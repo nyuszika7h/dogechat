@@ -1,0 +1,112 @@
+= DOGECHAT(1)
+:doctype: manpage
+:lang: cs
+
+== JMÉNO
+
+dogechat - the extensible chat client
+
+== PŘEHLED
+
+[verse]
+'dogechat' [-a|--no-connect] [-d|--dir <path>] [-p|--no-plugin] [-r|--run-command <command>] [-s|--no-script] [--upgrade] [plugin:option...]
+'dogechat' [-c|--colors]
+'dogechat' [-h|--help]
+'dogechat' [-l|--license]
+'dogechat' [-v|--version]
+
+== POPIS
+
+DogeChat (Doge Enhanced Environment for Chat) je svobodný chatovací klient, rychlý
+a lehký, připraven pro mnoho operačních systémů.
+Je velmi připůsobitelný a rozšiřitelný s skripty.
+
+== VOLBY
+
+include::cmdline_options.cs.asciidoc[]
+
+== VOLBY PLUGINŮ
+
+Pro kompletní dokumentaci nastavení pluginů a jejich volby podívejte se na
+https://dogechat.org/doc[DogeChat user's guide].
+
+S irc pluginem se můžete doččasně připojit na server s URL jako:
+
+    irc[6][s]://[[nickname][:password]@]server[:port][/#channel1[,#channel2...]]
+
+K připojení na IRC kanál Dogechatu pro podporu s přezdívkou "mynick":
+
+    irc://mynick@chat.freenode.net/#dogechat
+
+IPv6 adresa může být uzavřena do hranatých závorek k přidání portu, například:
+
+    irc://mynick@[2001:db8:0:85a3::ac1f:8001]:6668/#test
+
+== SOUBORY
+
+$HOME/.dogechat/dogechat.conf::
+    hlavní konfigurační soubor DogeChatu
+
+$HOME/.dogechat/plugins.conf::
+    soubor konfigurace pluginů
+
+$HOME/.dogechat/sec.conf::
+    konfigurační soubor s chráněnými daty
+
+$HOME/.dogechat/alias.conf::
+    configurační soubor pro 'alias' plugin
+
+$HOME/.dogechat/aspell.conf::
+    konfigurační soubor pro 'aspell' plugin
+
+$HOME/.dogechat/charset.conf::
+    konfigurační soubor pro 'charset' plugin
+
+$HOME/.dogechat/exec.conf::
+    konfigurační soubor pro 'exec' plugin
+
+$HOME/.dogechat/irc.conf::
+    konfigurační soubor pro 'irc' plugin
+
+$HOME/.dogechat/logger.conf::
+    konfigurační soubor pro 'logger' plugin
+
+$HOME/.dogechat/relay.conf::
+    konfigurační soubor pro 'relay' plugin
+
+$HOME/.dogechat/script.conf::
+    konfigurační soubor pro 'script' plugin
+
+$HOME/.dogechat/trigger.conf::
+    konfigurační soubor pro 'trigger' plugin
+
+$HOME/.dogechat/xfer.conf::
+    konfigurační soubor pro 'xfer' plugin
+
+$HOME/.dogechat/dogechat.log::
+    soubor záznamů DogeChatu
+
+== AUTOŘI
+
+Tato manuálová stránka byla napsána Sébastienem Helleu <flashcode@flashtux.org>.
+Tato manuálová stránka byla přeložena Ondřejem Súkupem <mimi.vx@gmail.com>
+
+== COPYRIGHT
+
+DogeChat je napsán Sébastienem Helleu a přispěvovateli (kompletní seznam je v
+souboru AUTHORS.asciidoc).
+
+Copyright (C) 2003-{sys:date "+%Y"} Sébastien Helleu <flashcode@flashtux.org>
+
+DogeChat je svobodný software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+Prosím přečtěte si soubor COPYING pro více informací.
+
+Web: <https://dogechat.org/>
+
+== PODPORA / HLÁŠENÍ CHYB
+
+Pro pomoc nebo hlášení chyb <https://dogechat.org/dev/support>

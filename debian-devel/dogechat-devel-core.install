@@ -1,0 +1,6 @@
+usr/share/locale/
+usr/lib/dogechat/plugins/alias.so
+usr/lib/dogechat/plugins/xfer.so
+usr/lib/dogechat/plugins/irc.so
+usr/lib/dogechat/plugins/charset.so
+usr/lib/dogechat/plugins/logger.so

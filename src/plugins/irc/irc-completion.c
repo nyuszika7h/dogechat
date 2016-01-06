@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-buffer.h"
 #include "irc-channel.h"
@@ -53,11 +53,11 @@ irc_completion_server_cb (void *data, const char *completion_item,
 
     if (ptr_server)
     {
-        weechat_hook_completion_list_add (completion, ptr_server->name,
-                                          0, WEECHAT_LIST_POS_SORT);
+        dogechat_hook_completion_list_add (completion, ptr_server->name,
+                                          0, DOGECHAT_LIST_POS_SORT);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -77,11 +77,11 @@ irc_completion_server_nick_cb (void *data, const char *completion_item,
 
     if (ptr_server && ptr_server->nick)
     {
-        weechat_hook_completion_list_add (completion, ptr_server->nick,
-                                          1, WEECHAT_LIST_POS_SORT);
+        dogechat_hook_completion_list_add (completion, ptr_server->nick,
+                                          1, DOGECHAT_LIST_POS_SORT);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -108,20 +108,20 @@ irc_completion_server_channels_cb (void *data, const char *completion_item,
         {
             if (ptr_channel2->type == IRC_CHANNEL_TYPE_CHANNEL)
             {
-                weechat_hook_completion_list_add (completion, ptr_channel2->name,
-                                                  0, WEECHAT_LIST_POS_SORT);
+                dogechat_hook_completion_list_add (completion, ptr_channel2->name,
+                                                  0, DOGECHAT_LIST_POS_SORT);
             }
         }
 
         /* add current channel first in list */
         if (ptr_channel)
         {
-            weechat_hook_completion_list_add (completion, ptr_channel->name,
-                                              0, WEECHAT_LIST_POS_BEGINNING);
+            dogechat_hook_completion_list_add (completion, ptr_channel->name,
+                                              0, DOGECHAT_LIST_POS_BEGINNING);
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -148,13 +148,13 @@ irc_completion_server_privates_cb (void *data, const char *completion_item,
         {
             if (ptr_channel->type == IRC_CHANNEL_TYPE_PRIVATE)
             {
-                weechat_hook_completion_list_add (completion, ptr_channel->name,
-                                                  0, WEECHAT_LIST_POS_SORT);
+                dogechat_hook_completion_list_add (completion, ptr_channel->name,
+                                                  0, DOGECHAT_LIST_POS_SORT);
             }
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -185,18 +185,18 @@ irc_completion_server_nicks_cb (void *data, const char *completion_item,
                 for (ptr_nick = ptr_channel2->nicks; ptr_nick;
                      ptr_nick = ptr_nick->next_nick)
                 {
-                    weechat_hook_completion_list_add (completion, ptr_nick->name,
-                                                      1, WEECHAT_LIST_POS_SORT);
+                    dogechat_hook_completion_list_add (completion, ptr_nick->name,
+                                                      1, DOGECHAT_LIST_POS_SORT);
                 }
             }
         }
 
         /* add self nick at the end */
-        weechat_hook_completion_list_add (completion, ptr_server->nick,
-                                          1, WEECHAT_LIST_POS_END);
+        dogechat_hook_completion_list_add (completion, ptr_server->nick,
+                                          1, DOGECHAT_LIST_POS_END);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -218,11 +218,11 @@ irc_completion_servers_cb (void *data, const char *completion_item,
     for (ptr_server = irc_servers; ptr_server;
          ptr_server = ptr_server->next_server)
     {
-        weechat_hook_completion_list_add (completion, ptr_server->name,
-                                          0, WEECHAT_LIST_POS_SORT);
+        dogechat_hook_completion_list_add (completion, ptr_server->name,
+                                          0, DOGECHAT_LIST_POS_SORT);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -242,11 +242,11 @@ irc_completion_channel_cb (void *data, const char *completion_item,
 
     if (ptr_channel)
     {
-        weechat_hook_completion_list_add (completion, ptr_channel->name,
-                                          0, WEECHAT_LIST_POS_SORT);
+        dogechat_hook_completion_list_add (completion, ptr_channel->name,
+                                          0, DOGECHAT_LIST_POS_SORT);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -264,17 +264,17 @@ irc_completion_channel_nicks_add_speakers (struct t_gui_completion *completion,
 
     if (channel->nicks_speaking[highlight])
     {
-        list_size = weechat_list_size (channel->nicks_speaking[highlight]);
+        list_size = dogechat_list_size (channel->nicks_speaking[highlight]);
         for (i = 0; i < list_size; i++)
         {
-            nick = weechat_list_string (
-                weechat_list_get (channel->nicks_speaking[highlight], i));
+            nick = dogechat_list_string (
+                dogechat_list_get (channel->nicks_speaking[highlight], i));
             if (nick && irc_nick_search (server, channel, nick))
             {
-                weechat_hook_completion_list_add (completion,
+                dogechat_hook_completion_list_add (completion,
                                                   nick,
                                                   1,
-                                                  WEECHAT_LIST_POS_BEGINNING);
+                                                  DOGECHAT_LIST_POS_BEGINNING);
             }
         }
     }
@@ -305,44 +305,44 @@ irc_completion_channel_nicks_cb (void *data, const char *completion_item,
                 for (ptr_nick = ptr_channel->nicks; ptr_nick;
                      ptr_nick = ptr_nick->next_nick)
                 {
-                    weechat_hook_completion_list_add (completion,
+                    dogechat_hook_completion_list_add (completion,
                                                       ptr_nick->name,
                                                       1,
-                                                      WEECHAT_LIST_POS_SORT);
+                                                      DOGECHAT_LIST_POS_SORT);
                 }
                 /* add recent speakers on channel */
-                if (weechat_config_integer (irc_config_look_nick_completion_smart) == IRC_CONFIG_NICK_COMPLETION_SMART_SPEAKERS)
+                if (dogechat_config_integer (irc_config_look_nick_completion_smart) == IRC_CONFIG_NICK_COMPLETION_SMART_SPEAKERS)
                 {
                     irc_completion_channel_nicks_add_speakers (completion, ptr_server, ptr_channel, 0);
                 }
                 /* add nicks whose make highlights on me recently on this channel */
-                if (weechat_config_integer (irc_config_look_nick_completion_smart) == IRC_CONFIG_NICK_COMPLETION_SMART_SPEAKERS_HIGHLIGHTS)
+                if (dogechat_config_integer (irc_config_look_nick_completion_smart) == IRC_CONFIG_NICK_COMPLETION_SMART_SPEAKERS_HIGHLIGHTS)
                 {
                     irc_completion_channel_nicks_add_speakers (completion, ptr_server, ptr_channel, 1);
                 }
                 /* add self nick at the end */
-                weechat_hook_completion_list_add (completion,
+                dogechat_hook_completion_list_add (completion,
                                                   ptr_server->nick,
                                                   1,
-                                                  WEECHAT_LIST_POS_END);
+                                                  DOGECHAT_LIST_POS_END);
                 break;
             case IRC_CHANNEL_TYPE_PRIVATE:
                 /* remote nick */
-                weechat_hook_completion_list_add (completion,
+                dogechat_hook_completion_list_add (completion,
                                                   ptr_channel->name,
                                                   1,
-                                                  WEECHAT_LIST_POS_SORT);
+                                                  DOGECHAT_LIST_POS_SORT);
                 /* add self nick at the end */
-                weechat_hook_completion_list_add (completion,
+                dogechat_hook_completion_list_add (completion,
                                                   ptr_server->nick,
                                                   1,
-                                                  WEECHAT_LIST_POS_END);
+                                                  DOGECHAT_LIST_POS_END);
                 break;
         }
         ptr_channel->nick_completion_reset = 0;
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -372,10 +372,10 @@ irc_completion_channel_nicks_hosts_cb (void *data, const char *completion_item,
                 for (ptr_nick = ptr_channel->nicks; ptr_nick;
                      ptr_nick = ptr_nick->next_nick)
                 {
-                    weechat_hook_completion_list_add (completion,
+                    dogechat_hook_completion_list_add (completion,
                                                       ptr_nick->name,
                                                       1,
-                                                      WEECHAT_LIST_POS_SORT);
+                                                      DOGECHAT_LIST_POS_SORT);
                     if (ptr_nick->host)
                     {
                         length = strlen (ptr_nick->name) + 1 +
@@ -385,21 +385,21 @@ irc_completion_channel_nicks_hosts_cb (void *data, const char *completion_item,
                         {
                             snprintf (buf, length, "%s!%s",
                                       ptr_nick->name, ptr_nick->host);
-                            weechat_hook_completion_list_add (
-                                completion, buf, 0, WEECHAT_LIST_POS_SORT);
+                            dogechat_hook_completion_list_add (
+                                completion, buf, 0, DOGECHAT_LIST_POS_SORT);
                             free (buf);
                         }
                     }
                 }
                 break;
             case IRC_CHANNEL_TYPE_PRIVATE:
-                weechat_hook_completion_list_add (
-                    completion, ptr_channel->name, 1, WEECHAT_LIST_POS_SORT);
+                dogechat_hook_completion_list_add (
+                    completion, ptr_channel->name, 1, DOGECHAT_LIST_POS_SORT);
                 break;
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -444,14 +444,14 @@ irc_completion_channel_topic_cb (void *data, const char *completion_item,
         else
             topic = strdup (ptr_channel->topic);
 
-        weechat_hook_completion_list_add (completion,
+        dogechat_hook_completion_list_add (completion,
                                           (topic) ? topic : ptr_channel->topic,
-                                          0, WEECHAT_LIST_POS_SORT);
+                                          0, DOGECHAT_LIST_POS_SORT);
         if (topic)
             free (topic);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -465,7 +465,7 @@ irc_completion_channels_cb (void *data, const char *completion_item,
 {
     struct t_irc_server *ptr_server2;
     struct t_irc_channel *ptr_channel2;
-    struct t_weelist *channels_current_server;
+    struct t_dogelist *channels_current_server;
     int i;
 
     IRC_BUFFER_GET_SERVER_CHANNEL(buffer);
@@ -474,7 +474,7 @@ irc_completion_channels_cb (void *data, const char *completion_item,
     (void) data;
     (void) completion_item;
 
-    channels_current_server = weechat_list_new ();
+    channels_current_server = dogechat_list_new ();
 
     for (ptr_server2 = irc_servers; ptr_server2;
          ptr_server2 = ptr_server2->next_server)
@@ -487,42 +487,42 @@ irc_completion_channels_cb (void *data, const char *completion_item,
                 if (ptr_server2 == ptr_server)
                 {
                     /* will be added later to completions */
-                    weechat_list_add (channels_current_server,
+                    dogechat_list_add (channels_current_server,
                                       ptr_channel2->name,
-                                      WEECHAT_LIST_POS_SORT,
+                                      DOGECHAT_LIST_POS_SORT,
                                       NULL);
                 }
                 else
                 {
-                    weechat_hook_completion_list_add (completion,
+                    dogechat_hook_completion_list_add (completion,
                                                       ptr_channel2->name,
                                                       0,
-                                                      WEECHAT_LIST_POS_SORT);
+                                                      DOGECHAT_LIST_POS_SORT);
                 }
             }
         }
     }
 
     /* add channels of current server first in list */
-    for (i = weechat_list_size (channels_current_server) - 1; i >= 0; i--)
+    for (i = dogechat_list_size (channels_current_server) - 1; i >= 0; i--)
     {
-        weechat_hook_completion_list_add (
+        dogechat_hook_completion_list_add (
             completion,
-            weechat_list_string (
-                weechat_list_get (channels_current_server, i)),
+            dogechat_list_string (
+                dogechat_list_get (channels_current_server, i)),
             0,
-            WEECHAT_LIST_POS_BEGINNING);
+            DOGECHAT_LIST_POS_BEGINNING);
     }
-    weechat_list_free (channels_current_server);
+    dogechat_list_free (channels_current_server);
 
     /* add current channel first in list */
     if (ptr_channel)
     {
-        weechat_hook_completion_list_add (completion, ptr_channel->name,
-                                          0, WEECHAT_LIST_POS_BEGINNING);
+        dogechat_hook_completion_list_add (completion, ptr_channel->name,
+                                          0, DOGECHAT_LIST_POS_BEGINNING);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -550,13 +550,13 @@ irc_completion_privates_cb (void *data, const char *completion_item,
         {
             if (ptr_channel->type == IRC_CHANNEL_TYPE_PRIVATE)
             {
-                weechat_hook_completion_list_add (completion, ptr_channel->name,
-                                                  0, WEECHAT_LIST_POS_SORT);
+                dogechat_hook_completion_list_add (completion, ptr_channel->name,
+                                                  0, DOGECHAT_LIST_POS_SORT);
             }
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -582,12 +582,12 @@ irc_completion_msg_kick_cb (void *data, const char *completion_item,
                                             IRC_SERVER_OPTION_DEFAULT_MSG_KICK);
         if (msg_kick && msg_kick[0])
         {
-            weechat_hook_completion_list_add (completion, msg_kick,
-                                              0, WEECHAT_LIST_POS_SORT);
+            dogechat_hook_completion_list_add (completion, msg_kick,
+                                              0, DOGECHAT_LIST_POS_SORT);
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -613,12 +613,12 @@ irc_completion_msg_part_cb (void *data, const char *completion_item,
                                             IRC_SERVER_OPTION_DEFAULT_MSG_PART);
         if (msg_part && msg_part[0])
         {
-            weechat_hook_completion_list_add (completion, msg_part,
-                                              0, WEECHAT_LIST_POS_SORT);
+            dogechat_hook_completion_list_add (completion, msg_part,
+                                              0, DOGECHAT_LIST_POS_SORT);
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -642,11 +642,11 @@ irc_completion_ignores_numbers_cb (void *data, const char *completion_item,
          ptr_ignore = ptr_ignore->next_ignore)
     {
         snprintf (str_number, sizeof (str_number), "%d", ptr_ignore->number);
-        weechat_hook_completion_list_add (completion, str_number,
-                                          0, WEECHAT_LIST_POS_END);
+        dogechat_hook_completion_list_add (completion, str_number,
+                                          0, DOGECHAT_LIST_POS_END);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -671,8 +671,8 @@ irc_completion_notify_nicks_cb (void *data, const char *completion_item,
         for (ptr_notify = ptr_server->notify_list; ptr_notify;
              ptr_notify = ptr_notify->next_notify)
         {
-            weechat_hook_completion_list_add (completion, ptr_notify->nick,
-                                              0, WEECHAT_LIST_POS_SORT);
+            dogechat_hook_completion_list_add (completion, ptr_notify->nick,
+                                              0, DOGECHAT_LIST_POS_SORT);
         }
     }
     else
@@ -683,13 +683,13 @@ irc_completion_notify_nicks_cb (void *data, const char *completion_item,
             for (ptr_notify = ptr_server->notify_list; ptr_notify;
                  ptr_notify = ptr_notify->next_notify)
             {
-                weechat_hook_completion_list_add (completion, ptr_notify->nick,
-                                                  0, WEECHAT_LIST_POS_SORT);
+                dogechat_hook_completion_list_add (completion, ptr_notify->nick,
+                                                  0, DOGECHAT_LIST_POS_SORT);
             }
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -699,52 +699,52 @@ irc_completion_notify_nicks_cb (void *data, const char *completion_item,
 void
 irc_completion_init ()
 {
-    weechat_hook_completion ("irc_server",
+    dogechat_hook_completion ("irc_server",
                              N_("current IRC server"),
                              &irc_completion_server_cb, NULL);
-    weechat_hook_completion ("irc_server_nick",
+    dogechat_hook_completion ("irc_server_nick",
                              N_("nick on current IRC server"),
                              &irc_completion_server_nick_cb, NULL);
-    weechat_hook_completion ("irc_server_channels",
+    dogechat_hook_completion ("irc_server_channels",
                              N_("channels on current IRC server"),
                              &irc_completion_server_channels_cb, NULL);
-    weechat_hook_completion ("irc_server_privates",
+    dogechat_hook_completion ("irc_server_privates",
                              N_("privates on current IRC server"),
                              &irc_completion_server_privates_cb, NULL);
-    weechat_hook_completion ("irc_server_nicks",
+    dogechat_hook_completion ("irc_server_nicks",
                              N_("nicks on all channels of current IRC server"),
                              &irc_completion_server_nicks_cb, NULL);
-    weechat_hook_completion ("irc_servers",
+    dogechat_hook_completion ("irc_servers",
                              N_("IRC servers (internal names)"),
                              &irc_completion_servers_cb, NULL);
-    weechat_hook_completion ("irc_channel",
+    dogechat_hook_completion ("irc_channel",
                              N_("current IRC channel"),
                              &irc_completion_channel_cb, NULL);
-    weechat_hook_completion ("nick",
+    dogechat_hook_completion ("nick",
                              N_("nicks of current IRC channel"),
                              &irc_completion_channel_nicks_cb, NULL);
-    weechat_hook_completion ("irc_channel_nicks_hosts",
+    dogechat_hook_completion ("irc_channel_nicks_hosts",
                              N_("nicks and hostnames of current IRC channel"),
                              &irc_completion_channel_nicks_hosts_cb, NULL);
-    weechat_hook_completion ("irc_channel_topic",
+    dogechat_hook_completion ("irc_channel_topic",
                              N_("topic of current IRC channel"),
                              &irc_completion_channel_topic_cb, NULL);
-    weechat_hook_completion ("irc_channels",
+    dogechat_hook_completion ("irc_channels",
                              N_("channels on all IRC servers"),
                              &irc_completion_channels_cb, NULL);
-    weechat_hook_completion ("irc_privates",
+    dogechat_hook_completion ("irc_privates",
                              N_("privates on all IRC servers"),
                              &irc_completion_privates_cb, NULL);
-    weechat_hook_completion ("irc_msg_kick",
+    dogechat_hook_completion ("irc_msg_kick",
                              N_("default kick message"),
                              &irc_completion_msg_kick_cb, NULL);
-    weechat_hook_completion ("irc_msg_part",
+    dogechat_hook_completion ("irc_msg_part",
                              N_("default part message for IRC channel"),
                              &irc_completion_msg_part_cb, NULL);
-    weechat_hook_completion ("irc_ignores_numbers",
+    dogechat_hook_completion ("irc_ignores_numbers",
                              N_("numbers for defined ignores"),
                              &irc_completion_ignores_numbers_cb, NULL);
-    weechat_hook_completion ("irc_notify_nicks",
+    dogechat_hook_completion ("irc_notify_nicks",
                              N_("nicks in notify list"),
                              &irc_completion_notify_nicks_cb, NULL);
 }

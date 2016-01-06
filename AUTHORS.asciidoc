@@ -1,4 +1,4 @@
-= WeeChat Authors
+= DogeChat Authors
 :author: Sébastien Helleu
 :email: flashcode@flashtux.org
 :lang: en
@@ -97,5 +97,5 @@ Alphabetically:
 
 == Contact
 
-See https://weechat.org/files/doc/devel/weechat_user.en.html#support[user's guide]
-or https://weechat.org/dev/support
+See https://dogechat.org/files/doc/devel/dogechat_user.en.html#support[user's guide]
+or https://dogechat.org/dev/support

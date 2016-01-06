@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -28,15 +28,15 @@
 #include <string.h>
 #include <limits.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-eval.h"
-#include "../core/wee-hashtable.h"
-#include "../core/wee-hdata.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-infolist.h"
-#include "../core/wee-log.h"
-#include "../core/wee-string.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-eval.h"
+#include "../core/doge-hashtable.h"
+#include "../core/doge-hdata.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-infolist.h"
+#include "../core/doge-log.h"
+#include "../core/doge-string.h"
 #include "../plugins/plugin.h"
 #include "gui-bar.h"
 #include "gui-bar-item.h"
@@ -408,8 +408,8 @@ gui_bar_check_conditions (struct t_gui_bar *bar,
     else if (conditions[0])
     {
         pointers = hashtable_new (32,
-                                  WEECHAT_HASHTABLE_STRING,
-                                  WEECHAT_HASHTABLE_POINTER,
+                                  DOGECHAT_HASHTABLE_STRING,
+                                  DOGECHAT_HASHTABLE_POINTER,
                                   NULL,
                                   NULL);
         if (pointers)
@@ -419,8 +419,8 @@ gui_bar_check_conditions (struct t_gui_bar *bar,
                 hashtable_set (pointers, "buffer", window->buffer);
         }
         extra_vars = hashtable_new (32,
-                                    WEECHAT_HASHTABLE_STRING,
-                                    WEECHAT_HASHTABLE_POINTER,
+                                    DOGECHAT_HASHTABLE_STRING,
+                                    DOGECHAT_HASHTABLE_POINTER,
                                     NULL,
                                     NULL);
         if (extra_vars)
@@ -433,8 +433,8 @@ gui_bar_check_conditions (struct t_gui_bar *bar,
                            (window && window->buffer && window->buffer->nicklist) ? "1" : "0");
         }
         options = hashtable_new (32,
-                                 WEECHAT_HASHTABLE_STRING,
-                                 WEECHAT_HASHTABLE_POINTER,
+                                 DOGECHAT_HASHTABLE_STRING,
+                                 DOGECHAT_HASHTABLE_POINTER,
                                  NULL,
                                  NULL);
         if (options)
@@ -1386,7 +1386,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
     {
         case GUI_BAR_OPTION_HIDDEN:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "boolean",
                 N_("true if bar is hidden, false if it is displayed"),
                 NULL, 0, 0, value, NULL, 0,
@@ -1394,7 +1394,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_PRIORITY:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "integer",
                 N_("bar priority (high number means bar displayed first)"),
                 NULL, 0, INT_MAX, value, NULL, 0,
@@ -1402,7 +1402,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_TYPE:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "integer",
                 N_("bar type (root, window, window_active, window_inactive)"),
                 "root|window|window_active|window_inactive", 0, 0, value, NULL, 0,
@@ -1410,7 +1410,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_CONDITIONS:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "string",
                 N_("conditions to display the bar: a simple condition: "
                    "\"active\", \"inactive\", \"nicklist\" (window must be "
@@ -1424,7 +1424,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_POSITION:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "integer",
                 N_("bar position (bottom, top, left, right)"),
                 "bottom|top|left|right", 0, 0, value, NULL, 0,
@@ -1432,7 +1432,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_FILLING_TOP_BOTTOM:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "integer",
                 N_("bar filling direction (\"horizontal\" (from left to right) "
                    "or \"vertical\" (from top to bottom)) when bar position is "
@@ -1443,7 +1443,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_FILLING_LEFT_RIGHT:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "integer",
                 N_("bar filling direction (\"horizontal\" (from left to right) "
                    "or \"vertical\" (from top to bottom)) when bar position is "
@@ -1454,7 +1454,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_SIZE:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "integer",
                 N_("bar size in chars (0 = auto size)"),
                 NULL, 0, INT_MAX, value, NULL, 0,
@@ -1464,7 +1464,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_SIZE_MAX:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "integer",
                 N_("max bar size in chars (0 = no limit)"),
                 NULL, 0, INT_MAX, value, NULL, 0,
@@ -1474,7 +1474,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_COLOR_FG:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "color",
                 N_("default text color for bar"),
                 NULL, 0, 0, value, NULL, 0,
@@ -1484,7 +1484,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_COLOR_DELIM:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "color",
                 N_("default delimiter color for bar"),
                 NULL, 0, 0, value, NULL, 0,
@@ -1494,7 +1494,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_COLOR_BG:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "color",
                 N_("default background color for bar"),
                 NULL, 0, 0, value, NULL, 0,
@@ -1504,7 +1504,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_SEPARATOR:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "boolean",
                 N_("separator line between bar and other bars/windows"),
                 NULL, 0, 0, value, NULL, 0,
@@ -1512,7 +1512,7 @@ gui_bar_create_option (const char *bar_name, int index_option, const char *value
             break;
         case GUI_BAR_OPTION_ITEMS:
             ptr_option = config_file_new_option (
-                weechat_config_file, weechat_config_section_bar,
+                dogechat_config_file, dogechat_config_section_bar,
                 option_name, "string",
                 N_("items of bar, they can be separated by comma (space "
                    "between items) or \"+\" (glued items); special syntax "
@@ -2287,7 +2287,7 @@ gui_bar_hdata_bar_cb (void *data, const char *hdata_name)
         HDATA_VAR(struct t_gui_bar, bar_refresh_needed, INTEGER, 0, NULL, NULL);
         HDATA_VAR(struct t_gui_bar, prev_bar, POINTER, 0, NULL, hdata_name);
         HDATA_VAR(struct t_gui_bar, next_bar, POINTER, 0, NULL, hdata_name);
-        HDATA_LIST(gui_bars, WEECHAT_HDATA_LIST_CHECK_POINTERS);
+        HDATA_LIST(gui_bars, DOGECHAT_HDATA_LIST_CHECK_POINTERS);
         HDATA_LIST(last_gui_bar, 0);
     }
     return hdata;
@@ -2381,7 +2381,7 @@ gui_bar_add_to_infolist (struct t_infolist *infolist,
 }
 
 /*
- * Prints bar infos in WeeChat log file (usually for crash dump).
+ * Prints bar infos in DogeChat log file (usually for crash dump).
  */
 
 void

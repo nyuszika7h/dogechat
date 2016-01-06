@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-raw.h"
 #include "irc-buffer.h"
@@ -49,7 +49,7 @@ irc_raw_message_print (struct t_irc_raw_message *raw_message)
 {
     if (irc_raw_buffer && raw_message)
     {
-        weechat_printf_date_tags (irc_raw_buffer,
+        dogechat_printf_date_tags (irc_raw_buffer,
                                   raw_message->date, NULL,
                                   "%s\t%s",
                                   raw_message->prefix,
@@ -68,11 +68,11 @@ irc_raw_open (int switch_to_buffer)
 
     if (!irc_raw_buffer)
     {
-        irc_raw_buffer = weechat_buffer_search (IRC_PLUGIN_NAME,
+        irc_raw_buffer = dogechat_buffer_search (IRC_PLUGIN_NAME,
                                                 IRC_RAW_BUFFER_NAME);
         if (!irc_raw_buffer)
         {
-            irc_raw_buffer = weechat_buffer_new (IRC_RAW_BUFFER_NAME,
+            irc_raw_buffer = dogechat_buffer_new (IRC_RAW_BUFFER_NAME,
                                                  &irc_input_data_cb, NULL,
                                                  &irc_buffer_close_cb, NULL);
 
@@ -80,21 +80,21 @@ irc_raw_open (int switch_to_buffer)
             if (!irc_raw_buffer)
                 return;
 
-            weechat_buffer_set (irc_raw_buffer,
+            dogechat_buffer_set (irc_raw_buffer,
                                 "title", _("IRC raw messages"));
 
-            if (!weechat_buffer_get_integer (irc_raw_buffer, "short_name_is_set"))
+            if (!dogechat_buffer_get_integer (irc_raw_buffer, "short_name_is_set"))
             {
-                weechat_buffer_set (irc_raw_buffer, "short_name",
+                dogechat_buffer_set (irc_raw_buffer, "short_name",
                                     IRC_RAW_BUFFER_NAME);
             }
-            weechat_buffer_set (irc_raw_buffer, "localvar_set_type", "debug");
-            weechat_buffer_set (irc_raw_buffer, "localvar_set_server", IRC_RAW_BUFFER_NAME);
-            weechat_buffer_set (irc_raw_buffer, "localvar_set_channel", IRC_RAW_BUFFER_NAME);
-            weechat_buffer_set (irc_raw_buffer, "localvar_set_no_log", "1");
+            dogechat_buffer_set (irc_raw_buffer, "localvar_set_type", "debug");
+            dogechat_buffer_set (irc_raw_buffer, "localvar_set_server", IRC_RAW_BUFFER_NAME);
+            dogechat_buffer_set (irc_raw_buffer, "localvar_set_channel", IRC_RAW_BUFFER_NAME);
+            dogechat_buffer_set (irc_raw_buffer, "localvar_set_no_log", "1");
 
             /* disable all highlights on this buffer */
-            weechat_buffer_set (irc_raw_buffer, "highlight_words", "-");
+            dogechat_buffer_set (irc_raw_buffer, "highlight_words", "-");
 
             /* print messages in list */
             for (ptr_raw_message = irc_raw_messages; ptr_raw_message;
@@ -106,7 +106,7 @@ irc_raw_open (int switch_to_buffer)
     }
 
     if (irc_raw_buffer && switch_to_buffer)
-        weechat_buffer_set (irc_raw_buffer, "display", "1");
+        dogechat_buffer_set (irc_raw_buffer, "display", "1");
 }
 
 /*
@@ -167,7 +167,7 @@ irc_raw_message_remove_old ()
 {
     int max_messages;
 
-    max_messages = weechat_config_integer (irc_config_look_raw_messages);
+    max_messages = dogechat_config_integer (irc_config_look_raw_messages);
     while (irc_raw_messages && (irc_raw_messages_count >= max_messages))
     {
         irc_raw_message_free (irc_raw_messages);
@@ -234,13 +234,13 @@ irc_raw_message_add (struct t_irc_server *server, int flags,
 
     if (flags & IRC_RAW_FLAG_BINARY)
     {
-        buf = weechat_string_hex_dump (message, strlen (message), 16,
+        buf = dogechat_string_hex_dump (message, strlen (message), 16,
                                        "  > ", NULL);
         snprintf (prefix, sizeof (prefix), " ");
     }
     else
     {
-        buf = weechat_iconv_to_internal (NULL, message);
+        buf = dogechat_iconv_to_internal (NULL, message);
         buf2 = malloc ((strlen (buf) * 4) + 1);
         if (buf2)
         {
@@ -250,7 +250,7 @@ irc_raw_message_add (struct t_irc_server *server, int flags,
             while (ptr_buf[pos_buf])
             {
                 if ((ptr_buf[pos_buf] < 32)
-                    || !weechat_utf8_is_valid ((const char *)(ptr_buf + pos_buf),
+                    || !dogechat_utf8_is_valid ((const char *)(ptr_buf + pos_buf),
                                                1, NULL))
                 {
                     buf2[pos_buf2++] = '\\';
@@ -261,7 +261,7 @@ irc_raw_message_add (struct t_irc_server *server, int flags,
                 }
                 else
                 {
-                    char_size = weechat_utf8_char_size ((const char *)(ptr_buf + pos_buf));
+                    char_size = dogechat_utf8_char_size ((const char *)(ptr_buf + pos_buf));
                     for (i = 0; i < char_size; i++)
                     {
                         buf2[pos_buf2++] = ptr_buf[pos_buf++];
@@ -301,10 +301,10 @@ irc_raw_message_add (struct t_irc_server *server, int flags,
 
         snprintf (prefix, sizeof (prefix), "%s%s%s%s%s",
                   (flags & IRC_RAW_FLAG_SEND) ?
-                  weechat_color ("chat_prefix_quit") :
-                  weechat_color ("chat_prefix_join"),
+                  dogechat_color ("chat_prefix_quit") :
+                  dogechat_color ("chat_prefix_join"),
                   prefix_arrow,
-                  (server) ? weechat_color ("chat_server") : "",
+                  (server) ? dogechat_color ("chat_server") : "",
                   (server) ? " " : "",
                   (server) ? server->name : "");
     }
@@ -335,7 +335,7 @@ irc_raw_print (struct t_irc_server *server, int flags,
         return;
 
     /* auto-open IRC raw buffer if debug for irc plugin is >= 1 */
-    if (!irc_raw_buffer && (weechat_irc_plugin->debug >= 1))
+    if (!irc_raw_buffer && (dogechat_irc_plugin->debug >= 1))
         irc_raw_open (0);
 
     new_raw_message = irc_raw_message_add (server, flags, message);
@@ -343,11 +343,11 @@ irc_raw_print (struct t_irc_server *server, int flags,
     {
         if (irc_raw_buffer)
             irc_raw_message_print (new_raw_message);
-        if (weechat_config_integer (irc_config_look_raw_messages) == 0)
+        if (dogechat_config_integer (irc_config_look_raw_messages) == 0)
             irc_raw_message_free (new_raw_message);
     }
 
-    if (weechat_irc_plugin->debug >= 2)
+    if (dogechat_irc_plugin->debug >= 2)
     {
         new_raw_message = irc_raw_message_add (server,
                                                flags | IRC_RAW_FLAG_BINARY,
@@ -356,7 +356,7 @@ irc_raw_print (struct t_irc_server *server, int flags,
         {
             if (irc_raw_buffer)
                 irc_raw_message_print (new_raw_message);
-            if (weechat_config_integer (irc_config_look_raw_messages) == 0)
+            if (dogechat_config_integer (irc_config_look_raw_messages) == 0)
                 irc_raw_message_free (new_raw_message);
         }
     }
@@ -379,15 +379,15 @@ irc_raw_add_to_infolist (struct t_infolist *infolist,
     if (!infolist || !raw_message)
         return 0;
 
-    ptr_item = weechat_infolist_new_item (infolist);
+    ptr_item = dogechat_infolist_new_item (infolist);
     if (!ptr_item)
         return 0;
 
-    if (!weechat_infolist_new_var_time (ptr_item, "date", raw_message->date))
+    if (!dogechat_infolist_new_var_time (ptr_item, "date", raw_message->date))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "prefix", raw_message->prefix))
+    if (!dogechat_infolist_new_var_string (ptr_item, "prefix", raw_message->prefix))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "message", raw_message->message))
+    if (!dogechat_infolist_new_var_string (ptr_item, "message", raw_message->message))
         return 0;
 
     return 1;

@@ -30,10 +30,10 @@
           ssl: SSL を有効化
 protocol.name: リレーするプロトコルと名前:
                  - "irc" プロトコル: name は共有するサーバ名 (任意指定、指定しない場合、サーバ名は "PASS" コマンドでクライアントが送信するものと同じでなければいけません、"PASS" コマンドのフォーマットは "PASS server:password")
-                 - "weechat" プロトコル (name は使われません)
+                 - "dogechat" プロトコル (name は使われません)
 
-"irc" プロトコルを指定した場合、どんな IRC クライアント (WeeChat 自身を含めて) でもポートに接続することができます。
-"weechat" プロトコルを指定した場合、リモートインターフェイスを使ってポートに接続することができます、参照: https://weechat.org/download/
+"irc" プロトコルを指定した場合、どんな IRC クライアント (DogeChat 自身を含めて) でもポートに接続することができます。
+"dogechat" プロトコルを指定した場合、リモートインターフェイスを使ってポートに接続することができます、参照: https://dogechat.org/download/
 
 引数無しの場合、リレークライアントのリストを含むバッファを開く
 
@@ -44,14 +44,14 @@ protocol.name: リレーするプロトコルと名前:
     /relay add ssl.irc.freenode 8001
   SSL を有効化してすべてのサーバに対する irc プロキシを設定 (クライアントがサーバを選ぶ):
     /relay add ssl.irc 8002
-  weechat プロトコル:
-    /relay add weechat 9000
-  SSL を有効化した weechat プロトコル:
-    /relay add ssl.weechat 9001
-  SSL を有効にした weechat プロトコル、IPv4 だけを利用:
-    /relay add ipv4.ssl.weechat 9001
-  SSL を有効にした weechat プロトコル、IPv6 だけを利用:
-    /relay add ipv6.ssl.weechat 9001
-  SSL を有効にした weechat プロトコル、IPv4 と IPv6 を利用:
-    /relay add ipv4.ipv6.ssl.weechat 9001
+  dogechat プロトコル:
+    /relay add dogechat 9000
+  SSL を有効化した dogechat プロトコル:
+    /relay add ssl.dogechat 9001
+  SSL を有効にした dogechat プロトコル、IPv4 だけを利用:
+    /relay add ipv4.ssl.dogechat 9001
+  SSL を有効にした dogechat プロトコル、IPv6 だけを利用:
+    /relay add ipv6.ssl.dogechat 9001
+  SSL を有効にした dogechat プロトコル、IPv4 と IPv6 を利用:
+    /relay add ipv4.ipv6.ssl.dogechat 9001
 ----

@@ -2,24 +2,24 @@
 #
 # Copyright (C) 2015-2016 Sébastien Helleu <flashcode@flashtux.org>
 #
-# This file is part of WeeChat, the extensible chat client.
+# This file is part of DogeChat, the extensible chat client.
 #
-# WeeChat is free software; you can redistribute it and/or modify
+# DogeChat is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
-# WeeChat is distributed in the hope that it will be useful,
+# DogeChat is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+# along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 #
-# Build WeeChat Debian packages for a stable or development version.
+# Build DogeChat Debian packages for a stable or development version.
 #
 # According to the version (stable/devel), a symbolic "debian" is made:
 #        debian/ --> debian-stable/
@@ -67,7 +67,7 @@ Syntax: $0 devel|stable|<version> distro
            for example: devel-2, stable-2, 1.4-2)
    distro  the distro type/name (debian/sid, ubuntu/wily, raspbian/jessie, ...)
 
-IMPORTANT: the current OS must match the distro, and the WeeChat sources
+IMPORTANT: the current OS must match the distro, and the DogeChat sources
            must be checkouted in the appropriate version (this script
            does not checkout sources on a specific tag).
 
@@ -109,7 +109,7 @@ fi
 # check git repository
 ROOT_DIR=$(git rev-parse --show-toplevel)
 if [ -z "${ROOT_DIR}" -o ! -d "${ROOT_DIR}/.git" -o ! -d "${ROOT_DIR}/debian-stable" ]; then
-    error "this script must be run from WeeChat git repository."
+    error "this script must be run from DogeChat git repository."
 fi
 cd "${ROOT_DIR}"
 
@@ -165,9 +165,9 @@ else
 fi
 
 if [ "${VERSION}" = "devel" ]; then
-    # packages are like: weechat-devel(-xxx)_X.Y-1~dev20150511_arch.deb
+    # packages are like: dogechat-devel(-xxx)_X.Y-1~dev20150511_arch.deb
     DEB_DIR="debian-devel"
-    DEB_NAME="weechat-devel"
+    DEB_NAME="dogechat-devel"
     DEB_VERSION="$(${ROOT_DIR}/version.sh devel)-1~dev$(date '+%Y%m%d')"
     if [ "${DEB_REVISION}" != "1" ]; then
         DEB_VERSION="${DEB_VERSION}-${DEB_REVISION}"
@@ -176,9 +176,9 @@ if [ "${VERSION}" = "devel" ]; then
     DCH_URGENCY="low"
     DCH_CHANGELOG="Repository snapshot"
 else
-    # packages are like: weechat-(-xxx)_X.Y-1_arch.deb
+    # packages are like: dogechat-(-xxx)_X.Y-1_arch.deb
     DEB_DIR="debian-stable"
-    DEB_NAME="weechat"
+    DEB_NAME="dogechat"
     DEB_VERSION="${VERSION}-${DEB_REVISION}"
     DCH_CREATE=""
     DCH_URGENCY="medium"
@@ -191,7 +191,7 @@ echo "=== Building ${DEB_NAME}-${DEB_VERSION} on ${DISTRO_TYPE}/${DISTRO_NAME} (
 # ================================== BUILD ==================================
 
 # apply patch (if needed, for old distros)
-PATCH_FILE="${ROOT_DIR}/tools/debian/patches/weechat_${DISTRO_TYPE}_${DISTRO_NAME}.patch"
+PATCH_FILE="${ROOT_DIR}/tools/debian/patches/dogechat_${DISTRO_TYPE}_${DISTRO_NAME}.patch"
 if [ -f "${PATCH_FILE}" ]; then
     echo " - Applying patch ${PATCH_FILE}"
     git apply "${PATCH_FILE}"

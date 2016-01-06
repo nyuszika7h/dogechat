@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -29,18 +29,18 @@
 #include <ctype.h>
 #include <time.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-eval.h"
-#include "../core/wee-hashtable.h"
-#include "../core/wee-hdata.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-infolist.h"
-#include "../core/wee-input.h"
-#include "../core/wee-list.h"
-#include "../core/wee-log.h"
-#include "../core/wee-string.h"
-#include "../core/wee-utf8.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-eval.h"
+#include "../core/doge-hashtable.h"
+#include "../core/doge-hdata.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-infolist.h"
+#include "../core/doge-input.h"
+#include "../core/doge-list.h"
+#include "../core/doge-log.h"
+#include "../core/doge-string.h"
+#include "../core/doge-utf8.h"
 #include "../plugins/plugin.h"
 #include "gui-key.h"
 #include "gui-bar.h"
@@ -83,7 +83,7 @@ int gui_key_buffer_alloc = 0;       /* input buffer allocated size          */
 int gui_key_buffer_size = 0;        /* input buffer size in bytes           */
 
 int gui_key_paste_pending = 0;      /* 1 is big paste was detected and      */
-                                    /* WeeChat is asking user what to do    */
+                                    /* DogeChat is asking user what to do    */
 int gui_key_paste_bracketed = 0;    /* bracketed paste mode detected        */
 struct t_hook *gui_key_paste_bracketed_timer = NULL;
                                     /* timer for bracketed paste            */
@@ -257,7 +257,7 @@ gui_key_grab_end_timer_cb (void *data, int remaining_calls)
     gui_key_grab_command = 0;
     gui_key_combo_buffer[0] = '\0';
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -659,7 +659,7 @@ gui_key_new (struct t_gui_buffer *buffer, int context, const char *key,
     expanded_name = gui_key_get_expanded_name (new_key->key);
 
     (void) hook_signal_send ("key_bind",
-                             WEECHAT_HOOK_SIGNAL_STRING, expanded_name);
+                             DOGECHAT_HOOK_SIGNAL_STRING, expanded_name);
 
     if (gui_key_verbose)
     {
@@ -877,7 +877,7 @@ gui_key_unbind (struct t_gui_buffer *buffer, int context, const char *key)
                           &gui_keys_count[context], ptr_key);
         }
         (void) hook_signal_send ("key_unbind",
-                                 WEECHAT_HOOK_SIGNAL_STRING, (char *)key);
+                                 DOGECHAT_HOOK_SIGNAL_STRING, (char *)key);
         return 1;
     }
 
@@ -1035,8 +1035,8 @@ gui_key_focus_command (const char *key, int context,
     char *command, **commands;
     const char *str_buffer;
     struct t_hashtable *hashtable;
-    struct t_weelist *list_keys;
-    struct t_weelist_item *ptr_item;
+    struct t_dogelist *list_keys;
+    struct t_dogelist_item *ptr_item;
     struct t_gui_buffer *ptr_buffer;
 
     debug = 0;
@@ -1362,10 +1362,10 @@ gui_key_pressed (const char *key_str)
             snprintf (signal_name, sizeof (signal_name),
                       "key_combo_%s", gui_key_context_string[context]);
             rc = hook_signal_send (signal_name,
-                                   WEECHAT_HOOK_SIGNAL_STRING,
+                                   DOGECHAT_HOOK_SIGNAL_STRING,
                                    gui_key_combo_buffer);
             gui_key_combo_buffer[0] = '\0';
-            if ((rc != WEECHAT_RC_OK_EAT) && ptr_key->command)
+            if ((rc != DOGECHAT_RC_OK_EAT) && ptr_key->command)
             {
                 commands = string_split_command (ptr_key->command, ';');
                 if (commands)
@@ -1387,8 +1387,8 @@ gui_key_pressed (const char *key_str)
         snprintf (signal_name, sizeof (signal_name),
                   "key_combo_%s", gui_key_context_string[context]);
         if (hook_signal_send (signal_name,
-                              WEECHAT_HOOK_SIGNAL_STRING,
-                              gui_key_combo_buffer) == WEECHAT_RC_OK_EAT)
+                              DOGECHAT_HOOK_SIGNAL_STRING,
+                              gui_key_combo_buffer) == DOGECHAT_RC_OK_EAT)
         {
             gui_key_combo_buffer[0] = '\0';
             return 0;
@@ -1405,8 +1405,8 @@ gui_key_pressed (const char *key_str)
         snprintf (signal_name, sizeof (signal_name),
                   "key_combo_%s", gui_key_context_string[context]);
         if (hook_signal_send (signal_name,
-                              WEECHAT_HOOK_SIGNAL_STRING,
-                              gui_key_combo_buffer) == WEECHAT_RC_OK_EAT)
+                              DOGECHAT_HOOK_SIGNAL_STRING,
+                              gui_key_combo_buffer) == DOGECHAT_RC_OK_EAT)
         {
             gui_key_combo_buffer[0] = '\0';
             return 0;
@@ -1702,7 +1702,7 @@ gui_key_get_paste_lines ()
 /*
  * Checks pasted lines: if more than N lines, then enables paste mode and ask
  * confirmation to user (ctrl-Y=paste, ctrl-N=cancel) (N is option
- * weechat.look.paste_max_lines).
+ * dogechat.look.paste_max_lines).
  *
  * Returns:
  *   1: paste mode has been enabled
@@ -1751,7 +1751,7 @@ gui_key_paste_bracketed_timer_cb (void *data, int remaining_calls)
     if (gui_key_paste_bracketed)
         gui_key_paste_bracketed_stop ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1970,7 +1970,7 @@ gui_key_add_to_infolist (struct t_infolist *infolist, struct t_gui_key *key)
 }
 
 /*
- * Prints a key info in WeeChat log file (usually for crash dump).
+ * Prints a key info in DogeChat log file (usually for crash dump).
  */
 
 void
@@ -1996,7 +1996,7 @@ gui_key_print_log_key (struct t_gui_key *key, const char *prefix)
 }
 
 /*
- * Prints key infos in WeeChat log file (usually for crash dump).
+ * Prints key infos in DogeChat log file (usually for crash dump).
  */
 
 void

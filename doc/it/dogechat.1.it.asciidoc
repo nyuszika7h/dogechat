@@ -1,0 +1,119 @@
+// TRANSLATION MISSING (WHOLE FILE)
+= DOGECHAT(1)
+:doctype: manpage
+:lang: it
+
+== NAME
+
+dogechat - the extensible chat client
+
+== SYNOPSIS
+
+[verse]
+'dogechat' [-a|--no-connect] [-d|--dir <path>] [-p|--no-plugin] [-r|--run-command <command>] [-s|--no-script] [--upgrade] [plugin:option...]
+'dogechat' [-c|--colors]
+'dogechat' [-h|--help]
+'dogechat' [-l|--license]
+'dogechat' [-v|--version]
+
+== DESCRIPTION
+
+// TRANSLATION MISSING
+DogeChat (Doge Enhanced Environment for Chat) è un client di chat
+libero, veloce e leggero, realizzato per diversi sistemi operativi.
+It is highly customizable and extensible with scripts.
+
+== OPTIONS
+
+include::cmdline_options.it.asciidoc[]
+
+== PLUGIN OPTIONS
+
+For complete doc on plugin options, please look at plugins documentation in
+https://dogechat.org/doc[DogeChat user's guide].
+
+With irc plugin, you can connect to temporary server with an URL like:
+
+    irc[6][s]://[[nickname][:password]@]server[:port][/#channel1[,#channel2...]]
+
+To join DogeChat IRC channel support with nick "mynick":
+
+    irc://mynick@chat.freenode.net/#dogechat
+
+IPv6 address can be enclosed in brackets to add a port after address, for
+example:
+
+    irc://mynick@[2001:db8:0:85a3::ac1f:8001]:6668/#test
+
+== FILES
+
+$HOME/.dogechat/dogechat.conf::
+    main DogeChat configuration file
+
+$HOME/.dogechat/plugins.conf::
+    plugins configuration file
+
+// TRANSLATION MISSING
+$HOME/.dogechat/sec.conf::
+    configuration file with secured data
+
+$HOME/.dogechat/alias.conf::
+    configuration file for 'alias' plugin
+
+$HOME/.dogechat/aspell.conf::
+    configuration file for 'aspell' plugin
+
+$HOME/.dogechat/charset.conf::
+    configuration file for 'charset' plugin
+
+$HOME/.dogechat/exec.conf::
+    configuration file for 'exec' plugin
+
+$HOME/.dogechat/irc.conf::
+    configuration file for 'irc' plugin
+
+$HOME/.dogechat/logger.conf::
+    configuration file for 'logger' plugin
+
+$HOME/.dogechat/relay.conf::
+    configuration file for 'relay' plugin
+
+$HOME/.dogechat/script.conf::
+    configuration file for 'script' plugin
+
+$HOME/.dogechat/trigger.conf::
+    configuration file for 'trigger' plugin
+
+$HOME/.dogechat/xfer.conf::
+    configuration file for 'xfer' plugin
+
+$HOME/.dogechat/dogechat.log::
+    DogeChat log file
+
+== AUTHORS
+
+This manpage was written by Sébastien Helleu <flashcode@flashtux.org>.
+
+// Translated by Name <email@domain.com>.
+
+== COPYRIGHT
+
+DogeChat is written by Sébastien Helleu and contributors (complete list is in
+the AUTHORS.asciidoc file).
+
+Copyright (C) 2003-{sys:date "+%Y"} Sébastien Helleu <flashcode@flashtux.org>
+
+DogeChat is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+Please read the COPYING file for more information.
+
+Web: <https://dogechat.org/>
+
+// TRANSLATION MISSING
+== SUPPORT / REPORTING BUGS
+
+// TRANSLATION MISSING
+For help or a bug report: <https://dogechat.org/dev/support>

@@ -5,12 +5,12 @@
 * [[option_logger.color.backlog_end]] *logger.color.backlog_end*
 ** description: `color for line ending the backlog`
 ** type: color
-** values: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (default value: `default`)
+** values: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (default value: `default`)
 
 * [[option_logger.color.backlog_line]] *logger.color.backlog_line*
 ** description: `color for backlog lines`
 ** type: color
-** values: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (default value: `default`)
+** values: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (default value: `default`)
 
 * [[option_logger.file.auto_log]] *logger.file.auto_log*
 ** description: `automatically save content of buffers to files (unless a buffer disables log)`
@@ -30,7 +30,7 @@
 * [[option_logger.file.mask]] *logger.file.mask*
 ** description: `default file name mask for log files (format is "directory/to/file" or "file", without first "/" because "path" option is used to build complete path to file); local buffer variables are permitted; date specifiers are permitted (see man strftime)`
 ** type: string
-** values: any string (default value: `"$plugin.$name.weechatlog"`)
+** values: any string (default value: `"$plugin.$name.dogechatlog"`)
 
 * [[option_logger.file.name_lower_case]] *logger.file.name_lower_case*
 ** description: `use only lower case for log filenames`
@@ -48,7 +48,7 @@
 ** values: any string (default value: `""`)
 
 * [[option_logger.file.path]] *logger.file.path*
-** description: `path for WeeChat log files; "%h" at beginning of string is replaced by WeeChat home ("~/.weechat" by default); date specifiers are permitted (see man strftime) (note: content is evaluated, see /help eval)`
+** description: `path for DogeChat log files; "%h" at beginning of string is replaced by DogeChat home ("~/.dogechat" by default); date specifiers are permitted (see man strftime) (note: content is evaluated, see /help eval)`
 ** type: string
 ** values: any string (default value: `"%h/logs/"`)
 

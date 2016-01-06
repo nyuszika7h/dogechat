@@ -25,10 +25,10 @@ arguments: Argumente für Befehl (Variablen die genutzt werden können und durch
 Beispiele:
   führe den Befehl '/me Ich teste gerade etwas...' für alle Channels aus:
     /allchan me Ich teste gerade etwas...
-  schicke 'Hallo Welt' an jeden Channel, ausgenommen an den #weechat Channel:
-    /allchan -exclude=#weechat msg * Hallo Welt
-  schicke 'Hallo Welt' an jeden Channel, ausgenommen an den #weechat Channel und Channels die mit #linux beginnen:
-    /allchan -exclude=#weechat,#linux* msg * Hallo Welt
+  schicke 'Hallo Welt' an jeden Channel, ausgenommen an den #dogechat Channel:
+    /allchan -exclude=#dogechat msg * Hallo Welt
+  schicke 'Hallo Welt' an jeden Channel, ausgenommen an den #dogechat Channel und Channels die mit #linux beginnen:
+    /allchan -exclude=#dogechat,#linux* msg * Hallo Welt
 ----
 
 [[command_irc_allpv]]
@@ -101,7 +101,7 @@ Ohne Angabe von Argumenten wird die Ban-Liste für den aktuellen Channel angezei
 
 Ohne Angaben von Argumenten werden "ls" und "list" gesendet.
 
-Fähigkeiten die von WeeChat unterstützt werden: account-notify, away-notify, cap-notify, extended-join, multi-prefix, server-time, userhost-in-names.
+Fähigkeiten die von DogeChat unterstützt werden: account-notify, away-notify, cap-notify, extended-join, multi-prefix, server-time, userhost-in-names.
 
 Fähigkeiten die standardmäßig genutzt werden sollen können mit der Option  irc.server_default.capabilities gesetzt werden (oder individuell für jeden Server mit der Option irc.server.xxx.capabilities).
 
@@ -268,8 +268,8 @@ Beispiele:
     /ignore add toto
   ignoriert den Host "toto@domain.com" auf dem freenode Server:
     /ignore add toto@domain.com freenode
-  ignoriert den Host "toto*@*.domain.com" im Chat freenode/#weechat:
-    /ignore add toto*@*.domain.com freenode #weechat
+  ignoriert den Host "toto*@*.domain.com" im Chat freenode/#dogechat:
+    /ignore add toto*@*.domain.com freenode #dogechat
 ----
 
 [[command_irc_info]]
@@ -312,10 +312,10 @@ nick: Nickname
       key: Zugriffsschlüssel für einen Channel (Channel, die einen Zugriffsschlüssel benötigen, müssen zuerst aufgeführt werden)
 
 Beispiele:
-  /join #weechat
-  /join #geschützter_Channel,#weechat Zugriffsschlüssel
-  /join -server freenode #weechat
-  /join -noswitch #weechat
+  /join #dogechat
+  /join #geschützter_Channel,#dogechat Zugriffsschlüssel
+  /join -server freenode #dogechat
+  /join -noswitch #dogechat
 ----
 
 [[command_irc_kick]]
@@ -379,10 +379,10 @@ channel: aufzulistender Channel
 Beispiele:
   listet alle Channels des Servers auf (dies kann bei großen Netzwerken sehr lange dauern):
     /list
-  listet den Channel #weechat auf:
-    /list #weechat
-  listet alle Channels auf die mit "#weechat" beginnen (dies kann bei großen Netzwerken sehr lange dauern):
-    /list -re #weechat.*
+  listet den Channel #dogechat auf:
+    /list #dogechat
+  listet alle Channels auf die mit "#dogechat" beginnen (dies kann bei großen Netzwerken sehr lange dauern):
+    /list -re #dogechat.*
 ----
 
 [[command_irc_lusers]]
@@ -441,8 +441,8 @@ User-Eigenschaften:
 Die Liste der hier dargestellten Eigenschaften ist nicht vollständig. Es sollte die Dokumentation des jeweiligen Servers zu Rate gezogen werden, um alle verfügbaren Modi zu erfahren.
 
 Beispiele:
-  schützt das Thema des Channels #weechat:
-    /mode #weechat +t
+  schützt das Thema des Channels #dogechat:
+    /mode #dogechat +t
   um sich auf dem Server unsichtbar machen:
     /mode nick +i
 ----
@@ -723,7 +723,7 @@ nooption: stellt die Boolean Einstellung auf 'off' (Beispiel: -nossl)
  reorder: Anordnung der Server ändern
     keep: übernimmt den Server in die Konfigurationsdatei (nur sinnvoll bei temporär angelegten Servern)
      del: entfernt einen Server
- deloutq: löscht bei allen Servern alle ausgehende Nachrichten, die in der Warteschlange stehen (dies betrifft alle Nachrichten die WeeChat gerade sendet)
+ deloutq: löscht bei allen Servern alle ausgehende Nachrichten, die in der Warteschlange stehen (dies betrifft alle Nachrichten die DogeChat gerade sendet)
     jump: springt zum Server-Buffer
      raw: öffnet Buffer mit Roh-IRC-Daten
 

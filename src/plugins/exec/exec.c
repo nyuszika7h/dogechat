@@ -1,22 +1,22 @@
 /*
- * exec.c - execution of external commands in WeeChat
+ * exec.c - execution of external commands in DogeChat
  *
  * Copyright (C) 2014-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "exec.h"
 #include "exec-buffer.h"
 #include "exec-command.h"
@@ -32,21 +32,21 @@
 #include "exec-config.h"
 
 
-WEECHAT_PLUGIN_NAME(EXEC_PLUGIN_NAME);
-WEECHAT_PLUGIN_DESCRIPTION(N_("Execution of external commands in WeeChat"));
-WEECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
-WEECHAT_PLUGIN_VERSION(WEECHAT_VERSION);
-WEECHAT_PLUGIN_LICENSE(WEECHAT_LICENSE);
-WEECHAT_PLUGIN_PRIORITY(11000);
+DOGECHAT_PLUGIN_NAME(EXEC_PLUGIN_NAME);
+DOGECHAT_PLUGIN_DESCRIPTION(N_("Execution of external commands in DogeChat"));
+DOGECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
+DOGECHAT_PLUGIN_VERSION(DOGECHAT_VERSION);
+DOGECHAT_PLUGIN_LICENSE(DOGECHAT_LICENSE);
+DOGECHAT_PLUGIN_PRIORITY(11000);
 
-struct t_weechat_plugin *weechat_exec_plugin = NULL;
+struct t_dogechat_plugin *dogechat_exec_plugin = NULL;
 
 struct t_exec_cmd *exec_cmds = NULL;        /* first executed command       */
 struct t_exec_cmd *last_exec_cmd = NULL;    /* last executed command        */
 int exec_cmds_count = 0;                    /* number of executed commands  */
 
 char *exec_color_string[EXEC_NUM_COLORS] =
-{ "ansi", "auto", "irc", "weechat", "strip" };
+{ "ansi", "auto", "irc", "dogechat", "strip" };
 
 
 /*
@@ -65,7 +65,7 @@ exec_search_color (const char *color)
 
     for (i = 0; i < EXEC_NUM_COLORS; i++)
     {
-        if (weechat_strcasecmp (exec_color_string[i], color) == 0)
+        if (dogechat_strcasecmp (exec_color_string[i], color) == 0)
             return i;
     }
 
@@ -184,7 +184,7 @@ exec_timer_delete_cb (void *data, int remaining_calls)
 
     exec_cmd = (struct t_exec_cmd *)data;
     if (!exec_cmd)
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
 
     for (ptr_exec_cmd = exec_cmds; ptr_exec_cmd;
          ptr_exec_cmd = ptr_exec_cmd->next_cmd)
@@ -196,7 +196,7 @@ exec_timer_delete_cb (void *data, int remaining_calls)
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -226,7 +226,7 @@ exec_decode_color (struct t_exec_cmd *exec_cmd, const char *string)
         case EXEC_COLOR_IRC:
             irc_color = 1;
             break;
-        case EXEC_COLOR_WEECHAT:
+        case EXEC_COLOR_DOGECHAT:
             irc_color = 0;
             break;
         case EXEC_COLOR_STRIP:
@@ -234,7 +234,7 @@ exec_decode_color (struct t_exec_cmd *exec_cmd, const char *string)
             break;
     }
 
-    return weechat_hook_modifier_exec (
+    return dogechat_hook_modifier_exec (
         (irc_color) ? "irc_color_decode_ansi" : "color_decode_ansi",
         (keep_colors) ? "1" : "0",
         string);
@@ -273,11 +273,11 @@ exec_display_line (struct t_exec_cmd *exec_cmd, struct t_gui_buffer *buffer,
         if (strstr (exec_cmd->pipe_command, "$line"))
         {
             /* replace $line by line content */
-            line2 = weechat_string_replace (exec_cmd->pipe_command,
+            line2 = dogechat_string_replace (exec_cmd->pipe_command,
                                             "$line", line_color);
             if (line2)
             {
-                weechat_command (buffer, line2);
+                dogechat_command (buffer, line2);
                 free (line2);
             }
         }
@@ -290,7 +290,7 @@ exec_display_line (struct t_exec_cmd *exec_cmd, struct t_gui_buffer *buffer,
             {
                 snprintf (line2, length,
                           "%s %s", exec_cmd->pipe_command, line_color);
-                weechat_command (buffer, line2);
+                dogechat_command (buffer, line2);
                 free (line2);
             }
         }
@@ -305,12 +305,12 @@ exec_display_line (struct t_exec_cmd *exec_cmd, struct t_gui_buffer *buffer,
             {
                 snprintf (line2, length,
                           "%d. %s", exec_cmd->output_line_nb, line_color);
-                weechat_command (buffer, line2);
+                dogechat_command (buffer, line2);
                 free (line2);
             }
         }
         else
-            weechat_command (buffer, (line_color[0]) ? line_color : " ");
+            dogechat_command (buffer, (line_color[0]) ? line_color : " ");
     }
     else
     {
@@ -319,11 +319,11 @@ exec_display_line (struct t_exec_cmd *exec_cmd, struct t_gui_buffer *buffer,
                   "exec_%s,exec_cmd_%s",
                   (out == EXEC_STDOUT) ? "stdout" : "stderr",
                   (exec_cmd->name) ? exec_cmd->name : str_number);
-        if (weechat_buffer_get_integer (buffer, "type") == 1)
+        if (dogechat_buffer_get_integer (buffer, "type") == 1)
         {
             snprintf (str_number, sizeof (str_number),
                       "%d. ", exec_cmd->output_line_nb);
-            weechat_printf_y (buffer, -1,
+            dogechat_printf_y (buffer, -1,
                               "%s%s",
                               (exec_cmd->line_numbers) ? str_number : " ",
                               line_color);
@@ -332,7 +332,7 @@ exec_display_line (struct t_exec_cmd *exec_cmd, struct t_gui_buffer *buffer,
         {
             snprintf (str_number, sizeof (str_number),
                       "%d\t", exec_cmd->output_line_nb);
-            weechat_printf_tags (buffer, str_tags,
+            dogechat_printf_tags (buffer, str_tags,
                                  "%s%s",
                                  (exec_cmd->line_numbers) ? str_number : " \t",
                                  line_color);
@@ -377,7 +377,7 @@ exec_concat_output (struct t_exec_cmd *exec_cmd, struct t_gui_buffer *buffer,
                 }
             }
             else
-                line = weechat_strndup (ptr_text, pos - ptr_text);
+                line = dogechat_strndup (ptr_text, pos - ptr_text);
             if (!line)
                 break;
             if (exec_cmd->output[out])
@@ -421,34 +421,34 @@ exec_end_command (struct t_exec_cmd *exec_cmd, int return_code)
 
     if (exec_cmd->hsignal)
     {
-        hashtable = weechat_hashtable_new (32,
-                                           WEECHAT_HASHTABLE_STRING,
-                                           WEECHAT_HASHTABLE_STRING,
+        hashtable = dogechat_hashtable_new (32,
+                                           DOGECHAT_HASHTABLE_STRING,
+                                           DOGECHAT_HASHTABLE_STRING,
                                            NULL,
                                            NULL);
         if (hashtable)
         {
-            weechat_hashtable_set (hashtable, "command", exec_cmd->command);
+            dogechat_hashtable_set (hashtable, "command", exec_cmd->command);
             snprintf (str_number, sizeof (str_number), "%d", exec_cmd->number);
-            weechat_hashtable_set (hashtable, "number", str_number);
-            weechat_hashtable_set (hashtable, "name", exec_cmd->name);
+            dogechat_hashtable_set (hashtable, "number", str_number);
+            dogechat_hashtable_set (hashtable, "name", exec_cmd->name);
             output = exec_decode_color (exec_cmd, exec_cmd->output[EXEC_STDOUT]);
-            weechat_hashtable_set (hashtable, "out", output);
+            dogechat_hashtable_set (hashtable, "out", output);
             if (output)
                 free (output);
             output = exec_decode_color (exec_cmd, exec_cmd->output[EXEC_STDERR]);
-            weechat_hashtable_set (hashtable, "err", output);
+            dogechat_hashtable_set (hashtable, "err", output);
             if (output)
                 free (output);
             snprintf (str_number, sizeof (str_number), "%d", return_code);
-            weechat_hashtable_set (hashtable, "rc", str_number);
-            weechat_hook_hsignal_send (exec_cmd->hsignal, hashtable);
-            weechat_hashtable_free (hashtable);
+            dogechat_hashtable_set (hashtable, "rc", str_number);
+            dogechat_hook_hsignal_send (exec_cmd->hsignal, hashtable);
+            dogechat_hashtable_free (hashtable);
         }
     }
     else
     {
-        ptr_buffer = weechat_buffer_search ("==", exec_cmd->buffer_full_name);
+        ptr_buffer = dogechat_buffer_search ("==", exec_cmd->buffer_full_name);
 
         /* display the last line of output (if not ending with '\n') */
         exec_display_line (exec_cmd, ptr_buffer, EXEC_STDOUT,
@@ -464,12 +464,12 @@ exec_end_command (struct t_exec_cmd *exec_cmd, int return_code)
             && !exec_cmd->detached && !exec_cmd->output_to_buffer
             && !exec_cmd->pipe_command)
         {
-            buffer_type = weechat_buffer_get_integer (ptr_buffer, "type");
+            buffer_type = dogechat_buffer_get_integer (ptr_buffer, "type");
             if (return_code >= 0)
             {
                 if (buffer_type == 1)
                 {
-                    weechat_printf_y (ptr_buffer, -1,
+                    dogechat_printf_y (ptr_buffer, -1,
                                       ("%s: end of command %d (\"%s\"), "
                                        "return code: %d"),
                                       EXEC_PLUGIN_NAME, exec_cmd->number,
@@ -477,7 +477,7 @@ exec_end_command (struct t_exec_cmd *exec_cmd, int return_code)
                 }
                 else
                 {
-                    weechat_printf_tags (ptr_buffer, "exec_rc",
+                    dogechat_printf_tags (ptr_buffer, "exec_rc",
                                          _("%s: end of command %d (\"%s\"), "
                                            "return code: %d"),
                                          EXEC_PLUGIN_NAME, exec_cmd->number,
@@ -488,7 +488,7 @@ exec_end_command (struct t_exec_cmd *exec_cmd, int return_code)
             {
                 if (buffer_type == 1)
                 {
-                    weechat_printf_y (ptr_buffer, -1,
+                    dogechat_printf_y (ptr_buffer, -1,
                                       _("%s: unexpected end of command %d "
                                         "(\"%s\")"),
                                       EXEC_PLUGIN_NAME, exec_cmd->number,
@@ -496,7 +496,7 @@ exec_end_command (struct t_exec_cmd *exec_cmd, int return_code)
                 }
                 else
                 {
-                    weechat_printf_tags (ptr_buffer, "exec_rc",
+                    dogechat_printf_tags (ptr_buffer, "exec_rc",
                                          _("%s: unexpected end of command %d "
                                            "(\"%s\")"),
                                          EXEC_PLUGIN_NAME, exec_cmd->number,
@@ -522,9 +522,9 @@ exec_end_command (struct t_exec_cmd *exec_cmd, int return_code)
     }
 
     /* schedule a timer to remove the executed command */
-    if (weechat_config_integer (exec_config_command_purge_delay) >= 0)
+    if (dogechat_config_integer (exec_config_command_purge_delay) >= 0)
     {
-        weechat_hook_timer (1 + (1000 * weechat_config_integer (exec_config_command_purge_delay)),
+        dogechat_hook_timer (1 + (1000 * dogechat_config_integer (exec_config_command_purge_delay)),
                             0, 1,
                             &exec_timer_delete_cb, exec_cmd);
     }
@@ -546,11 +546,11 @@ exec_process_cb (void *data, const char *command, int return_code,
 
     ptr_exec_cmd = (struct t_exec_cmd *)data;
     if (!ptr_exec_cmd)
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
-    if (weechat_exec_plugin->debug >= 2)
+    if (dogechat_exec_plugin->debug >= 2)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         "%s: process_cb: command=\"%s\", rc=%d, "
                         "out: %d bytes, err: %d bytes",
                         EXEC_PLUGIN_NAME,
@@ -562,7 +562,7 @@ exec_process_cb (void *data, const char *command, int return_code,
 
     if (out || err)
     {
-        ptr_buffer = weechat_buffer_search ("==",
+        ptr_buffer = dogechat_buffer_search ("==",
                                             ptr_exec_cmd->buffer_full_name);
         if (out)
             exec_concat_output (ptr_exec_cmd, ptr_buffer, EXEC_STDOUT, out);
@@ -570,12 +570,12 @@ exec_process_cb (void *data, const char *command, int return_code,
             exec_concat_output (ptr_exec_cmd, ptr_buffer, EXEC_STDERR, err);
     }
 
-    if (return_code == WEECHAT_HOOK_PROCESS_ERROR)
+    if (return_code == DOGECHAT_HOOK_PROCESS_ERROR)
         exec_end_command (ptr_exec_cmd, -1);
     else if (return_code >= 0)
         exec_end_command (ptr_exec_cmd, return_code);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -602,7 +602,7 @@ exec_free (struct t_exec_cmd *exec_cmd)
 
     /* free data */
     if (exec_cmd->hook)
-        weechat_unhook (exec_cmd->hook);
+        dogechat_unhook (exec_cmd->hook);
     if (exec_cmd->name)
         free (exec_cmd->name);
     if (exec_cmd->command)
@@ -638,7 +638,7 @@ exec_free_all ()
 }
 
 /*
- * Prints exec infos in WeeChat log file (usually for crash dump).
+ * Prints exec infos in DogeChat log file (usually for crash dump).
  */
 
 void
@@ -649,30 +649,30 @@ exec_print_log ()
     for (ptr_exec_cmd = exec_cmds; ptr_exec_cmd;
          ptr_exec_cmd = ptr_exec_cmd->next_cmd)
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("[exec command (addr:0x%lx)]", ptr_exec_cmd);
-        weechat_log_printf ("  number. . . . . . . . . : %d",    ptr_exec_cmd->number);
-        weechat_log_printf ("  name. . . . . . . . . . : '%s'",  ptr_exec_cmd->name);
-        weechat_log_printf ("  hook. . . . . . . . . . : 0x%lx", ptr_exec_cmd->hook);
-        weechat_log_printf ("  command . . . . . . . . : '%s'",  ptr_exec_cmd->command);
-        weechat_log_printf ("  pid . . . . . . . . . . : %d",    ptr_exec_cmd->pid);
-        weechat_log_printf ("  detached. . . . . . . . : %d",    ptr_exec_cmd->detached);
-        weechat_log_printf ("  start_time. . . . . . . : %ld",   ptr_exec_cmd->start_time);
-        weechat_log_printf ("  end_time. . . . . . . . : %ld",   ptr_exec_cmd->end_time);
-        weechat_log_printf ("  output_to_buffer. . . . : %d",    ptr_exec_cmd->output_to_buffer);
-        weechat_log_printf ("  buffer_full_name. . . . : '%s'",  ptr_exec_cmd->buffer_full_name);
-        weechat_log_printf ("  line_numbers. . . . . . : %d",    ptr_exec_cmd->line_numbers);
-        weechat_log_printf ("  display_rc. . . . . . . : %d",    ptr_exec_cmd->display_rc);
-        weechat_log_printf ("  output_line_nb. . . . . : %d",    ptr_exec_cmd->output_line_nb);
-        weechat_log_printf ("  output_size[stdout] . . : %d",    ptr_exec_cmd->output_size[EXEC_STDOUT]);
-        weechat_log_printf ("  output[stdout]. . . . . : '%s'",  ptr_exec_cmd->output[EXEC_STDOUT]);
-        weechat_log_printf ("  output_size[stderr] . . : %d",    ptr_exec_cmd->output_size[EXEC_STDERR]);
-        weechat_log_printf ("  output[stderr]. . . . . : '%s'",  ptr_exec_cmd->output[EXEC_STDERR]);
-        weechat_log_printf ("  return_code . . . . . . : %d",    ptr_exec_cmd->return_code);
-        weechat_log_printf ("  pipe_command. . . . . . : '%s'",  ptr_exec_cmd->pipe_command);
-        weechat_log_printf ("  hsignal . . . . . . . . : '%s'",  ptr_exec_cmd->hsignal);
-        weechat_log_printf ("  prev_cmd. . . . . . . . : 0x%lx", ptr_exec_cmd->prev_cmd);
-        weechat_log_printf ("  next_cmd. . . . . . . . : 0x%lx", ptr_exec_cmd->next_cmd);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("[exec command (addr:0x%lx)]", ptr_exec_cmd);
+        dogechat_log_printf ("  number. . . . . . . . . : %d",    ptr_exec_cmd->number);
+        dogechat_log_printf ("  name. . . . . . . . . . : '%s'",  ptr_exec_cmd->name);
+        dogechat_log_printf ("  hook. . . . . . . . . . : 0x%lx", ptr_exec_cmd->hook);
+        dogechat_log_printf ("  command . . . . . . . . : '%s'",  ptr_exec_cmd->command);
+        dogechat_log_printf ("  pid . . . . . . . . . . : %d",    ptr_exec_cmd->pid);
+        dogechat_log_printf ("  detached. . . . . . . . : %d",    ptr_exec_cmd->detached);
+        dogechat_log_printf ("  start_time. . . . . . . : %ld",   ptr_exec_cmd->start_time);
+        dogechat_log_printf ("  end_time. . . . . . . . : %ld",   ptr_exec_cmd->end_time);
+        dogechat_log_printf ("  output_to_buffer. . . . : %d",    ptr_exec_cmd->output_to_buffer);
+        dogechat_log_printf ("  buffer_full_name. . . . : '%s'",  ptr_exec_cmd->buffer_full_name);
+        dogechat_log_printf ("  line_numbers. . . . . . : %d",    ptr_exec_cmd->line_numbers);
+        dogechat_log_printf ("  display_rc. . . . . . . : %d",    ptr_exec_cmd->display_rc);
+        dogechat_log_printf ("  output_line_nb. . . . . : %d",    ptr_exec_cmd->output_line_nb);
+        dogechat_log_printf ("  output_size[stdout] . . : %d",    ptr_exec_cmd->output_size[EXEC_STDOUT]);
+        dogechat_log_printf ("  output[stdout]. . . . . : '%s'",  ptr_exec_cmd->output[EXEC_STDOUT]);
+        dogechat_log_printf ("  output_size[stderr] . . : %d",    ptr_exec_cmd->output_size[EXEC_STDERR]);
+        dogechat_log_printf ("  output[stderr]. . . . . : '%s'",  ptr_exec_cmd->output[EXEC_STDERR]);
+        dogechat_log_printf ("  return_code . . . . . . : %d",    ptr_exec_cmd->return_code);
+        dogechat_log_printf ("  pipe_command. . . . . . : '%s'",  ptr_exec_cmd->pipe_command);
+        dogechat_log_printf ("  hsignal . . . . . . . . : '%s'",  ptr_exec_cmd->hsignal);
+        dogechat_log_printf ("  prev_cmd. . . . . . . . : 0x%lx", ptr_exec_cmd->prev_cmd);
+        dogechat_log_printf ("  next_cmd. . . . . . . . : 0x%lx", ptr_exec_cmd->next_cmd);
     }
 }
 
@@ -690,20 +690,20 @@ exec_debug_dump_cb (void *data, const char *signal, const char *type_data,
     (void) type_data;
 
     if (!signal_data
-        || (weechat_strcasecmp ((char *)signal_data, EXEC_PLUGIN_NAME) == 0))
+        || (dogechat_strcasecmp ((char *)signal_data, EXEC_PLUGIN_NAME) == 0))
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("***** \"%s\" plugin dump *****",
-                            weechat_plugin->name);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("***** \"%s\" plugin dump *****",
+                            dogechat_plugin->name);
 
         exec_print_log ();
 
-        weechat_log_printf ("");
-        weechat_log_printf ("***** End of \"%s\" plugin dump *****",
-                            weechat_plugin->name);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("***** End of \"%s\" plugin dump *****",
+                            dogechat_plugin->name);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -711,21 +711,21 @@ exec_debug_dump_cb (void *data, const char *signal, const char *type_data,
  */
 
 int
-weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
+dogechat_plugin_init (struct t_dogechat_plugin *plugin, int argc, char *argv[])
 {
     int i, upgrading;
 
-    weechat_plugin = plugin;
+    dogechat_plugin = plugin;
 
     exec_command_init ();
 
     if (!exec_config_init ())
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
     exec_config_read ();
 
     /* hook some signals */
-    weechat_hook_signal ("debug_dump", &exec_debug_dump_cb, NULL);
+    dogechat_hook_signal ("debug_dump", &exec_debug_dump_cb, NULL);
 
     /* hook completions */
     exec_completion_init ();
@@ -734,7 +734,7 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
     upgrading = 0;
     for (i = 0; i < argc; i++)
     {
-        if (weechat_strcasecmp (argv[i], "--upgrade") == 0)
+        if (dogechat_strcasecmp (argv[i], "--upgrade") == 0)
         {
             upgrading = 1;
         }
@@ -743,7 +743,7 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
     if (upgrading)
         exec_buffer_set_callbacks ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -751,7 +751,7 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
  */
 
 int
-weechat_plugin_end (struct t_weechat_plugin *plugin)
+dogechat_plugin_end (struct t_dogechat_plugin *plugin)
 {
     /* make C compiler happy */
     (void) plugin;
@@ -760,5 +760,5 @@ weechat_plugin_end (struct t_weechat_plugin *plugin)
     exec_free_all ();
     exec_config_free ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }

@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2014-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "trigger.h"
 #include "trigger-buffer.h"
 #include "trigger-config.h"
@@ -55,8 +55,8 @@ trigger_buffer_match_filters (struct t_trigger *trigger)
         if (trigger_buffer_filters[i][0] == '@')
         {
             /* check if the hook matches the filter */
-            if (weechat_strcasecmp (
-                    trigger_hook_type_string[weechat_config_integer (trigger->options[TRIGGER_OPTION_HOOK])],
+            if (dogechat_strcasecmp (
+                    trigger_hook_type_string[dogechat_config_integer (trigger->options[TRIGGER_OPTION_HOOK])],
                     trigger_buffer_filters[i] + 1) == 0)
             {
                 return 1;
@@ -65,7 +65,7 @@ trigger_buffer_match_filters (struct t_trigger *trigger)
         else
         {
             /* check if the name matches the filter */
-            if (weechat_string_match (trigger->name, trigger_buffer_filters[i], 0))
+            if (dogechat_string_match (trigger->name, trigger_buffer_filters[i], 0))
                 return 1;
         }
     }
@@ -83,12 +83,12 @@ trigger_buffer_set_filter (const char *filter)
 {
     if (trigger_buffer_filters)
     {
-        weechat_string_free_split (trigger_buffer_filters);
+        dogechat_string_free_split (trigger_buffer_filters);
         trigger_buffer_filters = NULL;
     }
 
     if (filter && filter[0])
-        trigger_buffer_filters = weechat_string_split (filter, ",", 0, 0, NULL);
+        trigger_buffer_filters = dogechat_string_split (filter, ",", 0, 0, NULL);
 }
 
 /*
@@ -101,12 +101,12 @@ trigger_buffer_set_title ()
     const char *ptr_filter;
     char title[1024];
 
-    ptr_filter = weechat_buffer_get_string (trigger_buffer, "localvar_trigger_filter");
+    ptr_filter = dogechat_buffer_get_string (trigger_buffer, "localvar_trigger_filter");
     snprintf (title, sizeof (title),
               _("Trigger monitor (filter: %s) | Input: q=close, words=filter"),
               (ptr_filter) ? ptr_filter : "*");
 
-    weechat_buffer_set (trigger_buffer, "title", title);
+    dogechat_buffer_set (trigger_buffer, "title", title);
 }
 
 /*
@@ -123,20 +123,20 @@ trigger_buffer_input_cb (void *data, struct t_gui_buffer *buffer,
     /* close buffer */
     if (strcmp (input_data, "q") == 0)
     {
-        weechat_buffer_close (buffer);
-        return WEECHAT_RC_OK;
+        dogechat_buffer_close (buffer);
+        return DOGECHAT_RC_OK;
     }
 
     /* set filters */
     if (strcmp (input_data, "*") == 0)
-        weechat_buffer_set (buffer, "localvar_del_trigger_filter", "");
+        dogechat_buffer_set (buffer, "localvar_del_trigger_filter", "");
     else
-        weechat_buffer_set (buffer, "localvar_set_trigger_filter", input_data);
-    trigger_buffer_set_filter (weechat_buffer_get_string (buffer,
+        dogechat_buffer_set (buffer, "localvar_set_trigger_filter", input_data);
+    trigger_buffer_set_filter (dogechat_buffer_get_string (buffer,
                                                           "localvar_trigger_filter"));
     trigger_buffer_set_title ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -152,7 +152,7 @@ trigger_buffer_close_cb (void *data, struct t_gui_buffer *buffer)
 
     trigger_buffer = NULL;
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -165,16 +165,16 @@ trigger_buffer_set_callbacks ()
 {
     struct t_gui_buffer *ptr_buffer;
 
-    ptr_buffer = weechat_buffer_search (TRIGGER_PLUGIN_NAME,
+    ptr_buffer = dogechat_buffer_search (TRIGGER_PLUGIN_NAME,
                                         TRIGGER_BUFFER_NAME);
     if (ptr_buffer)
     {
         trigger_buffer = ptr_buffer;
-        weechat_buffer_set_pointer (trigger_buffer, "close_callback",
+        dogechat_buffer_set_pointer (trigger_buffer, "close_callback",
                                     &trigger_buffer_close_cb);
-        weechat_buffer_set_pointer (trigger_buffer, "input_callback",
+        dogechat_buffer_set_pointer (trigger_buffer, "input_callback",
                                     &trigger_buffer_input_cb);
-        trigger_buffer_set_filter (weechat_buffer_get_string (trigger_buffer,
+        trigger_buffer_set_filter (dogechat_buffer_get_string (trigger_buffer,
                                                               "localvar_trigger_filter"));
     }
 }
@@ -188,7 +188,7 @@ trigger_buffer_open (const char *filter, int switch_to_buffer)
 {
     if (!trigger_buffer)
     {
-        trigger_buffer = weechat_buffer_new (TRIGGER_BUFFER_NAME,
+        trigger_buffer = dogechat_buffer_new (TRIGGER_BUFFER_NAME,
                                              &trigger_buffer_input_cb, NULL,
                                              &trigger_buffer_close_cb, NULL);
 
@@ -196,25 +196,25 @@ trigger_buffer_open (const char *filter, int switch_to_buffer)
         if (!trigger_buffer)
             return;
 
-        if (!weechat_buffer_get_integer (trigger_buffer, "short_name_is_set"))
-            weechat_buffer_set (trigger_buffer, "short_name", TRIGGER_BUFFER_NAME);
-        weechat_buffer_set (trigger_buffer, "localvar_set_type", "debug");
-        weechat_buffer_set (trigger_buffer, "localvar_set_server", TRIGGER_BUFFER_NAME);
-        weechat_buffer_set (trigger_buffer, "localvar_set_channel", TRIGGER_BUFFER_NAME);
-        weechat_buffer_set (trigger_buffer, "localvar_set_no_log", "1");
+        if (!dogechat_buffer_get_integer (trigger_buffer, "short_name_is_set"))
+            dogechat_buffer_set (trigger_buffer, "short_name", TRIGGER_BUFFER_NAME);
+        dogechat_buffer_set (trigger_buffer, "localvar_set_type", "debug");
+        dogechat_buffer_set (trigger_buffer, "localvar_set_server", TRIGGER_BUFFER_NAME);
+        dogechat_buffer_set (trigger_buffer, "localvar_set_channel", TRIGGER_BUFFER_NAME);
+        dogechat_buffer_set (trigger_buffer, "localvar_set_no_log", "1");
 
         /* disable all highlights on this buffer */
-        weechat_buffer_set (trigger_buffer, "highlight_words", "-");
+        dogechat_buffer_set (trigger_buffer, "highlight_words", "-");
     }
 
     if (filter && filter[0])
     {
-        weechat_buffer_set (trigger_buffer,
+        dogechat_buffer_set (trigger_buffer,
                             "localvar_set_trigger_filter", filter);
     }
     else
     {
-        weechat_buffer_set (trigger_buffer,
+        dogechat_buffer_set (trigger_buffer,
                             "localvar_del_trigger_filter", "");
     }
     trigger_buffer_set_filter (filter);
@@ -222,7 +222,7 @@ trigger_buffer_open (const char *filter, int switch_to_buffer)
     trigger_buffer_set_title ();
 
     if (switch_to_buffer)
-        weechat_buffer_set (trigger_buffer, "display", "1");
+        dogechat_buffer_set (trigger_buffer, "display", "1");
 }
 
 /*
@@ -241,27 +241,27 @@ trigger_buffer_hashtable_map_cb (void *data,
     (void) data;
     (void) hashtable;
 
-    value_type = weechat_hashtable_get_string (hashtable, "type_values");
+    value_type = dogechat_hashtable_get_string (hashtable, "type_values");
     if (!value_type)
         return;
 
     if (strcmp (value_type, "string") == 0)
     {
-        value_no_color = (weechat_config_boolean (trigger_config_look_monitor_strip_colors)) ?
-            weechat_string_remove_color ((const char *)value, NULL) : NULL;
-        weechat_printf_tags (trigger_buffer, "no_trigger",
+        value_no_color = (dogechat_config_boolean (trigger_config_look_monitor_strip_colors)) ?
+            dogechat_string_remove_color ((const char *)value, NULL) : NULL;
+        dogechat_printf_tags (trigger_buffer, "no_trigger",
                              "\t    %s: %s\"%s%s%s\"",
                              (char *)key,
-                             weechat_color ("chat_delimiters"),
-                             weechat_color ("reset"),
+                             dogechat_color ("chat_delimiters"),
+                             dogechat_color ("reset"),
                              (value_no_color) ? value_no_color : (const char *)value,
-                             weechat_color ("chat_delimiters"));
+                             dogechat_color ("chat_delimiters"));
         if (value_no_color)
             free (value_no_color);
     }
     else if (strcmp (value_type, "pointer") == 0)
     {
-        weechat_printf_tags (trigger_buffer, "no_trigger",
+        dogechat_printf_tags (trigger_buffer, "no_trigger",
                              "\t    %s: 0x%lx",
                              (char *)key,
                              value);
@@ -279,9 +279,9 @@ trigger_buffer_display_hashtable (const char *name,
     if (!trigger_buffer)
         return;
 
-    weechat_printf_tags (trigger_buffer, "no_trigger", "  %s:", name);
+    dogechat_printf_tags (trigger_buffer, "no_trigger", "  %s:", name);
 
-    weechat_hashtable_map (hashtable, &trigger_buffer_hashtable_map_cb, NULL);
+    dogechat_hashtable_map (hashtable, &trigger_buffer_hashtable_map_cb, NULL);
 }
 
 /*
@@ -305,21 +305,21 @@ trigger_buffer_display_trigger (struct t_trigger *trigger,
     if (!trigger_buffer_match_filters (trigger))
         return 0;
 
-    weechat_printf_tags (trigger_buffer, "no_trigger",
+    dogechat_printf_tags (trigger_buffer, "no_trigger",
                          "%s\t%s%s %s(%s%s%s)",
-                         trigger_hook_type_string[weechat_config_integer (trigger->options[TRIGGER_OPTION_HOOK])],
-                         weechat_color (weechat_config_string (trigger_config_color_trigger)),
+                         trigger_hook_type_string[dogechat_config_integer (trigger->options[TRIGGER_OPTION_HOOK])],
+                         dogechat_color (dogechat_config_string (trigger_config_color_trigger)),
                          trigger->name,
-                         weechat_color ("chat_delimiters"),
-                         weechat_color ("reset"),
-                         weechat_config_string (trigger->options[TRIGGER_OPTION_ARGUMENTS]),
-                         weechat_color ("chat_delimiters"));
+                         dogechat_color ("chat_delimiters"),
+                         dogechat_color ("reset"),
+                         dogechat_config_string (trigger->options[TRIGGER_OPTION_ARGUMENTS]),
+                         dogechat_color ("chat_delimiters"));
     if (buffer)
     {
-        weechat_printf_tags (trigger_buffer, "no_trigger",
+        dogechat_printf_tags (trigger_buffer, "no_trigger",
                              "\t  buffer: %s%s",
-                             weechat_color ("chat_buffer"),
-                             weechat_buffer_get_string (buffer, "full_name"));
+                             dogechat_color ("chat_buffer"),
+                             dogechat_buffer_get_string (buffer, "full_name"));
     }
     if (pointers)
         trigger_buffer_display_hashtable ("pointers", pointers);
@@ -338,7 +338,7 @@ trigger_buffer_end ()
 {
     if (trigger_buffer_filters)
     {
-        weechat_string_free_split (trigger_buffer_filters);
+        dogechat_string_free_split (trigger_buffer_filters);
         trigger_buffer_filters = NULL;
     }
 }

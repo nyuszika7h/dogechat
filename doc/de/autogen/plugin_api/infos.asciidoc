@@ -6,7 +6,7 @@
 |===
 | Erweiterung | Name | Beschreibung | Argumente
 
-| aspell | aspell_dict | durch Kommata getrennte Liste von Wörterbüchern, die in diesem Buffer genutzt werden sollen | Buffer-Pointer ("0x12345678") oder der vollständige Buffername ("irc.freenode.#weechat")
+| aspell | aspell_dict | durch Kommata getrennte Liste von Wörterbüchern, die in diesem Buffer genutzt werden sollen | Buffer-Pointer ("0x12345678") oder der vollständige Buffername ("irc.freenode.#dogechat")
 
 | fifo | fifo_filename | Name der FIFO-Pipe | -
 
@@ -32,50 +32,50 @@
 
 | relay | relay_client_count | Anzahl an Clients für Relay | Statusname (optional): connecting, waiting_auth, connected, auth_failed, disconnected
 
-| weechat | charset_internal | Interner WeeChat Zeichensatz | -
+| dogechat | charset_internal | Interner DogeChat Zeichensatz | -
 
-| weechat | charset_terminal | Terminal Zeichensatz | -
+| dogechat | charset_terminal | Terminal Zeichensatz | -
 
-| weechat | color_ansi_regex | erweiterte reguläre POSIX Ausdrücke um ANSI Escapesequenz zu suchen | -
+| dogechat | color_ansi_regex | erweiterte reguläre POSIX Ausdrücke um ANSI Escapesequenz zu suchen | -
 
-| weechat | color_rgb2term | RGB Farbe wurde umgewandelt in Terminalfarbe (0-255) | RGB,limit (Obergrenze ist optional und ist Standardmäßig 256)
+| dogechat | color_rgb2term | RGB Farbe wurde umgewandelt in Terminalfarbe (0-255) | RGB,limit (Obergrenze ist optional und ist Standardmäßig 256)
 
-| weechat | color_term2rgb | Terminalfarbe (0-255) wurde umgewandelt in RGB Farbe | Farben (Terminalfarben: 0-255)
+| dogechat | color_term2rgb | Terminalfarbe (0-255) wurde umgewandelt in RGB Farbe | Farben (Terminalfarben: 0-255)
 
-| weechat | cursor_mode | 1, falls Cursor-Modus aktiviert ist | -
+| dogechat | cursor_mode | 1, falls Cursor-Modus aktiviert ist | -
 
-| weechat | date | Datum der WeeChat Kompilierung | -
+| dogechat | date | Datum der DogeChat Kompilierung | -
 
-| weechat | dir_separator | Trennzeichen für Verzeichnis | -
+| dogechat | dir_separator | Trennzeichen für Verzeichnis | -
 
-| weechat | filters_enabled | 1, falls Filter aktiviert sind | -
+| dogechat | filters_enabled | 1, falls Filter aktiviert sind | -
 
-| weechat | inactivity | Inaktivität der Tastatur (Sekunden) | -
+| dogechat | inactivity | Inaktivität der Tastatur (Sekunden) | -
 
-| weechat | locale | Lokalisation welche für die übersetzten Nachrichten verwendet werden soll | -
+| dogechat | locale | Lokalisation welche für die übersetzten Nachrichten verwendet werden soll | -
 
-| weechat | term_height | Höhe des Terminals | -
+| dogechat | term_height | Höhe des Terminals | -
 
-| weechat | term_width | Breite des Terminals | -
+| dogechat | term_width | Breite des Terminals | -
 
-| weechat | version | WeeChat-Version | -
+| dogechat | version | DogeChat-Version | -
 
-| weechat | version_git | WeeChat Git Version (Ausgabe des Befehls "git describe", ausschließlich für eine Entwicklerversion. Eine stabile Version gibt keine Information zurück) | -
+| dogechat | version_git | DogeChat Git Version (Ausgabe des Befehls "git describe", ausschließlich für eine Entwicklerversion. Eine stabile Version gibt keine Information zurück) | -
 
-| weechat | version_number | WeeChat-Version (als Zahl) | -
+| dogechat | version_number | DogeChat-Version (als Zahl) | -
 
-| weechat | weechat_dir | WeeChat Verzeichnis | -
+| dogechat | dogechat_dir | DogeChat Verzeichnis | -
 
-| weechat | weechat_libdir | WeeChat "lib" Verzeichnis | -
+| dogechat | dogechat_libdir | DogeChat "lib" Verzeichnis | -
 
-| weechat | weechat_localedir | "lokales" Verzeichnis von WeeChat | -
+| dogechat | dogechat_localedir | "lokales" Verzeichnis von DogeChat | -
 
-| weechat | weechat_sharedir | WeeChat "share" Verzeichnis | -
+| dogechat | dogechat_sharedir | DogeChat "share" Verzeichnis | -
 
-| weechat | weechat_site | WeeChat Seite | -
+| dogechat | dogechat_site | DogeChat Seite | -
 
-| weechat | weechat_site_download | Download-Seite von WeeChat | -
+| dogechat | dogechat_site_download | Download-Seite von DogeChat | -
 
-| weechat | weechat_upgrading | 1 falls WeeChat ein Upgrade durchführt (Befehl `/upgrade`) | -
+| dogechat | dogechat_upgrading | 1 falls DogeChat ein Upgrade durchführt (Befehl `/upgrade`) | -
 
 |===

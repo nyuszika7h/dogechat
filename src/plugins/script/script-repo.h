@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_SCRIPT_REPO_H
-#define WEECHAT_SCRIPT_REPO_H 1
+#ifndef DOGECHAT_SCRIPT_REPO_H
+#define DOGECHAT_SCRIPT_REPO_H 1
 
 /* status for script */
 #define SCRIPT_STATUS_INSTALLED   1
@@ -39,8 +39,8 @@ struct t_script_repo
     char *description;                   /* description                     */
     char *tags;                          /* comma-separated list of tags    */
     char *requirements;                  /* requirements                    */
-    char *min_weechat;                   /* min WeeChat version             */
-    char *max_weechat;                   /* max WeeChat version             */
+    char *min_dogechat;                   /* min DogeChat version             */
+    char *max_dogechat;                   /* max DogeChat version             */
     char *md5sum;                        /* md5sum of script content        */
     char *url;                           /* URL to download script          */
     int popularity;                      /* >0 for popular scripts only     */
@@ -85,4 +85,4 @@ extern int script_repo_add_to_infolist (struct t_infolist *infolist,
                                         struct t_script_repo *script);
 extern void script_repo_print_log ();
 
-#endif /* WEECHAT_SCRIPT_REPO_H */
+#endif /* DOGECHAT_SCRIPT_REPO_H */

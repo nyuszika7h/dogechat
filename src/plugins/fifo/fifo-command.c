@@ -3,25 +3,25 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "fifo.h"
 
 
@@ -42,42 +42,42 @@ fifo_command_fifo (void *data, struct t_gui_buffer *buffer, int argc,
     {
         if (fifo_fd != -1)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s: pipe is enabled (file: %s)"),
                             FIFO_PLUGIN_NAME,
                             fifo_filename);
         }
         else
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s: pipe is disabled"), FIFO_PLUGIN_NAME);
         }
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
     /* enable pipe */
-    if (weechat_strcasecmp (argv[1], "enable") == 0)
+    if (dogechat_strcasecmp (argv[1], "enable") == 0)
     {
-        weechat_config_set_plugin (FIFO_OPTION_NAME, "on");
-        return WEECHAT_RC_OK;
+        dogechat_config_set_plugin (FIFO_OPTION_NAME, "on");
+        return DOGECHAT_RC_OK;
     }
 
     /* disable pipe */
-    if (weechat_strcasecmp (argv[1], "disable") == 0)
+    if (dogechat_strcasecmp (argv[1], "disable") == 0)
     {
-        weechat_config_set_plugin (FIFO_OPTION_NAME, "off");
-        return WEECHAT_RC_OK;
+        dogechat_config_set_plugin (FIFO_OPTION_NAME, "off");
+        return DOGECHAT_RC_OK;
     }
 
     /* toggle pipe */
-    if (weechat_strcasecmp (argv[1], "toggle") == 0)
+    if (dogechat_strcasecmp (argv[1], "toggle") == 0)
     {
-        weechat_config_set_plugin (FIFO_OPTION_NAME,
+        dogechat_config_set_plugin (FIFO_OPTION_NAME,
                                    (fifo_fd == -1) ? "on" : "off");
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    WEECHAT_COMMAND_ERROR;
+    DOGECHAT_COMMAND_ERROR;
 }
 
 /*
@@ -87,7 +87,7 @@ fifo_command_fifo (void *data, struct t_gui_buffer *buffer, int argc,
 void
 fifo_command_init ()
 {
-    weechat_hook_command (
+    dogechat_hook_command (
         "fifo",
         N_("fifo plugin configuration"),
         N_("enable|disable|toggle"),
@@ -95,10 +95,10 @@ fifo_command_init ()
            "disable: disable FIFO pipe\n"
            " toggle: toggle FIFO pipe\n"
            "\n"
-           "FIFO pipe is used as remote control of WeeChat: you can send "
+           "FIFO pipe is used as remote control of DogeChat: you can send "
            "commands or text to the FIFO pipe from your shell.\n"
-           "By default the FIFO pipe is in ~/.weechat/weechat_fifo_xxx "
-           "(\"xxx\" is the WeeChat PID).\n"
+           "By default the FIFO pipe is in ~/.dogechat/dogechat_fifo_xxx "
+           "(\"xxx\" is the DogeChat PID).\n"
            "\n"
            "The expected format is one of:\n"
            "  plugin.buffer *text or command here\n"
@@ -106,7 +106,7 @@ fifo_command_init ()
            "\n"
            "For example to change your freenode nick:\n"
            "  echo 'irc.server.freenode */nick newnick' "
-           ">~/.weechat/weechat_fifo_12345\n"
+           ">~/.dogechat/dogechat_fifo_12345\n"
            "\n"
            "Please read the user's guide for more info and examples.\n"
            "\n"

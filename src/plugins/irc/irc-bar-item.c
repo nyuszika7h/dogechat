@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-buffer.h"
 #include "irc-color.h"
@@ -61,7 +61,7 @@ irc_bar_item_away (void *data, struct t_gui_bar_item *item,
 
     if (server && server->is_away)
     {
-        if (weechat_config_boolean (irc_config_look_item_away_message)
+        if (dogechat_config_boolean (irc_config_look_item_away_message)
             && server->away_message && server->away_message[0])
         {
             message = strdup (server->away_message);
@@ -98,7 +98,7 @@ irc_bar_item_buffer_plugin (void *data, struct t_gui_bar_item *item,
                             struct t_hashtable *extra_info)
 {
     char buf[512];
-    struct t_weechat_plugin *ptr_plugin;
+    struct t_dogechat_plugin *ptr_plugin;
     const char *name, *localvar_server, *localvar_channel;
     struct t_irc_server *server;
     struct t_irc_channel *channel;
@@ -114,12 +114,12 @@ irc_bar_item_buffer_plugin (void *data, struct t_gui_bar_item *item,
 
     buf[0] = '\0';
 
-    ptr_plugin = weechat_buffer_get_pointer (buffer, "plugin");
-    name = weechat_plugin_get_name (ptr_plugin);
-    if (ptr_plugin == weechat_irc_plugin)
+    ptr_plugin = dogechat_buffer_get_pointer (buffer, "plugin");
+    name = dogechat_plugin_get_name (ptr_plugin);
+    if (ptr_plugin == dogechat_irc_plugin)
     {
         irc_buffer_get_server_and_channel (buffer, &server, &channel);
-        if (weechat_config_integer (irc_config_look_item_display_server) == IRC_CONFIG_LOOK_ITEM_DISPLAY_SERVER_PLUGIN)
+        if (dogechat_config_integer (irc_config_look_item_display_server) == IRC_CONFIG_LOOK_ITEM_DISPLAY_SERVER_PLUGIN)
         {
             if (server && channel)
             {
@@ -131,9 +131,9 @@ irc_bar_item_buffer_plugin (void *data, struct t_gui_bar_item *item,
             }
             else
             {
-                localvar_server = weechat_buffer_get_string (buffer,
+                localvar_server = dogechat_buffer_get_string (buffer,
                                                              "localvar_server");
-                localvar_channel = weechat_buffer_get_string (buffer,
+                localvar_channel = dogechat_buffer_get_string (buffer,
                                                               "localvar_channel");
                 if (localvar_server && localvar_channel)
                 {
@@ -178,7 +178,7 @@ irc_bar_item_buffer_name_content (struct t_gui_buffer *buffer, int short_name)
     buf_name[0] = '\0';
     modes[0] = '\0';
 
-    display_server = (weechat_config_integer (irc_config_look_item_display_server) == IRC_CONFIG_LOOK_ITEM_DISPLAY_SERVER_NAME);
+    display_server = (dogechat_config_integer (irc_config_look_item_display_server) == IRC_CONFIG_LOOK_ITEM_DISPLAY_SERVER_NAME);
 
     irc_buffer_get_server_and_channel (buffer, &server, &channel);
     if (server || channel)
@@ -207,7 +207,7 @@ irc_bar_item_buffer_name_content (struct t_gui_buffer *buffer, int short_name)
                           (server && display_server) ? IRC_COLOR_BAR_DELIM : "",
                           (server && display_server) ? "/" : "",
                           (server && server->ssl_connected) ? IRC_COLOR_STATUS_NAME_SSL : IRC_COLOR_STATUS_NAME,
-                          (short_name) ? weechat_buffer_get_string (buffer, "short_name") : channel->name,
+                          (short_name) ? dogechat_buffer_get_string (buffer, "short_name") : channel->name,
                           (part_from_channel) ? IRC_COLOR_BAR_DELIM : "",
                           (part_from_channel) ? ")" : "");
             }
@@ -215,17 +215,17 @@ irc_bar_item_buffer_name_content (struct t_gui_buffer *buffer, int short_name)
     }
     else
     {
-        name = weechat_buffer_get_string (buffer,
+        name = dogechat_buffer_get_string (buffer,
                                           (short_name) ? "short_name" : "name");
         if (name)
         {
-            localvar_type = weechat_buffer_get_string (buffer,
+            localvar_type = dogechat_buffer_get_string (buffer,
                                                        "localvar_type");
             is_channel = (localvar_type
                           && (strcmp (localvar_type, "channel") == 0));
             if (is_channel)
             {
-                name = weechat_buffer_get_string (buffer,
+                name = dogechat_buffer_get_string (buffer,
                                                   "localvar_channel");
             }
             snprintf (buf_name, sizeof (buf_name),
@@ -329,7 +329,7 @@ irc_bar_item_buffer_modes (void *data, struct t_gui_bar_item *item,
             pos_space = strchr(channel->modes, ' ');
             if (pos_space)
             {
-                modes_without_args = weechat_strndup (
+                modes_without_args = dogechat_strndup (
                     channel->modes, pos_space - channel->modes);
             }
         }
@@ -373,7 +373,7 @@ irc_bar_item_channel (void *data, struct t_gui_bar_item *item,
     buf_name[0] = '\0';
     modes[0] = '\0';
 
-    display_server = (weechat_config_integer (irc_config_look_item_display_server) == IRC_CONFIG_LOOK_ITEM_DISPLAY_SERVER_NAME);
+    display_server = (dogechat_config_integer (irc_config_look_item_display_server) == IRC_CONFIG_LOOK_ITEM_DISPLAY_SERVER_NAME);
 
     irc_buffer_get_server_and_channel (buffer, &server, &channel);
     if (server || channel)
@@ -410,7 +410,7 @@ irc_bar_item_channel (void *data, struct t_gui_bar_item *item,
     }
     else
     {
-        name = weechat_buffer_get_string (buffer, "name");
+        name = dogechat_buffer_get_string (buffer, "name");
         if (name)
             snprintf (buf_name, sizeof (buf_name), "%s", name);
     }
@@ -447,7 +447,7 @@ irc_bar_item_lag (void *data, struct t_gui_bar_item *item,
     irc_buffer_get_server_and_channel (buffer, &server, NULL);
 
     if (server
-        && (server->lag >= weechat_config_integer (irc_config_network_lag_min_show)))
+        && (server->lag >= dogechat_config_integer (irc_config_network_lag_min_show)))
     {
         snprintf (buf, sizeof (buf),
                   ((server->lag_check_time.tv_sec == 0) || (server->lag < 1000)) ?
@@ -493,18 +493,18 @@ irc_bar_item_input_prompt (void *data, struct t_gui_bar_item *item,
 
     /* build prefix */
     str_prefix[0] = '\0';
-    if (weechat_config_boolean (irc_config_look_item_nick_prefix)
+    if (dogechat_config_boolean (irc_config_look_item_nick_prefix)
         && channel
         && (channel->type == IRC_CHANNEL_TYPE_CHANNEL))
     {
         ptr_nick = irc_nick_search (server, channel, server->nick);
         if (ptr_nick)
         {
-            if (weechat_config_boolean (irc_config_look_nick_mode_empty)
+            if (dogechat_config_boolean (irc_config_look_nick_mode_empty)
                 || (ptr_nick->prefix[0] != ' '))
             {
                 snprintf (str_prefix, sizeof (str_prefix), "%s%s",
-                          weechat_color (
+                          dogechat_color (
                               irc_nick_get_prefix_color_name (
                                   server, ptr_nick->prefix[0])),
                           ptr_nick->prefix);
@@ -519,7 +519,7 @@ irc_bar_item_input_prompt (void *data, struct t_gui_bar_item *item,
     buf = malloc (length);
     if (buf)
     {
-        if (weechat_config_boolean (irc_config_look_item_nick_modes)
+        if (dogechat_config_boolean (irc_config_look_item_nick_modes)
             && server->nick_modes && server->nick_modes[0])
         {
             snprintf (buf, length, "%s%s%s%s(%s%s%s)",
@@ -596,7 +596,7 @@ irc_bar_item_focus_buffer_nicklist (void *data,
     struct t_irc_nick *ptr_nick;
     const char *str_buffer, *nick;
 
-    str_buffer = weechat_hashtable_get (info, "_buffer");
+    str_buffer = dogechat_hashtable_get (info, "_buffer");
     if (!str_buffer || !str_buffer[0])
         return NULL;
 
@@ -613,13 +613,13 @@ irc_bar_item_focus_buffer_nicklist (void *data,
 
     if (ptr_server && ptr_channel)
     {
-        nick = weechat_hashtable_get (info, "nick");
+        nick = dogechat_hashtable_get (info, "nick");
         if (nick)
         {
             ptr_nick = irc_nick_search (ptr_server, ptr_channel, nick);
             if (ptr_nick && ptr_nick->host)
             {
-                weechat_hashtable_set (info, "irc_host", ptr_nick->host);
+                dogechat_hashtable_set (info, "irc_host", ptr_nick->host);
                 return info;
             }
         }
@@ -642,16 +642,16 @@ irc_bar_item_buffer_switch (void *data, const char *signal,
     (void) type_data;
     (void) signal_data;
 
-    weechat_bar_item_update ("away");
-    weechat_bar_item_update ("buffer_name");
-    weechat_bar_item_update ("buffer_short_name");
-    weechat_bar_item_update ("buffer_modes");
-    weechat_bar_item_update ("irc_channel");
-    weechat_bar_item_update ("lag");
-    weechat_bar_item_update ("input_prompt");
-    weechat_bar_item_update ("irc_nick_modes");
+    dogechat_bar_item_update ("away");
+    dogechat_bar_item_update ("buffer_name");
+    dogechat_bar_item_update ("buffer_short_name");
+    dogechat_bar_item_update ("buffer_modes");
+    dogechat_bar_item_update ("irc_channel");
+    dogechat_bar_item_update ("lag");
+    dogechat_bar_item_update ("input_prompt");
+    dogechat_bar_item_update ("irc_nick_modes");
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -661,9 +661,9 @@ irc_bar_item_buffer_switch (void *data, const char *signal,
 void
 irc_bar_item_update_channel ()
 {
-    weechat_bar_item_update ("buffer_name");
-    weechat_bar_item_update ("buffer_short_name");
-    weechat_bar_item_update ("irc_channel");
+    dogechat_bar_item_update ("buffer_name");
+    dogechat_bar_item_update ("buffer_short_name");
+    dogechat_bar_item_update ("irc_channel");
 }
 
 /*
@@ -673,17 +673,17 @@ irc_bar_item_update_channel ()
 void
 irc_bar_item_init ()
 {
-    weechat_bar_item_new ("away", &irc_bar_item_away, NULL);
-    weechat_bar_item_new ("buffer_plugin", &irc_bar_item_buffer_plugin, NULL);
-    weechat_bar_item_new ("buffer_name", &irc_bar_item_buffer_name, NULL);
-    weechat_bar_item_new ("buffer_short_name", &irc_bar_item_buffer_short_name, NULL);
-    weechat_bar_item_new ("buffer_modes", &irc_bar_item_buffer_modes, NULL);
-    weechat_bar_item_new ("irc_channel", &irc_bar_item_channel, NULL);
-    weechat_bar_item_new ("lag", &irc_bar_item_lag, NULL);
-    weechat_bar_item_new ("input_prompt", &irc_bar_item_input_prompt, NULL);
-    weechat_bar_item_new ("irc_nick_modes", &irc_bar_item_nick_modes, NULL);
-    weechat_hook_focus ("buffer_nicklist",
+    dogechat_bar_item_new ("away", &irc_bar_item_away, NULL);
+    dogechat_bar_item_new ("buffer_plugin", &irc_bar_item_buffer_plugin, NULL);
+    dogechat_bar_item_new ("buffer_name", &irc_bar_item_buffer_name, NULL);
+    dogechat_bar_item_new ("buffer_short_name", &irc_bar_item_buffer_short_name, NULL);
+    dogechat_bar_item_new ("buffer_modes", &irc_bar_item_buffer_modes, NULL);
+    dogechat_bar_item_new ("irc_channel", &irc_bar_item_channel, NULL);
+    dogechat_bar_item_new ("lag", &irc_bar_item_lag, NULL);
+    dogechat_bar_item_new ("input_prompt", &irc_bar_item_input_prompt, NULL);
+    dogechat_bar_item_new ("irc_nick_modes", &irc_bar_item_nick_modes, NULL);
+    dogechat_hook_focus ("buffer_nicklist",
                         &irc_bar_item_focus_buffer_nicklist, NULL);
-    weechat_hook_signal ("buffer_switch",
+    dogechat_hook_signal ("buffer_switch",
                          &irc_bar_item_buffer_switch, NULL);
 }

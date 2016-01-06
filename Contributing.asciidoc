@@ -1,4 +1,4 @@
-= Contributing to WeeChat
+= Contributing to DogeChat
 :author: Sébastien Helleu
 :email: flashcode@flashtux.org
 :lang: en
@@ -18,31 +18,31 @@ First, some basic things:
 === Security reports
 
 Please *DO NOT* file a GitHub issue for security related problems, but send an
-email to <security@weechat.org> instead.
+email to <security@dogechat.org> instead.
 
 === Required info
 
-When reporting https://github.com/weechat/weechat/issues[issues] on GitHub,
+When reporting https://github.com/dogechat/dogechat/issues[issues] on GitHub,
 please include:
 
-* your *WeeChat version*: the output of `/v` in WeeChat, for example:
-  'WeeChat 1.0-dev (git: v0.4.3-475-gb174b3c)'. +
-  If WeeChat does not start at all, please include the version displayed by
-  `weechat --help` (or the version installed with your package manager).
+* your *DogeChat version*: the output of `/v` in DogeChat, for example:
+  'DogeChat 1.0-dev (git: v0.4.3-475-gb174b3c)'. +
+  If DogeChat does not start at all, please include the version displayed by
+  `dogechat --help` (or the version installed with your package manager).
 * your *operating system*: its name and version (examples: Linux Debian Wheezy,
   FreeBSD 10.0, Windows/Cygwin 64-bit, ...).
 * the *steps to reproduce*: if possible, please include a reproducible example:
   explain the steps which led you to the problem. +
   It's even better if you can reproduce the problem with a new config (and no
-  scripts loaded): try `weechat --dir /tmp/weechat` and check if you have the
+  scripts loaded): try `dogechat --dir /tmp/dogechat` and check if you have the
   problem here.
 * the *gdb's backtrace* (only for a crash): if you can reproduce the crash
 (or if you have a core file), please include the backtrace from gdb (look at
-https://weechat.org/files/doc/devel/weechat_user.en.html#report_crashes[User's guide]
+https://dogechat.org/files/doc/devel/dogechat_user.en.html#report_crashes[User's guide]
 for more info).
 
 [IMPORTANT]
-Most of times, the WeeChat crash log file ('weechat_crash_YYYYMMDD_xxx.log') is
+Most of times, the DogeChat crash log file ('dogechat_crash_YYYYMMDD_xxx.log') is
 *NOT USEFUL* to fix the bug, so please report this file *ONLY* if a developer
 asked you to send it (and be extremely careful, this file can contain personal
 data like passwords and contents of your chats).
@@ -54,35 +54,35 @@ problem is related to one script, try to unload them one by one (using
 command `/script unload <name>`).
 
 Many issues reported are in fact related to bugs in scripts, so please first
-check that before reporting any issue on WeeChat itself.
+check that before reporting any issue on DogeChat itself.
 
 If you think the problem comes from a specific script, please report the issue
-in the https://github.com/weechat/scripts/issues[scripts git repository]
+in the https://github.com/dogechat/scripts/issues[scripts git repository]
 instead.
 
 == Translations
 
 Pull requests on GitHub for fixes or new translations are welcome at any
-time, for https://github.com/weechat/weechat[WeeChat] and
-the web site https://github.com/weechat/weechat.org[weechat.org].
+time, for https://github.com/dogechat/dogechat[DogeChat] and
+the web site https://github.com/dogechat/dogechat.org[dogechat.org].
 
 To start a translation in a new language (not yet supported), please look at
-https://weechat.org/files/doc/devel/weechat_dev.en.html#translations[translations]
+https://dogechat.org/files/doc/devel/dogechat_dev.en.html#translations[translations]
 in Developer's guide.
 
 == Feature requests
 
-WeeChat is under active development, so your idea may already have been
+DogeChat is under active development, so your idea may already have been
 implemented, or scheduled for a future version (you can check in
-https://weechat.org/dev[roadmap] or
-https://github.com/weechat/weechat/milestones[milestones] on GitHub.
+https://dogechat.org/dev[roadmap] or
+https://github.com/dogechat/dogechat/milestones[milestones] on GitHub.
 
 Pull requests on GitHub are welcome for minor new features.
 
 For major new features, it's better to discuss about it in IRC
-(server: 'chat.freenode.net', channel '#weechat').
+(server: 'chat.freenode.net', channel '#dogechat').
 
 Before submitting any pull request, be sure you have read the
-https://weechat.org/files/doc/devel/weechat_dev.en.html#coding_rules[coding rules]
+https://dogechat.org/files/doc/devel/dogechat_dev.en.html#coding_rules[coding rules]
 in Developer's guide, which contains info about styles used, naming convention
 and other useful info.

@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2011-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_GUI_FOCUS_H
-#define WEECHAT_GUI_FOCUS 1
+#ifndef DOGECHAT_GUI_FOCUS_H
+#define DOGECHAT_GUI_FOCUS 1
 
 /* focus structures */
 
@@ -46,4 +46,4 @@ extern void gui_focus_free_info (struct t_gui_focus_info *focus_info);
 extern struct t_hashtable *gui_focus_to_hashtable (struct t_gui_focus_info *focus_info,
                                                    const char *key);
 
-#endif /* WEECHAT_GUI_FOCUS_H */
+#endif /* DOGECHAT_GUI_FOCUS_H */

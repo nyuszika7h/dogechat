@@ -1,31 +1,31 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_LOGGER_H
-#define WEECHAT_LOGGER_H 1
+#ifndef DOGECHAT_LOGGER_H
+#define DOGECHAT_LOGGER_H 1
 
-#define weechat_plugin weechat_logger_plugin
+#define dogechat_plugin dogechat_logger_plugin
 #define LOGGER_PLUGIN_NAME "logger"
 
 #define LOGGER_LEVEL_DEFAULT 9
 
-extern struct t_weechat_plugin *weechat_logger_plugin;
+extern struct t_dogechat_plugin *dogechat_logger_plugin;
 
 extern struct t_hook *logger_timer;
 
@@ -34,4 +34,4 @@ extern void logger_stop_all (int write_info_line);
 extern void logger_adjust_log_filenames ();
 extern int logger_timer_cb (void *data, int remaining_calls);
 
-#endif /* WEECHAT_LOGGER_H */
+#endif /* DOGECHAT_LOGGER_H */

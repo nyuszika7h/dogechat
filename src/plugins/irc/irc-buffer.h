@@ -1,38 +1,38 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_IRC_BUFFER_H
-#define WEECHAT_IRC_BUFFER_H 1
+#ifndef DOGECHAT_IRC_BUFFER_H
+#define DOGECHAT_IRC_BUFFER_H 1
 
 #define IRC_BUFFER_GET_SERVER(__buffer)                                 \
-    struct t_weechat_plugin *buffer_plugin = NULL;                      \
+    struct t_dogechat_plugin *buffer_plugin = NULL;                      \
     struct t_irc_server *ptr_server = NULL;                             \
-    buffer_plugin = weechat_buffer_get_pointer (__buffer, "plugin");    \
-    if (buffer_plugin == weechat_irc_plugin)                            \
+    buffer_plugin = dogechat_buffer_get_pointer (__buffer, "plugin");    \
+    if (buffer_plugin == dogechat_irc_plugin)                            \
         irc_buffer_get_server_and_channel (__buffer, &ptr_server, NULL);
 
 #define IRC_BUFFER_GET_SERVER_CHANNEL(__buffer)                         \
-    struct t_weechat_plugin *buffer_plugin = NULL;                      \
+    struct t_dogechat_plugin *buffer_plugin = NULL;                      \
     struct t_irc_server *ptr_server = NULL;                             \
     struct t_irc_channel *ptr_channel = NULL;                           \
-    buffer_plugin = weechat_buffer_get_pointer (__buffer, "plugin");    \
-    if (buffer_plugin == weechat_irc_plugin)                            \
+    buffer_plugin = dogechat_buffer_get_pointer (__buffer, "plugin");    \
+    if (buffer_plugin == dogechat_irc_plugin)                            \
     {                                                                   \
         irc_buffer_get_server_and_channel (__buffer, &ptr_server,       \
                                            &ptr_channel);               \
@@ -61,4 +61,4 @@ extern int irc_buffer_nickcmp_cb (void *data,
 extern struct t_gui_buffer *irc_buffer_search_server_lowest_number ();
 extern struct t_gui_buffer *irc_buffer_search_private_lowest_number (struct t_irc_server *server);
 
-#endif /* WEECHAT_IRC_BUFFER_H */
+#endif /* DOGECHAT_IRC_BUFFER_H */

@@ -1,26 +1,26 @@
 #
 # Copyright (C) 2012-2016 Sébastien Helleu <flashcode@flashtux.org>
 #
-# This file is part of WeeChat, the extensible chat client.
+# This file is part of DogeChat, the extensible chat client.
 #
-# WeeChat is free software; you can redistribute it and/or modify
+# DogeChat is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
-# WeeChat is distributed in the hope that it will be useful,
+# DogeChat is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+# along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 docdir = $(datadir)/doc/$(PACKAGE)
 
 EXTRA_DIST = CMakeLists.txt \
-             weechat_quickstart.es.asciidoc
+             dogechat_quickstart.es.asciidoc
 
 if MAN
   man_targets =
@@ -28,15 +28,15 @@ if MAN
   man_uninstall =
 endif
 if DOC
-  doc_targets = weechat_quickstart.es.html
+  doc_targets = dogechat_quickstart.es.html
   doc_install = install-doc
   doc_uninstall = uninstall-doc
 endif
 all-local: $(man_targets) $(doc_targets)
 
 # quickstart
-weechat_quickstart.es.html: weechat_quickstart.es.asciidoc $(abs_top_srcdir)/doc/asciidoc_toc2.css
-	$(ASCIIDOC) -b html5 -a revision="$(VERSION)" -a stylesheet=$(abs_top_srcdir)/doc/asciidoc_toc2.css -f $(abs_top_srcdir)/doc/asciidoc.conf -n -o weechat_quickstart.es.html $(abs_top_srcdir)/doc/es/weechat_quickstart.es.asciidoc
+dogechat_quickstart.es.html: dogechat_quickstart.es.asciidoc $(abs_top_srcdir)/doc/asciidoc_toc2.css
+	$(ASCIIDOC) -b html5 -a revision="$(VERSION)" -a stylesheet=$(abs_top_srcdir)/doc/asciidoc_toc2.css -f $(abs_top_srcdir)/doc/asciidoc.conf -n -o dogechat_quickstart.es.html $(abs_top_srcdir)/doc/es/dogechat_quickstart.es.asciidoc
 
 # install man/docs
 
@@ -55,7 +55,7 @@ install-doc:
 uninstall-hook: $(man_uninstall) $(doc_uninstall)
 
 uninstall-man:
-	$(RM) $(DESTDIR)$(mandir)/es/man1/weechat.1
+	$(RM) $(DESTDIR)$(mandir)/es/man1/dogechat.1
 	-rmdir $(DESTDIR)$(mandir)/es/man1
 
 uninstall-doc:

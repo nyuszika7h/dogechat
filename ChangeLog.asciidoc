@@ -1,4 +1,4 @@
-= WeeChat ChangeLog
+= DogeChat ChangeLog
 :author: Sébastien Helleu
 :email: flashcode@flashtux.org
 :lang: en
@@ -8,10 +8,10 @@
 
 This document lists all changes for each version
 (the latest formatted version of this document can be found
-https://weechat.org/files/changelog/ChangeLog-devel.html[here]).
+https://dogechat.org/files/changelog/ChangeLog-devel.html[here]).
 
 For a list of important changes that require manual action, please look at
-https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
+https://dogechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 (file 'ReleaseNotes.asciidoc' in sources).
 
 
@@ -22,9 +22,9 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 === New features
 
 * core: add a parent name in options, display inherited values if null in
-  /set output, add option weechat.color.chat_value_null (issue #629)
+  /set output, add option dogechat.color.chat_value_null (issue #629)
 * core: add tag "term_warning" in warnings about wrong $TERM on startup
-* core: add option weechat.look.paste_auto_add_newline (issue #543)
+* core: add option dogechat.look.paste_auto_add_newline (issue #543)
 * core: display a more explicit error when a filter fails to be added
   (issue #522)
 * api: add function string_hex_dump()
@@ -63,7 +63,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: fix memory leak when using multiple "-d" or "-r" in command line
   arguments
 * core: don't complain any more about "tmux" and "tmux-256color" $TERM values
-  when WeeChat is running under tmux (issue #519)
+  when DogeChat is running under tmux (issue #519)
 * core: fix truncated messages after a word with a length of zero on screen
   (for example a zero width space: U+200B) (bug #40985, issue #502)
 * api: fix handle of invalid escape in function string_convert_escaped_chars()
@@ -90,10 +90,10 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: add completion "colors" (issue #481)
 * core: start/stop search in buffer at current scroll position by default,
   add key key[ctrl-q] to stop search and reset scroll (issue #76, issue #393)
-* core: add option weechat.look.key_grab_delay to set the default delay when
+* core: add option dogechat.look.key_grab_delay to set the default delay when
   grabbing a key with key[alt-k]
-* core: add option weechat.look.confirm_upgrade (issue #463)
-* core: allow key[ctrl-c] to exit WeeChat when the passphrase is asked on
+* core: add option dogechat.look.confirm_upgrade (issue #463)
+* core: allow key[ctrl-c] to exit DogeChat when the passphrase is asked on
   startup (issue #452)
 * core: allow pointer as list name in evaluation of hdata (issue #450)
 * core: add signal "signal_sighup"
@@ -127,7 +127,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: fix display of invalid UTF-8 chars in bars
 * core: fix bar item "scroll" after /buffer clear (issue #448)
 * core: fix display of time in bare display when option
-  weechat.look.buffer_time_format is set to empty string (issue #441)
+  dogechat.look.buffer_time_format is set to empty string (issue #441)
 * api: add missing function infolist_search_var() in script API (issue #484)
 * api: add missing function hook_completion_get_string() in script API
   (issue #484)
@@ -162,12 +162,12 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 === New features
 
 * core: add signals "signal_sigterm" and "signal_sigquit" (issue #114)
-* core: use environment variable WEECHAT_HOME on startup (issue #391)
-* core: remove WeeChat version from config files (issue #407)
-* core: add options weechat.look.quote_{nick_prefix|nick_suffix|time_format} to
+* core: use environment variable DOGECHAT_HOME on startup (issue #391)
+* core: remove DogeChat version from config files (issue #407)
+* core: add options dogechat.look.quote_{nick_prefix|nick_suffix|time_format} to
   customize quoted messages in cursor mode (issue #403)
-* core: add a welcome message on first WeeChat run (issue #318)
-* core: add options weechat.look.word_chars_{highlight|input}
+* core: add a welcome message on first DogeChat run (issue #318)
+* core: add options dogechat.look.word_chars_{highlight|input}
   (issue #55, task #9459)
 * core: display a warning on startup if the locale can not be set (issue #373)
 * core: allow "*" as plugin name in command /plugin reload to reload all
@@ -257,7 +257,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 [[1.1.1_bugs]]
 === Bugs fixed
 
-* core: fix random error when creating symbolic link weechat-curses on
+* core: fix random error when creating symbolic link dogechat-curses on
   make install with cmake (bug #40313)
 * core: fix crash when a root bar has conditions different from
   active/inactive/nicklist (issue #317)
@@ -281,18 +281,18 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 
 * core: check bar conditions in root bars and on each update of a bar item
 * core: fully evaluate commands bound to keys in cursor and mouse contexts
-* core: add option weechat.completion.command_inline (task #12491)
-* core: add bar item "mouse_status", new options weechat.look.item_mouse_status
-  and weechat.color.status_mouse (issue #247)
+* core: add option dogechat.completion.command_inline (task #12491)
+* core: add bar item "mouse_status", new options dogechat.look.item_mouse_status
+  and dogechat.color.status_mouse (issue #247)
 * core: add signals "mouse_enabled" and "mouse_disabled" (issue #244)
 * core: add hide of chars in string in evaluation of expressions
 * core: add arraylists, improve speed of completions (about 50x faster)
 * core: move bar item "scroll" between buffer name and lag in default bar items
   of status bar
 * core: allow incomplete commands if unambiguous, new option
-  weechat.look.command_incomplete (task #5419)
+  dogechat.look.command_incomplete (task #5419)
 * api: send value returned by command callback in function command(), remove
-  WeeChat error after command callback if return code is WEECHAT_RC_ERROR
+  DogeChat error after command callback if return code is DOGECHAT_RC_ERROR
 * api: add regex replace feature in function string_eval_expression()
 * api: use microseconds instead of milliseconds in functions
   util_timeval_diff() and util_timeval_add()
@@ -303,7 +303,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * irc: add server option "sasl_fail" (continue/reconnect/disconnect if SASL
   fails) (issue #265, task #12204)
 * irc: add support for color codes 16-99 in IRC messages (issue #228), add
-  infolist "irc_color_weechat"
+  infolist "irc_color_dogechat"
 * irc: disable SSLv3 by default in server option "ssl_priorities" (issue #248)
 * irc: add support of "extended-join" capability (issue #143, issue #212)
 * irc: automatically add current channel in command /samode (issue #241)
@@ -330,7 +330,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: fix buffer property "lines_hidden" when merging buffers or when a line
   is removed from a buffer (issue #226)
 * core: display time in bare display only if option
-  weechat.look.buffer_time_format is not an empty string
+  dogechat.look.buffer_time_format is not an empty string
 * core: fix translation of message displayed after /upgrade
 * doc: fix compilation of man pages with autotools in source directory
 * api: fix truncated process output in hook_process() (issue #266)
@@ -366,14 +366,14 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 [[1.0.1_bugs]]
 === Bugs fixed
 
-* core: fix crash on buffer close when option weechat.look.hotlist_remove is
+* core: fix crash on buffer close when option dogechat.look.hotlist_remove is
   set to "merged" (issue #199)
 * core: fix highlight of IRC action messages when option irc.look.nick_mode is
   set to "action" or "both" (issue #206)
 * core: fix compilation of plugin API functions (macros) when compiler
   optimizations are enabled (issue #200)
 * core: fix window/buffer pointers used in command /eval
-* core: fix modifier "weechat_print": discard only one line when several lines
+* core: fix modifier "dogechat_print": discard only one line when several lines
   are displayed in same message (issue #171)
 * api: fix bug in function hdata_move() when absolute value of count is greater
   than 1
@@ -406,7 +406,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: add terabyte unit for size displayed
 * core: display a warning on startup if $TERM does not start with "screen"
   under screen/tmux
-* core: add option weechat.color.status_nicklist_count (issue #109,
+* core: add option dogechat.color.status_nicklist_count (issue #109,
   issue #110)
 * core: add option "env" in command /set (manage environment variables)
 * core: add bar item "buffer_short_name" (task #10882)
@@ -420,17 +420,17 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   merged buffer is zoomed) (task #12845)
 * core: add text search in buffers with free content (task #13051)
 * core: add buffer property "clear"
-* core: add option weechat.look.hotlist_add_conditions, remove option
-  weechat.look.hotlist_add_buffer_if_away
-* core: add option weechat.look.hotlist_remove (issue #99)
+* core: add option dogechat.look.hotlist_add_conditions, remove option
+  dogechat.look.hotlist_add_buffer_if_away
+* core: add option dogechat.look.hotlist_remove (issue #99)
 * core: add options "-beep" and "-current" in command /print
 * core: add bare display mode (for easy text selection and click on URLs), new
   key: key[alt-l], new option "bare" in command /window, new options:
-  weechat.look.bare_display_exit_on_input and
-  weechat.look.bare_display_time_format
+  dogechat.look.bare_display_exit_on_input and
+  dogechat.look.bare_display_time_format
 * core: add signals "key_combo_{default|search|cursor}"
 * core: display a warning in case of inconsistency between the options
-  weechat.look.save_{config|layout}_on_exit
+  dogechat.look.save_{config|layout}_on_exit
 * api: add argument "flags" in function hdata_new_list()
 * api: allow wildcard "*" inside the mask in function string_match()
 * api: allow value "-1" for property "hotlist" in function buffer_set()
@@ -509,9 +509,9 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: fix refresh of bar item "buffer_zoom" on buffer switch
 * core: fix reset of attributes in bars when "resetcolor" is used (issue #41)
 * core: fix alignment of lines in merged buffers when options
-  weechat.look.prefix_align and weechat.look.prefix_buffer_align are set to
+  dogechat.look.prefix_align and dogechat.look.prefix_buffer_align are set to
   "none" (issue #43)
-* core: quit WeeChat on signal SIGHUP, remove signal "signal_sighup"
+* core: quit DogeChat on signal SIGHUP, remove signal "signal_sighup"
 * core: fix add of filter on OS X when regex for message is empty (filter regex
   ending with "\t")
 * core: check validity of buffer pointer when data is sent to a buffer
@@ -521,10 +521,10 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: fix compilation on SmartOS (bug #40981, issue #23)
 * core: add missing \0 at the end of stderr buffer in function hook_process()
 * core: fix highlight problem with "(?-i)" and upper case letters in option
-  weechat.look.highlight (issue #24)
+  dogechat.look.highlight (issue #24)
 * core: use glibtoolize on Mac OS X (autotools) (issue #22)
 * core: fix detection of terminated process in function hook_process()
-* core: set option weechat.look.buffer_search_where to prefix_message by
+* core: set option dogechat.look.buffer_search_where to prefix_message by
   default
 * core: fix "/window scroll -N" on a buffer with free content
 * core: fix recursive calls to function eval_expression()
@@ -578,17 +578,17 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   in Python 2.x (issue #125)
 * python: fix interpreter used after unload of a script
 * relay: fix memory leak during handshake on websocket
-* relay: fix memory leak when receiving commands from client (weechat protocol)
+* relay: fix memory leak when receiving commands from client (dogechat protocol)
 * relay: fix crash when an IRC "MODE" command is received from client without
   arguments
 * relay: fix number of bytes sent/received on 32-bit systems
 * relay: fix crash when closing relay buffers (issue #57, issue #78)
 * relay: check pointers received in hdata command to prevent crashes with bad
-  pointers (WeeChat protocol)
+  pointers (DogeChat protocol)
 * relay: remove warning on /reload of relay.conf when ports are defined
 * relay: fix client disconnection on empty websocket frames received (PONG)
 * relay: add support of Internet Explorer websocket (issue #73)
-* relay: fix crash on /upgrade received from a client (weechat protocol)
+* relay: fix crash on /upgrade received from a client (dogechat protocol)
 * relay: fix freeze after /upgrade when many disconnected clients still exist
 * relay: fix NULL pointer when reading buffer lines for irc backlog
 * ruby: fix crash when trying to load a directory with /ruby load
@@ -614,11 +614,11 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: add signals "signal_sighup" and "signal_sigwinch" (terminal resized)
 * core: add command /print, add support of more escaped chars in command
   "/input insert"
-* core: add option weechat.look.tab_width
+* core: add option dogechat.look.tab_width
 * core: add completion "plugins_installed"
 * core: add support of UTF-8 chars in horizontal/vertical separators (options
-  weechat.look.separator_{horizontal|vertical})
-* core: add option weechat.look.window_auto_zoom, disable automatic zoom by
+  dogechat.look.separator_{horizontal|vertical})
+* core: add option dogechat.look.window_auto_zoom, disable automatic zoom by
   default when terminal becomes too small for windows
 * core: add support of logical and/or for argument "tags" in function
   hook_print()
@@ -626,11 +626,11 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   new behavior for buffer property "highlight_tags" (force highlight on tags),
   rename option irc.look.highlight_tags to irc.look.highlight_tags_restrict
 * core: use "+" separator to make a logical "and" between tags in command
-  /filter, option weechat.look.highlight_tags and buffer property
+  /filter, option dogechat.look.highlight_tags and buffer property
   "highlight_tags"
 * core: rename options save/reset to store/del in command /layout
-* core: add options weechat.look.buffer_auto_renumber and
-  weechat.look.buffer_position, add option "renumber" in command /buffer, add
+* core: add options dogechat.look.buffer_auto_renumber and
+  dogechat.look.buffer_position, add option "renumber" in command /buffer, add
   bar item "buffer_last_number" (task #12766)
 * core: add signal "buffer_cleared"
 * core: add buffer property "day_change" to hide messages for the day change in
@@ -640,7 +640,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: replace default key key[ctrl-c,u] by key[ctrl-c,_] for underlined text
   in messages
 * core: add option "libs" in command /debug
-* core: rename option weechat.look.set_title to weechat.look.window_title,
+* core: rename option dogechat.look.set_title to dogechat.look.window_title,
   value is now a string (evaluated)
 * core: add infos "term_width" and "term_height"
 * core: add bar item "buffer_zoom", add signals "buffer_{zoomed|unzoomed}"
@@ -650,7 +650,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   for xterm
 * core: add support of italic text (requires ncurses >= 5.9 patch 20130831)
 * core: add options to customize default text search in buffers:
-  weechat.look.buffer_search_{case_sensitive|force_default|regex|where}
+  dogechat.look.buffer_search_{case_sensitive|force_default|regex|where}
 * doc: add French developer's guide and relay protocol
 * doc: add Japanese plugin API reference and developer's guide
 * doc: add Polish man page and user's guide
@@ -680,12 +680,12 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 === Bugs fixed
 
 * core: fix hotlist problems after apply of a layout (bug #41481)
-* core: fix installation of weechat-plugin.h with autotools (patch #8305)
+* core: fix installation of dogechat-plugin.h with autotools (patch #8305)
 * core: fix compilation on Android (bug #41420, patch #8301, bug #41434)
 * core: fix crash when creating two bars with same name but different case
   (bug #41418)
 * core: fix display of read marker when all buffer lines are unread and that
-  option weechat.look.read_marker_always_show is on
+  option dogechat.look.read_marker_always_show is on
 * core: fix memory leak in regex matching when evaluating expression
 * core: fix crash in /eval when config option has a NULL value
 * core: fix crash with hdata_update() on shared strings, add hdata type
@@ -694,9 +694,9 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: remove option on /unset of plugin description option (plugins.desc.xxx)
   (bug #40768)
 * core: fix random crash when closing a buffer
-* core: fix crash on /buffer close core.weechat
+* core: fix crash on /buffer close core.dogechat
 * core: apply color attributes when clearing a window (patch #8236)
-* core: set option weechat.look.paste_bracketed to "on" by default
+* core: set option dogechat.look.paste_bracketed to "on" by default
 * core: fix truncated text when pasting several long lines (bug #40210)
 * core: create .conf file with default options only if the file does not exist
   (and not on read error with existing file)
@@ -752,9 +752,9 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: reduce memory used by using shared strings for nicklist and lines in
   buffers
 * core: display day change message dynamically (do not store it as a line in
-  buffer), split option weechat.look.day_change_time_format into two options
-  weechat.look.day_change_message_{1date|2dates}, new option
-  weechat.color.chat_day_change (task #12775)
+  buffer), split option dogechat.look.day_change_time_format into two options
+  dogechat.look.day_change_message_{1date|2dates}, new option
+  dogechat.color.chat_day_change (task #12775)
 * core: add syntax "@buffer:item" in bar items to force the buffer used when
   displaying the bar item (task #12717)
 * core: add search of regular expression in buffer, don't reset search type on
@@ -762,28 +762,28 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   context: key[alt-c] (case (in)sensitive search), key[Tab] (search in
   messages/prefixes)
 * core: add text emphasis in messages when searching text in buffer, new
-  options: weechat.look.emphasized_attributes, weechat.color.emphasized,
-  weechat.color.emphasized_bg
-* core: change color format for options weechat.look.buffer_time_format and
-  weechat.look.prefix_{action|error|join|network|quit} from `${xxx}` to
+  options: dogechat.look.emphasized_attributes, dogechat.color.emphasized,
+  dogechat.color.emphasized_bg
+* core: change color format for options dogechat.look.buffer_time_format and
+  dogechat.look.prefix_{action|error|join|network|quit} from `${xxx}` to
   `${color:xxx}`
 * core: add secured data (encryption of passwords or private data): add new
   command /secure and new file sec.conf (task #7395)
-* core: rename binary and man page from "weechat-curses" to "weechat"
+* core: rename binary and man page from "dogechat-curses" to "dogechat"
   (task #11027)
 * core: disable build of doc by default, add cmake option ENABLE_MAN to compile
   man page (off by default)
 * core: add option "-o" in command /color
 * core: add CA_FILE option in cmake and configure to setup default
-  value of option weechat.network.gnutls_ca_file (default is
+  value of option dogechat.network.gnutls_ca_file (default is
   "/etc/ssl/certs/ca-certificates.crt") (task #12725)
 * core: add option "scroll_beyond_end" for command /window (task #6745)
-* core: add options weechat.look.hotlist_prefix and weechat.look.hotlist_suffix
+* core: add options dogechat.look.hotlist_prefix and dogechat.look.hotlist_suffix
   (task #12730)
-* core: add option weechat.look.key_bind_safe
+* core: add option dogechat.look.key_bind_safe
 * core: update man page and add translations (in French, German, Italian, and
   Japanese)
-* core: add option weechat.network.proxy_curl (task #12651)
+* core: add option dogechat.network.proxy_curl (task #12651)
 * core: add "proxy" infolist and hdata
 * core: add infolist "layout" and hdata "layout", "layout_buffer" and
   "layout_window"
@@ -810,7 +810,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   (patch #8062)
 * logger: add option "flush" in command /logger
 * plugins: remove the demo plugin
-* relay: add command "ping" in weechat protocol (task #12689)
+* relay: add command "ping" in dogechat protocol (task #12689)
 * rmodifier: add option "missing" in command /rmodifier
 * script: add info about things defined by script (like commands, options, ...)
   in the detailed view of script (/script show)
@@ -845,9 +845,9 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: remove extra space after empty prefix (when prefix for action, error,
   join, network or quit is set to empty string) (bug #39218)
 * core: fix random crash on mouse actions (bug #39094)
-* core: set options weechat.look.color_inactive_{buffer|window} to "on" by
+* core: set options dogechat.look.color_inactive_{buffer|window} to "on" by
   default
-* core: fix line alignment when option weechat.look.buffer_time_format is set
+* core: fix line alignment when option dogechat.look.buffer_time_format is set
   to empty string
 * api: change type of hashtable key hash to unsigned long
 * api: use pointer for infolist "hook" to return only one hook
@@ -878,11 +878,11 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 === New features
 
 * core: make nick prefix/suffix dynamic (not stored in the line): move options
-  irc.look.nick_{prefix|suffix} to weechat.look.nick_{prefix|suffix} and
+  irc.look.nick_{prefix|suffix} to dogechat.look.nick_{prefix|suffix} and
   options irc.color.nick_{prefix|suffix} to
-  weechat.color.chat_nick_{prefix|suffix}, add new options
-  weechat.look.prefix_align_more_after,
-  weechat.look.prefix_buffer_align_more_after, logger.file.nick_{prefix|suffix}
+  dogechat.color.chat_nick_{prefix|suffix}, add new options
+  dogechat.look.prefix_align_more_after,
+  dogechat.look.prefix_buffer_align_more_after, logger.file.nick_{prefix|suffix}
   (bug #37531)
 * core: add support of multiple layouts (task #11274)
 * core: add signals nicklist_{group|nick}_removing and hsignals
@@ -916,9 +916,9 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   nicklist)
 * relay: add support of multiple servers on same port for irc protocol (the
   client must send the server in the "PASS" command)
-* relay: add WebSocket server support (RFC 6455) for irc and weechat protocols,
+* relay: add WebSocket server support (RFC 6455) for irc and dogechat protocols,
   new option relay.network.websocket_allowed_origins
-* relay: add options "buffers" and "upgrade" in commands sync/desync (weechat
+* relay: add options "buffers" and "upgrade" in commands sync/desync (dogechat
   protocol)
 * rmodifier: rename default rmodifier "nickserv" to "command_auth" (with new
   modifier "irc_command_auth"), add default rmodifier "message_auth" (modifier
@@ -943,7 +943,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   "displayed" according to filters)
 * core: fix detection of python on Ubuntu Raring
 * core: fix hidden lines for messages without date when option
-  weechat.history.max_buffer_lines_minutes is set (bug #38197)
+  dogechat.history.max_buffer_lines_minutes is set (bug #38197)
 * core: use default hash/comparison callback for keys of type
   integer/pointer/time in hashtable
 * api: do not display a warning by default when loading a script with a license
@@ -987,7 +987,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * python: fix crash when loading scripts with Python 3.x (patch #8044)
 * relay: fix uncontrolled format string in redirection of irc commands
 * relay: rename compression "gzip" to "zlib" (compression is zlib, not gzip)
-* relay: fix commands sync/desync in weechat protocol (bug #38215)
+* relay: fix commands sync/desync in dogechat protocol (bug #38215)
 * ruby: fix crash in function hdata_move()
 * ruby: fix crash with Ruby 2.0: use one array for the last 6 arguments of
   function config_new_option() (bug #31050)
@@ -1009,15 +1009,15 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: add buffer pointer in arguments for signals "input_search",
   "input_text_changed" and "input_text_cursor_moved"
 * core: add option "diff" in command /set (list options with changed value)
-* core: add git version in build, display it in "weechat-curses --help" and
+* core: add git version in build, display it in "dogechat-curses --help" and
   /version
 * core: add color support in options
-  weechat.look.prefix_{action|error|join|network|quit} (task #9555)
+  dogechat.look.prefix_{action|error|join|network|quit} (task #9555)
 * core: display default values for changed config options in output of /set
 * core: add command /eval, use expression in conditions for bars
 * core: add option "-quit" in command /upgrade (save session and quit without
-  restarting WeeChat, for delayed restoration)
-* api: allow return code WEECHAT_RC_OK_EAT in callbacks of hook_signal() and
+  restarting DogeChat, for delayed restoration)
+* api: allow return code DOGECHAT_RC_OK_EAT in callbacks of hook_signal() and
   hook_hsignal() (stop sending the signal immediately)
 * api: allow creation of structure with hdata_update() (allowed for hdata
   "history")
@@ -1083,7 +1083,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: fix stuck mouse (bug #36533)
 * core: fix default mouse buttons actions for script buffer (focus the window
   before executing action)
-* core: fix scroll of one page down when weechat.look.scroll_page_percent is
+* core: fix scroll of one page down when dogechat.look.scroll_page_percent is
   less than 100 (bug #37875)
 * core: disable paste detection and confirmation if bar item "input_paste" is
   not used in a visible bar (task #12327)
@@ -1096,7 +1096,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: add incomplete mouse events "event-down" and "event-drag" (task #11840)
 * core: fix display of zoomed/merged buffer (with number >= 2) after switching
   to it (bug #37593)
-* core: fix display problem when option weechat.look.prefix_same_nick is set
+* core: fix display problem when option dogechat.look.prefix_same_nick is set
   (problem with nick displayed in first line of screen) (bug #37556)
 * core: fix wrapping of words with wide chars (the break was made before the
   correct position)
@@ -1127,7 +1127,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   disabled (bug #38044)
 * relay: fix duplicated messages sent to irc clients (when messages are
   redirected) (bug #37870)
-* relay: fix memory leak when adding hdata to a message (weechat protocol)
+* relay: fix memory leak when adding hdata to a message (dogechat protocol)
 * relay: fix crash after /upgrade when a client is connected
 * relay: add missing "ssl." in output of /relay listrelay
 * script: fix scroll with mouse when window with script buffer is not the
@@ -1165,24 +1165,24 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: add default key key[alt-x] (zoom on merged buffer) (task #11029)
 * core: add mouse bindings key[ctrl-] wheel up/down to scroll horizontally
   buffers with free content
-* core: add option weechat.startup.sys_rlimit to set system resource limits for
-  WeeChat process
+* core: add option dogechat.startup.sys_rlimit to set system resource limits for
+  DogeChat process
 * core: add option "swap" in command /buffer (task #11373)
 * core: add hdata "hotlist"
 * core: add support of arrays in hdata variables
 * core: add command line option "-r" (or "--run-command") to run command(s)
-  after startup of WeeChat
+  after startup of DogeChat
 * core: add function hook_set() in plugin API, add "subplugin" in hooks (set by
   script plugins), display subplugin in /help on commands (task #12049)
-* core: add option weechat.look.jump_smart_back_to_buffer (jump back to initial
+* core: add option dogechat.look.jump_smart_back_to_buffer (jump back to initial
   buffer after reaching end of hotlist, on by default, which is old behavior)
 * core: add default key key[alt-s] (toggle aspell)
 * core: add cmake option "MANDIR" (bug #36776)
 * core: add callback "nickcmp" in buffers
 * core: add horizontal separator between windows, new options
-  weechat.look.window_separator_{horizontal|vertical}
-* core: add options weechat.look.color_nick_offline and
-  weechat.color.chat_nick_offline{_highlight|_highlight_bg} to use different
+  dogechat.look.window_separator_{horizontal|vertical}
+* core: add options dogechat.look.color_nick_offline and
+  dogechat.color.chat_nick_offline{_highlight|_highlight_bg} to use different
   color for offline nicks in prefix (task #11109)
 * doc: add Japanese user's guide (patch #7827), scripting guide and tester's
   guide
@@ -1195,9 +1195,9 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   setdict/deldict/listdict), display aspell status with /aspell (task #11988)
 * irc: generate alternate nicks dynamically when all nicks are already in use
   (task #12209)
-* irc: move options from core to irc plugin: weechat.look.nickmode to
+* irc: move options from core to irc plugin: dogechat.look.nickmode to
   irc.look.nick_mode (new type: integer with values: none/prefix/action/both)
-  and weechat.look.nickmode_empty to irc.look.nick_mode_empty
+  and dogechat.look.nickmode_empty to irc.look.nick_mode_empty
 * irc: add bar item "buffer_modes", remove option irc.look.item_channel_modes
   (task #12022)
 * irc: add option irc.look.ctcp_time_format to customize reply to CTCP TIME
@@ -1205,11 +1205,11 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * logger: add tags in backlog lines displayed when opening buffer
 * logger: add messages "Day changed to" in backlog (task #12187)
 * lua: add support of lua 5.2
-* relay: add support of SSL (for irc and weechat protocols), new option
+* relay: add support of SSL (for irc and dogechat protocols), new option
   relay.network.ssl_cert_key (task #12044)
 * relay: add option relay.color.client
-* relay: add object type "arr" (array) in WeeChat protocol
-* script: new plugin "script" (scripts manager, replacing scripts weeget.py and
+* relay: add object type "arr" (array) in DogeChat protocol
+* script: new plugin "script" (scripts manager, replacing scripts dogeget.py and
   script.pl)
 * scripts: add signals for scripts loaded/unloaded/installed/removed
 * scripts: add hdata with list of scripts for each language
@@ -1243,7 +1243,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   (bug #36584)
 * aspell: add missing dictionaries (ast/grc/hus/kn/ky)
 * charset: do not allow "UTF-8" in charset decoding options (useless because
-  UTF-8 is the internal WeeChat charset)
+  UTF-8 is the internal DogeChat charset)
 * fifo: ignore read failing with error EAGAIN (bug #37019)
 * guile: fix crash when unloading a script without pointer to interpreter
 * guile: fix path of guile include dirs in cmake build (patch #7790)
@@ -1270,7 +1270,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   (bug #36835)
 * python: fix crash when unloading a script without pointer to interpreter
 * relay: fix freeze when writing on relay socket (use non-blocking sockets in
-  relay for irc and weechat protocols) (bug #36655)
+  relay for irc and dogechat protocols) (bug #36655)
 * ruby: detect Ruby version 1.9.3 in cmake and autotools
 * scripts: fix deletion of configuration files when script is unloaded
   (bug #36977)
@@ -1287,9 +1287,9 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 === New features
 
 * core: support lines of 16 Kb long in configuration files (instead of 1 Kb)
-* core: convert options weechat.look.prefix_align_more and
-  weechat.look.prefix_buffer_align_more from boolean to string (task #11197)
-* core: add option weechat.look.prefix_same_nick (hide or change prefix on
+* core: convert options dogechat.look.prefix_align_more and
+  dogechat.look.prefix_buffer_align_more from boolean to string (task #11197)
+* core: add option dogechat.look.prefix_same_nick (hide or change prefix on
   messages whose nick is the same as previous message) (task #11965)
 * core: convert tabs to spaces in text pasted (bug #25028)
 * core: add a connection timeout for child process in hook_connect()
@@ -1297,7 +1297,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: follow symbolic links when writing configuration files (.conf)
   (task #11779)
 * core: add support of terminal "bracketed paste mode", new options
-  weechat.look.paste_bracketed and weechat.look.paste_bracketed_timer_delay
+  dogechat.look.paste_bracketed and dogechat.look.paste_bracketed_timer_delay
   (task #11316)
 * doc: add Japanese FAQ (patch #7781)
 * api: add list "gui_buffer_last_displayed" in hdata "buffer"
@@ -1310,9 +1310,9 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * irc: add support of "external" SASL mechanism (task #11864)
 * logger: add colors for backlog lines and end of backlog, new options:
   logger.color.backlog_line and logger.color.backlog_end (task #11966)
-* relay: add signals "upgrade" and "upgrade_ended" in WeeChat protocol
+* relay: add signals "upgrade" and "upgrade_ended" in DogeChat protocol
 * relay: add "date_printed" and "highlight" in signal "_buffer_line_added"
-  (WeeChat protocol)
+  (DogeChat protocol)
 * rmodifier: add default rmodifier "quote_pass" to hide password in command
   "/quote pass" (bug #36250)
 * rmodifier: add default rmodifier "server" to hide passwords in commands
@@ -1364,9 +1364,9 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   different from UTF-8 (bug #36379)
 * perl: fix compilation on OS X (bug #30701)
 * perl: fix crash on quit on OS X
-* relay: keep spaces in beginning of "input" received from client (WeeChat
+* relay: keep spaces in beginning of "input" received from client (DogeChat
   protocol)
-* relay: fix crash on /upgrade when client is connected using WeeChat protocol
+* relay: fix crash on /upgrade when client is connected using DogeChat protocol
 * relay: redirect some irc messages from clients to hide output (messages:
   mode, ison, list, names, topic, who, whois, whowas, time, userhost)
   (bug #33516)
@@ -1388,18 +1388,18 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: add default keys key[ctrl-]key[Left]/key[Right] (`meta2-1;5D` /
   `meta2-1;5C`) for gnome-terminal
 * core: add option "hooks" in command /debug
-* core: add option "weechat.look.scroll_bottom_after_switch" (if enabled,
+* core: add option "dogechat.look.scroll_bottom_after_switch" (if enabled,
   restore old behavior before fix of bug #25555 in version 0.3.5)
-* core: add new option weechat.completion.base_word_until_cursor: allow
+* core: add new option dogechat.completion.base_word_until_cursor: allow
   completion in middle of words (enabled by default) (task #9771)
 * core: add option "jump_last_buffer_displayed" in command /input
   (key: key[alt-/]) (task #11553)
 * core: add developer's guide (task #5416)
-* core: add option weechat.history.max_buffer_lines_minutes: maximum number of
+* core: add option dogechat.history.max_buffer_lines_minutes: maximum number of
   minutes in history per buffer (task #10900), rename option
-  weechat.history.max_lines to weechat.history.max_buffer_lines_number
-* core: add WEECHAT_HOME option in cmake and configure to setup default
-  WeeChat home (default is "~/.weechat") (task #11266)
+  dogechat.history.max_lines to dogechat.history.max_buffer_lines_number
+* core: add DOGECHAT_HOME option in cmake and configure to setup default
+  DogeChat home (default is "~/.dogechat") (task #11266)
 * core: add optional arguments for command /plugin load/reload/autoload
 * api: add modifier "input_text_for_buffer" (bug #35317)
 * api: add support of URL in hook_process() / hook_process_hashtable()
@@ -1426,11 +1426,11 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * irc: add case insensitive string comparison based on casemapping of server
   (rfc1459, strict-rfc1459, ascii) (bug #34239)
 * irc: add option irc.color.mirc_remap to remap mirc colors in messages to
-  WeeChat colors
+  DogeChat colors
 * irc: allow URL "irc://" in command /connect
 * guile: new script plugin for scheme (task #7289)
 * python: add support of Python 3.x (task #11704)
-* relay: add WeeChat protocol for remote GUI
+* relay: add DogeChat protocol for remote GUI
 * xfer: display origin of xfer in core and xfer buffers (task #10956)
 
 [[0.3.7_bugs]]
@@ -1445,16 +1445,16 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: fix bug with layout: assign layout number in buffers when doing
   /layout save
 * core: do not auto add space after nick completer if option
-  weechat.completion.nick_add_space is off
+  dogechat.completion.nick_add_space is off
 * core: fix signal "buffer_switch": send it only once when switching buffer
   (bug #31158)
 * core: move option "scroll_unread" from command /input to /window
 * core: add library "pthread" in cmake file for link on OpenBSD
-* core: save current mouse state in option weechat.look.mouse (set option when
+* core: save current mouse state in option dogechat.look.mouse (set option when
   mouse state is changed with command /mouse)
 * core: apply filters after full reload of configuration files (with /reload)
   (bug #31182)
-* core: allow list for option weechat.plugin.extension (makes weechat.conf
+* core: allow list for option dogechat.plugin.extension (makes dogechat.conf
   portable across Un*x and Windows) (task #11479)
 * core: fix compilation under OpenBSD 5.0 (lib utf8 not needed any more)
   (bug #34727)
@@ -1469,7 +1469,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * irc: fix memory leak when a server is deleted
 * irc: fix self-highlight when using /me with an IRC bouncer like znc
   (bug #35123)
-* irc: use low priority for MODE sent automatically by WeeChat (when joining
+* irc: use low priority for MODE sent automatically by DogeChat (when joining
   channel)
 * irc: do not use option irc.look.nick_color_stop_chars for forced nick colors
   (bug #33480)
@@ -1499,21 +1499,21 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: add color attribute "|" (keep attributes) and value "resetcolor" for
   function color() in plugin API (used by irc plugin to keep
   bold/reverse/underlined in message when changing color) (bug #34550)
-* core: add new option weechat.look.color_basic_force_bold, off by default:
+* core: add new option dogechat.look.color_basic_force_bold, off by default:
   bold is used only if terminal has less than 16 colors (patch #7621)
 * core: add default key key[F5] (`meta2-[E`) for Linux console
 * core: add "inactive" colors for inactive windows and lines in merged buffers,
-  new options: weechat.look.color_inactive_window,
-  weechat.look.color_inactive_buffer, weechat.look.color_inactive_message,
-  weechat.look.color_inactive_prefix,
-  weechat.look.color_inactive_prefix_buffer,
-  weechat.look.color_inactive_time, weechat.color.chat_inactive_line,
-  weechat.color.chat_inactive_window,
-  weechat.color.chat_prefix_buffer_inactive_line
+  new options: dogechat.look.color_inactive_window,
+  dogechat.look.color_inactive_buffer, dogechat.look.color_inactive_message,
+  dogechat.look.color_inactive_prefix,
+  dogechat.look.color_inactive_prefix_buffer,
+  dogechat.look.color_inactive_time, dogechat.color.chat_inactive_line,
+  dogechat.color.chat_inactive_window,
+  dogechat.color.chat_prefix_buffer_inactive_line
 * core: do automatic zoom on current window when terminal becomes too small
   for windows
-* core: add new options weechat.look.bar_more_left/right/up/down
-* core: add new option weechat.look.item_buffer_filter
+* core: add new options dogechat.look.bar_more_left/right/up/down
+* core: add new option dogechat.look.item_buffer_filter
 * core: allow name of buffer for command /buffer clear (task #11269)
 * core: add new command /repeat (execute a command several times)
 * core: save and restore layout for buffers and windows on /upgrade
@@ -1522,7 +1522,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   for command /window)
 * core: allow buffer name in /buffer close
 * core: add support of mouse: new command /mouse, new key context "mouse",
-  new options weechat.look.mouse and weechat.look.mouse_timer_delay
+  new options dogechat.look.mouse and dogechat.look.mouse_timer_delay
   (task #5435)
 * core: add command /cursor (free movement of cursor on screen), with key
   context "cursor"
@@ -1532,11 +1532,11 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: allow plugin name in command /buffer name
 * core: add context "search" for keys (to define keys used during search in
   buffer with key[ctrl-r])
-* core: add new option weechat.look.separator_vertical, rename option
-  weechat.look.hline_char to weechat.look.separator_horizontal
+* core: add new option dogechat.look.separator_vertical, rename option
+  dogechat.look.hline_char to dogechat.look.separator_horizontal
 * core: add local variable "highlight_regex" in buffers
-* core: add "hdata" (direct access to WeeChat/plugin data)
-* core: add option weechat.look.eat_newline_glitch (do not add new line at end
+* core: add "hdata" (direct access to DogeChat/plugin data)
+* core: add option dogechat.look.eat_newline_glitch (do not add new line at end
   of each line displayed)
 * core: add options "infolists", "hdata" and "tags" for command /debug
 * core: add horizontal scrolling for buffers with free content (command
@@ -1571,7 +1571,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: fix paste detection (problem with end of lines)
 * core: fix display of paste multi-line prompt with a root input bar
   (bug #34305)
-* core: change default value of option weechat.network.gnutls_ca_file to
+* core: change default value of option dogechat.network.gnutls_ca_file to
   "/etc/ssl/certs/ca-certificates.crt"
 * core: replace deprecated gnutls function
   gnutls_certificate_client_set_retrieve_function() by new function
@@ -1595,7 +1595,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: fix completion for command arguments when same command exists in many
   plugins (bug #33753)
 * core: fix freeze when hook_fd() is called with a bad file/socket (bug #33619)
-* core: fix bug with option weechat.look.hotlist_count_max (value+1 was used)
+* core: fix bug with option dogechat.look.hotlist_count_max (value+1 was used)
 * api: use arguments for infolist "window" to return only one window by number
 * api: fix bug with function config_set_desc_plugin() (use immediately
   description for option when function is called)
@@ -1609,7 +1609,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * irc: use high priority queue for sending modes and wallchops messages
 * irc: rename info_hashtable "irc_parse_message" to "irc_message_parse"
 * irc: use color "default" for any invalid color in option
-  weechat.color.chat_nick_colors
+  dogechat.color.chat_nick_colors
 * irc: send WHO command to check away nicks only if channel was not parted
 * irc: fix crash when malformed IRC message 352 (WHO) is received (bug #33790)
 * irc: fix crash when command "/buffer close" is used in a server command to
@@ -1638,17 +1638,17 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 === New features
 
 * core: add buffer to hotlist if away is set on buffer (even if buffer is
-  displayed), new option weechat.look.hotlist_add_buffer_if_away (task #10948)
+  displayed), new option dogechat.look.hotlist_add_buffer_if_away (task #10948)
 * core: add option "balance" in command /window (key: key[alt-w,alt-b])
 * core: add option "swap" in command /window (key: key[alt-w,alt-s])
   (task #11001)
-* core: add option weechat.look.hotlist_buffer_separator
+* core: add option dogechat.look.hotlist_buffer_separator
 * core: add messages counts in hotlist for each buffer, new options:
-  weechat.look.hotlist_count_max, weechat.look.hotlist_count_min_msg and
-  weechat.color.status_count_{msg|private|highlight|other}
+  dogechat.look.hotlist_count_max, dogechat.look.hotlist_count_min_msg and
+  dogechat.color.status_count_{msg|private|highlight|other}
 * core: add tag "notify_none" (line with this tag will not update hotlist)
 * core: add optional bar name in command /bar default
-* core: add new option weechat.look.highlight_tags (force highlight on tags)
+* core: add new option dogechat.look.highlight_tags (force highlight on tags)
 * core: allow list of buffers in command /filter (exclusion with prefix "!")
   (task #10880)
 * core: remember scroll position for all buffers in windows (bug #25555)
@@ -1656,17 +1656,17 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: add some default keys for gnome-terminal (key[Home]/key[End],
   key[ctrl-]key[Up]/key[Down], key[alt-]key[PgUp]/key[PgDn])
 * core: add option "memory" in command /debug
-* core: add option weechat.look.read_marker_string
+* core: add option dogechat.look.read_marker_string
 * core: improve display of commands lists in /help (add arguments -list
   and -listfull) (task #10299)
 * core: improve arguments displayed in /help of commands
 * core: add some chars after cursor when scrolling input line: new option
-  weechat.look.input_cursor_scroll (bug #21391)
+  dogechat.look.input_cursor_scroll (bug #21391)
 * core: add color "gray"
 * core: add attributes for colors ("*": bold, "!": reverse, "_": underline)
 * core: dynamically allocate color pairs (extended colors can be used without
   being added with command "/color"), auto reset of color pairs with option
-  weechat.look.color_pairs_auto_reset
+  dogechat.look.color_pairs_auto_reset
 * core: allow background for nick colors (using ":")
 * api: add new function config_set_desc_plugin() (task #10925)
 * api: add new functions buffer_match_list() and window_search_with_buffer()
@@ -1689,7 +1689,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: recalculate buffer_max_length when buffer short name is changed
   (patch #7441)
 * core: do not update hotlist during upgrade
-* core: apply new value of option weechat.look.buffer_notify_default to all
+* core: apply new value of option dogechat.look.buffer_notify_default to all
   opened buffers
 * core: prohibit names beginning with "#" for bars, proxies, filters and IRC
   servers (bug #33020)
@@ -1697,7 +1697,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * core: fix bug with repeat of last completion ("%*"), which failed when many
   templates are used in completion
 * core: reload file with certificate authorities when option
-  weechat.network.gnutls_ca_file is changed
+  dogechat.network.gnutls_ca_file is changed
 * core: rebuild bar content when items are changed in an hidden bar
 * core: fix verification of SSL certificates by calling gnutls verify callback
   (patch #7459)
@@ -1743,20 +1743,20 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 === New features
 
 * core: add 256 colors support, new command /color, new section "palette" in
-  weechat.conf (task #6834)
-* core: add info "weechat_upgrading", signal "upgrade_ended", display duration
+  dogechat.conf (task #6834)
+* core: add info "dogechat_upgrading", signal "upgrade_ended", display duration
   of upgrade
 * core: replace the 10 nick color options and number of nick colors by a single
-  option "weechat.color.chat_nick_colors" (comma separated list of colors)
-* core: add color support in option weechat.look.buffer_time_format
-* core: add new option weechat.look.highlight_regex and function
+  option "dogechat.color.chat_nick_colors" (comma separated list of colors)
+* core: add color support in option dogechat.look.buffer_time_format
+* core: add new option dogechat.look.highlight_regex and function
   string_has_highlight_regex() in plugin API (task #10321)
-* core: add new option weechat.look.hotlist_unique_numbers (task #10691)
+* core: add new option dogechat.look.hotlist_unique_numbers (task #10691)
 * core: add property "hotlist_max_level_nicks" in buffers to set max hotlist
   level for some nicks in buffer
-* core: add new options weechat.look.input_share and
-  weechat.look.input_share_overwrite (task #9228)
-* core: add new option weechat.look.prefix_align_min (task #10650)
+* core: add new options dogechat.look.input_share and
+  dogechat.look.input_share_overwrite (task #9228)
+* core: add new option dogechat.look.prefix_align_min (task #10650)
 * api: add priority for hooks (task #10550)
 * api: add new functions: list_search_pos(), list_casesearch_pos(),
   hashtable_get_string(), hashtable_set_pointer(), hook_info_hashtable(),
@@ -1826,7 +1826,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * irc: improve nick prefixes, all modes (even unknown) are used with PREFIX
   value from message 005
 * irc: fix crash/bug when option "addresses" for a server is unset or changed
-  when WeeChat is connected to this server (bug #31268)
+  when DogeChat is connected to this server (bug #31268)
 * irc: switch to next server address when IRC error is received after TCP
   connection but before message 001 (bug #30884)
 * irc: fix bug with hostmasks in command /ignore (bug #30716)
@@ -1851,9 +1851,9 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   and hide other lines) (task #10032)
 * core: add keys for undo/redo changes on command line
   (default: key[ctrl-`_`] and key[alt-`_`]) (task #9483)
-* core: add new option weechat.look.align_end_of_lines
-* core: add new option weechat.look.confirm_quit
-* core: add new option weechat.color.status_name_ssl (task #10339)
+* core: add new option dogechat.look.align_end_of_lines
+* core: add new option dogechat.look.confirm_quit
+* core: add new option dogechat.color.status_name_ssl (task #10339)
 * core: add hashtables with new functions in plugin API
 * api: add function string_expand_home(), fix bug with replacement of home in
   paths
@@ -1862,7 +1862,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   even when pong has not been received, lag_min_show is now in milliseconds
 * irc: add new options irc.look.display_host_join/join_local/quit and
   irc.color.reason_quit
-* irc: move options weechat.color.nicklist_prefix to irc plugin
+* irc: move options dogechat.color.nicklist_prefix to irc plugin
 * irc: add command /wallchops, fix bug with display of notice for ops
   (task #10021, bug #29932)
 * irc: add isupport value in servers (content of IRC message 005), with new
@@ -1911,21 +1911,21 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 
 * core: add new options for command /key: listdefault, listdiff and reset
 * core: add new command /mute
-* core: add command line option "-s" (or "--no-script") to start WeeChat
+* core: add command line option "-s" (or "--no-script") to start DogeChat
   without loading any script
-* core: improve plugins autoload (option weechat.plugin.autoload): allow to
+* core: improve plugins autoload (option dogechat.plugin.autoload): allow to
   use "*" as wildcard and "!" to prevent a plugin from being autoloaded
   (task #6361)
 * core: add option "switch_active_buffer_previous" in command /input
   (task #10141)
-* core: add new option weechat.look.time_format to customize default format
+* core: add new option dogechat.look.time_format to customize default format
   for date/time displayed (localized date by default), add function
   util_get_time_string() in plugin API (patch #6914)
-* core: add new option weechat.look.command_chars, add functions
+* core: add new option dogechat.look.command_chars, add functions
   string_is_command_char() and string_input_for_buffer() in plugin and script
   API
-* core: add new option weechat.look.read_marker_always_show
-* api: add "version_number" for function info_get() to get WeeChat version as
+* core: add new option dogechat.look.read_marker_always_show
+* api: add "version_number" for function info_get() to get DogeChat version as
   number
 * api: add "irc_is_nick" for function info_get() to check if a string is a
   valid IRC nick name (patch #7133)
@@ -1957,13 +1957,13 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 === Bugs fixed
 
 * core: remove unneeded space after time on each line if option
-  weechat.look.buffer_time_format is set to empty value (bug #28751)
+  dogechat.look.buffer_time_format is set to empty value (bug #28751)
 * core: use arguments for infolist "nicklist" to return only one nick or group
 * core: fix bug with writing of configuration files when disk is full
   (bug #29331)
 * core: fix infinite loop with /layout apply and bug when applying layout,
   sometimes many /layout apply were needed (bug #26110)
-* gui: refresh screen when exiting WeeChat (to display messages printed after
+* gui: refresh screen when exiting DogeChat (to display messages printed after
   /quit)
 * gui: fix bug with global history, reset pointer to last entry after each user
   input (bug #28754)
@@ -1973,9 +1973,9 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * api: add missing infos in functions buffer_get_{integer|string}() and in
   buffer infolist
 * api: fix function color() in Lua script API
-* api: fix "inactivity" value when no key has been pressed since WeeChat
+* api: fix "inactivity" value when no key has been pressed since DogeChat
   started (bug #28930)
-* api: return absolute path for info_get() of "weechat_dir" (bug #27936)
+* api: return absolute path for info_get() of "dogechat_dir" (bug #27936)
 * scripts: fix bug with callbacks when loading a script already loaded
 * perl: fix crash when multiplicity is disabled
 * perl: fix crash when callbacks are called during script initialization
@@ -2056,7 +2056,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   include directories (patch #6922)
 * core: fix plural form in translation files (bug #27430)
 * core: fix terminal title bug: do not reset it when option
-  weechat.look.set_title is off (bug #27399)
+  dogechat.look.set_title is off (bug #27399)
 * core: fix buffer used by some input functions called via plugin API with
   buffer pointer (bug #28152)
 * alias: fix bug with buffer for execution of alias, when called from plugin
@@ -2092,7 +2092,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 
 * core: add group support in nicklist
 * core: improve main loop: higher timeout in select(), less CPU usage
-* core: add /reload command to reload WeeChat and plugins config files (signal
+* core: add /reload command to reload DogeChat and plugins config files (signal
   SIGHUP is caught to reload config files)
 * core: add new /layout command and save_layout_on_exit config option, to
   save/restore windows and buffers order (task #5453)
@@ -2135,15 +2135,15 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * logger: add logger plugin with new features: backlog, level for messages to
   log (task #8592), level by buffer (task #6687), filename mask by buffer,
   option "name_lower_case" (bug #19522)
-* relay: add relay plugin (network communication between WeeChat and remote
+* relay: add relay plugin (network communication between DogeChat and remote
   application)
 * xfer: add speed limit for DCC files sending (task #6178)
 * xfer: add new option "xfer.file.use_nick_in_filename" for Xfer files
   (task #7140)
 * plugins: add some other plugins: alias, demo, fifo, tcl, xfer
-* scripts: new scripts: weeget.py (scripts manager), jabber.py (jabber/XMPP
+* scripts: new scripts: dogeget.py (scripts manager), jabber.py (jabber/XMPP
   protocol), go.py (quick jump to buffers), buffers.pl (sidebar with list of
-  buffers), iset.pl (set options interactively), weetris.pl (tetris-like game),
+  buffers), iset.pl (set options interactively), dogetris.pl (tetris-like game),
   mastermind.pl, ...
 * api: add hooks: command, timer, file descriptor, process, connection, print,
   signal, config, completion, modifier, info, infolist
@@ -2244,7 +2244,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * fix user modes in nicklist when ban and nick mode are received in the same
   MODE message (bug #20870)
 * fix IRC message 333: silently ignore message if error when parsing it
-* fix server option "command_delay": does not freeze WeeChat any more
+* fix server option "command_delay": does not freeze DogeChat any more
 * fix bug with highlight and UTF-8 chars around word (bug #20753)
 * fix nick prefix display on servers that doesn't support all prefixes
   (bug #20025)
@@ -2272,7 +2272,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * improve key bindings: now possible to bind a key on many commands, separated
   by semicolon (task #5444)
 * improve IRC long message split: use word boundary (task #6685)
-* add cmake for weechat compile (patch #5943)
+* add cmake for dogechat compile (patch #5943)
 * add protocol priority for gnutls (patch #5915)
 * add channel admin mode "!" for some IRC servers
 * add /reconnect command (task #5448)
@@ -2315,7 +2315,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 [[0.2.4_features]]
 === New features
 
-* rename log file for DCC chat (now <server>.dcc.<nick>.weechatlog)
+* rename log file for DCC chat (now <server>.dcc.<nick>.dogechatlog)
 * add current buffer in hotlist when scrolling up in buffer (task #6664)
 * improve password hiding, code cleanup (bug #19229)
 * add new return code in plugin API to force highlight (for message handlers
@@ -2421,7 +2421,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 
 * command "/away -all" now allowed when not connected to current server
 * new signals handled: SIGTERM and SIGHUP (received when terminal is closed):
-  clean WeeChat quit (send quit to irc servers then quit WeeChat)
+  clean DogeChat quit (send quit to irc servers then quit DogeChat)
 * add some new default key bindings for existing keys (for some OS)
 * command /key now OK with one argument (key name): display key if found
 * add current channel completion for /ctcp command
@@ -2478,7 +2478,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 [[0.2.0_bugs]]
 === Bugs fixed
 
-* fix "wallops" command when received, now displayed by WeeChat (bug #17441)
+* fix "wallops" command when received, now displayed by DogeChat (bug #17441)
 * fix /wallops command (now many words are correctly sent)
 * fix command 348 (channel exception list, received by /mode #chan e)
 * add missing modes (channel & user), now all modes are allowed (bug #16606)
@@ -2506,7 +2506,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * fix crash when closing DCC/raw buffer if 2 are open (bug #16808)
 * fix crashes with DCC chat remove/purge on DCC view (bug #16775)
 * fix bug with connection to bnc (bug #16760)
-* command /save now writes plugins options (~/.weechat/plugins.rc)
+* command /save now writes plugins options (~/.dogechat/plugins.rc)
 * fix crash with register() function in plugin scripts (bug #16701)
 * fix random crash at exit (/quit or /upgrade) with split windows
 
@@ -2516,7 +2516,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 [[0.1.9_features]]
 === New features
 
-* add backtrace when WeeChat crashes, log file automatically renamed
+* add backtrace when DogeChat crashes, log file automatically renamed
 * add new key to find previous completion (key[shift-Tab] by default)
 * add Russian translations (thanks to Pavel Shevchuk)
 * add German doc (thanks to Frank Zacharias)
@@ -2530,7 +2530,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * improve script plugin loader
 * add hostname/IP option for connection to server
 * add /setp command (set plugin options)
-* aliases are executed before WeeChat/IRC commands, add /builtin command
+* aliases are executed before DogeChat/IRC commands, add /builtin command
 * add /cycle command, /part command does close buffer any more (use
   /buffer close (or alias /close) to part and close buffer
 
@@ -2541,7 +2541,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   arguments)
 * fix /alias command (with an alias name, display content)
 * improve lua plugin detection (bug #16574)
-* add lock for log file (~/.weechat/weechat.log), only one WeeChat process can
+* add lock for log file (~/.dogechat/dogechat.log), only one DogeChat process can
   use this file (bug #16382)
 * fix crash with malformed UTF-8 strings
 * fix crash with ncurses color when too many colors defined in ncurses
@@ -2579,13 +2579,13 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * add inactivity time, available for plugins via get_info("inactivity")
 * add keys key[alt-]key[Home]/key[End] to scroll top/bottom,
   key[alt-]key[F11]/key[F12] to scroll nicklist top/bottom
-* add special names for plugin message handlers: weechat_pv, weechat_highlight,
-  weechat_ctcp, weechat_dcc
+* add special names for plugin message handlers: dogechat_pv, dogechat_highlight,
+  dogechat_ctcp, dogechat_dcc
 * add IRC raw data buffer (new key: key[alt-j,alt-r])
 * add new plugins functions: add_timer_handler(), remove_timer_handler(),
   remove_infobar()
 * plugin messages handlers now called when message is ignored (by /ignore)
-* new behavior for messages ignored by a message handler: now WeeChat
+* new behavior for messages ignored by a message handler: now DogeChat
   executes standard handler, treating message as "ignored"
 * many commands allowed for aliases
 * many commands allowed when connecting to server
@@ -2598,7 +2598,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   (default: key[alt-]key[PgUp]/key[PgDn]) (patch from Pistos)
 * add new option "irc_away_check_max_nicks" to disable away check on channels
   with high number of nicks (patch from Gwenn)
-* add new command line argument for setting WeeChat home dir (-d or --dir)
+* add new command line argument for setting DogeChat home dir (-d or --dir)
   (patch from Gwenn)
 * add option "irc_show_away_once", to show away message only once in pv
 * add partial Hungarian translation
@@ -2613,7 +2613,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   (according to "history_max_lines" setting)
 * fix /mode command output
 * fix completion problem in private with nicks
-* script plugins now load scripts in WeeChat system share directory
+* script plugins now load scripts in DogeChat system share directory
 * /msg command does not open any buffer any more
 * fix crash when using global history (when older entry is removed)
 * fix display bug with /kill command
@@ -2677,7 +2677,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * add "Day changed to [date]" message when day changes
 * new plugin interface, rewritten from scratch: now loads dynamic C library,
   and perl/python are script plugins
-* log options (for server/channel/private) can now be set while WeeChat is
+* log options (for server/channel/private) can now be set while DogeChat is
   running
 * add channel modes +e and +f
 * add some missing IRC commands, fix command 367
@@ -2771,7 +2771,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * add SSL support
 * channel notify levels are saved in config file (new option
   "server_notify_levels" for server sections)
-* part message now accepts %v (replaced by WeeChat version), like quit message
+* part message now accepts %v (replaced by DogeChat version), like quit message
 
 [[0.1.3_bugs]]
 === Bugs fixed
@@ -2785,7 +2785,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   buffers
 * fix color problem with new libcurses version
 * fix crash when using key[alt-s] or key[alt-x] on DCC buffer (key[alt-d])
-* fix startup crash when config file (~/.weechat/weechat.rc) is not found
+* fix startup crash when config file (~/.dogechat/dogechat.rc) is not found
 * improve Perl/Python libs detection for ./configure script
 
 [[0.1.2]]
@@ -2801,7 +2801,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * add transfer rate for DCC files
 * add "-all" option for /nick command
 * buffers timestamp can now be changed (new option in config file)
-* WeeChat now OK under *BSD and Mac OS X
+* DogeChat now OK under *BSD and Mac OS X
 * add missing IRC commands (307, 341, 485, 671)
 
 [[0.1.2_bugs]]
@@ -2819,13 +2819,13 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 
 * add nicks count for channel buffers
 * add FIFO pipe for remote control
-* add crash dump when WeeChat receives SIGSEGV (Segmentation fault)
+* add crash dump when DogeChat receives SIGSEGV (Segmentation fault)
 * add new display engine: doesn't cut words at end of lines
 * add DCC send and DCC chat
 * add /halfop & /dehalfop commands, fix halfop display bug in nicklist
 * add /ban, /unban and /kickban commands
 * add Spanish translation
-* add --irc-commands and --weechat-commands command line options
+* add --irc-commands and --dogechat-commands command line options
 * connection to IRC server is now made by child process (non blocking)
 * add support for UnrealIrcd ("~" for chan owner, "&" for chan admin)
 * new key for window switch (now: key[F5]/key[F6] = switch buffer,
@@ -2857,7 +2857,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
   when only one completion matches, completion mechanism is stopped
   (to complete command argument for example)
 * improve /set command: empty strings are allowed, new colors, server options
-  can be changed while WeeChat is running
+  can be changed while DogeChat is running
 * add default away/part/quit messages in config file
 * new [irc] section in config file, move option "look_display_away" to
   "irc_display_away"
@@ -2952,7 +2952,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * fix display bug when nicklist is displayed at bottom of screen
 * replace --enable-debug with --with-debug option for ./configure, which is now
   integer: 1 = compiler debug flag, 2 = same 1 with verbose debug messages in
-  WeeChat (default: 0 = no debug)
+  DogeChat (default: 0 = no debug)
 
 [[0.0.6]]
 == Version 0.0.6 (2004-06-05)
@@ -2979,7 +2979,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 [[0.0.5_features]]
 === New features
 
-* /set command to modify config options when WeeChat is running
+* /set command to modify config options when DogeChat is running
 * URL command line parameter to connect to server(s)
 * new Perl script function to display message in info bar
   ("IRC::print_infobar")
@@ -3012,7 +3012,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 [[0.0.4_bugs]]
 === Bugs fixed
 
-* when private window is created (another user is talking), WeeChat does not
+* when private window is created (another user is talking), DogeChat does not
   switch to this window
 * highlight when our nick is written in a channel/private window
 * catch key[ctrl-c] (ignored)
@@ -3023,7 +3023,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 [[0.0.3_features]]
 === New features
 
-* ./configure script to build WeeChat
+* ./configure script to build DogeChat
 * French translation
 * new IRC command: /stats, /service, /squit, /motd, /lusers, /links, /time,
   /trace, /admin, /info, /servlist, /squery, /who, /whowas, /die, /summon,
@@ -3049,11 +3049,11 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * add commands /rehash and /restart
 * and command and auto-join channels when connected to server
 * new commands for alias: /alias, /unalias (new section in config file)
-* config is now saved automatically when quitting WeeChat, add /save command
+* config is now saved automatically when quitting DogeChat, add /save command
 * new commands for servers: /server, /connect, /disconnect
 * add autoconnect flag for each server in config file
 * add "look_set_title" option in config file
-* term window title is modified with WeeChat name and version
+* term window title is modified with DogeChat name and version
 * CTCP version returns more info (about OS)
 
 [[0.0.2_bugs]]
@@ -3072,7 +3072,7 @@ https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[release notes]
 * IRC commands: away, ctcp, deop, devoice, invite, join, kick, kill, list, me,
   mode, msg, names, nick, notice, op, oper, part, ping, pong, quit, quote,
   topic, version, voice, whois
-* WeeChat commands: clear, help, set (partial)
+* DogeChat commands: clear, help, set (partial)
 * many config options
-* log file (~/.weechat/weechat.log)
+* log file (~/.dogechat/dogechat.log)
 * nicklist can be moved on top, bottom, left or right of window

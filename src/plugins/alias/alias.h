@@ -1,26 +1,26 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_ALIAS_H
-#define WEECHAT_ALIAS_H 1
+#ifndef DOGECHAT_ALIAS_H
+#define DOGECHAT_ALIAS_H 1
 
-#define weechat_plugin weechat_alias_plugin
+#define dogechat_plugin dogechat_alias_plugin
 #define ALIAS_PLUGIN_NAME "alias"
 
 #define ALIAS_CONFIG_NAME "alias"
@@ -39,7 +39,7 @@ struct t_alias
 
 extern struct t_alias *alias_list;
 
-extern struct t_weechat_plugin *weechat_alias_plugin;
+extern struct t_dogechat_plugin *dogechat_alias_plugin;
 
 extern int alias_valid (struct t_alias *alias);
 extern struct t_alias *alias_search (const char *alias_name);
@@ -52,4 +52,4 @@ extern void alias_free_all ();
 extern int alias_add_to_infolist (struct t_infolist *infolist,
                                   struct t_alias *alias);
 
-#endif /* WEECHAT_ALIAS_H */
+#endif /* DOGECHAT_ALIAS_H */

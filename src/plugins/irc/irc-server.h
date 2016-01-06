@@ -2,24 +2,24 @@
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  * Copyright (C) 2012 Simon Arlott
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_IRC_SERVER_H
-#define WEECHAT_IRC_SERVER_H 1
+#ifndef DOGECHAT_IRC_SERVER_H
+#define DOGECHAT_IRC_SERVER_H 1
 
 #include <sys/time.h>
 #include <regex.h>
@@ -87,29 +87,29 @@ enum t_irc_server_option
 };
 
 #define IRC_SERVER_OPTION_BOOLEAN(__server, __index)                          \
-    ((!weechat_config_option_is_null(__server->options[__index])) ?           \
-     weechat_config_boolean(__server->options[__index]) :                     \
-     ((!weechat_config_option_is_null(irc_config_server_default[__index])) ?  \
-      weechat_config_boolean(irc_config_server_default[__index])              \
-      : weechat_config_boolean_default(irc_config_server_default[__index])))
+    ((!dogechat_config_option_is_null(__server->options[__index])) ?           \
+     dogechat_config_boolean(__server->options[__index]) :                     \
+     ((!dogechat_config_option_is_null(irc_config_server_default[__index])) ?  \
+      dogechat_config_boolean(irc_config_server_default[__index])              \
+      : dogechat_config_boolean_default(irc_config_server_default[__index])))
 
 #define IRC_SERVER_OPTION_INTEGER(__server, __index)                          \
-    ((!weechat_config_option_is_null(__server->options[__index])) ?           \
-     weechat_config_integer(__server->options[__index]) :                     \
-     ((!weechat_config_option_is_null(irc_config_server_default[__index])) ?  \
-      weechat_config_integer(irc_config_server_default[__index])              \
-      : weechat_config_integer_default(irc_config_server_default[__index])))
+    ((!dogechat_config_option_is_null(__server->options[__index])) ?           \
+     dogechat_config_integer(__server->options[__index]) :                     \
+     ((!dogechat_config_option_is_null(irc_config_server_default[__index])) ?  \
+      dogechat_config_integer(irc_config_server_default[__index])              \
+      : dogechat_config_integer_default(irc_config_server_default[__index])))
 
 #define IRC_SERVER_OPTION_STRING(__server, __index)                           \
-    ((!weechat_config_option_is_null(__server->options[__index])) ?           \
-     weechat_config_string(__server->options[__index]) :                      \
-     ((!weechat_config_option_is_null(irc_config_server_default[__index])) ?  \
-      weechat_config_string(irc_config_server_default[__index])               \
-      : weechat_config_string_default(irc_config_server_default[__index])))
+    ((!dogechat_config_option_is_null(__server->options[__index])) ?           \
+     dogechat_config_string(__server->options[__index]) :                      \
+     ((!dogechat_config_option_is_null(irc_config_server_default[__index])) ?  \
+      dogechat_config_string(irc_config_server_default[__index])               \
+      : dogechat_config_string_default(irc_config_server_default[__index])))
 
 #define IRC_SERVER_DEFAULT_PORT     6667
 #define IRC_SERVER_DEFAULT_PORT_SSL 6697
-#define IRC_SERVER_DEFAULT_NICKS    "weechat1,weechat2,weechat3,weechat4,weechat5"
+#define IRC_SERVER_DEFAULT_NICKS    "dogechat1,dogechat2,dogechat3,dogechat4,dogechat5"
 
 /* number of queues for sending messages */
 #define IRC_SERVER_NUM_OUTQUEUES_PRIO 2
@@ -168,7 +168,7 @@ struct t_irc_server
     struct t_hook *hook_fd;         /* hook for server socket                */
     struct t_hook *hook_timer_connection; /* timer for connection            */
     struct t_hook *hook_timer_sasl; /* timer for SASL authentication         */
-    int is_connected;               /* 1 if WeeChat is connected to server   */
+    int is_connected;               /* 1 if DogeChat is connected to server   */
     int ssl_connected;              /* = 1 if connected with SSL             */
     int disconnected;               /* 1 if server has been disconnected     */
 #ifdef HAVE_GNUTLS
@@ -360,4 +360,4 @@ extern int irc_server_add_to_infolist (struct t_infolist *infolist,
                                        struct t_irc_server *server);
 extern void irc_server_print_log ();
 
-#endif /* WEECHAT_IRC_SERVER_H */
+#endif /* DOGECHAT_IRC_SERVER_H */

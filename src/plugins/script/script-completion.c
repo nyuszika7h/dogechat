@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -24,7 +24,7 @@
 #include <string.h>
 #include <libgen.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "script.h"
 #include "script-repo.h"
 
@@ -47,12 +47,12 @@ script_completion_languages_cb (void *data, const char *completion_item,
 
     for (i = 0; i < SCRIPT_NUM_LANGUAGES; i++)
     {
-        weechat_hook_completion_list_add (completion,
+        dogechat_hook_completion_list_add (completion,
                                           script_language[i],
-                                          0, WEECHAT_LIST_POS_SORT);
+                                          0, DOGECHAT_LIST_POS_SORT);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -73,12 +73,12 @@ script_completion_extensions_cb (void *data, const char *completion_item,
 
     for (i = 0; i < SCRIPT_NUM_LANGUAGES; i++)
     {
-        weechat_hook_completion_list_add (completion,
+        dogechat_hook_completion_list_add (completion,
                                           script_extension[i],
-                                          0, WEECHAT_LIST_POS_SORT);
+                                          0, DOGECHAT_LIST_POS_SORT);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -100,12 +100,12 @@ script_completion_scripts_cb (void *data, const char *completion_item,
     for (ptr_script = scripts_repo; ptr_script;
          ptr_script = ptr_script->next_script)
     {
-        weechat_hook_completion_list_add (completion,
+        dogechat_hook_completion_list_add (completion,
                                           ptr_script->name_with_extension,
-                                          0, WEECHAT_LIST_POS_SORT);
+                                          0, DOGECHAT_LIST_POS_SORT);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -129,13 +129,13 @@ script_completion_scripts_installed_cb (void *data, const char *completion_item,
     {
         if (ptr_script->status & SCRIPT_STATUS_INSTALLED)
         {
-            weechat_hook_completion_list_add (completion,
+            dogechat_hook_completion_list_add (completion,
                                               ptr_script->name_with_extension,
-                                              0, WEECHAT_LIST_POS_SORT);
+                                              0, DOGECHAT_LIST_POS_SORT);
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -164,9 +164,9 @@ script_completion_exec_file_cb (void *data, const char *filename)
     if (filename2)
     {
         ptr_base_name = basename (filename2);
-        weechat_hook_completion_list_add (completion,
+        dogechat_hook_completion_list_add (completion,
                                           ptr_base_name,
-                                          0, WEECHAT_LIST_POS_SORT);
+                                          0, DOGECHAT_LIST_POS_SORT);
         free (filename2);
     }
 }
@@ -180,7 +180,7 @@ script_completion_scripts_files_cb (void *data, const char *completion_item,
                                     struct t_gui_buffer *buffer,
                                     struct t_gui_completion *completion)
 {
-    const char *weechat_home;
+    const char *dogechat_home;
     char *directory;
     int length, i;
     void *pointers[2];
@@ -190,9 +190,9 @@ script_completion_scripts_files_cb (void *data, const char *completion_item,
     (void) completion_item;
     (void) buffer;
 
-    weechat_home = weechat_info_get ("weechat_dir", NULL);
+    dogechat_home = dogechat_info_get ("dogechat_dir", NULL);
 
-    length = strlen (weechat_home) + 128 + 1;
+    length = strlen (dogechat_home) + 128 + 1;
     directory = malloc (length);
     if (directory)
     {
@@ -201,22 +201,22 @@ script_completion_scripts_files_cb (void *data, const char *completion_item,
             pointers[0] = completion;
             pointers[1] = script_extension[i];
 
-            /* look for files in "~/.weechat/<language>/" */
+            /* look for files in "~/.dogechat/<language>/" */
             snprintf (directory, length,
-                      "%s/%s", weechat_home, script_language[i]);
-            weechat_exec_on_files (directory, 0,
+                      "%s/%s", dogechat_home, script_language[i]);
+            dogechat_exec_on_files (directory, 0,
                                    pointers, &script_completion_exec_file_cb);
 
-            /* look for files in "~/.weechat/<language>/autoload/" */
+            /* look for files in "~/.dogechat/<language>/autoload/" */
             snprintf (directory, length,
-                      "%s/%s/autoload", weechat_home, script_language[i]);
-            weechat_exec_on_files (directory, 0,
+                      "%s/%s/autoload", dogechat_home, script_language[i]);
+            dogechat_exec_on_files (directory, 0,
                                    pointers, &script_completion_exec_file_cb);
         }
         free (directory);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -242,22 +242,22 @@ script_completion_tags_cb (void *data, const char *completion_item,
     {
         if (ptr_script->tags)
         {
-            list_tags = weechat_string_split (ptr_script->tags, ",", 0, 0,
+            list_tags = dogechat_string_split (ptr_script->tags, ",", 0, 0,
                                               &num_tags);
             if (list_tags)
             {
                 for (i = 0; i < num_tags; i++)
                 {
-                    weechat_hook_completion_list_add (completion,
+                    dogechat_hook_completion_list_add (completion,
                                                       list_tags[i],
-                                                      0, WEECHAT_LIST_POS_SORT);
+                                                      0, DOGECHAT_LIST_POS_SORT);
                 }
-                weechat_string_free_split (list_tags);
+                dogechat_string_free_split (list_tags);
             }
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -267,22 +267,22 @@ script_completion_tags_cb (void *data, const char *completion_item,
 void
 script_completion_init ()
 {
-    weechat_hook_completion ("script_languages",
+    dogechat_hook_completion ("script_languages",
                              N_("list of script languages"),
                              &script_completion_languages_cb, NULL);
-    weechat_hook_completion ("script_extensions",
+    dogechat_hook_completion ("script_extensions",
                              N_("list of script extensions"),
                              &script_completion_extensions_cb, NULL);
-    weechat_hook_completion ("script_scripts",
+    dogechat_hook_completion ("script_scripts",
                              N_("list of scripts in repository"),
                              &script_completion_scripts_cb, NULL);
-    weechat_hook_completion ("script_scripts_installed",
+    dogechat_hook_completion ("script_scripts_installed",
                              N_("list of scripts installed (from repository)"),
                              &script_completion_scripts_installed_cb, NULL);
-    weechat_hook_completion ("script_files",
+    dogechat_hook_completion ("script_files",
                              N_("files in script directories"),
                              &script_completion_scripts_files_cb, NULL);
-    weechat_hook_completion ("script_tags",
+    dogechat_hook_completion ("script_tags",
                              N_("tags of scripts in repository"),
                              &script_completion_tags_cb, NULL);
 }

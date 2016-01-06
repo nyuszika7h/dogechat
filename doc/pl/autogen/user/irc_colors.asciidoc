@@ -4,7 +4,7 @@
 //
 [width="30%",cols="^2m,3",options="header"]
 |===
-| Kolory IRC | Kolory WeeChat
+| Kolory IRC | Kolory DogeChat
 
 | 00 | white
 | 01 | black

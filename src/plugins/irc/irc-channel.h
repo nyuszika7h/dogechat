@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_IRC_CHANNEL_H
-#define WEECHAT_IRC_CHANNEL_H 1
+#ifndef DOGECHAT_IRC_CHANNEL_H
+#define DOGECHAT_IRC_CHANNEL_H 1
 
 #define IRC_CHANNEL_DEFAULT_CHANTYPES "#&+!"
 
@@ -63,7 +63,7 @@ struct t_irc_channel
     int nicks_count;                   /* # nicks on channel (0 if pv)      */
     struct t_irc_nick *nicks;          /* nicks on the channel              */
     struct t_irc_nick *last_nick;      /* last nick on the channel          */
-    struct t_weelist *nicks_speaking[2]; /* for smart completion: first     */
+    struct t_dogelist *nicks_speaking[2]; /* for smart completion: first     */
                                        /* list is nick speaking, second is  */
                                        /* speaking to me (highlight)        */
     struct t_irc_channel_speaking *nicks_speaking_time; /* for smart filter */
@@ -163,4 +163,4 @@ extern int irc_channel_add_to_infolist (struct t_infolist *infolist,
                                         struct t_irc_channel *channel);
 extern void irc_channel_print_log (struct t_irc_channel *channel);
 
-#endif /* WEECHAT_IRC_CHANNEL_H */
+#endif /* DOGECHAT_IRC_CHANNEL_H */

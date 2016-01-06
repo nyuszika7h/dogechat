@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -28,16 +28,16 @@
 #include <string.h>
 #include <time.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-arraylist.h"
-#include "../core/wee-config.h"
-#include "../core/wee-hashtable.h"
-#include "../core/wee-hdata.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-infolist.h"
-#include "../core/wee-log.h"
-#include "../core/wee-string.h"
-#include "../core/wee-utf8.h"
+#include "../core/dogechat.h"
+#include "../core/doge-arraylist.h"
+#include "../core/doge-config.h"
+#include "../core/doge-hashtable.h"
+#include "../core/doge-hdata.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-infolist.h"
+#include "../core/doge-log.h"
+#include "../core/doge-string.h"
+#include "../core/doge-utf8.h"
 #include "../plugins/plugin.h"
 #include "gui-bar-item.h"
 #include "gui-bar.h"
@@ -144,7 +144,7 @@ gui_bar_item_search (const char *item_name)
  */
 
 struct t_gui_bar_item *
-gui_bar_item_search_with_plugin (struct t_weechat_plugin *plugin,
+gui_bar_item_search_with_plugin (struct t_dogechat_plugin *plugin,
                                  int exact_plugin,
                                  const char *item_name)
 {
@@ -525,7 +525,7 @@ gui_bar_item_count_lines (char *string)
  */
 
 struct t_gui_bar_item *
-gui_bar_item_new (struct t_weechat_plugin *plugin, const char *name,
+gui_bar_item_new (struct t_dogechat_plugin *plugin, const char *name,
                   char *(*build_callback)(void *data,
                                           struct t_gui_bar_item *item,
                                           struct t_gui_window *window,
@@ -707,7 +707,7 @@ gui_bar_item_free_all ()
  */
 
 void
-gui_bar_item_free_all_plugin (struct t_weechat_plugin *plugin)
+gui_bar_item_free_all_plugin (struct t_dogechat_plugin *plugin)
 {
     struct t_gui_bar_item *ptr_item, *next_item;
 
@@ -1153,7 +1153,7 @@ gui_bar_item_default_buffer_short_name (void *data,
 /*
  * Default item for modes of buffer.
  *
- * Note: this bar item is empty for WeeChat core, this is used only by plugins
+ * Note: this bar item is empty for DogeChat core, this is used only by plugins
  * like irc to display channel modes.
  */
 
@@ -1924,7 +1924,7 @@ gui_bar_item_timer_cb (void *data, int remaining_calls)
     if (strftime (new_item_time_text, sizeof (new_item_time_text),
                   CONFIG_STRING(config_look_item_time_format),
                   local_time) == 0)
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
 
     /*
      * we update item only if it changed since last time
@@ -1938,7 +1938,7 @@ gui_bar_item_timer_cb (void *data, int remaining_calls)
         gui_bar_item_update ((char *)data);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1956,7 +1956,7 @@ gui_bar_item_signal_cb (void *data, const char *signal,
 
     gui_bar_item_update ((char *)data);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1980,7 +1980,7 @@ gui_bar_item_hook_signal (const char *signal, const char *item)
 }
 
 /*
- * Initializes default items in WeeChat.
+ * Initializes default items in DogeChat.
  */
 
 void
@@ -2276,7 +2276,7 @@ gui_bar_item_hdata_bar_item_cb (void *data, const char *hdata_name)
         HDATA_VAR(struct t_gui_bar_item, build_callback_data, POINTER, 0, NULL, NULL);
         HDATA_VAR(struct t_gui_bar_item, prev_item, POINTER, 0, NULL, hdata_name);
         HDATA_VAR(struct t_gui_bar_item, next_item, POINTER, 0, NULL, hdata_name);
-        HDATA_LIST(gui_bar_items, WEECHAT_HDATA_LIST_CHECK_POINTERS);
+        HDATA_LIST(gui_bar_items, DOGECHAT_HDATA_LIST_CHECK_POINTERS);
         HDATA_LIST(last_gui_bar_item, 0);
     }
     return hdata;
@@ -2316,7 +2316,7 @@ gui_bar_item_add_to_infolist (struct t_infolist *infolist,
 }
 
 /*
- * Prints bar items infos in WeeChat log file (usually for crash dump).
+ * Prints bar items infos in DogeChat log file (usually for crash dump).
  */
 
 void

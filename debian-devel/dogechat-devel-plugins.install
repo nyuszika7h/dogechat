@@ -1,0 +1,15 @@
+#!/usr/bin/dh-exec
+
+usr/lib/dogechat/plugins/aspell.so
+usr/lib/dogechat/plugins/exec.so
+usr/lib/dogechat/plugins/fifo.so
+usr/lib/dogechat/plugins/guile.so
+[amd64 armel armhf hurd-i386 i386 kfreebsd-amd64 kfreebsd-i386 mips mipsel] usr/lib/dogechat/plugins/javascript.so
+usr/lib/dogechat/plugins/lua.so
+usr/lib/dogechat/plugins/perl.so
+usr/lib/dogechat/plugins/python.so
+usr/lib/dogechat/plugins/relay.so
+usr/lib/dogechat/plugins/ruby.so
+usr/lib/dogechat/plugins/script.so
+usr/lib/dogechat/plugins/tcl.so
+usr/lib/dogechat/plugins/trigger.so

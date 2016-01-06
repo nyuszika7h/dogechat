@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2014-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "trigger.h"
 #include "trigger-callback.h"
 #include "trigger-buffer.h"
@@ -53,18 +53,18 @@ trigger_callback_irc_message_parse (const char *irc_message,
 
     hashtable_out = NULL;
 
-    hashtable_in = weechat_hashtable_new (32,
-                                          WEECHAT_HASHTABLE_STRING,
-                                          WEECHAT_HASHTABLE_STRING,
+    hashtable_in = dogechat_hashtable_new (32,
+                                          DOGECHAT_HASHTABLE_STRING,
+                                          DOGECHAT_HASHTABLE_STRING,
                                           NULL,
                                           NULL);
     if (hashtable_in)
     {
-        weechat_hashtable_set (hashtable_in, "message", irc_message);
-        weechat_hashtable_set (hashtable_in, "server", irc_server);
-        hashtable_out = weechat_info_get_hashtable ("irc_message_parse",
+        dogechat_hashtable_set (hashtable_in, "message", irc_message);
+        dogechat_hashtable_set (hashtable_in, "server", irc_server);
+        hashtable_out = dogechat_info_get_hashtable ("irc_message_parse",
                                                     hashtable_in);
-        weechat_hashtable_free (hashtable_in);
+        dogechat_hashtable_free (hashtable_in);
     }
 
     return hashtable_out;
@@ -87,9 +87,9 @@ trigger_callback_set_tags (struct t_gui_buffer *buffer,
     int i;
 
     snprintf (str_temp, sizeof (str_temp), "%d", tags_count);
-    weechat_hashtable_set (extra_vars, "tg_tags_count", str_temp);
+    dogechat_hashtable_set (extra_vars, "tg_tags_count", str_temp);
     localvar_type = (buffer) ?
-        weechat_buffer_get_string (buffer, "localvar_type") : NULL;
+        dogechat_buffer_get_string (buffer, "localvar_type") : NULL;
 
     for (i = 0; i < tags_count; i++)
     {
@@ -99,31 +99,31 @@ trigger_callback_set_tags (struct t_gui_buffer *buffer,
         }
         else if (strncmp (tags[i], "notify_", 7) == 0)
         {
-            weechat_hashtable_set (extra_vars, "tg_tag_notify", tags[i] + 7);
+            dogechat_hashtable_set (extra_vars, "tg_tag_notify", tags[i] + 7);
             if (strcmp (tags[i] + 7, "none") != 0)
             {
-                weechat_hashtable_set (extra_vars, "tg_notify", tags[i] + 7);
+                dogechat_hashtable_set (extra_vars, "tg_notify", tags[i] + 7);
                 if (strcmp (tags[i] + 7, "private") == 0)
                 {
                     snprintf (str_temp, sizeof (str_temp), "%d",
                               (localvar_type
                                && (strcmp (localvar_type, "private") == 0)) ? 1 : 0);
-                    weechat_hashtable_set (extra_vars, "tg_msg_pv", str_temp);
+                    dogechat_hashtable_set (extra_vars, "tg_msg_pv", str_temp);
                 }
             }
         }
         else if (strncmp (tags[i], "nick_", 5) == 0)
         {
-            weechat_hashtable_set (extra_vars, "tg_tag_nick", tags[i] + 5);
+            dogechat_hashtable_set (extra_vars, "tg_tag_nick", tags[i] + 5);
         }
         else if (strncmp (tags[i], "prefix_nick_", 12) == 0)
         {
-            weechat_hashtable_set (extra_vars, "tg_tag_prefix_nick",
+            dogechat_hashtable_set (extra_vars, "tg_tag_prefix_nick",
                                    tags[i] + 12);
         }
         else if (strncmp (tags[i], "host_", 5) == 0)
         {
-            weechat_hashtable_set (extra_vars, "tg_tag_host", tags[i] + 5);
+            dogechat_hashtable_set (extra_vars, "tg_tag_host", tags[i] + 5);
         }
     }
 
@@ -147,11 +147,11 @@ trigger_callback_check_conditions (struct t_trigger *trigger,
     char *value;
     int rc;
 
-    conditions = weechat_config_string (trigger->options[TRIGGER_OPTION_CONDITIONS]);
+    conditions = dogechat_config_string (trigger->options[TRIGGER_OPTION_CONDITIONS]);
     if (!conditions || !conditions[0])
         return 1;
 
-    value = weechat_string_eval_expression (
+    value = dogechat_string_eval_expression (
         conditions,
         pointers,
         extra_vars,
@@ -184,9 +184,9 @@ trigger_callback_replace_regex (struct t_trigger *trigger,
 
     if (!pointers)
     {
-        pointers = weechat_hashtable_new (32,
-                                          WEECHAT_HASHTABLE_STRING,
-                                          WEECHAT_HASHTABLE_POINTER,
+        pointers = dogechat_hashtable_new (32,
+                                          DOGECHAT_HASHTABLE_STRING,
+                                          DOGECHAT_HASHTABLE_POINTER,
                                           NULL,
                                           NULL);
         if (!pointers)
@@ -202,36 +202,36 @@ trigger_callback_replace_regex (struct t_trigger *trigger,
 
         ptr_key = (trigger->regex[i].variable) ?
             trigger->regex[i].variable :
-            trigger_hook_regex_default_var[weechat_config_integer (trigger->options[TRIGGER_OPTION_HOOK])];
+            trigger_hook_regex_default_var[dogechat_config_integer (trigger->options[TRIGGER_OPTION_HOOK])];
         if (!ptr_key || !ptr_key[0])
         {
             if (trigger_buffer && display_monitor)
             {
-                weechat_printf_tags (trigger_buffer, "no_trigger",
+                dogechat_printf_tags (trigger_buffer, "no_trigger",
                                      "\t  regex %d: %s",
                                      i + 1, _("no variable"));
             }
             continue;
         }
 
-        ptr_value = weechat_hashtable_get (extra_vars, ptr_key);
+        ptr_value = dogechat_hashtable_get (extra_vars, ptr_key);
         if (!ptr_value)
         {
             if (trigger_buffer && display_monitor)
             {
-                weechat_printf_tags (trigger_buffer, "no_trigger",
+                dogechat_printf_tags (trigger_buffer, "no_trigger",
                                      "\t  regex %d (%s): %s",
                                      i + 1, ptr_key, _("empty variable"));
             }
             continue;
         }
 
-        weechat_hashtable_set (pointers, "regex", trigger->regex[i].regex);
-        weechat_hashtable_set (trigger_callback_hashtable_options_regex,
+        dogechat_hashtable_set (pointers, "regex", trigger->regex[i].regex);
+        dogechat_hashtable_set (trigger_callback_hashtable_options_regex,
                                "regex_replace",
                                trigger->regex[i].replace_escaped);
 
-        value = weechat_string_eval_expression (
+        value = dogechat_string_eval_expression (
             ptr_value,
             pointers,
             extra_vars,
@@ -242,29 +242,29 @@ trigger_callback_replace_regex (struct t_trigger *trigger,
             /* display debug info on trigger buffer */
             if (trigger_buffer && display_monitor)
             {
-                weechat_printf_tags (trigger_buffer, "no_trigger",
+                dogechat_printf_tags (trigger_buffer, "no_trigger",
                                      "\t  regex %d %s(%s%s%s)%s: "
                                      "%s\"%s%s%s\"",
                                      i + 1,
-                                     weechat_color ("chat_delimiters"),
-                                     weechat_color ("reset"),
+                                     dogechat_color ("chat_delimiters"),
+                                     dogechat_color ("reset"),
                                      ptr_key,
-                                     weechat_color ("chat_delimiters"),
-                                     weechat_color ("reset"),
-                                     weechat_color ("chat_delimiters"),
-                                     weechat_color ("reset"),
+                                     dogechat_color ("chat_delimiters"),
+                                     dogechat_color ("reset"),
+                                     dogechat_color ("chat_delimiters"),
+                                     dogechat_color ("reset"),
                                      value,
-                                     weechat_color ("chat_delimiters"));
+                                     dogechat_color ("chat_delimiters"));
             }
-            weechat_hashtable_set (extra_vars, ptr_key, value);
+            dogechat_hashtable_set (extra_vars, ptr_key, value);
             free (value);
         }
     }
 
     if (pointers_allocated)
-        weechat_hashtable_free (pointers);
+        dogechat_hashtable_free (pointers);
     else
-        weechat_hashtable_remove (pointers, "regex");
+        dogechat_hashtable_remove (pointers, "regex");
 }
 
 /*
@@ -286,14 +286,14 @@ trigger_callback_run_command (struct t_trigger *trigger,
 
     if (!buffer)
     {
-        buffer = weechat_buffer_search_main ();
+        buffer = dogechat_buffer_search_main ();
         if (!buffer)
             return;
     }
 
     for (i = 0; trigger->commands[i]; i++)
     {
-        command_eval = weechat_string_eval_expression (trigger->commands[i],
+        command_eval = dogechat_string_eval_expression (trigger->commands[i],
                                                        pointers, extra_vars,
                                                        NULL);
         if (command_eval)
@@ -301,21 +301,21 @@ trigger_callback_run_command (struct t_trigger *trigger,
             /* display debug info on trigger buffer */
             if (trigger_buffer && display_monitor)
             {
-                weechat_printf_tags (trigger_buffer, "no_trigger",
+                dogechat_printf_tags (trigger_buffer, "no_trigger",
                                      _("%s  running command %s\"%s%s%s\"%s "
                                        "on buffer %s%s%s"),
                                      "\t",
-                                     weechat_color ("chat_delimiters"),
-                                     weechat_color ("reset"),
+                                     dogechat_color ("chat_delimiters"),
+                                     dogechat_color ("reset"),
                                      command_eval,
-                                     weechat_color ("chat_delimiters"),
-                                     weechat_color ("reset"),
-                                     weechat_color ("chat_buffer"),
-                                     weechat_buffer_get_string (buffer,
+                                     dogechat_color ("chat_delimiters"),
+                                     dogechat_color ("reset"),
+                                     dogechat_color ("chat_buffer"),
+                                     dogechat_buffer_get_string (buffer,
                                                                 "full_name"),
-                                     weechat_color ("reset"));
+                                     dogechat_color ("reset"));
             }
-            weechat_command (buffer, command_eval);
+            dogechat_command (buffer, command_eval);
             trigger->hook_count_cmd++;
         }
         free (command_eval);
@@ -341,7 +341,7 @@ trigger_callback_execute (struct t_trigger *trigger,
     int display_monitor;
 
     /* display debug info on trigger buffer */
-    if (!trigger_buffer && (weechat_trigger_plugin->debug >= 1))
+    if (!trigger_buffer && (dogechat_trigger_plugin->debug >= 1))
         trigger_buffer_open (NULL, 0);
     display_monitor = trigger_buffer_display_trigger (trigger,
                                                       buffer,
@@ -373,12 +373,12 @@ trigger_callback_signal_cb (void *data, const char *signal,
     char str_data[128], *irc_server;
     const char *pos, *ptr_irc_message;
 
-    TRIGGER_CALLBACK_CB_INIT(WEECHAT_RC_OK);
+    TRIGGER_CALLBACK_CB_INIT(DOGECHAT_RC_OK);
 
     /* split IRC message (if signal_data is an IRC message) */
     irc_server = NULL;
     ptr_irc_message = NULL;
-    if (strcmp (type_data, WEECHAT_HOOK_SIGNAL_STRING) == 0)
+    if (strcmp (type_data, DOGECHAT_HOOK_SIGNAL_STRING) == 0)
     {
         if (strstr (signal, ",irc_in_")
             || strstr (signal, ",irc_in2_")
@@ -390,7 +390,7 @@ trigger_callback_signal_cb (void *data, const char *signal,
             pos = strchr (signal, ',');
             if (pos)
             {
-                irc_server = weechat_strndup (signal, pos - signal);
+                irc_server = dogechat_strndup (signal, pos - signal);
                 ptr_irc_message = (const char *)signal_data;
             }
         }
@@ -399,7 +399,7 @@ trigger_callback_signal_cb (void *data, const char *signal,
             pos = strstr (signal, ",irc_outtags_");
             if (pos)
             {
-                irc_server = weechat_strndup (signal, pos - signal);
+                irc_server = dogechat_strndup (signal, pos - signal);
                 pos = strchr ((const char *)signal_data, ';');
                 if (pos)
                     ptr_irc_message = pos + 1;
@@ -411,7 +411,7 @@ trigger_callback_signal_cb (void *data, const char *signal,
         extra_vars = trigger_callback_irc_message_parse (ptr_irc_message,
                                                          irc_server);
         if (extra_vars)
-            weechat_hashtable_set (extra_vars, "server", irc_server);
+            dogechat_hashtable_set (extra_vars, "server", irc_server);
     }
     if (irc_server)
         free (irc_server);
@@ -424,12 +424,12 @@ trigger_callback_signal_cb (void *data, const char *signal,
 
     /* add data in hashtable used for conditions/replace/command */
     ptr_signal_data = NULL;
-    weechat_hashtable_set (extra_vars, "tg_signal", signal);
-    if (strcmp (type_data, WEECHAT_HOOK_SIGNAL_STRING) == 0)
+    dogechat_hashtable_set (extra_vars, "tg_signal", signal);
+    if (strcmp (type_data, DOGECHAT_HOOK_SIGNAL_STRING) == 0)
     {
         ptr_signal_data = (const char *)signal_data;
     }
-    else if (strcmp (type_data, WEECHAT_HOOK_SIGNAL_INT) == 0)
+    else if (strcmp (type_data, DOGECHAT_HOOK_SIGNAL_INT) == 0)
     {
         str_data[0] = '\0';
         if (signal_data)
@@ -439,7 +439,7 @@ trigger_callback_signal_cb (void *data, const char *signal,
         }
         ptr_signal_data = str_data;
     }
-    else if (strcmp (type_data, WEECHAT_HOOK_SIGNAL_POINTER) == 0)
+    else if (strcmp (type_data, DOGECHAT_HOOK_SIGNAL_POINTER) == 0)
     {
         str_data[0] = '\0';
         if (signal_data)
@@ -449,7 +449,7 @@ trigger_callback_signal_cb (void *data, const char *signal,
         }
         ptr_signal_data = str_data;
     }
-    weechat_hashtable_set (extra_vars, "tg_signal_data", ptr_signal_data);
+    dogechat_hashtable_set (extra_vars, "tg_signal_data", ptr_signal_data);
 
     /* execute the trigger (conditions, regex, command) */
     trigger_callback_execute (trigger, NULL, pointers, extra_vars);
@@ -468,22 +468,22 @@ trigger_callback_hsignal_cb (void *data, const char *signal,
 {
     const char *type_values;
 
-    TRIGGER_CALLBACK_CB_INIT(WEECHAT_RC_OK);
+    TRIGGER_CALLBACK_CB_INIT(DOGECHAT_RC_OK);
 
     /* duplicate hashtable */
     if (hashtable
-        && (strcmp (weechat_hashtable_get_string (hashtable, "type_keys"), "string") == 0))
+        && (strcmp (dogechat_hashtable_get_string (hashtable, "type_keys"), "string") == 0))
     {
-        type_values = weechat_hashtable_get_string (hashtable, "type_values");
+        type_values = dogechat_hashtable_get_string (hashtable, "type_values");
         if (strcmp (type_values, "pointer") == 0)
         {
-            pointers = weechat_hashtable_dup (hashtable);
+            pointers = dogechat_hashtable_dup (hashtable);
             if (!pointers)
                 goto end;
         }
         else if (strcmp (type_values, "string") == 0)
         {
-            extra_vars = weechat_hashtable_dup (hashtable);
+            extra_vars = dogechat_hashtable_dup (hashtable);
             if (!extra_vars)
                 goto end;
         }
@@ -496,7 +496,7 @@ trigger_callback_hsignal_cb (void *data, const char *signal,
     }
 
     /* add data in hashtable used for conditions/replace/command */
-    weechat_hashtable_set (extra_vars, "tg_signal", signal);
+    dogechat_hashtable_set (extra_vars, "tg_signal", signal);
 
     /* execute the trigger (conditions, regex, command) */
     trigger_callback_execute (trigger, NULL, pointers, extra_vars);
@@ -535,7 +535,7 @@ trigger_callback_modifier_cb (void *data, const char *modifier,
         extra_vars = trigger_callback_irc_message_parse (string,
                                                          modifier_data);
         if (extra_vars)
-            weechat_hashtable_set (extra_vars, "server", modifier_data);
+            dogechat_hashtable_set (extra_vars, "server", modifier_data);
     }
 
     TRIGGER_CALLBACK_CB_NEW_POINTERS;
@@ -545,18 +545,18 @@ trigger_callback_modifier_cb (void *data, const char *modifier,
     }
 
     /* add data in hashtable used for conditions/replace/command */
-    weechat_hashtable_set (extra_vars, "tg_modifier", modifier);
-    weechat_hashtable_set (extra_vars, "tg_modifier_data", modifier_data);
-    weechat_hashtable_set (extra_vars, "tg_string", string);
-    string_no_color = weechat_string_remove_color (string, NULL);
+    dogechat_hashtable_set (extra_vars, "tg_modifier", modifier);
+    dogechat_hashtable_set (extra_vars, "tg_modifier_data", modifier_data);
+    dogechat_hashtable_set (extra_vars, "tg_string", string);
+    string_no_color = dogechat_string_remove_color (string, NULL);
     if (string_no_color)
     {
-        weechat_hashtable_set (extra_vars,
+        dogechat_hashtable_set (extra_vars,
                                "tg_string_nocolor", string_no_color);
     }
 
-    /* add special variables for a WeeChat message */
-    if (strcmp (modifier, "weechat_print") == 0)
+    /* add special variables for a DogeChat message */
+    if (strcmp (modifier, "dogechat_print") == 0)
     {
         /* set "tg_prefix" and "tg_message" */
         pos = strchr (string, '\t');
@@ -564,20 +564,20 @@ trigger_callback_modifier_cb (void *data, const char *modifier,
         {
             if (pos > string)
             {
-                prefix = weechat_strndup (string, pos - string);
+                prefix = dogechat_strndup (string, pos - string);
                 if (prefix)
                 {
-                    weechat_hashtable_set (extra_vars, "tg_prefix", prefix);
+                    dogechat_hashtable_set (extra_vars, "tg_prefix", prefix);
                     free (prefix);
                 }
             }
             pos++;
             if (pos[0] == '\t')
                 pos++;
-            weechat_hashtable_set (extra_vars, "tg_message", pos);
+            dogechat_hashtable_set (extra_vars, "tg_message", pos);
         }
         else
-            weechat_hashtable_set (extra_vars, "tg_message", string);
+            dogechat_hashtable_set (extra_vars, "tg_message", string);
 
         /* set "tg_prefix_nocolor" and "tg_message_nocolor" */
         if (string_no_color)
@@ -587,11 +587,11 @@ trigger_callback_modifier_cb (void *data, const char *modifier,
             {
                 if (pos > string_no_color)
                 {
-                    prefix = weechat_strndup (string_no_color,
+                    prefix = dogechat_strndup (string_no_color,
                                               pos - string_no_color);
                     if (prefix)
                     {
-                        weechat_hashtable_set (extra_vars,
+                        dogechat_hashtable_set (extra_vars,
                                                "tg_prefix_nocolor", prefix);
                         free (prefix);
                     }
@@ -599,11 +599,11 @@ trigger_callback_modifier_cb (void *data, const char *modifier,
                 pos++;
                 if (pos[0] == '\t')
                     pos++;
-                weechat_hashtable_set (extra_vars, "tg_message_nocolor", pos);
+                dogechat_hashtable_set (extra_vars, "tg_message_nocolor", pos);
             }
             else
             {
-                weechat_hashtable_set (extra_vars,
+                dogechat_hashtable_set (extra_vars,
                                        "tg_message_nocolor", string_no_color);
             }
         }
@@ -615,18 +615,18 @@ trigger_callback_modifier_cb (void *data, const char *modifier,
         pos = strchr (modifier_data, ';');
         if (pos)
         {
-            plugin_name = weechat_strndup (modifier_data, pos - modifier_data);
+            plugin_name = dogechat_strndup (modifier_data, pos - modifier_data);
             if (plugin_name)
             {
-                weechat_hashtable_set (extra_vars, "tg_plugin", plugin_name);
+                dogechat_hashtable_set (extra_vars, "tg_plugin", plugin_name);
                 pos++;
                 pos2 = strchr (pos, ';');
                 if (pos2)
                 {
-                    buffer_name = weechat_strndup (pos, pos2 - pos);
+                    buffer_name = dogechat_strndup (pos, pos2 - pos);
                     if (buffer_name)
                     {
-                        buffer = weechat_buffer_search (plugin_name,
+                        buffer = dogechat_buffer_search (plugin_name,
                                                         buffer_name);
                         length = strlen (plugin_name) + 1 + strlen (buffer_name) + 1;
                         buffer_full_name = malloc (length);
@@ -634,7 +634,7 @@ trigger_callback_modifier_cb (void *data, const char *modifier,
                         {
                             snprintf (buffer_full_name, length,
                                       "%s.%s", plugin_name, buffer_name);
-                            weechat_hashtable_set (extra_vars, "tg_buffer",
+                            dogechat_hashtable_set (extra_vars, "tg_buffer",
                                                    buffer_full_name);
                             free (buffer_full_name);
                         }
@@ -643,13 +643,13 @@ trigger_callback_modifier_cb (void *data, const char *modifier,
                     pos2++;
                     if (pos2[0])
                     {
-                        tags = weechat_string_split (pos2, ",", 0, 0, &num_tags);
+                        tags = dogechat_string_split (pos2, ",", 0, 0, &num_tags);
                         length = 1 + strlen (pos2) + 1 + 1;
                         str_tags = malloc (length);
                         if (str_tags)
                         {
                             snprintf (str_tags, length, ",%s,", pos2);
-                            weechat_hashtable_set (extra_vars, "tg_tags",
+                            dogechat_hashtable_set (extra_vars, "tg_tags",
                                                    str_tags);
                             free (str_tags);
                         }
@@ -658,7 +658,7 @@ trigger_callback_modifier_cb (void *data, const char *modifier,
                 free (plugin_name);
             }
         }
-        weechat_hashtable_set (pointers, "buffer", buffer);
+        dogechat_hashtable_set (pointers, "buffer", buffer);
     }
 
     if (tags)
@@ -674,12 +674,12 @@ trigger_callback_modifier_cb (void *data, const char *modifier,
     trigger_callback_execute (trigger, buffer, pointers, extra_vars);
 
 end:
-    ptr_string = weechat_hashtable_get (extra_vars, "tg_string");
+    ptr_string = dogechat_hashtable_get (extra_vars, "tg_string");
     string_modified = (ptr_string && (strcmp (ptr_string, string) != 0)) ?
         strdup (ptr_string) : NULL;
 
     if (tags)
-        weechat_string_free_split (tags);
+        dogechat_string_free_split (tags);
     if (string_no_color)
         free (string_no_color);
 
@@ -700,44 +700,44 @@ trigger_callback_print_cb  (void *data, struct t_gui_buffer *buffer,
     int length;
     struct tm *date_tmp;
 
-    TRIGGER_CALLBACK_CB_INIT(WEECHAT_RC_OK);
+    TRIGGER_CALLBACK_CB_INIT(DOGECHAT_RC_OK);
 
     /* do nothing if the buffer does not match buffers defined in the trigger */
     if (trigger->hook_print_buffers
-        && !weechat_buffer_match_list (buffer, trigger->hook_print_buffers))
+        && !dogechat_buffer_match_list (buffer, trigger->hook_print_buffers))
         goto end;
 
     TRIGGER_CALLBACK_CB_NEW_POINTERS;
     TRIGGER_CALLBACK_CB_NEW_EXTRA_VARS;
 
     /* add data in hashtables used for conditions/replace/command */
-    weechat_hashtable_set (pointers, "buffer", buffer);
+    dogechat_hashtable_set (pointers, "buffer", buffer);
     date_tmp = localtime (&date);
     if (date_tmp)
     {
         strftime (str_temp, sizeof (str_temp), "%Y-%m-%d %H:%M:%S", date_tmp);
-        weechat_hashtable_set (extra_vars, "tg_date", str_temp);
+        dogechat_hashtable_set (extra_vars, "tg_date", str_temp);
     }
     snprintf (str_temp, sizeof (str_temp), "%d", displayed);
-    weechat_hashtable_set (extra_vars, "tg_displayed", str_temp);
+    dogechat_hashtable_set (extra_vars, "tg_displayed", str_temp);
     snprintf (str_temp, sizeof (str_temp), "%d", highlight);
-    weechat_hashtable_set (extra_vars, "tg_highlight", str_temp);
-    weechat_hashtable_set (extra_vars, "tg_prefix", prefix);
-    str_no_color = weechat_string_remove_color (prefix, NULL);
+    dogechat_hashtable_set (extra_vars, "tg_highlight", str_temp);
+    dogechat_hashtable_set (extra_vars, "tg_prefix", prefix);
+    str_no_color = dogechat_string_remove_color (prefix, NULL);
     if (str_no_color)
     {
-        weechat_hashtable_set (extra_vars, "tg_prefix_nocolor", str_no_color);
+        dogechat_hashtable_set (extra_vars, "tg_prefix_nocolor", str_no_color);
         free (str_no_color);
     }
-    weechat_hashtable_set (extra_vars, "tg_message", message);
-    str_no_color = weechat_string_remove_color (message, NULL);
+    dogechat_hashtable_set (extra_vars, "tg_message", message);
+    str_no_color = dogechat_string_remove_color (message, NULL);
     if (str_no_color)
     {
-        weechat_hashtable_set (extra_vars, "tg_message_nocolor", str_no_color);
+        dogechat_hashtable_set (extra_vars, "tg_message_nocolor", str_no_color);
         free (str_no_color);
     }
 
-    str_tags = weechat_string_build_with_split_string (tags, ",");
+    str_tags = dogechat_string_build_with_split_string (tags, ",");
     if (str_tags)
     {
         /* build string with tags and commas around: ",tag1,tag2,tag3," */
@@ -746,7 +746,7 @@ trigger_callback_print_cb  (void *data, struct t_gui_buffer *buffer,
         if (str_tags2)
         {
             snprintf (str_tags2, length, ",%s,", str_tags);
-            weechat_hashtable_set (extra_vars, "tg_tags", str_tags2);
+            dogechat_hashtable_set (extra_vars, "tg_tags", str_tags2);
             free (str_tags2);
         }
         free (str_tags);
@@ -772,19 +772,19 @@ trigger_callback_command_cb  (void *data, struct t_gui_buffer *buffer,
     char str_name[32];
     int i;
 
-    TRIGGER_CALLBACK_CB_INIT(WEECHAT_RC_OK);
+    TRIGGER_CALLBACK_CB_INIT(DOGECHAT_RC_OK);
 
     TRIGGER_CALLBACK_CB_NEW_POINTERS;
     TRIGGER_CALLBACK_CB_NEW_EXTRA_VARS;
 
     /* add data in hashtables used for conditions/replace/command */
-    weechat_hashtable_set (pointers, "buffer", buffer);
+    dogechat_hashtable_set (pointers, "buffer", buffer);
     for (i = 0; i < argc; i++)
     {
         snprintf (str_name, sizeof (str_name), "tg_argv%d", i);
-        weechat_hashtable_set (extra_vars, str_name, argv[i]);
+        dogechat_hashtable_set (extra_vars, str_name, argv[i]);
         snprintf (str_name, sizeof (str_name), "tg_argv_eol%d", i);
-        weechat_hashtable_set (extra_vars, str_name, argv_eol[i]);
+        dogechat_hashtable_set (extra_vars, str_name, argv_eol[i]);
     }
 
     /* execute the trigger (conditions, regex, command) */
@@ -802,14 +802,14 @@ int
 trigger_callback_command_run_cb  (void *data, struct t_gui_buffer *buffer,
                                   const char *command)
 {
-    TRIGGER_CALLBACK_CB_INIT(WEECHAT_RC_OK);
+    TRIGGER_CALLBACK_CB_INIT(DOGECHAT_RC_OK);
 
     TRIGGER_CALLBACK_CB_NEW_POINTERS;
     TRIGGER_CALLBACK_CB_NEW_EXTRA_VARS;
 
     /* add data in hashtables used for conditions/replace/command */
-    weechat_hashtable_set (pointers, "buffer", buffer);
-    weechat_hashtable_set (extra_vars, "tg_command", command);
+    dogechat_hashtable_set (pointers, "buffer", buffer);
+    dogechat_hashtable_set (extra_vars, "tg_command", command);
 
     /* execute the trigger (conditions, regex, command) */
     trigger_callback_execute (trigger, buffer, pointers, extra_vars);
@@ -830,11 +830,11 @@ trigger_callback_timer_cb  (void *data, int remaining_calls)
     time_t date;
     struct tm *date_tmp;
 
-    TRIGGER_CALLBACK_CB_INIT(WEECHAT_RC_OK);
+    TRIGGER_CALLBACK_CB_INIT(DOGECHAT_RC_OK);
 
     /*
      * remove the hook if this is the last call to timer
-     * (because WeeChat will remove the hook after this call, so the pointer
+     * (because DogeChat will remove the hook after this call, so the pointer
      * will become invalid)
      */
     if ((remaining_calls == 0) && trigger->hooks)
@@ -849,13 +849,13 @@ trigger_callback_timer_cb  (void *data, int remaining_calls)
 
     /* add data in hashtable used for conditions/replace/command */
     snprintf (str_temp, sizeof (str_temp), "%d", remaining_calls);
-    weechat_hashtable_set (extra_vars, "tg_remaining_calls", str_temp);
+    dogechat_hashtable_set (extra_vars, "tg_remaining_calls", str_temp);
     date = time (NULL);
     date_tmp = localtime (&date);
     if (date_tmp)
     {
         strftime (str_temp, sizeof (str_temp), "%Y-%m-%d %H:%M:%S", date_tmp);
-        weechat_hashtable_set (extra_vars, "tg_date", str_temp);
+        dogechat_hashtable_set (extra_vars, "tg_date", str_temp);
     }
 
     /* execute the trigger (conditions, regex, command) */
@@ -872,13 +872,13 @@ end:
 int
 trigger_callback_config_cb  (void *data, const char *option, const char *value)
 {
-    TRIGGER_CALLBACK_CB_INIT(WEECHAT_RC_OK);
+    TRIGGER_CALLBACK_CB_INIT(DOGECHAT_RC_OK);
 
     TRIGGER_CALLBACK_CB_NEW_EXTRA_VARS;
 
     /* add data in hashtable used for conditions/replace/command */
-    weechat_hashtable_set (extra_vars, "tg_option", option);
-    weechat_hashtable_set (extra_vars, "tg_value", value);
+    dogechat_hashtable_set (extra_vars, "tg_option", option);
+    dogechat_hashtable_set (extra_vars, "tg_value", value);
 
     /* execute the trigger (conditions, regex, command) */
     trigger_callback_execute (trigger, NULL, pointers, extra_vars);
@@ -903,19 +903,19 @@ trigger_callback_focus_cb (void *data, struct t_hashtable *info)
     TRIGGER_CALLBACK_CB_NEW_POINTERS;
 
     /* add data in hashtables used for conditions/replace/command */
-    ptr_value = weechat_hashtable_get (info, "_window");
+    ptr_value = dogechat_hashtable_get (info, "_window");
     if (ptr_value && ptr_value[0] && (strncmp (ptr_value, "0x", 2) == 0))
     {
         rc = sscanf (ptr_value + 2, "%lx", &value);
         if ((rc != EOF) && (rc >= 1))
-            weechat_hashtable_set (pointers, "window", (void *)value);
+            dogechat_hashtable_set (pointers, "window", (void *)value);
     }
-    ptr_value = weechat_hashtable_get (info, "_buffer");
+    ptr_value = dogechat_hashtable_get (info, "_buffer");
     if (ptr_value && ptr_value[0] && (strncmp (ptr_value, "0x", 2) == 0))
     {
         rc = sscanf (ptr_value + 2, "%lx", &value);
         if ((rc != EOF) && (rc >= 1))
-            weechat_hashtable_set (pointers, "buffer", (void *)value);
+            dogechat_hashtable_set (pointers, "buffer", (void *)value);
     }
 
     /* execute the trigger (conditions, regex, command) */
@@ -932,22 +932,22 @@ end:
 void
 trigger_callback_init ()
 {
-    trigger_callback_hashtable_options_conditions = weechat_hashtable_new (
+    trigger_callback_hashtable_options_conditions = dogechat_hashtable_new (
         32,
-        WEECHAT_HASHTABLE_STRING,
-        WEECHAT_HASHTABLE_STRING,
+        DOGECHAT_HASHTABLE_STRING,
+        DOGECHAT_HASHTABLE_STRING,
         NULL,
         NULL);
     if (trigger_callback_hashtable_options_conditions)
     {
-        weechat_hashtable_set (trigger_callback_hashtable_options_conditions,
+        dogechat_hashtable_set (trigger_callback_hashtable_options_conditions,
                                "type", "condition");
     }
 
-    trigger_callback_hashtable_options_regex = weechat_hashtable_new (
+    trigger_callback_hashtable_options_regex = dogechat_hashtable_new (
         32,
-        WEECHAT_HASHTABLE_STRING,
-        WEECHAT_HASHTABLE_STRING,
+        DOGECHAT_HASHTABLE_STRING,
+        DOGECHAT_HASHTABLE_STRING,
         NULL,
         NULL);
 }
@@ -960,7 +960,7 @@ void
 trigger_callback_end ()
 {
     if (trigger_callback_hashtable_options_conditions)
-        weechat_hashtable_free (trigger_callback_hashtable_options_conditions);
+        dogechat_hashtable_free (trigger_callback_hashtable_options_conditions);
     if (trigger_callback_hashtable_options_regex)
-        weechat_hashtable_free (trigger_callback_hashtable_options_regex);
+        dogechat_hashtable_free (trigger_callback_hashtable_options_regex);
 }

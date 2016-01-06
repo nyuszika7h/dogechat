@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -26,7 +26,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "xfer.h"
 #include "xfer-chat.h"
 #include "xfer-buffer.h"
@@ -45,7 +45,7 @@ xfer_chat_color_for_tags (const char *color)
     if (!color)
         return NULL;
 
-    return weechat_string_replace (color, ",", ":");
+    return dogechat_string_replace (color, ",", ":");
 }
 
 /*
@@ -73,12 +73,12 @@ xfer_chat_sendf (struct t_xfer *xfer, const char *format, ...)
     if (!xfer || (xfer->sock < 0))
         return;
 
-    weechat_va_format (format);
+    dogechat_va_format (format);
     if (!vbuffer)
         return;
 
     msg_encoded = (xfer->charset_modifier) ?
-        weechat_hook_modifier_exec ("charset_encode",
+        dogechat_hook_modifier_exec ("charset_encode",
                                     xfer->charset_modifier,
                                     vbuffer) : NULL;
 
@@ -86,9 +86,9 @@ xfer_chat_sendf (struct t_xfer *xfer, const char *format, ...)
 
     if (xfer_chat_send (xfer, ptr_msg, strlen (ptr_msg)) <= 0)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: error sending data to \"%s\" via xfer chat"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                         xfer->remote_nick);
         xfer_close (xfer, XFER_STATUS_FAILED);
     }
@@ -109,7 +109,7 @@ xfer_chat_recv_cb (void *arg_xfer, int fd)
     struct t_xfer *xfer;
     static char buffer[4096 + 2];
     char *buf2, *pos, *ptr_buf, *ptr_buf2, *next_ptr_buf;
-    char *ptr_buf_decoded, *ptr_buf_without_weechat_colors, *ptr_buf_color;
+    char *ptr_buf_decoded, *ptr_buf_without_dogechat_colors, *ptr_buf_color;
     char str_tags[256], *str_color;
     const char *pv_tags;
     int num_read, length, ctcp_action;
@@ -179,19 +179,19 @@ xfer_chat_recv_cb (void *arg_xfer, int fd)
                 }
 
                 ptr_buf_decoded = (xfer->charset_modifier) ?
-                    weechat_hook_modifier_exec ("charset_decode",
+                    dogechat_hook_modifier_exec ("charset_decode",
                                                 xfer->charset_modifier,
                                                 ptr_buf) : NULL;
-                ptr_buf_without_weechat_colors = weechat_string_remove_color ((ptr_buf_decoded) ? ptr_buf_decoded : ptr_buf,
+                ptr_buf_without_dogechat_colors = dogechat_string_remove_color ((ptr_buf_decoded) ? ptr_buf_decoded : ptr_buf,
                                                                               "?");
-                ptr_buf_color = weechat_hook_modifier_exec ("irc_color_decode",
+                ptr_buf_color = dogechat_hook_modifier_exec ("irc_color_decode",
                                                             "1",
-                                                            (ptr_buf_without_weechat_colors) ?
-                                                            ptr_buf_without_weechat_colors : ((ptr_buf_decoded) ? ptr_buf_decoded : ptr_buf));
+                                                            (ptr_buf_without_dogechat_colors) ?
+                                                            ptr_buf_without_dogechat_colors : ((ptr_buf_decoded) ? ptr_buf_decoded : ptr_buf));
                 ptr_buf2 = (ptr_buf_color) ?
-                    ptr_buf_color : ((ptr_buf_without_weechat_colors) ?
-                                     ptr_buf_without_weechat_colors : ((ptr_buf_decoded) ? ptr_buf_decoded : ptr_buf));
-                pv_tags = weechat_config_string (xfer_config_look_pv_tags);
+                    ptr_buf_color : ((ptr_buf_without_dogechat_colors) ?
+                                     ptr_buf_without_dogechat_colors : ((ptr_buf_decoded) ? ptr_buf_decoded : ptr_buf));
+                pv_tags = dogechat_config_string (xfer_config_look_pv_tags);
                 if (ctcp_action)
                 {
                     snprintf (str_tags, sizeof (str_tags),
@@ -199,14 +199,14 @@ xfer_chat_recv_cb (void *arg_xfer, int fd)
                               (pv_tags && pv_tags[0]) ? pv_tags : "",
                               (pv_tags && pv_tags[0]) ? "," : "",
                               xfer->remote_nick);
-                    weechat_printf_tags (xfer->buffer,
+                    dogechat_printf_tags (xfer->buffer,
                                          str_tags,
                                          "%s%s%s%s%s%s",
-                                         weechat_prefix ("action"),
-                                         weechat_color ((xfer->remote_nick_color) ?
+                                         dogechat_prefix ("action"),
+                                         dogechat_color ((xfer->remote_nick_color) ?
                                                         xfer->remote_nick_color : "chat_nick_other"),
                                          xfer->remote_nick,
-                                         weechat_color ("chat"),
+                                         dogechat_color ("chat"),
                                          (ptr_buf2[0]) ? " " : "",
                                          ptr_buf2);
                 }
@@ -214,7 +214,7 @@ xfer_chat_recv_cb (void *arg_xfer, int fd)
                 {
                     str_color = xfer_chat_color_for_tags (
                         (xfer->remote_nick_color) ?
-                        xfer->remote_nick_color : weechat_config_color (weechat_config_get ("weechat.color.chat_nick_other")));
+                        xfer->remote_nick_color : dogechat_config_color (dogechat_config_get ("dogechat.color.chat_nick_other")));
                     snprintf (str_tags, sizeof (str_tags),
                               "irc_privmsg,%s%sprefix_nick_%s,nick_%s,log1",
                               (pv_tags && pv_tags[0]) ? pv_tags : "",
@@ -223,18 +223,18 @@ xfer_chat_recv_cb (void *arg_xfer, int fd)
                               xfer->remote_nick);
                     if (str_color)
                         free (str_color);
-                    weechat_printf_tags (xfer->buffer,
+                    dogechat_printf_tags (xfer->buffer,
                                          str_tags,
                                          "%s%s\t%s",
-                                         weechat_color ((xfer->remote_nick_color) ?
+                                         dogechat_color ((xfer->remote_nick_color) ?
                                                         xfer->remote_nick_color : "chat_nick_other"),
                                          xfer->remote_nick,
                                          ptr_buf2);
                 }
                 if (ptr_buf_decoded)
                     free (ptr_buf_decoded);
-                if (ptr_buf_without_weechat_colors)
-                    free (ptr_buf_without_weechat_colors);
+                if (ptr_buf_without_dogechat_colors)
+                    free (ptr_buf_without_dogechat_colors);
                 if (ptr_buf_color)
                     free (ptr_buf_color);
             }
@@ -248,10 +248,10 @@ xfer_chat_recv_cb (void *arg_xfer, int fd)
     else
     {
         xfer_close (xfer, XFER_STATUS_ABORTED);
-        xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+        xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -277,20 +277,20 @@ xfer_chat_buffer_input_cb (void *data, struct t_gui_buffer *buffer,
             xfer_chat_sendf (ptr_xfer, "%s\r\n", input_data);
             if (!XFER_HAS_ENDED(ptr_xfer->status))
             {
-                str_color = xfer_chat_color_for_tags (weechat_config_color (weechat_config_get ("weechat.color.chat_nick_self")));
+                str_color = xfer_chat_color_for_tags (dogechat_config_color (dogechat_config_get ("dogechat.color.chat_nick_self")));
                 snprintf (str_tags, sizeof (str_tags),
                           "irc_privmsg,no_highlight,prefix_nick_%s,nick_%s,log1",
                           (str_color) ? str_color : "default",
                           ptr_xfer->local_nick);
                 if (str_color)
                     free (str_color);
-                input_data_color = weechat_hook_modifier_exec ("irc_color_decode",
+                input_data_color = dogechat_hook_modifier_exec ("irc_color_decode",
                                                                "1",
                                                                input_data);
-                weechat_printf_tags (buffer,
+                dogechat_printf_tags (buffer,
                                      str_tags,
                                      "%s%s\t%s",
-                                     weechat_color ("chat_nick_self"),
+                                     dogechat_color ("chat_nick_self"),
                                      ptr_xfer->local_nick,
                                      (input_data_color) ? input_data_color : input_data);
                 if (input_data_color)
@@ -299,7 +299,7 @@ xfer_chat_buffer_input_cb (void *data, struct t_gui_buffer *buffer,
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -322,13 +322,13 @@ xfer_chat_buffer_close_cb (void *data, struct t_gui_buffer *buffer)
             if (!XFER_HAS_ENDED(ptr_xfer->status))
             {
                 xfer_close (ptr_xfer, XFER_STATUS_ABORTED);
-                xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+                xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             }
             ptr_xfer->buffer = NULL;
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -350,10 +350,10 @@ xfer_chat_open_buffer (struct t_xfer *xfer)
     {
         snprintf (name, length, "%s_dcc.%s.%s",
                   xfer->plugin_name, xfer->plugin_id, xfer->remote_nick);
-        xfer->buffer = weechat_buffer_search (XFER_PLUGIN_NAME, name);
+        xfer->buffer = dogechat_buffer_search (XFER_PLUGIN_NAME, name);
         if (!xfer->buffer)
         {
-            xfer->buffer = weechat_buffer_new (name,
+            xfer->buffer = dogechat_buffer_new (name,
                                                &xfer_chat_buffer_input_cb, NULL,
                                                &xfer_chat_buffer_close_cb, NULL);
             buffer_created = 1;
@@ -365,21 +365,21 @@ xfer_chat_open_buffer (struct t_xfer *xfer)
 
         if (buffer_created)
         {
-            weechat_buffer_set (xfer->buffer, "title", _("xfer chat"));
-            if (!weechat_buffer_get_integer (xfer->buffer, "short_name_is_set"))
+            dogechat_buffer_set (xfer->buffer, "title", _("xfer chat"));
+            if (!dogechat_buffer_get_integer (xfer->buffer, "short_name_is_set"))
             {
-                weechat_buffer_set (xfer->buffer, "short_name",
+                dogechat_buffer_set (xfer->buffer, "short_name",
                                     xfer->remote_nick);
             }
-            weechat_buffer_set (xfer->buffer, "localvar_set_type", "private");
-            weechat_buffer_set (xfer->buffer, "localvar_set_nick", xfer->local_nick);
-            weechat_buffer_set (xfer->buffer, "localvar_set_channel", xfer->remote_nick);
-            weechat_buffer_set (xfer->buffer, "highlight_words_add", "$nick");
+            dogechat_buffer_set (xfer->buffer, "localvar_set_type", "private");
+            dogechat_buffer_set (xfer->buffer, "localvar_set_nick", xfer->local_nick);
+            dogechat_buffer_set (xfer->buffer, "localvar_set_channel", xfer->remote_nick);
+            dogechat_buffer_set (xfer->buffer, "highlight_words_add", "$nick");
         }
 
-        weechat_printf (xfer->buffer,
+        dogechat_printf (xfer->buffer,
                         _("%s%s: connected to %s (%s) via xfer chat"),
-                        weechat_prefix ("network"),
+                        dogechat_prefix ("network"),
                         XFER_PLUGIN_NAME,
                         xfer->remote_nick,
                         xfer->remote_address_str);

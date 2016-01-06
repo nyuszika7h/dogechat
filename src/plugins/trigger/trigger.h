@@ -1,28 +1,28 @@
 /*
  * Copyright (C) 2014-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_TRIGGER_H
-#define WEECHAT_TRIGGER_H 1
+#ifndef DOGECHAT_TRIGGER_H
+#define DOGECHAT_TRIGGER_H 1
 
 #include <regex.h>
 
-#define weechat_plugin weechat_trigger_plugin
+#define dogechat_plugin dogechat_trigger_plugin
 #define TRIGGER_PLUGIN_NAME "trigger"
 
 #define TRIGGER_HOOK_DEFAULT_CONDITIONS "${...}"
@@ -104,7 +104,7 @@ struct t_trigger
     struct t_trigger *next_trigger;    /* link to next trigger              */
 };
 
-extern struct t_weechat_plugin *weechat_trigger_plugin;
+extern struct t_dogechat_plugin *dogechat_trigger_plugin;
 extern char *trigger_option_string[];
 extern char *trigger_option_default[];
 extern char *trigger_hook_type_string[];
@@ -157,4 +157,4 @@ extern struct t_trigger *trigger_copy (struct t_trigger *trigger,
 extern void trigger_free (struct t_trigger *trigger);
 extern void trigger_free_all ();
 
-#endif /* WEECHAT_TRIGGER_H */
+#endif /* DOGECHAT_TRIGGER_H */

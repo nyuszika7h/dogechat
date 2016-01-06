@@ -1,28 +1,28 @@
 /*
- * relay.c - network communication between WeeChat and remote client
+ * relay.c - network communication between DogeChat and remote client
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "relay.h"
 #include "relay-buffer.h"
 #include "relay-client.h"
@@ -36,20 +36,20 @@
 #include "relay-upgrade.h"
 
 
-WEECHAT_PLUGIN_NAME(RELAY_PLUGIN_NAME);
-WEECHAT_PLUGIN_DESCRIPTION(N_("Relay WeeChat data to remote application "
-                              "(irc/weechat protocols)"));
-WEECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
-WEECHAT_PLUGIN_VERSION(WEECHAT_VERSION);
-WEECHAT_PLUGIN_LICENSE(WEECHAT_LICENSE);
-WEECHAT_PLUGIN_PRIORITY(4000);
+DOGECHAT_PLUGIN_NAME(RELAY_PLUGIN_NAME);
+DOGECHAT_PLUGIN_DESCRIPTION(N_("Relay DogeChat data to remote application "
+                              "(irc/dogechat protocols)"));
+DOGECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
+DOGECHAT_PLUGIN_VERSION(DOGECHAT_VERSION);
+DOGECHAT_PLUGIN_LICENSE(DOGECHAT_LICENSE);
+DOGECHAT_PLUGIN_PRIORITY(4000);
 
-struct t_weechat_plugin *weechat_relay_plugin = NULL;
+struct t_dogechat_plugin *dogechat_relay_plugin = NULL;
 
 int relay_signal_upgrade_received = 0; /* signal "upgrade" received ?       */
 
 char *relay_protocol_string[] =        /* strings for protocols             */
-{ "weechat", "irc" };
+{ "dogechat", "irc" };
 
 struct t_hook *relay_hook_timer = NULL;
 
@@ -119,10 +119,10 @@ relay_signal_upgrade_cb (void *data, const char *signal, const char *type_data,
             if (!quit)
             {
                 ssl_disconnected++;
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: disconnecting from client %s%s%s because "
                                   "upgrade can't work for clients connected via SSL"),
-                                weechat_prefix ("error"),
+                                dogechat_prefix ("error"),
                                 RELAY_PLUGIN_NAME,
                                 RELAY_COLOR_CHAT_CLIENT,
                                 ptr_client->desc,
@@ -133,16 +133,16 @@ relay_signal_upgrade_cb (void *data, const char *signal, const char *type_data,
     }
     if (ssl_disconnected > 0)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         /* TRANSLATORS: "%s" after "%d" is "client" or "clients" */
                         _("%s%s: disconnected from %d %s (SSL connection "
                           "not supported with upgrade)"),
-                        weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                        dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                         ssl_disconnected,
                         NG_("client", "clients", ssl_disconnected));
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -159,21 +159,21 @@ relay_debug_dump_cb (void *data, const char *signal, const char *type_data,
     (void) type_data;
 
     if (!signal_data
-        || (weechat_strcasecmp ((char *)signal_data, RELAY_PLUGIN_NAME) == 0))
+        || (dogechat_strcasecmp ((char *)signal_data, RELAY_PLUGIN_NAME) == 0))
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("***** \"%s\" plugin dump *****",
-                            weechat_plugin->name);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("***** \"%s\" plugin dump *****",
+                            dogechat_plugin->name);
 
         relay_server_print_log ();
         relay_client_print_log ();
 
-        weechat_log_printf ("");
-        weechat_log_printf ("***** End of \"%s\" plugin dump *****",
-                            weechat_plugin->name);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("***** End of \"%s\" plugin dump *****",
+                            dogechat_plugin->name);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -181,7 +181,7 @@ relay_debug_dump_cb (void *data, const char *signal, const char *type_data,
  */
 
 int
-weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
+dogechat_plugin_init (struct t_dogechat_plugin *plugin, int argc, char *argv[])
 {
     int i, upgrading;
 
@@ -189,10 +189,10 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
     (void) argc;
     (void) argv;
 
-    weechat_plugin = plugin;
+    dogechat_plugin = plugin;
 
     if (!relay_config_init ())
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
     relay_config_read ();
 
@@ -203,8 +203,8 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
     /* hook completions */
     relay_completion_init ();
 
-    weechat_hook_signal ("upgrade", &relay_signal_upgrade_cb, NULL);
-    weechat_hook_signal ("debug_dump", &relay_debug_dump_cb, NULL);
+    dogechat_hook_signal ("upgrade", &relay_signal_upgrade_cb, NULL);
+    dogechat_hook_signal ("debug_dump", &relay_debug_dump_cb, NULL);
 
     relay_info_init ();
 
@@ -212,7 +212,7 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
     upgrading = 0;
     for (i = 0; i < argc; i++)
     {
-        if (weechat_strcasecmp (argv[i], "--upgrade") == 0)
+        if (dogechat_strcasecmp (argv[i], "--upgrade") == 0)
         {
             upgrading = 1;
         }
@@ -221,10 +221,10 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
     if (upgrading)
         relay_upgrade_load ();
 
-    relay_hook_timer = weechat_hook_timer (1 * 1000, 0, 0,
+    relay_hook_timer = dogechat_hook_timer (1 * 1000, 0, 0,
                                            &relay_client_timer_cb, NULL);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -232,13 +232,13 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
  */
 
 int
-weechat_plugin_end (struct t_weechat_plugin *plugin)
+dogechat_plugin_end (struct t_dogechat_plugin *plugin)
 {
     /* make C compiler happy */
     (void) plugin;
 
     if (relay_hook_timer)
-        weechat_unhook (relay_hook_timer);
+        dogechat_unhook (relay_hook_timer);
 
     relay_config_write ();
 
@@ -253,7 +253,7 @@ weechat_plugin_end (struct t_weechat_plugin *plugin)
         relay_client_disconnect_all ();
 
         if (relay_buffer)
-            weechat_buffer_close (relay_buffer);
+            dogechat_buffer_close (relay_buffer);
 
         relay_client_free_all ();
     }
@@ -262,5 +262,5 @@ weechat_plugin_end (struct t_weechat_plugin *plugin)
 
     relay_config_free ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }

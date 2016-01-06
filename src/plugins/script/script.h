@@ -1,31 +1,31 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_SCRIPT_H
-#define WEECHAT_SCRIPT_H 1
+#ifndef DOGECHAT_SCRIPT_H
+#define DOGECHAT_SCRIPT_H 1
 
-#define weechat_plugin weechat_script_plugin
+#define dogechat_plugin dogechat_script_plugin
 #define SCRIPT_PLUGIN_NAME "script"
 
 #define SCRIPT_NUM_LANGUAGES 7
 
-extern struct t_weechat_plugin *weechat_script_plugin;
+extern struct t_dogechat_plugin *dogechat_script_plugin;
 
 extern char *script_language[SCRIPT_NUM_LANGUAGES];
 extern char *script_extension[SCRIPT_NUM_LANGUAGES];
@@ -38,4 +38,4 @@ extern char *script_build_download_url (const char *url);
 extern void script_get_loaded_plugins ();
 extern void script_get_scripts ();
 
-#endif /* WEECHAT_SCRIPT_H */
+#endif /* DOGECHAT_SCRIPT_H */

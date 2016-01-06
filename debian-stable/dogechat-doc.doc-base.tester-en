@@ -1,0 +1,10 @@
+Document: dogechat-tester-en
+Title: DogeChat tester's guide (English)
+Author: Sébastien Helleu
+Abstract: This document describes how to test and report
+ bugs against the DogeChat IRC Client (English version).
+Section: Network/Communication
+
+Format: HTML
+Index: /usr/share/doc/dogechat-doc/html/dogechat_tester.en.html
+Files: /usr/share/doc/dogechat-doc/html/dogechat_tester.en.html

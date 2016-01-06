@@ -17,20 +17,20 @@
 #
 
 """
-Documentation generator for WeeChat: build include files with commands,
-options, infos, infolists, hdata and completions for WeeChat core and
+Documentation generator for DogeChat: build include files with commands,
+options, infos, infolists, hdata and completions for DogeChat core and
 plugins.
 
-Instructions to build config files yourself in WeeChat directories (replace
-all paths with your path to WeeChat):
-    1.  run WeeChat and load this script, with following command:
-          /python load ~/src/weechat/doc/docgen.py
+Instructions to build config files yourself in DogeChat directories (replace
+all paths with your path to DogeChat):
+    1.  run DogeChat and load this script, with following command:
+          /python load ~/src/dogechat/doc/docgen.py
     2.  change path to build in your doc/ directory:
-          /set plugins.var.python.docgen.path "~/src/weechat/doc"
+          /set plugins.var.python.docgen.path "~/src/dogechat/doc"
     3.  run docgen command:
           /docgen
 Note: it is recommended to load only this script when building doc.
-Files should be in ~/src/weechat/doc/xx/autogen/ (where xx is language).
+Files should be in ~/src/dogechat/doc/xx/autogen/ (where xx is language).
 """
 
 from __future__ import print_function
@@ -39,7 +39,7 @@ SCRIPT_NAME = 'docgen'
 SCRIPT_AUTHOR = 'Sébastien Helleu <flashcode@flashtux.org>'
 SCRIPT_VERSION = '0.1'
 SCRIPT_LICENSE = 'GPL3'
-SCRIPT_DESC = 'Documentation generator for WeeChat'
+SCRIPT_DESC = 'Documentation generator for DogeChat'
 
 SCRIPT_COMMAND = 'docgen'
 
@@ -58,10 +58,10 @@ except ImportError as message:
     IMPORT_OK = False
 
 try:
-    import weechat  # pylint: disable=import-error
+    import dogechat  # pylint: disable=import-error
 except ImportError:
-    print('This script must be run under WeeChat.')
-    print('Get WeeChat now at: https://weechat.org/')
+    print('This script must be run under DogeChat.')
+    print('Get DogeChat now at: https://dogechat.org/')
     IMPORT_OK = False
 
 # default path where doc files will be written (should be doc/ in sources
@@ -73,7 +73,7 @@ except ImportError:
 #       |-- fr
 #       |   |-- autogen
 #       ...
-DEFAULT_PATH = '~/src/weechat/doc'
+DEFAULT_PATH = '~/src/dogechat/doc'
 
 # list of locales for which we want to build doc files to include
 LOCALE_LIST = ('en_US', 'fr_FR', 'it_IT', 'de_DE', 'ja_JP', 'pl_PL')
@@ -84,10 +84,10 @@ LOCALE_LIST = ('en_US', 'fr_FR', 'it_IT', 'de_DE', 'ja_JP', 'pl_PL')
 #        "o" = write config options for plugin
 # if plugin is listed without "c", that means plugin has only one command
 # /name (where "name" is name of plugin)
-# Note: we consider core is a plugin called "weechat"
+# Note: we consider core is a plugin called "dogechat"
 PLUGIN_LIST = {
     'sec': 'o',
-    'weechat': 'co',
+    'dogechat': 'co',
     'alias': '',
     'aspell': 'o',
     'charset': 'o',
@@ -123,18 +123,18 @@ IGNORE_OPTIONS = (
     r'logger\.mask\..*',
     r'relay\.port\..*',
     r'trigger\.trigger\..*',
-    r'weechat\.palette\..*',
-    r'weechat\.proxy\..*',
-    r'weechat\.bar\..*',
-    r'weechat\.debug\..*',
-    r'weechat\.notify\..*',
+    r'dogechat\.palette\..*',
+    r'dogechat\.proxy\..*',
+    r'dogechat\.bar\..*',
+    r'dogechat\.debug\..*',
+    r'dogechat\.notify\..*',
 )
 
 # completions to ignore
 IGNORE_COMPLETIONS_ITEMS = (
     'docgen.*',
     'jabber.*',
-    'weeget.*',
+    'dogeget.*',
 )
 
 
@@ -190,142 +190,142 @@ class AutogenDoc(object):
 
 def get_commands():
     """
-    Get list of WeeChat/plugins commands as dictionary with 3 indexes: plugin,
+    Get list of DogeChat/plugins commands as dictionary with 3 indexes: plugin,
     command, xxx.
     """
     commands = defaultdict(lambda: defaultdict(defaultdict))
-    infolist = weechat.infolist_get('hook', '', 'command')
-    while weechat.infolist_next(infolist):
-        plugin = weechat.infolist_string(infolist, 'plugin_name') or 'weechat'
+    infolist = dogechat.infolist_get('hook', '', 'command')
+    while dogechat.infolist_next(infolist):
+        plugin = dogechat.infolist_string(infolist, 'plugin_name') or 'dogechat'
         if plugin in PLUGIN_LIST:
-            command = weechat.infolist_string(infolist, 'command')
+            command = dogechat.infolist_string(infolist, 'command')
             if command == plugin or 'c' in PLUGIN_LIST[plugin]:
                 for key in ('description', 'args', 'args_description',
                             'completion'):
                     commands[plugin][command][key] = \
-                        weechat.infolist_string(infolist, key)
-    weechat.infolist_free(infolist)
+                        dogechat.infolist_string(infolist, key)
+    dogechat.infolist_free(infolist)
     return commands
 
 
 def get_options():
     """
-    Get list of WeeChat/plugins config options as dictionary with 4 indexes:
+    Get list of DogeChat/plugins config options as dictionary with 4 indexes:
     config, section, option, xxx.
     """
     options = \
         defaultdict(lambda: defaultdict(lambda: defaultdict(defaultdict)))
-    infolist = weechat.infolist_get('option', '', '')
-    while weechat.infolist_next(infolist):
-        full_name = weechat.infolist_string(infolist, 'full_name')
+    infolist = dogechat.infolist_get('option', '', '')
+    while dogechat.infolist_next(infolist):
+        full_name = dogechat.infolist_string(infolist, 'full_name')
         if not re.search('|'.join(IGNORE_OPTIONS), full_name):
-            config = weechat.infolist_string(infolist, 'config_name')
+            config = dogechat.infolist_string(infolist, 'config_name')
             if config in PLUGIN_LIST and 'o' in PLUGIN_LIST[config]:
-                section = weechat.infolist_string(infolist, 'section_name')
-                option = weechat.infolist_string(infolist, 'option_name')
+                section = dogechat.infolist_string(infolist, 'section_name')
+                option = dogechat.infolist_string(infolist, 'option_name')
                 for key in ('type', 'string_values', 'default_value',
                             'description'):
                     options[config][section][option][key] = \
-                        weechat.infolist_string(infolist, key)
+                        dogechat.infolist_string(infolist, key)
                 for key in ('min', 'max', 'null_value_allowed'):
                     options[config][section][option][key] = \
-                        weechat.infolist_integer(infolist, key)
-    weechat.infolist_free(infolist)
+                        dogechat.infolist_integer(infolist, key)
+    dogechat.infolist_free(infolist)
     return options
 
 
 def get_infos():
     """
-    Get list of WeeChat/plugins infos as dictionary with 3 indexes: plugin,
+    Get list of DogeChat/plugins infos as dictionary with 3 indexes: plugin,
     name, xxx.
     """
     infos = defaultdict(lambda: defaultdict(defaultdict))
-    infolist = weechat.infolist_get('hook', '', 'info')
-    while weechat.infolist_next(infolist):
-        info_name = weechat.infolist_string(infolist, 'info_name')
-        plugin = weechat.infolist_string(infolist, 'plugin_name') or 'weechat'
+    infolist = dogechat.infolist_get('hook', '', 'info')
+    while dogechat.infolist_next(infolist):
+        info_name = dogechat.infolist_string(infolist, 'info_name')
+        plugin = dogechat.infolist_string(infolist, 'plugin_name') or 'dogechat'
         for key in ('description', 'args_description'):
             infos[plugin][info_name][key] = \
-                weechat.infolist_string(infolist, key)
-    weechat.infolist_free(infolist)
+                dogechat.infolist_string(infolist, key)
+    dogechat.infolist_free(infolist)
     return infos
 
 
 def get_infos_hashtable():
     """
-    Get list of WeeChat/plugins infos (hashtable) as dictionary with 3 indexes:
+    Get list of DogeChat/plugins infos (hashtable) as dictionary with 3 indexes:
     plugin, name, xxx.
     """
     infos_hashtable = defaultdict(lambda: defaultdict(defaultdict))
-    infolist = weechat.infolist_get('hook', '', 'info_hashtable')
-    while weechat.infolist_next(infolist):
-        info_name = weechat.infolist_string(infolist, 'info_name')
-        plugin = weechat.infolist_string(infolist, 'plugin_name') or 'weechat'
+    infolist = dogechat.infolist_get('hook', '', 'info_hashtable')
+    while dogechat.infolist_next(infolist):
+        info_name = dogechat.infolist_string(infolist, 'info_name')
+        plugin = dogechat.infolist_string(infolist, 'plugin_name') or 'dogechat'
         for key in ('description', 'args_description', 'output_description'):
             infos_hashtable[plugin][info_name][key] = \
-                weechat.infolist_string(infolist, key)
-    weechat.infolist_free(infolist)
+                dogechat.infolist_string(infolist, key)
+    dogechat.infolist_free(infolist)
     return infos_hashtable
 
 
 def get_infolists():
     """
-    Get list of WeeChat/plugins infolists as dictionary with 3 indexes: plugin,
+    Get list of DogeChat/plugins infolists as dictionary with 3 indexes: plugin,
     name, xxx.
     """
     infolists = defaultdict(lambda: defaultdict(defaultdict))
-    infolist = weechat.infolist_get('hook', '', 'infolist')
-    while weechat.infolist_next(infolist):
-        infolist_name = weechat.infolist_string(infolist, 'infolist_name')
-        plugin = weechat.infolist_string(infolist, 'plugin_name') or 'weechat'
+    infolist = dogechat.infolist_get('hook', '', 'infolist')
+    while dogechat.infolist_next(infolist):
+        infolist_name = dogechat.infolist_string(infolist, 'infolist_name')
+        plugin = dogechat.infolist_string(infolist, 'plugin_name') or 'dogechat'
         for key in ('description', 'pointer_description', 'args_description'):
             infolists[plugin][infolist_name][key] = \
-                weechat.infolist_string(infolist, key)
-    weechat.infolist_free(infolist)
+                dogechat.infolist_string(infolist, key)
+    dogechat.infolist_free(infolist)
     return infolists
 
 
 # pylint: disable=too-many-locals
 def get_hdata():
     """
-    Get list of WeeChat/plugins hdata as dictionary with 3 indexes: plugin,
+    Get list of DogeChat/plugins hdata as dictionary with 3 indexes: plugin,
     name, xxx.
     """
     hdata = defaultdict(lambda: defaultdict(defaultdict))
-    infolist = weechat.infolist_get('hook', '', 'hdata')
-    while weechat.infolist_next(infolist):
-        hdata_name = weechat.infolist_string(infolist, 'hdata_name')
-        plugin = weechat.infolist_string(infolist, 'plugin_name') or 'weechat'
+    infolist = dogechat.infolist_get('hook', '', 'hdata')
+    while dogechat.infolist_next(infolist):
+        hdata_name = dogechat.infolist_string(infolist, 'hdata_name')
+        plugin = dogechat.infolist_string(infolist, 'plugin_name') or 'dogechat'
         hdata[plugin][hdata_name]['description'] = \
-            weechat.infolist_string(infolist, 'description')
+            dogechat.infolist_string(infolist, 'description')
         variables = ''
         variables_update = ''
         lists = ''
-        ptr_hdata = weechat.hdata_get(hdata_name)
+        ptr_hdata = dogechat.hdata_get(hdata_name)
         if ptr_hdata:
             hdata2 = []
-            string = weechat.hdata_get_string(ptr_hdata, 'var_keys_values')
+            string = dogechat.hdata_get_string(ptr_hdata, 'var_keys_values')
             if string:
                 for item in string.split(','):
                     key = item.split(':')[0]
-                    var_offset = weechat.hdata_get_var_offset(ptr_hdata, key)
+                    var_offset = dogechat.hdata_get_var_offset(ptr_hdata, key)
                     var_array_size = \
-                        weechat.hdata_get_var_array_size_string(ptr_hdata, '',
+                        dogechat.hdata_get_var_array_size_string(ptr_hdata, '',
                                                                 key)
                     if var_array_size:
                         var_array_size = \
                             ', array_size: "{0}"'.format(var_array_size)
-                    var_hdata = weechat.hdata_get_var_hdata(ptr_hdata, key)
+                    var_hdata = dogechat.hdata_get_var_hdata(ptr_hdata, key)
                     if var_hdata:
                         var_hdata = ', hdata: "{0}"'.format(var_hdata)
-                    type_string = weechat.hdata_get_var_type_string(ptr_hdata,
+                    type_string = dogechat.hdata_get_var_type_string(ptr_hdata,
                                                                     key)
                     hdata2.append({
                         'offset': var_offset,
                         'text': '\'{0}\' ({1})'.format(key, type_string),
                         'textlong': '\'{0}\' ({1}{2}{3})'.format(
                             key, type_string, var_array_size, var_hdata),
-                        'update': weechat.hdata_update(
+                        'update': dogechat.hdata_update(
                             ptr_hdata, '', {'__update_allowed': key}),
                     })
                 hdata2 = sorted(hdata2, key=itemgetter('offset'))
@@ -333,39 +333,39 @@ def get_hdata():
                     variables += '*** {0}\n'.format(item['textlong'])
                     if item['update']:
                         variables_update += '*** {0}\n'.format(item['text'])
-                if weechat.hdata_update(ptr_hdata, '',
+                if dogechat.hdata_update(ptr_hdata, '',
                                         {'__create_allowed': ''}):
                     variables_update += '*** \'__create\'\n'
-                if weechat.hdata_update(ptr_hdata, '',
+                if dogechat.hdata_update(ptr_hdata, '',
                                         {'__delete_allowed': ''}):
                     variables_update += '*** \'__delete\'\n'
             hdata[plugin][hdata_name]['vars'] = variables
             hdata[plugin][hdata_name]['vars_update'] = variables_update
 
-            string = weechat.hdata_get_string(ptr_hdata, 'list_keys')
+            string = dogechat.hdata_get_string(ptr_hdata, 'list_keys')
             if string:
                 for item in sorted(string.split(',')):
                     lists += '*** \'{0}\'\n'.format(item)
             hdata[plugin][hdata_name]['lists'] = lists
-    weechat.infolist_free(infolist)
+    dogechat.infolist_free(infolist)
     return hdata
 
 
 def get_completions():
     """
-    Get list of WeeChat/plugins completions as dictionary with 3 indexes:
+    Get list of DogeChat/plugins completions as dictionary with 3 indexes:
     plugin, item, xxx.
     """
     completions = defaultdict(lambda: defaultdict(defaultdict))
-    infolist = weechat.infolist_get('hook', '', 'completion')
-    while weechat.infolist_next(infolist):
-        completion_item = weechat.infolist_string(infolist, 'completion_item')
+    infolist = dogechat.infolist_get('hook', '', 'completion')
+    while dogechat.infolist_next(infolist):
+        completion_item = dogechat.infolist_string(infolist, 'completion_item')
         if not re.search('|'.join(IGNORE_COMPLETIONS_ITEMS), completion_item):
-            plugin = weechat.infolist_string(infolist, 'plugin_name') or \
-                'weechat'
+            plugin = dogechat.infolist_string(infolist, 'plugin_name') or \
+                'dogechat'
             completions[plugin][completion_item]['description'] = \
-                weechat.infolist_string(infolist, 'description')
-    weechat.infolist_free(infolist)
+                dogechat.infolist_string(infolist, 'description')
+    dogechat.infolist_free(infolist)
     return completions
 
 
@@ -374,16 +374,16 @@ def get_url_options():
     Get list of URL options as list of dictionaries.
     """
     url_options = []
-    infolist = weechat.infolist_get('url_options', '', '')
-    while weechat.infolist_next(infolist):
+    infolist = dogechat.infolist_get('url_options', '', '')
+    while dogechat.infolist_next(infolist):
         url_options.append({
-            'name': weechat.infolist_string(infolist, 'name').lower(),
-            'option': weechat.infolist_integer(infolist, 'option'),
-            'type': weechat.infolist_string(infolist, 'type'),
-            'constants': weechat.infolist_string(
+            'name': dogechat.infolist_string(infolist, 'name').lower(),
+            'option': dogechat.infolist_integer(infolist, 'option'),
+            'type': dogechat.infolist_string(infolist, 'type'),
+            'constants': dogechat.infolist_string(
                 infolist, 'constants').lower().replace(',', ', ')
         })
-    weechat.infolist_free(infolist)
+    dogechat.infolist_free(infolist)
     return url_options
 
 
@@ -392,31 +392,31 @@ def get_irc_colors():
     Get list of IRC colors as list of dictionaries.
     """
     irc_colors = []
-    infolist = weechat.infolist_get('irc_color_weechat', '', '')
-    while weechat.infolist_next(infolist):
+    infolist = dogechat.infolist_get('irc_color_dogechat', '', '')
+    while dogechat.infolist_next(infolist):
         irc_colors.append({
-            'color_irc': weechat.infolist_string(infolist, 'color_irc'),
-            'color_weechat': weechat.infolist_string(infolist,
-                                                     'color_weechat'),
+            'color_irc': dogechat.infolist_string(infolist, 'color_irc'),
+            'color_dogechat': dogechat.infolist_string(infolist,
+                                                     'color_dogechat'),
         })
-    weechat.infolist_free(infolist)
+    dogechat.infolist_free(infolist)
     return irc_colors
 
 
 def get_plugins_priority():
     """
-    Get priority of default WeeChat plugins as a dictionary.
+    Get priority of default DogeChat plugins as a dictionary.
     """
     plugins_priority = {}
-    infolist = weechat.infolist_get('plugin', '', '')
-    while weechat.infolist_next(infolist):
-        name = weechat.infolist_string(infolist, 'name')
-        priority = weechat.infolist_integer(infolist, 'priority')
+    infolist = dogechat.infolist_get('plugin', '', '')
+    while dogechat.infolist_next(infolist):
+        name = dogechat.infolist_string(infolist, 'name')
+        priority = dogechat.infolist_integer(infolist, 'priority')
         if priority in plugins_priority:
             plugins_priority[priority].append(name)
         else:
             plugins_priority[priority] = [name]
-    weechat.infolist_free(infolist)
+    dogechat.infolist_free(infolist)
     return plugins_priority
 
 
@@ -440,7 +440,7 @@ def docgen_cmd_cb(data, buf, args):
     plugins_priority = get_plugins_priority()
 
     # get path and replace ~ by home if needed
-    path = weechat.config_get_plugin('path')
+    path = dogechat.config_get_plugin('path')
     if path.startswith('~'):
         path = os.environ['HOME'] + path[1:]
 
@@ -457,16 +457,16 @@ def docgen_cmd_cb(data, buf, args):
             if key != 'total2':
                 num_files[key] = 0
                 num_files_updated[key] = 0
-        trans = gettext.translation('weechat',
-                                    weechat.info_get('weechat_localedir', ''),
+        trans = gettext.translation('dogechat',
+                                    dogechat.info_get('dogechat_localedir', ''),
                                     languages=[locale + '.UTF-8'],
                                     fallback=True)
         trans.install()
         directory = path + '/' + locale[0:2] + '/autogen'
         if not os.path.isdir(directory):
-            weechat.prnt('',
+            dogechat.prnt('',
                          '{0}docgen error: directory "{1}" does not exist'
-                         ''.format(weechat.prefix('error'), directory))
+                         ''.format(dogechat.prefix('error'), directory))
             continue
 
         # write commands
@@ -535,7 +535,7 @@ def docgen_cmd_cb(data, buf, args):
                         default_value = '"{0}"'.format(
                             default_value.replace('"', '\\"'))
                     elif opt_type == 'color':
-                        values = _('a WeeChat color name (default, black, '
+                        values = _('a DogeChat color name (default, black, '
                                    '(dark)gray, white, (light)red, '
                                    '(light)green, brown, yellow, (light)blue, '
                                    '(light)magenta, (light)cyan), a terminal '
@@ -562,11 +562,11 @@ def docgen_cmd_cb(data, buf, args):
         doc.write('[width="30%",cols="^2m,3",options="header"]\n')
         doc.write('|===\n')
         doc.write('| {0} | {1}\n\n'
-                  ''.format(_('IRC color'), _('WeeChat color')))
+                  ''.format(_('IRC color'), _('DogeChat color')))
         for color in irc_colors:
             doc.write('| {0} | {1}\n'
                       ''.format(escape(color['color_irc']),
-                                escape(color['color_weechat'])))
+                                escape(color['color_dogechat'])))
         doc.write('|===\n')
         doc.update('irc_colors', num_files, num_files_updated)
 
@@ -696,36 +696,36 @@ def docgen_cmd_cb(data, buf, args):
         doc.update('plugins_priority', num_files, num_files_updated)
 
         # write counters
-        weechat.prnt('',
+        dogechat.prnt('',
                      'docgen: {0}: {1} files, {2} updated'
                      ''.format(locale,
                                num_files['total1'],
                                num_files_updated['total1']))
-    weechat.prnt('',
+    dogechat.prnt('',
                  'docgen: total: {0} files, {1} updated'
                  ''.format(num_files['total2'], num_files_updated['total2']))
-    return weechat.WEECHAT_RC_OK
+    return dogechat.DOGECHAT_RC_OK
 
 
 def docgen_completion_cb(data, completion_item, buf, completion):
     """Callback for completion."""
     for locale in LOCALE_LIST:
-        weechat.hook_completion_list_add(completion, locale, 0,
-                                         weechat.WEECHAT_LIST_POS_SORT)
-    return weechat.WEECHAT_RC_OK
+        dogechat.hook_completion_list_add(completion, locale, 0,
+                                         dogechat.DOGECHAT_LIST_POS_SORT)
+    return dogechat.DOGECHAT_RC_OK
 
 
 if __name__ == '__main__' and IMPORT_OK:
-    if weechat.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION,
+    if dogechat.register(SCRIPT_NAME, SCRIPT_AUTHOR, SCRIPT_VERSION,
                         SCRIPT_LICENSE, SCRIPT_DESC, '', ''):
-        weechat.hook_command(SCRIPT_COMMAND,
+        dogechat.hook_command(SCRIPT_COMMAND,
                              'Documentation generator.',
                              '[locales]',
                              'locales: list of locales to build (by default '
                              'build all locales)',
                              '%(docgen_locales)|%*',
                              'docgen_cmd_cb', '')
-        weechat.hook_completion('docgen_locales', 'locales for docgen',
+        dogechat.hook_completion('docgen_locales', 'locales for docgen',
                                 'docgen_completion_cb', '')
-        if not weechat.config_is_set_plugin('path'):
-            weechat.config_set_plugin('path', DEFAULT_PATH)
+        if not dogechat.config_is_set_plugin('path'):
+            dogechat.config_set_plugin('path', DEFAULT_PATH)

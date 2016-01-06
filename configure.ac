@@ -4,27 +4,27 @@
 # Copyright (C) 2005-2006 Julien Louis <ptitlouis@sysif.net>
 # Copyright (C) 2005-2009 Emmanuel Bouthenot <kolter@openics.org>
 #
-# This file is part of WeeChat, the extensible chat client.
+# This file is part of DogeChat, the extensible chat client.
 #
-# WeeChat is free software; you can redistribute it and/or modify
+# DogeChat is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
-# WeeChat is distributed in the hope that it will be useful,
+# DogeChat is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+# along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.56)
-AC_INIT(WeeChat, m4_esyscmd([./version.sh devel-full | tr -d '\n']), flashcode@flashtux.org)
+AC_INIT(DogeChat, m4_esyscmd([./version.sh devel-full | tr -d '\n']), flashcode@flashtux.org)
 AC_CONFIG_SRCDIR([configure.ac])
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE([foreign])
@@ -39,8 +39,8 @@ AC_PROG_LN_S
 AM_PROG_LIBTOOL
 
 # Files to generate
-AC_CONFIG_FILES([weechat.pc])
-AC_CONFIG_FILES([weechat-${VERSION}-1.cygport:weechat.cygport.in])
+AC_CONFIG_FILES([dogechat.pc])
+AC_CONFIG_FILES([dogechat-${VERSION}-1.cygport:dogechat.cygport.in])
 
 # Add some flags for some OS
 case "$host_os" in
@@ -96,8 +96,8 @@ AC_CHECK_FUNCS([mallinfo])
 # Variables in config.h
 
 AH_VERBATIM([PREFIX], [#undef PREFIX])
-AH_VERBATIM([WEECHAT_LIBDIR], [#undef WEECHAT_LIBDIR])
-AH_VERBATIM([WEECHAT_SHAREDIR], [#undef WEECHAT_SHAREDIR])
+AH_VERBATIM([DOGECHAT_LIBDIR], [#undef DOGECHAT_LIBDIR])
+AH_VERBATIM([DOGECHAT_SHAREDIR], [#undef DOGECHAT_SHAREDIR])
 AH_VERBATIM([HAVE_GNUTLS], [#undef HAVE_GNUTLS])
 AH_VERBATIM([HAVE_FLOCK], [#undef HAVE_FLOCK])
 AH_VERBATIM([HAVE_EAT_NEWLINE_GLITCH], [#undef HAVE_EAT_NEWLINE_GLITCH])
@@ -125,7 +125,7 @@ AH_VERBATIM([PLUGIN_XFER], [#undef PLUGIN_XFER])
 AH_VERBATIM([TESTS], [#undef TESTS])
 AH_VERBATIM([MAN], [#undef MAN])
 AH_VERBATIM([DOC], [#undef DOC])
-AH_VERBATIM([WEECHAT_HOME], [#define WEECHAT_HOME "~/.weechat"])
+AH_VERBATIM([DOGECHAT_HOME], [#define DOGECHAT_HOME "~/.dogechat"])
 AH_VERBATIM([CA_FILE], [#define CA_FILE "/etc/ssl/certs/ca-certificates.crt"])
 
 # Arguments for ./configure
@@ -160,13 +160,13 @@ AC_ARG_ENABLE(tests,        [  --enable-tests          turn on build of tests (d
 AC_ARG_ENABLE(man,          [  --enable-man            turn on build of man page (default=not built)],enable_man=$enableval,enable_man=no)
 AC_ARG_ENABLE(doc,          [  --enable-doc            turn on build of documentation (default=not built)],enable_doc=$enableval,enable_doc=no)
 
-AC_ARG_VAR(WEECHAT_HOME, [WeeChat home directory for config, logs, scripts.. (default is "~/.weechat")])
-AC_ARG_VAR(CA_FILE, [File containing the certificate authorities (default is "/etc/ssl/certs/ca-certificates.crt"). This is the default value of option "weechat.network.gnutls_ca_file".])
+AC_ARG_VAR(DOGECHAT_HOME, [DogeChat home directory for config, logs, scripts.. (default is "~/.dogechat")])
+AC_ARG_VAR(CA_FILE, [File containing the certificate authorities (default is "/etc/ssl/certs/ca-certificates.crt"). This is the default value of option "dogechat.network.gnutls_ca_file".])
 
-if test "x$WEECHAT_HOME" = "x" ; then
-    WEECHAT_HOME="~/.weechat"
+if test "x$DOGECHAT_HOME" = "x" ; then
+    DOGECHAT_HOME="~/.dogechat"
 fi
-AC_DEFINE_UNQUOTED(WEECHAT_HOME, "$WEECHAT_HOME")
+AC_DEFINE_UNQUOTED(DOGECHAT_HOME, "$DOGECHAT_HOME")
 
 if test "x$CA_FILE" = "x" ; then
     CA_FILE="/etc/ssl/certs/ca-certificates.crt"
@@ -214,7 +214,7 @@ if test "x$enable_ncurses" = "xyes" ; then
         if test "$LIBNCURSES_FOUND" = "0" ; then
             AC_MSG_WARN([
 *** ncurses library not found!
-*** WeeChat will be built without ncurses support.])
+*** DogeChat will be built without ncurses support.])
             enable_ncurses="no"
             not_found="$not_found ncurses"
         else
@@ -270,7 +270,7 @@ if test "x$iconv_found" = "xno" ; then
    AC_MSG_ERROR([
 *** Iconv headers and/or libraries couldn't be found on your system.
 *** Try to install them with your software package manager.
-*** WeeChat can't be built without Iconv support.])
+*** DogeChat can't be built without Iconv support.])
 fi
 
 # ------------------------------------------------------------------------------
@@ -339,7 +339,7 @@ if test "x$enable_aspell" = "xyes" ; then
             AC_MSG_WARN([
 *** Aspell headers and/or libraries couldn't be found on your system.
 *** Try to install them with your software package manager.
-*** WeeChat will be built without Aspell support.])
+*** DogeChat will be built without Aspell support.])
             enable_aspell="no"
             not_found="$not_found aspell"
         else
@@ -458,7 +458,7 @@ if test "x$enable_perl" = "xyes" ; then
         AC_MSG_WARN([
 *** Perl must be installed on your system but perl interpreter couldn't be found in path.
 *** Please check that perl is in path, or install it with your software package manager.
-*** WeeChat will be built without Perl support.])
+*** DogeChat will be built without Perl support.])
         enable_perl="no"
         not_found="$not_found perl"
     else
@@ -479,7 +479,7 @@ if test "x$enable_perl" = "xyes" ; then
                 AC_MSG_WARN([
 *** Perl library couldn't be found on your system.
 *** Try to install it with your software package manager.
-*** WeeChat will be built without Perl support.])
+*** DogeChat will be built without Perl support.])
                 enable_perl="no"
                 not_found="$not_found perl"
             fi
@@ -487,7 +487,7 @@ if test "x$enable_perl" = "xyes" ; then
             AC_MSG_WARN([
 *** Perl headers couldn't be found on your system.
 *** Try to install it with your software package manager.
-*** WeeChat will be built without Perl support.])
+*** DogeChat will be built without Perl support.])
             enable_perl="no"
             not_found="$not_found perl"
         fi
@@ -516,7 +516,7 @@ if test "x$enable_python" = "xyes" ; then
         AC_MSG_WARN([
 *** Python must be installed on your system but python interpreter couldn't be found in path.
 *** Please check that python is in path, or install it with your software package manager.
-*** WeeChat will be built without Python support.])
+*** DogeChat will be built without Python support.])
         enable_python="no"
         not_found="$not_found python"
     else
@@ -527,7 +527,7 @@ if test "x$enable_python" = "xyes" ; then
         if test "x$PYTHON_OLD_VERSION" = "xTrue" ; then
             AC_MSG_WARN([
 *** Python >= 2.5 is needed to build Python plugin, version found: $PYTHON_VERSION.
-*** WeeChat will be built without Python support.])
+*** DogeChat will be built without Python support.])
             enable_python="no"
             not_found="$not_found python"
         else
@@ -554,7 +554,7 @@ if test "x$enable_python" = "xyes" ; then
                     AC_MSG_WARN([
 *** Python library couldn't be found on your system.
 *** Try to install it with your software package manager.
-*** WeeChat will be built without Python support.])
+*** DogeChat will be built without Python support.])
                     enable_python="no"
                     not_found="$not_found python"
                 fi
@@ -562,7 +562,7 @@ if test "x$enable_python" = "xyes" ; then
                 AC_MSG_WARN([
 *** Python header files couldn't be found on your system.
 *** Try to install them with your software package manager.
-*** WeeChat will be built without Python support.])
+*** DogeChat will be built without Python support.])
                 enable_python="no"
                 not_found="$not_found python"
             fi
@@ -601,7 +601,7 @@ if test "x$enable_ruby" = "xyes" ; then
             AC_MSG_WARN([
 *** Ruby must be installed on your system but ruby interpreter couldn't be found in path.
 *** Please check that ruby is in path, or install it with your software package manager.
-*** WeeChat will be built without Ruby support.])
+*** DogeChat will be built without Ruby support.])
             enable_ruby="no"
             not_found="$not_found ruby"
         else
@@ -615,7 +615,7 @@ if test "x$enable_ruby" = "xyes" ; then
                 AC_MSG_WARN([
 *** Ruby header files couldn't be found on your system.
 *** Try to install them with your software package manager.
-*** WeeChat will be built without Ruby support.])
+*** DogeChat will be built without Ruby support.])
                 enable_ruby="no"
                 not_found="$not_found ruby"
             fi
@@ -733,7 +733,7 @@ if test "x$enable_lua" = "xyes" ; then
             AC_MSG_WARN([
 *** Lua (>=5.0) headers and/or librairies couldn't be found on your system.
 *** Try to install liblua, liblualib and liblua-dev with your software package manager.
-*** WeeChat will be built without Lua support.])
+*** DogeChat will be built without Lua support.])
             enable_lua="no"
             not_found="$not_found lua"
         else
@@ -782,7 +782,7 @@ if test "x$enable_tcl" = "xyes" ; then
     if test "x$tcl_found" = "xno" ; then
         AC_MSG_WARN([
 *** Script tclConfig.sh couldn't be found on your system.
-*** WeeChat will be built without Tcl support.])
+*** DogeChat will be built without Tcl support.])
         enable_tcl="no"
         not_found="$not_found tcl"
     fi
@@ -837,7 +837,7 @@ if test "x$enable_guile" = "xyes" ; then
     else
         AC_MSG_WARN([
 *** Guile >= 2.0 couldn't be found on your system.
-*** WeeChat will be built without Guile (scheme) support.])
+*** DogeChat will be built without Guile (scheme) support.])
         enable_guile="no"
         not_found="$not_found guile"
     fi
@@ -882,14 +882,14 @@ if test "x$enable_javascript" = "xyes" ; then
             AC_MSG_RESULT(no)
             AC_MSG_WARN([
 *** V8 library couldn't be found on your system.
-*** WeeChat will be built without Javascript support.])
+*** DogeChat will be built without Javascript support.])
             enable_javascript="no"
             not_found="$not_found javascript/v8"
         fi
     else
         AC_MSG_WARN([
 *** V8 header files couldn't be found on your system.
-*** WeeChat will be built without Javascript support.])
+*** DogeChat will be built without Javascript support.])
         enable_javascript="no"
         not_found="$not_found javascript/v8"
     fi
@@ -963,7 +963,7 @@ if test "x$enable_gnutls" = "xyes" ; then
         AC_MSG_RESULT(no)
         AC_MSG_WARN([
 *** libgnutls was not found. You may want to get it from ftp://ftp.gnutls.org/pub/gnutls/
-*** WeeChat will be built without GnuTLS support.])
+*** DogeChat will be built without GnuTLS support.])
         enable_gnutls="no"
         not_found="$not_found gnutls"
     else
@@ -1099,7 +1099,7 @@ if test "x$enable_tests" = "xyes" ; then
     else
         AC_MSG_WARN([
 *** CppUTest couldn't be found on your system.
-*** WeeChat will be built without tests.])
+*** DogeChat will be built without tests.])
         enable_tests="no"
         not_found="$not_found tests"
     fi
@@ -1192,14 +1192,14 @@ fi
 
 AC_DEFINE_UNQUOTED(PREFIX, "${prefix}")
 
-WEECHAT_LIBDIR=`eval eval echo ${libdir}/weechat`
-AC_DEFINE_UNQUOTED(WEECHAT_LIBDIR, "$WEECHAT_LIBDIR")
+DOGECHAT_LIBDIR=`eval eval echo ${libdir}/dogechat`
+AC_DEFINE_UNQUOTED(DOGECHAT_LIBDIR, "$DOGECHAT_LIBDIR")
 
-WEECHAT_SHAREDIR=`eval eval echo ${datadir}/weechat`
-AC_DEFINE_UNQUOTED(WEECHAT_SHAREDIR, "$WEECHAT_SHAREDIR")
+DOGECHAT_SHAREDIR=`eval eval echo ${datadir}/dogechat`
+AC_DEFINE_UNQUOTED(DOGECHAT_SHAREDIR, "$DOGECHAT_SHAREDIR")
 
-weechat_libdir=${libdir}/weechat
-AC_SUBST(weechat_libdir)
+dogechat_libdir=${libdir}/dogechat
+AC_SUBST(dogechat_libdir)
 
 COMMON_CFLAGS="-Wall -Wextra -Werror-implicit-function-declaration"
 AC_MSG_CHECKING([whether we have GNU assembler])
@@ -1248,8 +1248,8 @@ gnu*)
         ;;
 esac
 
-CFLAGS="$CFLAGS -DWEECHAT_VERSION=\\\"$VERSION\\\" -DWEECHAT_LICENSE=\\\"$LICENSE\\\""
-CPPFLAGS="$CPPFLAGS -DWEECHAT_VERSION=\\\"$VERSION\\\" -DWEECHAT_LICENSE=\\\"$LICENSE\\\""
+CFLAGS="$CFLAGS -DDOGECHAT_VERSION=\\\"$VERSION\\\" -DDOGECHAT_LICENSE=\\\"$LICENSE\\\""
+CPPFLAGS="$CPPFLAGS -DDOGECHAT_VERSION=\\\"$VERSION\\\" -DDOGECHAT_LICENSE=\\\"$LICENSE\\\""
 
 # ------------------------------------------------------------------------------
 #                                output Makefiles
@@ -1448,9 +1448,9 @@ if test "x$not_asked" != "x" || test "x$not_found" != "x"; then
 fi
 
 echo ""
-echo "WeeChat home directory is ${WEECHAT_HOME}"
+echo "DogeChat home directory is ${DOGECHAT_HOME}"
 echo ""
-eval echo "WeeChat will be installed in $bindir"
+eval echo "DogeChat will be installed in $bindir"
 echo ""
-echo "configure complete, now type 'make' to build WeeChat $VERSION"
+echo "configure complete, now type 'make' to build DogeChat $VERSION"
 echo ""

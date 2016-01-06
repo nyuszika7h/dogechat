@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -31,13 +31,13 @@
 #include <time.h>
 #include <regex.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-eval.h"
-#include "../core/wee-hashtable.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-string.h"
-#include "../core/wee-utf8.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-eval.h"
+#include "../core/doge-hashtable.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-string.h"
+#include "../core/doge-utf8.h"
 #include "../plugins/plugin.h"
 #include "gui-chat.h"
 #include "gui-buffer.h"
@@ -60,7 +60,7 @@ char *gui_chat_lines_waiting_buffer = NULL;     /* lines waiting for core   */
 
 
 /*
- * Initializes some variables for chat area (called before reading WeeChat
+ * Initializes some variables for chat area (called before reading DogeChat
  * configuration file).
  */
 
@@ -91,7 +91,7 @@ gui_chat_init ()
 }
 
 /*
- * Builds prefix with colors (called after reading WeeChat configuration file).
+ * Builds prefix with colors (called after reading DogeChat configuration file).
  */
 
 void
@@ -676,7 +676,7 @@ gui_chat_printf_date_tags (struct t_gui_buffer *buffer, time_t date,
             && (gui_chat_mute_buffer == buffer)))
         return;
 
-    weechat_va_format (message);
+    dogechat_va_format (message);
     if (!vbuffer)
         return;
 
@@ -696,7 +696,7 @@ gui_chat_printf_date_tags (struct t_gui_buffer *buffer, time_t date,
         if (pos_end)
             pos_end[0] = '\0';
 
-        /* call modifier for message printed ("weechat_print") */
+        /* call modifier for message printed ("dogechat_print") */
         new_msg = NULL;
         msg_discarded = 0;
         if (buffer)
@@ -711,7 +711,7 @@ gui_chat_printf_date_tags (struct t_gui_buffer *buffer, time_t date,
                           buffer->name,
                           (tags) ? tags : "");
                 new_msg = hook_modifier_exec (NULL,
-                                              "weechat_print",
+                                              "dogechat_print",
                                               modifier_data,
                                               pos);
                 free (modifier_data);
@@ -869,7 +869,7 @@ gui_chat_printf_y (struct t_gui_buffer *buffer, int y, const char *message, ...)
             return;
     }
 
-    weechat_va_format (message);
+    dogechat_va_format (message);
     if (!vbuffer)
         return;
 
@@ -997,7 +997,7 @@ gui_chat_hsignal_quote_line_cb (void *data, const char *signal,
     (void) data;
 
     if (!gui_current_window->buffer->input)
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
 
     /* get time */
     str_time[0] = '\0';
@@ -1047,7 +1047,7 @@ gui_chat_hsignal_quote_line_cb (void *data, const char *signal,
     message = hashtable_get (hashtable, "_chat_line_message");
 
     if (!message)
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
 
     length_time = strlen (str_time);
     length_nick_prefix = strlen (CONFIG_STRING(config_look_quote_nick_prefix));
@@ -1076,7 +1076,7 @@ gui_chat_hsignal_quote_line_cb (void *data, const char *signal,
         free (str);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*

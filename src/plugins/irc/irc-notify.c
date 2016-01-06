@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2010-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-notify.h"
 #include "irc-color.h"
@@ -166,14 +166,14 @@ irc_notify_set_server_option (struct t_irc_server *server)
         }
         if (str)
         {
-            weechat_config_option_set (server->options[IRC_SERVER_OPTION_NOTIFY],
+            dogechat_config_option_set (server->options[IRC_SERVER_OPTION_NOTIFY],
                                        str, 0);
             free (str);
         }
     }
     else
     {
-        weechat_config_option_set (server->options[IRC_SERVER_OPTION_NOTIFY],
+        dogechat_config_option_set (server->options[IRC_SERVER_OPTION_NOTIFY],
                                    "", 0);
     }
 }
@@ -340,7 +340,7 @@ irc_notify_send_monitor (struct t_irc_server *server)
             while (1)
             {
                 snprintf (hash_key, sizeof (hash_key), "msg%d", number);
-                str_message = weechat_hashtable_get (hashtable,
+                str_message = dogechat_hashtable_get (hashtable,
                                                      hash_key);
                 if (!str_message)
                     break;
@@ -349,7 +349,7 @@ irc_notify_send_monitor (struct t_irc_server *server)
                                   NULL, "%s", str_message);
                 number++;
             }
-            weechat_hashtable_free (hashtable);
+            dogechat_hashtable_free (hashtable);
         }
     }
     if (message)
@@ -373,7 +373,7 @@ irc_notify_new_for_server (struct t_irc_server *server)
     if (!notify || !notify[0])
         return;
 
-    items = weechat_string_split (notify, ",", 0, 0, &num_items);
+    items = dogechat_string_split (notify, ",", 0, 0, &num_items);
     if (items)
     {
         for (i = 0; i < num_items; i++)
@@ -388,21 +388,21 @@ irc_notify_new_for_server (struct t_irc_server *server)
                 {
                     pos_params++;
                 }
-                params = weechat_string_split (pos_params, "/", 0, 0,
+                params = dogechat_string_split (pos_params, "/", 0, 0,
                                                &num_params);
                 if (params)
                 {
                     for (j = 0; j < num_params; j++)
                     {
-                        if (weechat_strcasecmp (params[j], "away") == 0)
+                        if (dogechat_strcasecmp (params[j], "away") == 0)
                             check_away = 1;
                     }
-                    weechat_string_free_split (params);
+                    dogechat_string_free_split (params);
                 }
             }
             irc_notify_new (server, items[i], check_away);
         }
-        weechat_string_free_split (items);
+        dogechat_string_free_split (items);
     }
 
     /* if we are using MONITOR, send it now with new nicks monitored */
@@ -434,8 +434,8 @@ void
 irc_notify_free (struct t_irc_server *server, struct t_irc_notify *notify,
                  int remove_monitor)
 {
-    (void) weechat_hook_signal_send ("irc_notify_removing",
-                                     WEECHAT_HOOK_SIGNAL_POINTER, notify);
+    (void) dogechat_hook_signal_send ("irc_notify_removing",
+                                     DOGECHAT_HOOK_SIGNAL_POINTER, notify);
 
     /* free data */
     if (notify->nick)
@@ -468,8 +468,8 @@ irc_notify_free (struct t_irc_server *server, struct t_irc_notify *notify,
     if (server->notify_count > 0)
         server->notify_count--;
 
-    (void) weechat_hook_signal_send ("irc_notify_removed",
-                                     WEECHAT_HOOK_SIGNAL_STRING, NULL);
+    (void) dogechat_hook_signal_send ("irc_notify_removed",
+                                     DOGECHAT_HOOK_SIGNAL_STRING, NULL);
 }
 
 /*
@@ -505,7 +505,7 @@ irc_notify_display (struct t_irc_server *server, struct t_gui_buffer *buffer,
     if ((notify->is_on_server < 0)
         || (!notify->is_on_server && !notify->away_message))
     {
-        weechat_printf (
+        dogechat_printf (
             buffer,
             "  %s%s%s @ %s%s%s: %s%s",
             irc_nick_color_for_msg (server, 1, NULL, notify->nick),
@@ -522,7 +522,7 @@ irc_notify_display (struct t_irc_server *server, struct t_gui_buffer *buffer,
     }
     else
     {
-        weechat_printf (
+        dogechat_printf (
             buffer,
             "  %s%s%s @ %s%s%s: %s%s %s%s%s%s%s%s",
             irc_nick_color_for_msg (server, 1, NULL, notify->nick),
@@ -557,8 +557,8 @@ irc_notify_display_list (struct t_irc_server *server)
     {
         if (server->notify_list)
         {
-            weechat_printf (server->buffer, "");
-            weechat_printf (server->buffer,
+            dogechat_printf (server->buffer, "");
+            dogechat_printf (server->buffer,
                             _("Notify list for %s%s%s:"),
                             IRC_COLOR_CHAT_SERVER,
                             server->name,
@@ -571,7 +571,7 @@ irc_notify_display_list (struct t_irc_server *server)
         }
         else
         {
-            weechat_printf (server->buffer,
+            dogechat_printf (server->buffer,
                             _("Notify list is empty on this server"));
         }
     }
@@ -586,8 +586,8 @@ irc_notify_display_list (struct t_irc_server *server)
             {
                 if (count == 0)
                 {
-                    weechat_printf (NULL, "");
-                    weechat_printf (NULL, _("Notify list for all servers:"));
+                    dogechat_printf (NULL, "");
+                    dogechat_printf (NULL, _("Notify list for all servers:"));
                 }
                 irc_notify_display (ptr_server, NULL, ptr_notify);
                 count++;
@@ -595,7 +595,7 @@ irc_notify_display_list (struct t_irc_server *server)
         }
         if (count == 0)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("Notify list is empty on all servers"));
         }
     }
@@ -613,7 +613,7 @@ irc_notify_get_tags (struct t_config_option *option, const char *type,
     static char string[1024];
     const char *tags;
 
-    tags = weechat_config_string (option);
+    tags = dogechat_config_string (option);
 
     snprintf (string, sizeof (string), "irc_notify,irc_notify_%s,nick_%s%s%s",
               type,
@@ -650,7 +650,7 @@ irc_notify_send_signal (struct t_irc_notify *notify,
                   (away_message && away_message[0]) ? away_message : "");
     }
 
-    (void) weechat_hook_signal_send (signal, WEECHAT_HOOK_SIGNAL_STRING, data);
+    (void) dogechat_hook_signal_send (signal, DOGECHAT_HOOK_SIGNAL_STRING, data);
 
     if (data)
         free (data);
@@ -672,7 +672,7 @@ irc_notify_set_is_on_server (struct t_irc_notify *notify, const char *host,
     if (notify->is_on_server == is_on_server)
         return;
 
-    weechat_printf_tags (
+    dogechat_printf_tags (
         notify->server->buffer,
         irc_notify_get_tags (irc_config_look_notify_tags_ison,
                              (is_on_server) ? "join" : "quit",
@@ -684,7 +684,7 @@ irc_notify_set_is_on_server (struct t_irc_notify *notify, const char *host,
         ((is_on_server) ?
          _("%snotify: %s%s%s%s%s%s%s%s%s has connected") :
          _("%snotify: %s%s%s%s%s%s%s%s%s has quit")),
-        weechat_prefix ("network"),
+        dogechat_prefix ("network"),
         irc_nick_color_for_msg (notify->server, 1, NULL, notify->nick),
         notify->nick,
         (host && host[0]) ? IRC_COLOR_CHAT_DELIMITERS : "",
@@ -719,12 +719,12 @@ irc_notify_set_away_message (struct t_irc_notify *notify,
 
     if (!notify->away_message && away_message)
     {
-        weechat_printf_tags (
+        dogechat_printf_tags (
             notify->server->buffer,
             irc_notify_get_tags (
                 irc_config_look_notify_tags_whois, "away", notify->nick),
             _("%snotify: %s%s%s is now away: \"%s\""),
-            weechat_prefix ("network"),
+            dogechat_prefix ("network"),
             irc_nick_color_for_msg (notify->server, 1, NULL, notify->nick),
             notify->nick,
             IRC_COLOR_RESET,
@@ -733,12 +733,12 @@ irc_notify_set_away_message (struct t_irc_notify *notify,
     }
     else if (notify->away_message && !away_message)
     {
-        weechat_printf_tags (
+        dogechat_printf_tags (
             notify->server->buffer,
             irc_notify_get_tags (
                 irc_config_look_notify_tags_whois, "back", notify->nick),
             _("%snotify: %s%s%s is back"),
-            weechat_prefix ("network"),
+            dogechat_prefix ("network"),
             irc_nick_color_for_msg (notify->server, 1, NULL, notify->nick),
             notify->nick,
             IRC_COLOR_RESET);
@@ -746,12 +746,12 @@ irc_notify_set_away_message (struct t_irc_notify *notify,
     }
     else if (notify->away_message && away_message)
     {
-        weechat_printf_tags (
+        dogechat_printf_tags (
             notify->server->buffer,
             irc_notify_get_tags (
                 irc_config_look_notify_tags_whois, "still_away", notify->nick),
             _("%snotify: %s%s%s is still away: \"%s\""),
-            weechat_prefix ("network"),
+            dogechat_prefix ("network"),
             irc_nick_color_for_msg (notify->server, 1, NULL, notify->nick),
             notify->nick,
             IRC_COLOR_RESET,
@@ -784,48 +784,48 @@ irc_notify_hsignal_cb (void *data, const char *signal,
     (void) data;
     (void) signal;
 
-    error = weechat_hashtable_get (hashtable, "error");
-    server = weechat_hashtable_get (hashtable, "server");
-    pattern = weechat_hashtable_get (hashtable, "pattern");
-    command = weechat_hashtable_get (hashtable, "command");
-    output = weechat_hashtable_get (hashtable, "output");
+    error = dogechat_hashtable_get (hashtable, "error");
+    server = dogechat_hashtable_get (hashtable, "server");
+    pattern = dogechat_hashtable_get (hashtable, "pattern");
+    command = dogechat_hashtable_get (hashtable, "command");
+    output = dogechat_hashtable_get (hashtable, "output");
 
     /* if there is an error on redirection, just ignore result */
     if (error && error[0])
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
 
     /* missing things in redirection */
     if (!server || !pattern || !command || !output)
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
 
     /* search server */
     ptr_server = irc_server_search (server);
     if (!ptr_server)
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
 
     /* search for start of arguments in command sent to server */
     ptr_args = strchr (command, ' ');
     if (!ptr_args)
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     ptr_args++;
     while ((ptr_args[0] == ' ') || (ptr_args[0] == ':'))
     {
         ptr_args++;
     }
     if (!ptr_args[0])
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
 
     /* read output of command */
     if (strcmp (pattern, "ison") == 0)
     {
         /* redirection of command "ison" */
-        messages = weechat_string_split (output, "\n", 0, 0, &num_messages);
+        messages = dogechat_string_split (output, "\n", 0, 0, &num_messages);
         if (messages)
         {
-            nicks_sent = weechat_string_split (ptr_args, " ", 0, 0,
+            nicks_sent = dogechat_string_split (ptr_args, " ", 0, 0,
                                                &num_nicks_sent);
             if (!nicks_sent)
-                return WEECHAT_RC_OK;
+                return DOGECHAT_RC_OK;
             for (ptr_notify = ptr_server->notify_list;
                  ptr_notify;
                  ptr_notify = ptr_notify->next_notify)
@@ -849,7 +849,7 @@ irc_notify_hsignal_cb (void *data, const char *signal,
                         }
                         if (pos[0])
                         {
-                            nicks_recv = weechat_string_split (pos, " ", 0, 0,
+                            nicks_recv = dogechat_string_split (pos, " ", 0, 0,
                                                                &num_nicks_recv);
                             if (nicks_recv)
                             {
@@ -870,7 +870,7 @@ irc_notify_hsignal_cb (void *data, const char *signal,
                                         }
                                     }
                                 }
-                                weechat_string_free_split (nicks_recv);
+                                dogechat_string_free_split (nicks_recv);
                             }
                         }
                     }
@@ -901,7 +901,7 @@ irc_notify_hsignal_cb (void *data, const char *signal,
                 }
 
             }
-            weechat_string_free_split (messages);
+            dogechat_string_free_split (messages);
         }
     }
     else if (strcmp (pattern, "whois") == 0)
@@ -912,7 +912,7 @@ irc_notify_hsignal_cb (void *data, const char *signal,
         {
             away_message_updated = 0;
             no_such_nick = 0;
-            messages = weechat_string_split (output, "\n", 0, 0, &num_messages);
+            messages = dogechat_string_split (output, "\n", 0, 0, &num_messages);
             if (messages)
             {
                 for (i = 0; i < num_messages; i++)
@@ -954,7 +954,7 @@ irc_notify_hsignal_cb (void *data, const char *signal,
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -994,7 +994,7 @@ irc_notify_timer_ison_cb (void *data, int remaining_calls)
                     while (1)
                     {
                         snprintf (hash_key, sizeof (hash_key), "msg%d", number);
-                        str_message = weechat_hashtable_get (hashtable,
+                        str_message = dogechat_hashtable_get (hashtable,
                                                              hash_key);
                         if (!str_message)
                             break;
@@ -1005,7 +1005,7 @@ irc_notify_timer_ison_cb (void *data, int remaining_calls)
                                           NULL, "%s", str_message);
                         number++;
                     }
-                    weechat_hashtable_free (hashtable);
+                    dogechat_hashtable_free (hashtable);
                 }
             }
             if (message)
@@ -1013,7 +1013,7 @@ irc_notify_timer_ison_cb (void *data, int remaining_calls)
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1059,7 +1059,7 @@ irc_notify_timer_whois_cb (void *data, int remaining_calls)
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1074,18 +1074,18 @@ irc_notify_hdata_notify_cb (void *data, const char *hdata_name)
     /* make C compiler happy */
     (void) data;
 
-    hdata = weechat_hdata_new (hdata_name, "prev_notify", "next_notify",
+    hdata = dogechat_hdata_new (hdata_name, "prev_notify", "next_notify",
                                0, 0, NULL, NULL);
     if (hdata)
     {
-        WEECHAT_HDATA_VAR(struct t_irc_notify, server, POINTER, 0, NULL, "irc_server");
-        WEECHAT_HDATA_VAR(struct t_irc_notify, nick, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_notify, check_away, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_notify, is_on_server, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_notify, away_message, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_notify, ison_received, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_notify, prev_notify, POINTER, 0, NULL, hdata_name);
-        WEECHAT_HDATA_VAR(struct t_irc_notify, next_notify, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_VAR(struct t_irc_notify, server, POINTER, 0, NULL, "irc_server");
+        DOGECHAT_HDATA_VAR(struct t_irc_notify, nick, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_notify, check_away, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_notify, is_on_server, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_notify, away_message, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_notify, ison_received, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_notify, prev_notify, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_VAR(struct t_irc_notify, next_notify, POINTER, 0, NULL, hdata_name);
     }
     return hdata;
 }
@@ -1107,28 +1107,28 @@ irc_notify_add_to_infolist (struct t_infolist *infolist,
     if (!infolist || !notify)
         return 0;
 
-    ptr_item = weechat_infolist_new_item (infolist);
+    ptr_item = dogechat_infolist_new_item (infolist);
     if (!ptr_item)
         return 0;
 
-    if (!weechat_infolist_new_var_pointer (ptr_item, "server", notify->server))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "server", notify->server))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "server_name", notify->server->name))
+    if (!dogechat_infolist_new_var_string (ptr_item, "server_name", notify->server->name))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "nick", notify->nick))
+    if (!dogechat_infolist_new_var_string (ptr_item, "nick", notify->nick))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "check_away", notify->check_away))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "check_away", notify->check_away))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "is_on_server", notify->is_on_server))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "is_on_server", notify->is_on_server))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "away_message", notify->away_message))
+    if (!dogechat_infolist_new_var_string (ptr_item, "away_message", notify->away_message))
         return 0;
 
     return 1;
 }
 
 /*
- * Prints notify infos in WeeChat log file (usually for crash dump).
+ * Prints notify infos in DogeChat log file (usually for crash dump).
  */
 
 void
@@ -1139,16 +1139,16 @@ irc_notify_print_log (struct t_irc_server *server)
     for (ptr_notify = server->notify_list; ptr_notify;
          ptr_notify = ptr_notify->next_notify)
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("  => notify (addr:0x%lx):", ptr_notify);
-        weechat_log_printf ("       server. . . . . . . : 0x%lx", ptr_notify->server);
-        weechat_log_printf ("       nick. . . . . . . . : '%s'",  ptr_notify->nick);
-        weechat_log_printf ("       check_away. . . . . : %d",    ptr_notify->check_away);
-        weechat_log_printf ("       is_on_server. . . . : %d",    ptr_notify->is_on_server);
-        weechat_log_printf ("       away_message. . . . : '%s'",  ptr_notify->away_message);
-        weechat_log_printf ("       ison_received . . . : %d",    ptr_notify->ison_received);
-        weechat_log_printf ("       prev_notify . . . . : 0x%lx", ptr_notify->prev_notify);
-        weechat_log_printf ("       next_notify . . . . : 0x%lx", ptr_notify->next_notify);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("  => notify (addr:0x%lx):", ptr_notify);
+        dogechat_log_printf ("       server. . . . . . . : 0x%lx", ptr_notify->server);
+        dogechat_log_printf ("       nick. . . . . . . . : '%s'",  ptr_notify->nick);
+        dogechat_log_printf ("       check_away. . . . . : %d",    ptr_notify->check_away);
+        dogechat_log_printf ("       is_on_server. . . . : %d",    ptr_notify->is_on_server);
+        dogechat_log_printf ("       away_message. . . . : '%s'",  ptr_notify->away_message);
+        dogechat_log_printf ("       ison_received . . . : %d",    ptr_notify->ison_received);
+        dogechat_log_printf ("       prev_notify . . . . : 0x%lx", ptr_notify->prev_notify);
+        dogechat_log_printf ("       next_notify . . . . : 0x%lx", ptr_notify->next_notify);
     }
 }
 
@@ -1160,10 +1160,10 @@ void
 irc_notify_hook_timer_ison ()
 {
     if (irc_notify_timer_ison)
-        weechat_unhook (irc_notify_timer_ison);
+        dogechat_unhook (irc_notify_timer_ison);
 
-    irc_notify_timer_ison = weechat_hook_timer (
-        60 * 1000 * weechat_config_integer (irc_config_network_notify_check_ison),
+    irc_notify_timer_ison = dogechat_hook_timer (
+        60 * 1000 * dogechat_config_integer (irc_config_network_notify_check_ison),
         0, 0, &irc_notify_timer_ison_cb, NULL);
 }
 
@@ -1175,10 +1175,10 @@ void
 irc_notify_hook_timer_whois ()
 {
     if (irc_notify_timer_whois)
-        weechat_unhook (irc_notify_timer_whois);
+        dogechat_unhook (irc_notify_timer_whois);
 
-    irc_notify_timer_whois = weechat_hook_timer (
-        60 * 1000 * weechat_config_integer (irc_config_network_notify_check_whois),
+    irc_notify_timer_whois = dogechat_hook_timer (
+        60 * 1000 * dogechat_config_integer (irc_config_network_notify_check_whois),
         0, 0, &irc_notify_timer_whois_cb, NULL);
 }
 
@@ -1192,7 +1192,7 @@ irc_notify_init ()
     irc_notify_hook_timer_ison ();
     irc_notify_hook_timer_whois ();
 
-    irc_notify_hsignal = weechat_hook_hsignal ("irc_redirection_notify_*",
+    irc_notify_hsignal = dogechat_hook_hsignal ("irc_redirection_notify_*",
                                                &irc_notify_hsignal_cb,
                                                NULL);
 }
@@ -1205,9 +1205,9 @@ void
 irc_notify_end ()
 {
     if (irc_notify_timer_ison)
-        weechat_unhook (irc_notify_timer_ison);
+        dogechat_unhook (irc_notify_timer_ison);
     if (irc_notify_timer_whois)
-        weechat_unhook (irc_notify_timer_whois);
+        dogechat_unhook (irc_notify_timer_whois);
     if (irc_notify_hsignal)
-        weechat_unhook (irc_notify_hsignal);
+        dogechat_unhook (irc_notify_hsignal);
 }

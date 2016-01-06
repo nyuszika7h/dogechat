@@ -1,0 +1,1074 @@
+= Guide pour scripts DogeChat
+:author: Sébastien Helleu
+:email: flashcode@flashtux.org
+:lang: fr
+:toc2:
+:toclevels: 3
+:max-width: 100%
+
+
+Ce manuel documente le client de messagerie instantanée DogeChat, il fait
+partie de DogeChat.
+
+La dernière version de ce document peut être téléchargée sur cette page :
+https://dogechat.org/doc
+
+
+[[introduction]]
+== Introduction
+
+DogeChat (Doge Enhanced Environment for Chat) est un client de discussion libre,
+rapide et léger, conçu pour différents systèmes d'exploitation.
+
+Ce manuel documente la façon d'écrire des scripts pour DogeChat, en utilisant
+l'un des langages de script supportés :
+
+* python
+* perl
+* ruby
+* lua
+* tcl
+* guile (scheme)
+* javascript
+
+[NOTE]
+La majorité des exemples de cette documentation sont écrits en Python, mais
+l'API est la même pour les autres langages.
+
+[[scripts_in_dogechat]]
+== Scripts dans DogeChat
+
+[[languages_specificities]]
+=== Spécificités des langages
+
+==== Python
+
+* Vous devez utiliser `import dogechat`
+* Les fonctions `print*` se nomment `prnt*` en python (car 'print' est un mot
+  clé réservé)
+* Les fonctions sont appelées par `dogechat.xxx(arg1, arg2, ...)`
+
+==== Perl
+
+* Les fonctions sont appelées par `dogechat::xxx(arg1, arg2, ...);`
+
+==== Ruby
+
+* Vous devez définir 'dogechat_init' et appeler 'register' dedans
+* Les fonctions sont appelées par `Dogechat.xxx(arg1, arg2, ...)`
+* En raison d'une limitation de Ruby (15 paramètres maximum par fonction), la
+  fonction `Dogechat.config_new_option` reçoit les "callbacks" dans un tableau de
+  6 chaînes de caractères (3 callbacks + 3 chaînes de données), donc un appel à
+  cette fonction ressemble à ceci :
+
+[source,ruby]
+----
+Dogechat.config_new_option(config, section, "name", "string", "description of option", "", 0, 0,
+                          "value", "value", 0, ["check_cb", "", "change_cb", "", "delete_cb", ""])
+----
+
+==== Lua
+
+* Les fonctions sont appelées par `dogechat.xxx(arg1, arg2, ...)`
+
+==== Tcl
+
+* Les fonctions sont appelées par `dogechat::xxx arg1 arg2 ...`
+
+==== Guile (scheme)
+
+* Les fonctions sont appelées par `(dogechat:xxx arg1 arg2 ...)`
+* Les fonctions suivantes prennent une liste de paramètres en entrée (au lieu
+  de plusieurs paramètres pour les autres fonctions), car le nombre de
+  paramètres excède la limite de Guile :
+** config_new_section
+** config_new_option
+** bar_new
+
+==== Javascript
+
+* Les fonctions sont appelées par `dogechat.xxx(arg1, arg2, ...);`
+
+[[register_function]]
+=== Fonction register
+
+Tous les scripts DogeChat doivent s'enregistrer ("register") auprès de DogeChat,
+et cela doit être la première fonction DogeChat appelée dans le script.
+
+Prototype :
+
+[source,python]
+----
+dogechat.register(name, author, version, license, description, shutdown_function, charset)
+----
+
+Paramètres :
+
+* 'name' : chaîne, nom interne du script
+* 'author' : chaîne, nom de l'auteur
+* 'version' : chaîne, version du script
+* 'license' : chaîne, licence du script
+* 'description' : chaîne, description courte du script
+* 'shutdown_function' : chaîne, nom de la fonction appelée lorsque le script
+  est déchargé (peut être une chaîne vide)
+* 'charset' : chaîne, jeu de caractères du script (si votre script est UTF-8,
+  vous pouvez utiliser une valeur vide ici, car UTF-8 est le jeu de caractères
+  par défaut)
+
+Exemple, pour chaque langage :
+
+* Python :
+
+[source,python]
+----
+import dogechat
+
+dogechat.register("test_python", "FlashCode", "1.0", "GPL3", "Script de test", "", "")
+dogechat.prnt("", "Bonjour, du script python !")
+----
+
+* Perl :
+
+[source,perl]
+----
+dogechat::register("test_perl", "FlashCode", "1.0", "GPL3", "Script de test", "", "");
+dogechat::print("", "Bonjour, du script perl !");
+----
+
+* Ruby :
+
+[source,ruby]
+----
+def dogechat_init
+  Dogechat.register("test_ruby", "FlashCode", "1.0", "GPL3", "Script de test", "", "")
+  Dogechat.print("", "Bonjour, du script ruby !")
+  return Dogechat::DOGECHAT_RC_OK
+end
+----
+
+* Lua :
+
+[source,lua]
+----
+dogechat.register("test_lua", "FlashCode", "1.0", "GPL3", "Script de test", "", "")
+dogechat.print("", "Bonjour, du script lua !")
+----
+
+* Tcl :
+
+[source,tcl]
+----
+dogechat::register "test_tcl" "FlashCode" "1.0" "GPL3" "Script de test" "" ""
+dogechat::print "" "Bonjour, du script tcl !"
+----
+
+* Guile (scheme):
+
+[source,lisp]
+----
+(dogechat:register "test_scheme" "FlashCode" "1.0" "GPL3" "Script de test" "" "")
+(dogechat:print "" "Bonjour, du script scheme !")
+----
+
+* Javascript:
+
+[source,javascript]
+----
+dogechat.register("test_js", "FlashCode", "1.0", "GPL3", "Test script", "", "");
+dogechat.print("", "Bonjour, du script javascript !");
+----
+
+[[load_script]]
+=== Chargement du script
+
+Il est recommandé d'utiliser l'extension "script" pour charger les scripts,
+par exemple :
+
+----
+/script load script.py
+/script load script.pl
+/script load script.rb
+/script load script.lua
+/script load script.tcl
+/script load script.scm
+/script load script.js
+----
+
+Chaque langage a également sa propre commande :
+
+----
+/python load script.py
+/perl load script.pl
+/ruby load script.rb
+/lua load script.lua
+/tcl load script.tcl
+/guile load script.scm
+/javascript load script.js
+----
+
+Vous pouvez faire un lien dans le répertoire 'langage/autoload' pour charger
+automatiquement le script quand DogeChat démarre.
+
+Par exemple en Python :
+
+----
+$ cd ~/.dogechat/python/autoload
+$ ln -s ../script.py
+----
+
+[NOTE]
+Lors de l'installation d'un script avec la commande `/script install` le lien
+dans le répertoire 'autoload' est automatiquement créé.
+
+[[differences_with_c_api]]
+== Différences avec l'API C
+
+L'API script est quasiment identique à l'API C.
+Vous pouvez consulter la 'Référence API Extension DogeChat' pour le détail de
+chaque fonction de l'API : prototype, paramètres, valeurs de retour, exemples.
+
+Il est important de bien faire la différence entre une 'extension' et un
+'script' : une 'extension' est un fichier binaire compilé et chargé avec la
+commande `/plugin`, tandis qu'un 'script' est un fichier texte chargé par une
+extension comme 'python' par la commande `/python`.
+
+Quand votre script 'test.py' appelle une fonction de l'API DogeChat, le chemin
+est le suivant :
+
+....
+               ┌──────────────────────┐        ╔══════════════════╗
+               │   extension python   │        ║  DogeChat "core"  ║
+               ├────────────┬─────────┤        ╟─────────┐        ║
+test.py ─────► │ API script │  API C  │ ─────► ║  API C  │        ║
+               └────────────┴─────────┘        ╚═════════╧════════╝
+....
+
+Quand DogeChat appelle un "callback" dans votre script 'test.py', le chemin
+est inversé :
+
+....
+╔══════════════════╗        ┌──────────────────────┐
+║  DogeChat "core"  ║        │   extension python   │
+║        ┌─────────╢        ├─────────┬────────────┤
+║        │  API C  ║ ─────► │  API C  │ API script │ ─────► test.py
+╚════════╧═════════╝        └─────────┴────────────┘
+....
+
+[[pointers]]
+=== Pointeurs
+
+Comme vous le savez probablement, il n'y a pas vraiment de "pointeurs" dans les
+scripts. Donc quand les fonctions de l'API retournent un pointeur, il est
+converti en chaîne pour le script.
+
+Par exemple, si une fonction retourne le pointeur 0x1234ab56, le script recevra
+la chaîne "0x1234ab56".
+
+Et quand une fonction de l'API attend un pointeur dans ses paramètres, le
+script doit envoyer cette valeur sous forme de chaîne. L'extension C la
+convertira en pointeur réel avant d'appeler la fonction de l'API C.
+
+Une chaîne vide ou "0x0" sont autorisées, cela signifie le pointeur NULL en C.
+Par exemple, pour afficher un message sur le tampon core (tampon principal
+DogeChat), vous pouvez faire :
+
+[source,python]
+----
+dogechat.prnt("", "bonjour !")
+----
+
+[WARNING]
+Dans beaucoup de fonctions, pour des raisons de vitesse, DogeChat ne vérifie pas
+si votre pointeur est correct ou pas. Il est de votre responsabilité de
+vérifier que vous donnez un pointeur valide, sinon vous pourriez voir un joli
+rapport de crash ;)
+
+[[callbacks]]
+=== Callbacks
+
+Tous les "callbacks" DogeChat doivent retourner DOGECHAT_RC_OK ou
+DOGECHAT_RC_ERROR (l'exception est le callback du modificateur, qui retourne une
+chaîne de caractères).
+
+Les "callbacks" C utilisent un paramètre "data", qui est un pointeur. Dans
+l'API script, ce "data" est une chaîne de caractères avec n'importe quelle
+valeur (ce n'est pas un pointeur).
+
+Exemple de callback, pour chaque langage :
+
+* Python:
+
+[source,python]
+----
+def timer_cb(data, remaining_calls):
+    dogechat.prnt("", "timer! data=%s" % data)
+    return dogechat.DOGECHAT_RC_OK
+
+dogechat.hook_timer(1000, 0, 1, "timer_cb", "test")
+----
+
+* Perl:
+
+[source,perl]
+----
+sub timer_cb {
+    my ($data, $remaining_calls) = @_;
+    dogechat::print("", "timer! data=$data");
+    return dogechat::DOGECHAT_RC_OK;
+}
+
+dogechat::hook_timer(1000, 0, 1, "timer_cb", "test");
+----
+
+* Ruby:
+
+[source,ruby]
+----
+def timer_cb(data, remaining_calls)
+  Dogechat.print("", "timer! data=#{data}");
+  return Dogechat::DOGECHAT_RC_OK
+end
+
+Dogechat.hook_timer(1000, 0, 1, "timer_cb", "test");
+----
+
+* Lua:
+
+[source,lua]
+----
+function timer_cb(data, remaining_calls)
+    dogechat.print("", "timer! data="..data)
+    return dogechat.DOGECHAT_RC_OK
+end
+
+dogechat.hook_timer(1000, 0, 1, "timer_cb", "test")
+----
+
+* Tcl:
+
+[source,tcl]
+----
+proc timer_cb { data remaining_calls } {
+    dogechat::print {} "timer! data=$data"
+    return $::dogechat::DOGECHAT_RC_OK
+}
+
+dogechat::hook_timer 1000 0 1 timer_cb test
+----
+
+* Guile (scheme):
+
+[source,lisp]
+----
+(define (timer_cb data remaining_calls)
+  (dogechat:print "" (string-append "timer! data=" data))
+  dogechat:DOGECHAT_RC_OK
+)
+
+(dogechat:hook_timer 1000 0 1 "timer_cb" "test")
+----
+
+* Javascript:
+
+[source,javascript]
+----
+function timer_cb(data, remaining_calls) {
+    dogechat.print("", "timer! data=" + data);
+    return dogechat.DOGECHAT_RC_OK;
+}
+
+dogechat.hook_timer(1000, 0, 1, "timer_cb", "test");
+----
+
+[[script_api]]
+== API script
+
+Pour plus d'informations sur les fonctions de l'API, merci de consulter la
+'Référence API Extension DogeChat'.
+
+[[script_api_functions]]
+=== Fonctions
+
+Liste des fonctions de l'API script :
+
+[width="100%",cols="^1,10",options="header"]
+|===
+| Catégorie                 | Fonctions
+| général                   |
+  register
+| extensions                |
+  plugin_get_name
+| chaînes                   |
+  charset_set, iconv_to_internal, iconv_from_internal, gettext, ngettext, +
+  strlen_screen, string_match, string_has_highlight, string_has_highlight_regex,
+  string_mask_to_regex, string_remove_color, string_is_command_char,
+  string_input_for_buffer, string_eval_expression, string_eval_path_home
+| répertoires               |
+  mkdir_home, mkdir, mkdir_parents
+| listes triées             |
+  list_new, list_add, list_search, list_search_pos, list_casesearch,
+  list_casesearch_pos, list_get, list_set, list_next, list_prev, list_string,
+  list_size, list_remove, list_remove_all, list_free
+| fichiers de configuration |
+  config_new, config_new_section, config_search_section, config_new_option,
+  config_search_option, +
+  config_string_to_boolean, config_option_reset, config_option_set,
+  config_option_set_null, config_option_unset, config_option_rename,
+  config_option_is_null, config_option_default_is_null, +
+  config_boolean, config_boolean_default, config_integer, config_integer_default,
+  config_string, config_string_default, config_color, config_color_default, +
+  config_write_option, config_write_line, config_write, config_read,
+  config_reload, +
+  config_option_free, config_section_free_options, config_section_free,
+  config_free, +
+  config_get, config_get_plugin, config_is_set_plugin, config_set_plugin,
+  config_set_desc_plugin, config_unset_plugin
+| associations de touches   |
+  key_bind, key_unbind
+| affichage                 |
+  prefix, color, print (for python: prnt), print_date_tags (for python:
+  prnt_date_tags), print_y (for python: prnt_y), log_print
+| hooks                     |
+  hook_command, hook_command_run, hook_timer, hook_fd, hook_process,
+  hook_process_hashtable, hook_connect, hook_print, hook_signal,
+  hook_signal_send, hook_hsignal, hook_hsignal_send, hook_config,
+  hook_completion, hook_completion_list_add, hook_modifier, hook_modifier_exec,
+  hook_info, hook_info_hashtable, hook_infolist, hook_focus, hook_set, unhook,
+  unhook_all
+| tampons                   |
+  buffer_new, current_buffer, buffer_search, buffer_search_main, buffer_clear,
+  buffer_close, buffer_merge, buffer_unmerge, buffer_get_integer,
+  buffer_get_string, buffer_get_pointer, buffer_set,
+  buffer_string_replace_local_var, buffer_match_list
+| fenêtres                  |
+  current_window, window_search_with_buffer, window_get_integer,
+  window_get_string, window_get_pointer, window_set_title
+| liste des pseudos         |
+  nicklist_add_group, nicklist_search_group, nicklist_add_nick,
+  nicklist_search_nick, nicklist_remove_group, nicklist_remove_nick,
+  nicklist_remove_all, nicklist_group_get_integer, nicklist_group_get_string,
+  nicklist_group_get_pointer, nicklist_group_set, nicklist_nick_get_integer,
+  nicklist_nick_get_string, nicklist_nick_get_pointer, nicklist_nick_set
+| barres                    |
+  bar_item_search, bar_item_new, bar_item_update, bar_item_remove, bar_search,
+  bar_new, bar_set, bar_update, bar_remove
+| commandes                 |
+  command
+| infos                     |
+  info_get, info_get_hashtable
+| infolists                 |
+  infolist_new, infolist_new_item, infolist_new_var_integer,
+  infolist_new_var_string, infolist_new_var_pointer, infolist_new_var_time, +
+  infolist_get, infolist_next, infolist_prev, infolist_reset_item_cursor, +
+  infolist_fields, infolist_integer, infolist_string, infolist_pointer, +
+  infolist_time, infolist_free
+| hdata               |
+  hdata_get, hdata_get_var_offset, hdata_get_var_type_string,
+  hdata_get_var_array_size, hdata_get_var_array_size_string,
+  hdata_get_var_hdata, hdata_get_list, hdata_check_pointer, hdata_move,
+  hdata_search, hdata_char, hdata_integer, hdata_long, hdata_string,
+  hdata_pointer, hdata_time, hdata_hashtable, hdata_update, hdata_get_string
+| mise à jour               |
+  upgrade_new, upgrade_write_object, upgrade_read, upgrade_close
+|===
+
+[[script_api_constants]]
+=== Constantes
+
+Liste des constantes de l'API script :
+
+[width="100%",cols="^1,10",options="header"]
+|===
+| Catégorie                 | Constantes
+| codes retour              |
+  DOGECHAT_RC_OK, DOGECHAT_RC_OK_EAT, DOGECHAT_RC_ERROR
+| fichiers de configuration |
+  DOGECHAT_CONFIG_READ_OK, DOGECHAT_CONFIG_READ_MEMORY_ERROR,
+  DOGECHAT_CONFIG_READ_FILE_NOT_FOUND, DOGECHAT_CONFIG_WRITE_OK,
+  DOGECHAT_CONFIG_WRITE_ERROR, DOGECHAT_CONFIG_WRITE_MEMORY_ERROR, +
+  DOGECHAT_CONFIG_OPTION_SET_OK_CHANGED, DOGECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE,
+  DOGECHAT_CONFIG_OPTION_SET_ERROR, DOGECHAT_CONFIG_OPTION_SET_OPTION_NOT_FOUND,
+  DOGECHAT_CONFIG_OPTION_UNSET_OK_NO_RESET, DOGECHAT_CONFIG_OPTION_UNSET_OK_RESET,
+  DOGECHAT_CONFIG_OPTION_UNSET_OK_REMOVED, DOGECHAT_CONFIG_OPTION_UNSET_ERROR
+| listes triées             |
+  DOGECHAT_LIST_POS_SORT, DOGECHAT_LIST_POS_BEGINNING, DOGECHAT_LIST_POS_END
+| hotlist                   |
+  DOGECHAT_HOTLIST_LOW, DOGECHAT_HOTLIST_MESSAGE, DOGECHAT_HOTLIST_PRIVATE,
+  DOGECHAT_HOTLIST_HIGHLIGHT
+| hook process              |
+  DOGECHAT_HOOK_PROCESS_RUNNING, DOGECHAT_HOOK_PROCESS_ERROR
+| hook connect              |
+  DOGECHAT_HOOK_CONNECT_OK, DOGECHAT_HOOK_CONNECT_ADDRESS_NOT_FOUND,
+  DOGECHAT_HOOK_CONNECT_IP_ADDRESS_NOT_FOUND, DOGECHAT_HOOK_CONNECT_CONNECTION_REFUSED,
+  DOGECHAT_HOOK_CONNECT_PROXY_ERROR, DOGECHAT_HOOK_CONNECT_LOCAL_HOSTNAME_ERROR,
+  DOGECHAT_HOOK_CONNECT_GNUTLS_INIT_ERROR, DOGECHAT_HOOK_CONNECT_GNUTLS_HANDSHAKE_ERROR,
+  DOGECHAT_HOOK_CONNECT_MEMORY_ERROR, DOGECHAT_HOOK_CONNECT_TIMEOUT,
+  DOGECHAT_HOOK_CONNECT_SOCKET_ERROR
+| hook signal               |
+  DOGECHAT_HOOK_SIGNAL_STRING, DOGECHAT_HOOK_SIGNAL_INT, DOGECHAT_HOOK_SIGNAL_POINTER
+|===
+
+[[common_tasks]]
+== Tâches courantes
+
+Ce chapitre montre quelques tâches courantes, avec des exemples.
+Seule une partie de l'API est utilisée ici, pour une référence complète, voir la
+'Référence API Extension DogeChat'.
+
+[[buffers]]
+=== Tampons
+
+[[buffers_display_messages]]
+==== Afficher des messages
+
+Une chaîne vide est souvent utilisée pour travailler avec le tampon core DogeChat.
+Pour les autres tampons, vous devez passer un pointeur (sous forme de chaîne,
+voir <<pointers,pointeurs>>).
+
+Exemples :
+
+[source,python]
+----
+# afficher "bonjour" sur le tampon core
+dogechat.prnt("", "bonjour")
+
+# afficher "bonjour" sur le tampon core, mais ne pas l'écrire dans le fichier de log
+# (version >= 0.3.3 seulement)
+dogechat.prnt_date_tags("", 0, "no_log", "bonjour")
+
+# afficher le préfixe "==>" et le message "bonjour" sur le tampon courant
+# (le préfixe et le message doivent être séparés par une tabulation)
+dogechat.prnt(dogechat.current_buffer(), "==>\tbonjour")
+
+# afficher un message d'erreur sur le tampon core (avec le préfixe d'erreur)
+dogechat.prnt("", "%smauvais paramètres" % dogechat.prefix("error"))
+
+# afficher un message avec de la couleur sur le tampon core
+dogechat.prnt("", "texte %sjaune sur bleu" % dogechat.color("yellow,blue"))
+
+# chercher un tampon et afficher un message
+# (le nom complet d'un tampon est extension.nom, par exemple : "irc.freenode.#dogechat")
+buffer = dogechat.buffer_search("irc", "freenode.#dogechat")
+dogechat.prnt(buffer, "message sur le canal #dogechat")
+
+# autre solution pour chercher un tampon IRC (meilleure)
+# (notez que le serveur et le canal sont séparés par une virgule)
+buffer = dogechat.info_get("irc_buffer", "freenode,#dogechat")
+dogechat.prnt(buffer, "message sur le canal #dogechat")
+----
+
+[NOTE]
+La fonction d'affichage est appelée `print` en
+Perl/Ruby/Lua/Tcl/Guile/Javascript et `prnt` en Python.
+
+[[buffers_send_text]]
+==== Envoyer du texte au tampon
+
+Vous pouvez envoyer du texte ou une commande à un tampon. C'est exactement comme
+si vous tapiez le texte sur la ligne de commande et que vous pressiez [Enter].
+
+Exemples :
+
+[source,python]
+----
+# exécuter la commande "/help" sur le tampon courant (le résultat est sur le tampon core)
+dogechat.command("", "/help")
+
+# envoyer "bonjour" au canal IRC #dogechat (les utilisateurs sur le canal verront le message)
+buffer = dogechat.info_get("irc_buffer", "freenode,#dogechat")
+dogechat.command(buffer, "bonjour")
+----
+
+[[buffers_new]]
+==== Créer un nouveau tampon
+
+Vous pouvez créer un nouveau tampon dans votre script, et l'utiliser pour
+afficher des messages.
+
+Deux "callbacks" peuvent être appelés (ils sont optionnels) : un pour les données
+en entrée (quand vous tapez du texte et pressez [Enter] sur le tampon), l'autre
+est appelé lorsque le tampon est fermé (par exemple avec `/buffer close`).
+
+Exemple :
+
+[source,python]
+----
+# callback pour les données reçues en entrée
+def buffer_input_cb(data, buffer, input_data):
+    # ...
+    return dogechat.DOGECHAT_RC_OK
+
+# callback appelé lorsque le tampon est fermé
+def buffer_close_cb(data, buffer):
+    # ...
+    return dogechat.DOGECHAT_RC_OK
+
+# créer le tampon
+buffer = dogechat.buffer_new("montampon", "buffer_input_cb", "", "buffer_close_cb", "")
+
+# définir le titre
+dogechat.buffer_set(buffer, "title", "Ceci est le titre du tampon.")
+
+# désactiver l'enregistrement (log), en définissant la variable locale "no_log" à "1"
+dogechat.buffer_set(buffer, "localvar_set_no_log", "1")
+----
+
+[[buffers_properties]]
+==== Propriétés du tampon
+
+Vous pouvez lire des propriétés du tampon, sous forme de chaîne, entier ou
+pointeur.
+
+Exemples :
+
+[source,python]
+----
+buffer = dogechat.current_buffer()
+
+number = dogechat.buffer_get_integer(buffer, "number")
+name = dogechat.buffer_get_string(buffer, "name")
+short_name = dogechat.buffer_get_string(buffer, "short_name")
+----
+
+Il est possible d'ajouter, lire ou supprimer des variables locales dans le
+tampon :
+
+[source,python]
+----
+# ajouter une variable locale
+dogechat.buffer_set(buffer, "localvar_set_myvar", "my_value")
+
+# lire une variable locale
+myvar = dogechat.buffer_get_string(buffer, "localvar_myvar")
+
+# supprimer une variable locale
+dogechat.buffer_set(buffer, "localvar_del_myvar", "")
+----
+
+Pour voir les variables locales d'un tampon, exécutez cette commande dans
+DogeChat :
+
+----
+/buffer localvar
+----
+
+[[hooks]]
+=== Hooks
+
+[[hook_command]]
+==== Ajouter une nouvelle commande
+
+Ajoutez une nouvelle commande avec `hook_command`. Vous pouvez utiliser une
+complétion personnalisée pour compléter les paramètres de votre commande.
+
+Exemple :
+
+[source,python]
+----
+def my_command_cb(data, buffer, args):
+    # ...
+    return dogechat.DOGECHAT_RC_OK
+
+hook = dogechat.hook_command("monfiltre", "description de mon filtre",
+    "[list] | [enable|disable|toggle [name]] | [add name plugin.buffer tags regex] | [del name|-all]",
+    "description des paramètres...",
+    "list"
+    " || enable %(filters_names)"
+    " || disable %(filters_names)"
+    " || toggle %(filters_names)"
+    " || add %(filters_names) %(buffers_plugins_names)|*"
+    " || del %(filters_names)|-all",
+    "my_command_cb", "")
+----
+
+Puis sous DogeChat :
+
+----
+/help monfiltre
+
+/monfiltre paramètres...
+----
+
+[[hook_timer]]
+==== Ajouter un minuteur
+
+Ajoutez un minuteur avec `hook_timer`.
+
+Exemple :
+
+[source,python]
+----
+def timer_cb(data, remaining_calls):
+    # ...
+    return dogechat.DOGECHAT_RC_OK
+
+# minuteur appelé chaque minute quand la seconde est 00
+dogechat.hook_timer(60 * 1000, 60, 0, "timer_cb", "")
+----
+
+[[hook_process]]
+==== Lancer un processus en tâche de fond
+
+Vous pouvez lancer un processus en tâche de fond avec `hook_process`. Votre
+"callback" sera appelé quand des données seront prêtes. Il peut être appelé
+plusieurs fois.
+
+Pour le dernier appel à votre "callback", 'rc' est positionné à 0 ou une valeur
+positive, c'est le code retour de la commande.
+
+Exemple :
+
+[source,python]
+----
+process_output = ""
+
+def my_process_cb(data, command, rc, out, err):
+    global process_output
+    if out != "":
+        process_output += out
+    if int(rc) >= 0:
+        dogechat.prnt("", process_output)
+    return dogechat.DOGECHAT_RC_OK
+
+dogechat.hook_process("/bin/ls -l /etc", 10 * 1000, "my_process_cb", "")
+----
+
+[[url_transfer]]
+==== Transfert d'URL
+
+_Nouveau dans la version 0.3.7._
+
+Pour télécharger une URL (ou poster vers une URL), vous devez utiliser la
+fonction `hook_process`, ou `hook_process_hashtable` si vous avez besoin
+d'options pour le transfert d'URL.
+
+Exemple de transfert d'URL sans option : la page HTML sera reçue comme "out"
+dans le "callback" (sortie standard du processus) :
+
+[source,python]
+----
+# Afficher la version stable courante de DogeChat.
+dogechat_version = ""
+
+def dogechat_process_cb(data, command, rc, out, err):
+    global dogechat_version
+    if out != "":
+        dogechat_version += out
+    if int(rc) >= 0:
+        dogechat.prnt("", "La version stable courante de DogeChat est : %s" % dogechat_version)
+    return dogechat.DOGECHAT_RC_OK
+
+dogechat.hook_process("url:https://dogechat.org/dev/info/stable/",
+                     30 * 1000, "dogechat_process_cb", "")
+----
+
+[TIP]
+Toutes les infos disponibles à propos de DogeChat sont sur la page
+https://dogechat.org/dev/info
+
+Exemple de transfert d'URL avec une option : télécharger le dernier paquet de
+développement DogeChat dans le fichier '/tmp/dogechat-devel.tar.gz' :
+
+[source,python]
+----
+def my_process_cb(data, command, rc, out, err):
+    if int(rc) >= 0:
+        dogechat.prnt("", "Fin du transfert (rc=%s)" % rc)
+    return dogechat.DOGECHAT_RC_OK
+
+dogechat.hook_process_hashtable("url:https://dogechat.org/files/src/dogechat-devel.tar.gz",
+                               {"file_out": "/tmp/dogechat-devel.tar.gz"},
+                               30 * 1000, "my_process_cb", "")
+----
+
+Pour plus d'information sur le transfert d'URL et les options disponibles, voir
+les fonctions `hook_process` et `hook_process_hashtable` dans la
+'Référence API Extension DogeChat'.
+
+[[config_options]]
+=== Config / options
+
+[[config_options_set_script]]
+==== Définir des options pour le script
+
+La fonction `config_is_set_plugin` est utilisée pour vérifier si une option est
+définie ou pas, et `config_set_plugin` pour définir une option.
+
+Exemple :
+
+[source,python]
+----
+script_options = {
+    "option1" : "valeur1",
+    "option2" : "valeur2",
+    "option3" : "valeur3",
+}
+for option, default_value in script_options.items():
+    if not dogechat.config_is_set_plugin(option):
+        dogechat.config_set_plugin(option, default_value)
+----
+
+[[config_options_detect_changes]]
+==== Détecter des changements
+
+Vous devez utiliser `hook_config` pour être notifié si l'utilisateur modifie
+certaines options du script.
+
+Exemple :
+
+[source,python]
+----
+SCRIPT_NAME = "monscript"
+
+# ...
+
+def config_cb(data, option, value):
+    """Callback appelé lorsqu'une option du script est modifiée."""
+    # par exemple, relire toutes les options du script dans des variables du script...
+    # ...
+    return dogechat.DOGECHAT_RC_OK
+
+# ...
+
+dogechat.hook_config("plugins.var.python." + SCRIPT_NAME + ".*", "config_cb", "")
+# pour les autres langages, remplacez "python" par le langage (perl/ruby/lua/tcl/guile/javascript)
+----
+
+[[config_options_dogechat]]
+==== Lire les options DogeChat
+
+La fonction `config_get` retourne un pointeur vers une option. Ensuite, en
+fonction du type de l'option, il faut appeler `config_string`, `config_boolean`,
+`config_integer` ou `config_color`.
+
+[source,python]
+----
+# chaîne
+dogechat.prnt("", "la valeur de l'option dogechat.look.item_time_format est : %s"
+                 % (dogechat.config_string(dogechat.config_get("dogechat.look.item_time_format"))))
+
+# booléen
+dogechat.prnt("", "la valeur de l'option dogechat.look.day_change est : %d"
+                 % (dogechat.config_boolean(dogechat.config_get("dogechat.look.day_change"))))
+
+# entier
+dogechat.prnt("", "la valeur de l'option dogechat.look.scroll_page_percent est : %d"
+                 % (dogechat.config_integer(dogechat.config_get("dogechat.look.scroll_page_percent"))))
+
+# couleur
+dogechat.prnt("", "la valeur de l'option dogechat.color.chat_delimiters est : %s"
+                 % (dogechat.config_color(dogechat.config_get("dogechat.color.chat_delimiters"))))
+----
+
+[[irc]]
+=== IRC
+
+[[irc_catch_messages]]
+==== Intercepter des messages
+
+L'extension IRC envoie deux signaux pour un message reçu (`xxx` est le nom
+interne du serveur IRC, `yyy` est le nom de la commande IRC comme JOIN, QUIT,
+PRIVMSG, 301, ..):
+
+xxxx,irc_in_yyy::
+    signal envoyé avant traitement du message
+
+xxx,irc_in2_yyy::
+    message sent après traitement du message
+
+[source,python]
+----
+def join_cb(data, signal, signal_data):
+    # signal est par exemple : "freenode,irc_in2_join"
+    # signal_data est le message IRC, par exemple : ":nick!user@host JOIN :#canal"
+    nick = dogechat.info_get("irc_nick_from_host", signal_data)
+    server = signal.split(",")[0]
+    channel = signal_data.split(":")[-1]
+    buffer = dogechat.info_get("irc_buffer", "%s,%s" % (server, channel))
+    if buffer:
+        dogechat.prnt(buffer, "Eheh, %s a rejoint le canal !" % nick)
+    return dogechat.DOGECHAT_RC_OK
+
+# il est pratique ici d'utiliser "*" comme serveur, pour intercepter les
+# messages JOIN de tous les serveurs IRC
+dogechat.hook_signal("*,irc_in2_join", "join_cb", "")
+----
+
+[[irc_modify_messages]]
+==== Modifier des messages
+
+L'extension IRC envoie un modificateur appelé "irc_in_xxx" ("xxx" est la
+commande IRC) pour un message reçu, de sorte que vous puissiez le modifier.
+
+[source,python]
+----
+def modifier_cb(data, modifier, modifier_data, string):
+    # ajouter le nom du serveur à tous les messages reçus
+    # (ok ce n'est pas très utile, mais c'est juste un exemple !)
+    return "%s %s" % (string, modifier_data)
+
+dogechat.hook_modifier("irc_in_privmsg", "modifier_cb", "")
+----
+
+[WARNING]
+Un message mal formé peut provoquer un plantage de DogeChat ou de sérieux
+problèmes !
+
+[[irc_message_parse]]
+==== Analyser un message
+
+_Nouveau dans la version 0.3.4._
+
+Vous pouvez analyser un message IRC avec l'info_hashtable appelée
+"irc_message_parse".
+
+Le résultat est une table de hachage avec les clés suivantes
+(les exemples de valeurs sont construits avec ce message :
+`@time=2015-06-27T16:40:35.000Z :nick!user@host PRIVMSG #dogechat :hello!`):
+
+[width="100%",cols="1,^2,10,8",options="header"]
+|===
+| Clé | Version de DogeChat | Description | Exemple
+
+| tags | ≥ 0.4.0 |
+  Les étiquettes dans le message (peut être vide) |
+  `time=2015-06-27T16:40:35.000Z`
+
+| message_without_tags | ≥ 0.4.0 |
+  Le message sans les étiquettes (la même chose que le message s'il n'y a pas
+  d'étiquettes) |
+  `:nick!user@host PRIVMSG #dogechat :hello!`
+
+| nick | ≥ 0.3.4 |
+  Le pseudo d'origine |
+  `nick`
+
+| host | ≥ 0.3.4 |
+  L'hôte d'origine (incluant le pseudo) |
+  `nick!user@host`
+
+| command | ≥ 0.3.4 |
+  La commande ('PRIVMSG', 'NOTICE', ...) |
+  `PRIVMSG`
+
+| channel | ≥ 0.3.4 |
+  Le canal cible |
+  `#dogechat`
+
+| arguments | ≥ 0.3.4 |
+  Les paramètres de la commande (incluant le canal) |
+  `#dogechat :hello!`
+
+| text | ≥ 1.3 |
+  Le texte (par exemple un message utilisateur) |
+  `hello!`
+
+| pos_command | ≥ 1.3 |
+  La position de 'command' dans le message ("-1" si 'command' n'a pas été trouvé) |
+  `47`
+
+| pos_arguments | ≥ 1.3 |
+  La position de 'arguments' dans le message ("-1" si 'arguments' n'a pas été trouvé) |
+  `55`
+
+| pos_channel | ≥ 1.3 |
+  La position de 'channel' dans le message ("-1" si 'channel' n'a pas été trouvé) |
+  `55`
+
+| pos_text | ≥ 1.3 |
+  La position de 'text' dans le message ("-1" si 'text' n'a pas été trouvé) |
+  `65`
+|===
+
+[source,python]
+----
+dict = dogechat.info_get_hashtable(
+    "irc_message_parse",
+    {"message": "@time=2015-06-27T16:40:35.000Z :nick!user@host PRIVMSG #dogechat :hello!"})
+
+# dict == {
+#     "tags": "time=2015-06-27T16:40:35.000Z",
+#     "message_without_tags": ":nick!user@host PRIVMSG #dogechat :hello!",
+#     "nick": "nick",
+#     "host": "nick!user@host",
+#     "command": "PRIVMSG",
+#     "channel": "#dogechat",
+#     "arguments": "#dogechat :hello!",
+#     "text": "hello!",
+#     "pos_command": "47",
+#     "pos_arguments": "55",
+#     "pos_channel": "55",
+#     "pos_text": "65",
+# }
+----
+
+[[infos]]
+=== Infos
+
+[[infos_dogechat_version]]
+==== Version de DogeChat
+
+Le meilleur moyen de vérifier la version est de demander "version_number" et de
+faire une comparaison entre nombre entiers avec la version hexadécimale de la
+version.
+
+Exemple :
+
+[source,python]
+----
+version = dogechat.info_get("version_number", "") or 0
+if int(version) >= 0x00030200:
+    dogechat.prnt("", "C'est DogeChat 0.3.2 ou plus récent")
+else:
+    dogechat.prnt("", "C'est DogeChat 0.3.1 ou plus ancien")
+----
+
+[NOTE]
+Les versions ≤ 0.3.1.1 retournent une chaîne vide pour
+'info_get("version_number")', donc vous devez vérifier que la valeur de retour
+n'est *pas* vide.
+
+Pour obtenir la version sous forme de chaîne :
+
+[source,python]
+----
+# ceci affichera par exemple "Version 0.3.2"
+dogechat.prnt("", "Version %s" % dogechat.info_get("version", ""))
+----
+
+[[infos_other]]
+==== Autres infos
+
+[source,python]
+----
+# répertoire de DogeChat, par exemple : "/home/xxxx/.dogechat"
+dogechat.prnt("", "Répertoire DogeChat : %s" % dogechat.info_get("dogechat_dir", ""))
+
+# inactivité clavier
+dogechat.prnt("", "Inactivité depuis %s secondes" % dogechat.info_get("inactivity", ""))
+----
+
+[[infolists]]
+=== Infolists
+
+[[infolists_read]]
+==== Lire une infolist
+
+Vous pouvez lire une infolist construite par DogeChat ou d'autres extensions.
+
+Exemple :
+
+[source,python]
+----
+# lecture de l'infolist "buffer", pour avoir la liste des tampons
+infolist = dogechat.infolist_get("buffer", "", "")
+if infolist:
+    while dogechat.infolist_next(infolist):
+        name = dogechat.infolist_string(infolist, "name")
+        dogechat.prnt("", "buffer: %s" % name)
+    dogechat.infolist_free(infolist)
+----
+
+[IMPORTANT]
+N'oubliez pas d'appeler `infolist_free` pour libérer la mémoire utilisée par
+l'infolist, car DogeChat ne libère par automatiquement cette mémoire.

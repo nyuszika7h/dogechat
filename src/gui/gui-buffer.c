@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -33,16 +33,16 @@
 #include <time.h>
 #include <ctype.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-hashtable.h"
-#include "../core/wee-hdata.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-infolist.h"
-#include "../core/wee-list.h"
-#include "../core/wee-log.h"
-#include "../core/wee-string.h"
-#include "../core/wee-utf8.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-hashtable.h"
+#include "../core/doge-hdata.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-infolist.h"
+#include "../core/doge-list.h"
+#include "../core/doge-log.h"
+#include "../core/doge-string.h"
+#include "../core/doge-utf8.h"
 #include "../plugins/plugin.h"
 #include "gui-buffer.h"
 #include "gui-chat.h"
@@ -178,7 +178,7 @@ gui_buffer_local_var_add (struct t_gui_buffer *buffer, const char *name,
     hashtable_set (buffer->local_variables, name, value);
     (void) hook_signal_send ((ptr_value) ?
                              "buffer_localvar_changed" : "buffer_localvar_added",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -198,7 +198,7 @@ gui_buffer_local_var_remove (struct t_gui_buffer *buffer, const char *name)
     {
         hashtable_remove (buffer->local_variables, name);
         (void) hook_signal_send ("buffer_localvar_removed",
-                                 WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                                 DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
     }
 }
 
@@ -213,7 +213,7 @@ gui_buffer_local_var_remove_all (struct t_gui_buffer *buffer)
     {
         hashtable_remove_all (buffer->local_variables);
         (void) hook_signal_send ("buffer_localvar_removed",
-                                 WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                                 DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
     }
 }
 
@@ -240,8 +240,8 @@ gui_buffer_notify_get (struct t_gui_buffer *buffer)
         ptr_end = option_name + strlen (option_name);
         while (ptr_end >= option_name)
         {
-            ptr_option = config_file_search_option (weechat_config_file,
-                                                    weechat_config_section_notify,
+            ptr_option = config_file_search_option (dogechat_config_file,
+                                                    dogechat_config_section_notify,
                                                     option_name);
             if (ptr_option)
             {
@@ -256,8 +256,8 @@ gui_buffer_notify_get (struct t_gui_buffer *buffer)
             if ((ptr_end >= option_name) && (ptr_end[0] == '.'))
                 ptr_end[0] = '\0';
         }
-        ptr_option = config_file_search_option (weechat_config_file,
-                                                weechat_config_section_notify,
+        ptr_option = config_file_search_option (dogechat_config_file,
+                                                dogechat_config_section_notify,
                                                 option_name);
 
         free (option_name);
@@ -533,7 +533,7 @@ gui_buffer_input_buffer_init (struct t_gui_buffer *buffer)
  */
 
 struct t_gui_buffer *
-gui_buffer_new (struct t_weechat_plugin *plugin,
+gui_buffer_new (struct t_dogechat_plugin *plugin,
                 const char *name,
                 int (*input_callback)(void *data,
                                       struct t_gui_buffer *buffer,
@@ -683,8 +683,8 @@ gui_buffer_new (struct t_weechat_plugin *plugin,
 
     /* hotlist */
     new_buffer->hotlist_max_level_nicks = hashtable_new (32,
-                                                         WEECHAT_HASHTABLE_STRING,
-                                                         WEECHAT_HASHTABLE_INTEGER,
+                                                         DOGECHAT_HASHTABLE_STRING,
+                                                         DOGECHAT_HASHTABLE_INTEGER,
                                                          NULL,
                                                          NULL);
 
@@ -695,8 +695,8 @@ gui_buffer_new (struct t_weechat_plugin *plugin,
 
     /* local variables */
     new_buffer->local_variables = hashtable_new (32,
-                                                 WEECHAT_HASHTABLE_STRING,
-                                                 WEECHAT_HASHTABLE_STRING,
+                                                 DOGECHAT_HASHTABLE_STRING,
+                                                 DOGECHAT_HASHTABLE_STRING,
                                                  NULL,
                                                  NULL);
     hashtable_set (new_buffer->local_variables,
@@ -722,7 +722,7 @@ gui_buffer_new (struct t_weechat_plugin *plugin,
     else
     {
         (void) hook_signal_send ("buffer_opened",
-                                 WEECHAT_HOOK_SIGNAL_POINTER, new_buffer);
+                                 DOGECHAT_HOOK_SIGNAL_POINTER, new_buffer);
     }
 
     return new_buffer;
@@ -881,10 +881,10 @@ gui_buffer_match_list_split (struct t_gui_buffer *buffer,
  *
  * Examples:
  *   "*"
- *   "*,!*#weechat*"
+ *   "*,!*#dogechat*"
  *   "irc.freenode.*"
  *   "irc.freenode.*,irc.oftc.#channel"
- *   "irc.freenode.#weechat,irc.freenode.#other"
+ *   "irc.freenode.#dogechat,irc.freenode.#other"
  */
 
 int
@@ -913,7 +913,7 @@ gui_buffer_match_list (struct t_gui_buffer *buffer, const char *string)
  */
 
 void
-gui_buffer_set_plugin_for_upgrade (char *name, struct t_weechat_plugin *plugin)
+gui_buffer_set_plugin_for_upgrade (char *name, struct t_dogechat_plugin *plugin)
 {
     struct t_gui_buffer *ptr_buffer;
 
@@ -1144,7 +1144,7 @@ gui_buffer_set_name (struct t_gui_buffer *buffer, const char *name)
         gui_buffer_local_var_add (buffer, "name", name);
 
         (void) hook_signal_send ("buffer_renamed",
-                                 WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                                 DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
     }
 }
 
@@ -1168,7 +1168,7 @@ gui_buffer_set_short_name (struct t_gui_buffer *buffer, const char *short_name)
     gui_buffer_ask_chat_refresh (buffer, 1);
 
     (void) hook_signal_send ("buffer_renamed",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -1190,7 +1190,7 @@ gui_buffer_set_type (struct t_gui_buffer *buffer, enum t_gui_buffer_type type)
     gui_buffer_ask_chat_refresh (buffer, 2);
 
     (void) hook_signal_send ("buffer_type_changed",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -1205,7 +1205,7 @@ gui_buffer_set_title (struct t_gui_buffer *buffer, const char *new_title)
     buffer->title = (new_title && new_title[0]) ? strdup (new_title) : NULL;
 
     (void) hook_signal_send ("buffer_title_changed",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -1276,19 +1276,19 @@ gui_buffer_set_highlight_words (struct t_gui_buffer *buffer,
 
 void
 gui_buffer_set_highlight_words_list (struct t_gui_buffer *buffer,
-                                     struct t_weelist *list)
+                                     struct t_dogelist *list)
 {
-    struct t_weelist_item *ptr_list_item;
+    struct t_dogelist_item *ptr_list_item;
     int length;
     const char *ptr_string;
     char *words;
 
     /* compute length */
     length = 0;
-    for (ptr_list_item = weelist_get (list, 0); ptr_list_item;
-         ptr_list_item = weelist_next (ptr_list_item))
+    for (ptr_list_item = dogelist_get (list, 0); ptr_list_item;
+         ptr_list_item = dogelist_next (ptr_list_item))
     {
-        ptr_string = weelist_string (ptr_list_item);
+        ptr_string = dogelist_string (ptr_list_item);
         if (ptr_string)
             length += strlen (ptr_string) + 1;
     }
@@ -1301,14 +1301,14 @@ gui_buffer_set_highlight_words_list (struct t_gui_buffer *buffer,
 
     /* build string */
     words[0] = '\0';
-    for (ptr_list_item = weelist_get (list, 0); ptr_list_item;
-         ptr_list_item = weelist_next (ptr_list_item))
+    for (ptr_list_item = dogelist_get (list, 0); ptr_list_item;
+         ptr_list_item = dogelist_next (ptr_list_item))
     {
-        ptr_string = weelist_string (ptr_list_item);
+        ptr_string = dogelist_string (ptr_list_item);
         if (ptr_string)
         {
             strcat (words, ptr_string);
-            if (weelist_next (ptr_list_item))
+            if (dogelist_next (ptr_list_item))
                 strcat (words, ",");
         }
     }
@@ -1328,12 +1328,12 @@ gui_buffer_add_highlight_words (struct t_gui_buffer *buffer,
 {
     char **current_words, **add_words;
     int current_count, add_count, i;
-    struct t_weelist *list;
+    struct t_dogelist *list;
 
     if (!words_to_add)
         return;
 
-    list = weelist_new ();
+    list = dogelist_new ();
     if (!list)
         return;
 
@@ -1344,18 +1344,18 @@ gui_buffer_add_highlight_words (struct t_gui_buffer *buffer,
 
     for (i = 0; i < current_count; i++)
     {
-        if (!weelist_search (list, current_words[i]))
-            weelist_add (list, current_words[i], WEECHAT_LIST_POS_END, NULL);
+        if (!dogelist_search (list, current_words[i]))
+            dogelist_add (list, current_words[i], DOGECHAT_LIST_POS_END, NULL);
     }
     for (i = 0; i < add_count; i++)
     {
-        if (!weelist_search (list, add_words[i]))
-            weelist_add (list, add_words[i], WEECHAT_LIST_POS_END, NULL);
+        if (!dogelist_search (list, add_words[i]))
+            dogelist_add (list, add_words[i], DOGECHAT_LIST_POS_END, NULL);
     }
 
     gui_buffer_set_highlight_words_list (buffer, list);
 
-    weelist_free (list);
+    dogelist_free (list);
 
     if (current_words)
         string_free_split (current_words);
@@ -1373,12 +1373,12 @@ gui_buffer_remove_highlight_words (struct t_gui_buffer *buffer,
 {
     char **current_words, **remove_words;
     int current_count, remove_count, i, j, to_remove;
-    struct t_weelist *list;
+    struct t_dogelist *list;
 
     if (!words_to_remove)
         return;
 
-    list = weelist_new ();
+    list = dogelist_new ();
     if (!list)
         return;
 
@@ -1400,12 +1400,12 @@ gui_buffer_remove_highlight_words (struct t_gui_buffer *buffer,
             }
         }
         if (!to_remove)
-            weelist_add (list, current_words[i], WEECHAT_LIST_POS_END, NULL);
+            dogelist_add (list, current_words[i], DOGECHAT_LIST_POS_END, NULL);
     }
 
     gui_buffer_set_highlight_words_list (buffer, list);
 
-    weelist_free (list);
+    dogelist_free (list);
 
     if (current_words)
         string_free_split (current_words);
@@ -2049,10 +2049,10 @@ gui_buffer_add_value_num_displayed (struct t_gui_buffer *buffer, int value)
 }
 
 /*
- * Checks if a buffer is the WeeChat core buffer.
+ * Checks if a buffer is the DogeChat core buffer.
  *
  * Returns:
- *   1: buffer is WeeChat core buffer
+ *   1: buffer is DogeChat core buffer
  *   0: buffer is another buffer
  */
 
@@ -2063,7 +2063,7 @@ gui_buffer_is_main (const char *plugin_name, const char *name)
     if (plugin_name && (strcmp (plugin_name, plugin_get_name (NULL)) != 0))
         return 0;
 
-    /* if name is set and is not "weechat", then it's NOT main buffer */
+    /* if name is set and is not "dogechat", then it's NOT main buffer */
     if (name && (strcmp (name, GUI_BUFFER_MAIN) != 0))
         return 0;
 
@@ -2072,7 +2072,7 @@ gui_buffer_is_main (const char *plugin_name, const char *name)
 }
 
 /*
- * Gets main buffer (weechat one, created at startup).
+ * Gets main buffer (dogechat one, created at startup).
  */
 
 struct t_gui_buffer *
@@ -2094,7 +2094,7 @@ gui_buffer_search_main ()
 }
 
 /*
- * Searches for a buffer by full name (example: "irc.freenode.#weechat").
+ * Searches for a buffer by full name (example: "irc.freenode.#dogechat").
  */
 
 struct t_gui_buffer *
@@ -2472,7 +2472,7 @@ gui_buffer_clear (struct t_gui_buffer *buffer)
     gui_buffer_ask_chat_refresh (buffer, 2);
 
     (void) hook_signal_send ("buffer_cleared",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -2508,7 +2508,7 @@ gui_buffer_close (struct t_gui_buffer *buffer)
     buffer->closing = 1;
 
     (void) hook_signal_send ("buffer_closing",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 
     if (buffer->close_callback)
     {
@@ -2526,7 +2526,7 @@ gui_buffer_close (struct t_gui_buffer *buffer)
         gui_buffer_unmerge (buffer, last_gui_buffer->number + 1);
     }
 
-    if (!weechat_quit)
+    if (!dogechat_quit)
     {
         /*
          * find other buffer to display: previously visited buffer if current
@@ -2699,7 +2699,7 @@ gui_buffer_close (struct t_gui_buffer *buffer)
         gui_buffers_count--;
 
     (void) hook_signal_send ("buffer_closed",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 
     free (buffer);
 }
@@ -2951,7 +2951,7 @@ gui_buffer_renumber (int number1, int number2, int start_number)
         if (ptr_buffer_moved)
         {
             (void) hook_signal_send ("buffer_moved",
-                                     WEECHAT_HOOK_SIGNAL_POINTER,
+                                     DOGECHAT_HOOK_SIGNAL_POINTER,
                                      ptr_buffer_moved);
         }
         ptr_buffer = ptr_buffer2;
@@ -3084,7 +3084,7 @@ gui_buffer_move_to_number (struct t_gui_buffer *buffer, int number)
     }
 
     (void) hook_signal_send ("buffer_moved",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -3176,9 +3176,9 @@ gui_buffer_swap (int number1, int number2)
 
     /* send signals */
     (void) hook_signal_send ("buffer_moved",
-                             WEECHAT_HOOK_SIGNAL_POINTER, ptr_first_buffer[0]);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, ptr_first_buffer[0]);
     (void) hook_signal_send ("buffer_moved",
-                             WEECHAT_HOOK_SIGNAL_POINTER, ptr_first_buffer[1]);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, ptr_first_buffer[1]);
 }
 
 /*
@@ -3280,7 +3280,7 @@ gui_buffer_merge (struct t_gui_buffer *buffer,
     gui_window_ask_refresh (1);
 
     (void) hook_signal_send ("buffer_merged",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -3411,7 +3411,7 @@ gui_buffer_unmerge (struct t_gui_buffer *buffer, int number)
     gui_window_ask_refresh (1);
 
     (void) hook_signal_send ("buffer_unmerged",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -3455,7 +3455,7 @@ gui_buffer_hide (struct t_gui_buffer *buffer)
     buffer->hidden = 1;
 
     (void) hook_signal_send ("buffer_hidden",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -3487,7 +3487,7 @@ gui_buffer_unhide (struct t_gui_buffer *buffer)
     buffer->hidden = 0;
 
     (void) hook_signal_send ("buffer_unhidden",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -4017,7 +4017,7 @@ gui_buffer_hdata_buffer_cb (void *data, const char *hdata_name)
         HDATA_VAR(struct t_gui_buffer, local_variables, HASHTABLE, 0, NULL, NULL);
         HDATA_VAR(struct t_gui_buffer, prev_buffer, POINTER, 0, NULL, hdata_name);
         HDATA_VAR(struct t_gui_buffer, next_buffer, POINTER, 0, NULL, hdata_name);
-        HDATA_LIST(gui_buffers, WEECHAT_HDATA_LIST_CHECK_POINTERS);
+        HDATA_LIST(gui_buffers, DOGECHAT_HDATA_LIST_CHECK_POINTERS);
         HDATA_LIST(last_gui_buffer, 0);
         HDATA_LIST(gui_buffer_last_displayed, 0);
     }
@@ -4067,7 +4067,7 @@ gui_buffer_hdata_buffer_visited_cb (void *data, const char *hdata_name)
         HDATA_VAR(struct t_gui_buffer_visited, buffer, POINTER, 0, NULL, "buffer");
         HDATA_VAR(struct t_gui_buffer_visited, prev_buffer, POINTER, 0, NULL, hdata_name);
         HDATA_VAR(struct t_gui_buffer_visited, next_buffer, POINTER, 0, NULL, hdata_name);
-        HDATA_LIST(gui_buffers_visited, WEECHAT_HDATA_LIST_CHECK_POINTERS);
+        HDATA_LIST(gui_buffers_visited, DOGECHAT_HDATA_LIST_CHECK_POINTERS);
         HDATA_LIST(last_gui_buffer_visited, 0);
     }
     return hdata;
@@ -4229,7 +4229,7 @@ gui_buffer_add_to_infolist (struct t_infolist *infolist,
 }
 
 /*
- * Dumps content of buffer as hexa data in WeeChat log file.
+ * Dumps content of buffer as hexa data in DogeChat log file.
  */
 
 void
@@ -4303,7 +4303,7 @@ gui_buffer_dump_hexa (struct t_gui_buffer *buffer)
 }
 
 /*
- * Prints buffer infos in WeeChat log file (usually for crash dump).
+ * Prints buffer infos in DogeChat log file (usually for crash dump).
  */
 
 void

@@ -5,20 +5,20 @@
  * Copyright (C) 2005-2010 Emmanuel Bouthenot <kolter@openics.org>
  * Copyright (C) 2012 Simon Arlott
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -46,7 +46,7 @@
 #include <gnutls/x509.h>
 #endif /* HAVE_GNUTLS */
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-server.h"
 #include "irc-bar-item.h"
@@ -111,8 +111,8 @@ char *irc_server_options[IRC_SERVER_NUM_OPTIONS][2] =
   { "away_check",           "0"                   },
   { "away_check_max_nicks", "25"                  },
   { "default_msg_kick",     ""                    },
-  { "default_msg_part",     "WeeChat %v"          },
-  { "default_msg_quit",     "WeeChat %v"          },
+  { "default_msg_part",     "DogeChat %v"          },
+  { "default_msg_quit",     "DogeChat %v"          },
   { "notify",               ""                    },
 };
 
@@ -210,7 +210,7 @@ irc_server_casesearch (const char *server_name)
     for (ptr_server = irc_servers; ptr_server;
          ptr_server = ptr_server->next_server)
     {
-        if (weechat_strcasecmp (ptr_server->name, server_name) == 0)
+        if (dogechat_strcasecmp (ptr_server->name, server_name) == 0)
             return ptr_server;
     }
 
@@ -234,7 +234,7 @@ irc_server_search_option (const char *option_name)
 
     for (i = 0; i < IRC_SERVER_NUM_OPTIONS; i++)
     {
-        if (weechat_strcasecmp (irc_server_options[i][0], option_name) == 0)
+        if (dogechat_strcasecmp (irc_server_options[i][0], option_name) == 0)
             return i;
     }
 
@@ -256,7 +256,7 @@ irc_server_search_casemapping (const char *casemapping)
 
     for (i = 0; i < IRC_SERVER_NUM_CASEMAPPING; i++)
     {
-        if (weechat_strcasecmp (irc_server_casemapping_string[i], casemapping) == 0)
+        if (dogechat_strcasecmp (irc_server_casemapping_string[i], casemapping) == 0)
             return i;
     }
 
@@ -283,16 +283,16 @@ irc_server_strcasecmp (struct t_irc_server *server,
     switch (casemapping)
     {
         case IRC_SERVER_CASEMAPPING_RFC1459:
-            rc = weechat_strcasecmp_range (string1, string2, 30);
+            rc = dogechat_strcasecmp_range (string1, string2, 30);
             break;
         case IRC_SERVER_CASEMAPPING_STRICT_RFC1459:
-            rc = weechat_strcasecmp_range (string1, string2, 29);
+            rc = dogechat_strcasecmp_range (string1, string2, 29);
             break;
         case IRC_SERVER_CASEMAPPING_ASCII:
-            rc = weechat_strcasecmp (string1, string2);
+            rc = dogechat_strcasecmp (string1, string2);
             break;
         default:
-            rc = weechat_strcasecmp_range (string1, string2, 30);
+            rc = dogechat_strcasecmp_range (string1, string2, 30);
             break;
     }
     return rc;
@@ -318,16 +318,16 @@ irc_server_strncasecmp (struct t_irc_server *server,
     switch (casemapping)
     {
         case IRC_SERVER_CASEMAPPING_RFC1459:
-            rc = weechat_strncasecmp_range (string1, string2, max, 30);
+            rc = dogechat_strncasecmp_range (string1, string2, max, 30);
             break;
         case IRC_SERVER_CASEMAPPING_STRICT_RFC1459:
-            rc = weechat_strncasecmp_range (string1, string2, max, 29);
+            rc = dogechat_strncasecmp_range (string1, string2, max, 29);
             break;
         case IRC_SERVER_CASEMAPPING_ASCII:
-            rc = weechat_strncasecmp (string1, string2, max);
+            rc = dogechat_strncasecmp (string1, string2, max);
             break;
         default:
-            rc = weechat_strncasecmp_range (string1, string2, max, 30);
+            rc = dogechat_strncasecmp_range (string1, string2, max, 30);
             break;
     }
     return rc;
@@ -350,10 +350,10 @@ irc_server_sasl_enabled (struct t_irc_server *server)
 
     sasl_mechanism = IRC_SERVER_OPTION_INTEGER(
         server, IRC_SERVER_OPTION_SASL_MECHANISM);
-    sasl_username = weechat_string_eval_expression (
+    sasl_username = dogechat_string_eval_expression (
         IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_SASL_USERNAME),
         NULL, NULL, NULL);
-    sasl_password = weechat_string_eval_expression (
+    sasl_password = dogechat_string_eval_expression (
         IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_SASL_PASSWORD),
         NULL, NULL, NULL);
     sasl_key = IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_SASL_KEY);
@@ -395,7 +395,7 @@ irc_server_get_name_without_port (const char *name)
 
     pos = strchr (name, '/');
     if (pos && (pos != name))
-        return weechat_strndup (name, pos - name);
+        return dogechat_strndup (name, pos - name);
 
     return strdup (name);
 }
@@ -415,7 +415,7 @@ irc_server_set_addresses (struct t_irc_server *server, const char *addresses)
     server->addresses_count = 0;
     if (server->addresses_array)
     {
-        weechat_string_free_split (server->addresses_array);
+        dogechat_string_free_split (server->addresses_array);
         server->addresses_array = NULL;
     }
     if (server->ports_array)
@@ -432,9 +432,9 @@ irc_server_set_addresses (struct t_irc_server *server, const char *addresses)
     /* set new addresses/ports */
     if (addresses && addresses[0])
     {
-        addresses_eval = weechat_string_eval_expression (addresses,
+        addresses_eval = dogechat_string_eval_expression (addresses,
                                                          NULL, NULL, NULL);
-        server->addresses_array = weechat_string_split (
+        server->addresses_array = dogechat_string_split (
             (addresses_eval) ? addresses_eval : addresses,
             ",", 0, 0, &server->addresses_count);
         server->ports_array = malloc (
@@ -506,15 +506,15 @@ irc_server_set_nicks (struct t_irc_server *server, const char *nicks)
     server->nicks_count = 0;
     if (server->nicks_array)
     {
-        weechat_string_free_split (server->nicks_array);
+        dogechat_string_free_split (server->nicks_array);
         server->nicks_array = NULL;
     }
 
     /* evaluate value */
-    nicks2 = weechat_string_eval_expression (nicks, NULL, NULL, NULL);
+    nicks2 = dogechat_string_eval_expression (nicks, NULL, NULL, NULL);
 
     /* set new nicks */
-    server->nicks_array = weechat_string_split (
+    server->nicks_array = dogechat_string_split (
         (nicks2) ? nicks2 : IRC_SERVER_DEFAULT_NICKS,
         ",", 0, 0, &server->nicks_count);
 
@@ -536,14 +536,14 @@ irc_server_set_nick (struct t_irc_server *server, const char *nick)
     server->nick = (nick) ? strdup (nick) : NULL;
 
     /* set local variable "nick" for server and all channels/pv */
-    weechat_buffer_set (server->buffer, "localvar_set_nick", nick);
+    dogechat_buffer_set (server->buffer, "localvar_set_nick", nick);
     for (ptr_channel = server->channels; ptr_channel;
          ptr_channel = ptr_channel->next_channel)
     {
-        weechat_buffer_set (ptr_channel->buffer, "localvar_set_nick", nick);
+        dogechat_buffer_set (ptr_channel->buffer, "localvar_set_nick", nick);
     }
 
-    weechat_bar_item_update ("input_prompt");
+    dogechat_bar_item_update ("input_prompt");
 }
 
 /*
@@ -757,7 +757,7 @@ irc_server_set_prefix_modes_chars (struct t_irc_server *server,
     pos = strchr (prefix, ')');
     if (pos)
     {
-        server->prefix_modes = weechat_strndup (prefix + 1,
+        server->prefix_modes = dogechat_strndup (prefix + 1,
                                                 pos - prefix - 1);
         if (server->prefix_modes)
         {
@@ -969,9 +969,9 @@ irc_server_alloc (const char *name)
     new_server = malloc (sizeof (*new_server));
     if (!new_server)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: error when allocating new server"),
-                        weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                        dogechat_prefix ("error"), IRC_PLUGIN_NAME);
         return NULL;
     }
 
@@ -1040,7 +1040,7 @@ irc_server_alloc (const char *name)
     new_server->lag_check_time.tv_sec = 0;
     new_server->lag_check_time.tv_usec = 0;
     new_server->lag_next_check = time (NULL) +
-        weechat_config_integer (irc_config_network_lag_check);
+        dogechat_config_integer (irc_config_network_lag_check);
     new_server->lag_last_refresh = 0;
     new_server->cmd_list_regexp = NULL;
     new_server->last_user_message = 0;
@@ -1056,19 +1056,19 @@ irc_server_alloc (const char *name)
     new_server->notify_list = NULL;
     new_server->last_notify = NULL;
     new_server->notify_count = 0;
-    new_server->join_manual = weechat_hashtable_new (32,
-                                                     WEECHAT_HASHTABLE_STRING,
-                                                     WEECHAT_HASHTABLE_TIME,
+    new_server->join_manual = dogechat_hashtable_new (32,
+                                                     DOGECHAT_HASHTABLE_STRING,
+                                                     DOGECHAT_HASHTABLE_TIME,
                                                      NULL,
                                                      NULL);
-    new_server->join_channel_key = weechat_hashtable_new (32,
-                                                          WEECHAT_HASHTABLE_STRING,
-                                                          WEECHAT_HASHTABLE_STRING,
+    new_server->join_channel_key = dogechat_hashtable_new (32,
+                                                          DOGECHAT_HASHTABLE_STRING,
+                                                          DOGECHAT_HASHTABLE_STRING,
                                                           NULL,
                                                           NULL);
-    new_server->join_noswitch = weechat_hashtable_new (32,
-                                                       WEECHAT_HASHTABLE_STRING,
-                                                       WEECHAT_HASHTABLE_TIME,
+    new_server->join_noswitch = dogechat_hashtable_new (32,
+                                                       DOGECHAT_HASHTABLE_STRING,
+                                                       DOGECHAT_HASHTABLE_TIME,
                                                        NULL,
                                                        NULL);
     new_server->buffer = NULL;
@@ -1164,16 +1164,16 @@ irc_server_alloc_with_url (const char *irc_url)
     }
 
     /* check for SSL / IPv6 */
-    if (weechat_strcasecmp (irc_url2, "irc6") == 0)
+    if (dogechat_strcasecmp (irc_url2, "irc6") == 0)
     {
         ipv6 = 1;
     }
-    else if (weechat_strcasecmp (irc_url2, "ircs") == 0)
+    else if (dogechat_strcasecmp (irc_url2, "ircs") == 0)
     {
         ssl = 1;
     }
-    else if ((weechat_strcasecmp (irc_url2, "irc6s") == 0)
-             || (weechat_strcasecmp (irc_url2, "ircs6") == 0))
+    else if ((dogechat_strcasecmp (irc_url2, "irc6s") == 0)
+             || (dogechat_strcasecmp (irc_url2, "ircs6") == 0))
     {
         ipv6 = 1;
         ssl = 1;
@@ -1249,17 +1249,17 @@ irc_server_alloc_with_url (const char *irc_url)
                           "%s/%s",
                           pos_address,
                           (pos_port && pos_port[0]) ? pos_port : default_port);
-                weechat_config_option_set (
+                dogechat_config_option_set (
                     ptr_server->options[IRC_SERVER_OPTION_ADDRESSES],
                     server_address,
                     1);
                 free (server_address);
             }
         }
-        weechat_config_option_set (ptr_server->options[IRC_SERVER_OPTION_IPV6],
+        dogechat_config_option_set (ptr_server->options[IRC_SERVER_OPTION_IPV6],
                                    (ipv6) ? "on" : "off",
                                    1);
-        weechat_config_option_set (ptr_server->options[IRC_SERVER_OPTION_SSL],
+        dogechat_config_option_set (ptr_server->options[IRC_SERVER_OPTION_SSL],
                                    (ssl) ? "on" : "off",
                                    1);
         if (pos_nick && pos_nick[0])
@@ -1271,7 +1271,7 @@ irc_server_alloc_with_url (const char *irc_url)
                 snprintf (server_nicks, length,
                           "%s,%s1,%s2,%s3,%s4",
                           pos_nick, pos_nick, pos_nick, pos_nick, pos_nick);
-                weechat_config_option_set (
+                dogechat_config_option_set (
                     ptr_server->options[IRC_SERVER_OPTION_NICKS],
                     server_nicks,
                     1);
@@ -1280,12 +1280,12 @@ irc_server_alloc_with_url (const char *irc_url)
         }
         if (pos_password && pos_password[0])
         {
-            weechat_config_option_set (
+            dogechat_config_option_set (
                 ptr_server->options[IRC_SERVER_OPTION_PASSWORD],
                 pos_password,
                 1);
         }
-        weechat_config_option_set (
+        dogechat_config_option_set (
             ptr_server->options[IRC_SERVER_OPTION_AUTOCONNECT],
             "on",
             1);
@@ -1305,7 +1305,7 @@ irc_server_alloc_with_url (const char *irc_url)
             }
             if (server_autojoin)
             {
-                weechat_config_option_set (
+                dogechat_config_option_set (
                     ptr_server->options[IRC_SERVER_OPTION_AUTOJOIN],
                     server_autojoin,
                     1);
@@ -1339,7 +1339,7 @@ irc_server_apply_command_line_options (struct t_irc_server *server,
             pos = strchr (argv[i], '=');
             if (pos)
             {
-                option_name = weechat_strndup (argv[i] + 1, pos - argv[i] - 1);
+                option_name = dogechat_strndup (argv[i] + 1, pos - argv[i] - 1);
                 ptr_value = pos + 1;
             }
             else
@@ -1353,7 +1353,7 @@ irc_server_apply_command_line_options (struct t_irc_server *server,
                 if (index_option < 0)
                 {
                     /* look if option is negative, like "-noxxx" */
-                    if (weechat_strncasecmp (argv[i], "-no", 3) == 0)
+                    if (dogechat_strncasecmp (argv[i], "-no", 3) == 0)
                     {
                         free (option_name);
                         option_name = strdup (argv[i] + 3);
@@ -1363,7 +1363,7 @@ irc_server_apply_command_line_options (struct t_irc_server *server,
                 }
                 if (index_option >= 0)
                 {
-                    weechat_config_option_set (server->options[index_option],
+                    dogechat_config_option_set (server->options[index_option],
                                                ptr_value, 1);
                 }
                 free (option_name);
@@ -1480,20 +1480,20 @@ irc_server_free_data (struct t_irc_server *server)
     irc_channel_free_all (server);
 
     /* free hashtables */
-    weechat_hashtable_free (server->join_manual);
-    weechat_hashtable_free (server->join_channel_key);
-    weechat_hashtable_free (server->join_noswitch);
+    dogechat_hashtable_free (server->join_manual);
+    dogechat_hashtable_free (server->join_channel_key);
+    dogechat_hashtable_free (server->join_noswitch);
 
     /* free server data */
     for (i = 0; i < IRC_SERVER_NUM_OPTIONS; i++)
     {
         if (server->options[i])
-            weechat_config_option_free (server->options[i]);
+            dogechat_config_option_free (server->options[i]);
     }
     if (server->name)
         free (server->name);
     if (server->addresses_array)
-        weechat_string_free_split (server->addresses_array);
+        dogechat_string_free_split (server->addresses_array);
     if (server->ports_array)
         free (server->ports_array);
     if (server->retry_array)
@@ -1503,17 +1503,17 @@ irc_server_free_data (struct t_irc_server *server)
     if (server->current_ip)
         free (server->current_ip);
     if (server->hook_connect)
-        weechat_unhook (server->hook_connect);
+        dogechat_unhook (server->hook_connect);
     if (server->hook_fd)
-        weechat_unhook (server->hook_fd);
+        dogechat_unhook (server->hook_fd);
     if (server->hook_timer_connection)
-        weechat_unhook (server->hook_timer_connection);
+        dogechat_unhook (server->hook_timer_connection);
     if (server->hook_timer_sasl)
-        weechat_unhook (server->hook_timer_sasl);
+        dogechat_unhook (server->hook_timer_sasl);
     if (server->unterminated_message)
         free (server->unterminated_message);
     if (server->nicks_array)
-        weechat_string_free_split (server->nicks_array);
+        dogechat_string_free_split (server->nicks_array);
     if (server->nick)
         free (server->nick);
     if (server->nick_modes)
@@ -1557,7 +1557,7 @@ irc_server_free (struct t_irc_server *server)
      * keep connections and closing server buffer would disconnect from server)
      */
     if (server->buffer && !irc_signal_upgrade_received)
-        weechat_buffer_close (server->buffer);
+        dogechat_buffer_close (server->buffer);
 
     /* remove server from queue */
     if (last_irc_server == server)
@@ -1620,15 +1620,15 @@ irc_server_copy (struct t_irc_server *server, const char *new_name)
         if (!mask)
             return 0;
         snprintf (mask, length, "irc.server.%s.*", server->name);
-        infolist = weechat_infolist_get ("option", NULL, mask);
+        infolist = dogechat_infolist_get ("option", NULL, mask);
         free (mask);
         if (infolist)
         {
-            while (weechat_infolist_next (infolist))
+            while (dogechat_infolist_next (infolist))
             {
-                if (!weechat_infolist_integer (infolist, "value_is_null"))
+                if (!dogechat_infolist_integer (infolist, "value_is_null"))
                 {
-                    option_name = weechat_infolist_string (infolist,
+                    option_name = dogechat_infolist_string (infolist,
                                                            "option_name");
                     pos = strrchr (option_name, '.');
                     if (pos)
@@ -1636,15 +1636,15 @@ irc_server_copy (struct t_irc_server *server, const char *new_name)
                         index_option = irc_server_search_option (pos + 1);
                         if (index_option >= 0)
                         {
-                            weechat_config_option_set (
+                            dogechat_config_option_set (
                                 new_server->options[index_option],
-                                weechat_infolist_string (infolist, "value"),
+                                dogechat_infolist_string (infolist, "value"),
                                 1);
                         }
                     }
                 }
             }
-            weechat_infolist_free (infolist);
+            dogechat_infolist_free (infolist);
         }
     }
 
@@ -1679,17 +1679,17 @@ irc_server_rename (struct t_irc_server *server, const char *new_name)
     if (!mask)
         return 0;
     snprintf (mask, length, "irc.server.%s.*", server->name);
-    infolist = weechat_infolist_get ("option", NULL, mask);
+    infolist = dogechat_infolist_get ("option", NULL, mask);
     free (mask);
     if (infolist)
     {
-        while (weechat_infolist_next (infolist))
+        while (dogechat_infolist_next (infolist))
         {
-            ptr_option = weechat_config_get (
-                weechat_infolist_string (infolist, "full_name"));
+            ptr_option = dogechat_config_get (
+                dogechat_infolist_string (infolist, "full_name"));
             if (ptr_option)
             {
-                option_name = weechat_infolist_string (infolist, "option_name");
+                option_name = dogechat_infolist_string (infolist, "option_name");
                 if (option_name)
                 {
                     pos_option = strrchr (option_name, '.');
@@ -1702,14 +1702,14 @@ irc_server_rename (struct t_irc_server *server, const char *new_name)
                         {
                             snprintf (new_option_name, length,
                                       "%s.%s", new_name, pos_option);
-                            weechat_config_option_rename (ptr_option, new_option_name);
+                            dogechat_config_option_rename (ptr_option, new_option_name);
                             free (new_option_name);
                         }
                     }
                 }
             }
         }
-        weechat_infolist_free (infolist);
+        dogechat_infolist_free (infolist);
     }
 
     /* rename server */
@@ -1725,23 +1725,23 @@ irc_server_rename (struct t_irc_server *server, const char *new_name)
         {
             buffer_name = irc_buffer_build_name (server->name,
                                                  ptr_channel->name);
-            weechat_buffer_set (ptr_channel->buffer, "name", buffer_name);
-            weechat_buffer_set (ptr_channel->buffer, "localvar_set_server",
+            dogechat_buffer_set (ptr_channel->buffer, "name", buffer_name);
+            dogechat_buffer_set (ptr_channel->buffer, "localvar_set_server",
                                 server->name);
         }
     }
     if (server->buffer)
     {
         buffer_name = irc_buffer_build_name (server->name, NULL);
-        weechat_buffer_set (server->buffer, "name", buffer_name);
-        weechat_buffer_set (server->buffer, "short_name", server->name);
-        weechat_buffer_set (server->buffer, "localvar_set_server",
+        dogechat_buffer_set (server->buffer, "name", buffer_name);
+        dogechat_buffer_set (server->buffer, "short_name", server->name);
+        dogechat_buffer_set (server->buffer, "localvar_set_server",
                             server->name);
-        weechat_buffer_set (server->buffer, "localvar_set_channel",
+        dogechat_buffer_set (server->buffer, "localvar_set_channel",
                             server->name);
         snprintf (charset_modifier, sizeof (charset_modifier),
                   "irc.%s", server->name);
-        weechat_buffer_set (server->buffer, "localvar_set_charset_modifier",
+        dogechat_buffer_set (server->buffer, "localvar_set_charset_modifier",
                             charset_modifier);
     }
 
@@ -1833,16 +1833,16 @@ irc_server_send_signal (struct t_irc_server *server, const char *signal,
             {
                 snprintf (full_message_tags, length,
                           "%s;%s", tags, full_message);
-                (void) weechat_hook_signal_send (str_signal,
-                                                 WEECHAT_HOOK_SIGNAL_STRING,
+                (void) dogechat_hook_signal_send (str_signal,
+                                                 DOGECHAT_HOOK_SIGNAL_STRING,
                                                  (void *)full_message_tags);
                 free (full_message_tags);
             }
         }
         else
         {
-            (void) weechat_hook_signal_send (str_signal,
-                                             WEECHAT_HOOK_SIGNAL_STRING,
+            (void) dogechat_hook_signal_send (str_signal,
+                                             DOGECHAT_HOOK_SIGNAL_STRING,
                                              (void *)full_message);
         }
         free (str_signal);
@@ -1862,21 +1862,21 @@ irc_server_send (struct t_irc_server *server, const char *buffer, int size_buf)
 
     if (!server)
     {
-        weechat_printf (
+        dogechat_printf (
             NULL,
             _("%s%s: sending data to server: null pointer (please report "
               "problem to developers)"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME);
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME);
         return 0;
     }
 
     if (size_buf <= 0)
     {
-        weechat_printf (
+        dogechat_printf (
             server->buffer,
             _("%s%s: sending data to server: empty buffer (please report "
               "problem to developers)"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME);
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME);
         return 0;
     }
 
@@ -1892,19 +1892,19 @@ irc_server_send (struct t_irc_server *server, const char *buffer, int size_buf)
 #ifdef HAVE_GNUTLS
         if (server->ssl_connected)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: sending data to server: error %d %s"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME,
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME,
                 rc, gnutls_strerror (rc));
         }
         else
 #endif /* HAVE_GNUTLS */
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: sending data to server: error %d %s"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME,
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME,
                 errno, strerror (errno));
         }
     }
@@ -2080,7 +2080,7 @@ irc_server_send_one_msg (struct t_irc_server *server, int flags,
     snprintf (str_modifier, sizeof (str_modifier),
               "irc_out_%s",
               (command) ? command : "unknown");
-    new_msg = weechat_hook_modifier_exec (str_modifier,
+    new_msg = dogechat_hook_modifier_exec (str_modifier,
                                           server->name,
                                           message);
 
@@ -2100,7 +2100,7 @@ irc_server_send_one_msg (struct t_irc_server *server, int flags,
         msg_encoded = NULL;
         irc_message_parse (server, ptr_msg, NULL, NULL, NULL, NULL, NULL, NULL,
                            NULL, NULL, NULL, NULL, &pos_channel, &pos_text);
-        if (weechat_config_boolean (irc_config_network_channel_encode))
+        if (dogechat_config_boolean (irc_config_network_channel_encode))
             pos_encode = (pos_channel >= 0) ? pos_channel : pos_text;
         else
             pos_encode = pos_text;
@@ -2111,7 +2111,7 @@ irc_server_send_one_msg (struct t_irc_server *server, int flags,
             {
                 snprintf (modifier_data, sizeof (modifier_data),
                           "%s.%s.%s",
-                          weechat_plugin->name,
+                          dogechat_plugin->name,
                           server->name,
                           ptr_chan_nick);
             }
@@ -2119,7 +2119,7 @@ irc_server_send_one_msg (struct t_irc_server *server, int flags,
             {
                 snprintf (modifier_data, sizeof (modifier_data),
                           "%s.%s",
-                          weechat_plugin->name,
+                          dogechat_plugin->name,
                           server->name);
             }
             msg_encoded = irc_message_convert_charset (ptr_msg, pos_encode,
@@ -2278,7 +2278,7 @@ irc_server_sendf (struct t_irc_server *server, int flags, const char *tags,
     if (!server)
         return NULL;
 
-    weechat_va_format (format);
+    dogechat_va_format (format);
     if (!vbuffer)
         return NULL;
 
@@ -2286,15 +2286,15 @@ irc_server_sendf (struct t_irc_server *server, int flags, const char *tags,
     ret_number = 1;
     if (flags & IRC_SERVER_SEND_RETURN_HASHTABLE)
     {
-        ret_hashtable = weechat_hashtable_new (32,
-                                               WEECHAT_HASHTABLE_STRING,
-                                               WEECHAT_HASHTABLE_STRING,
+        ret_hashtable = dogechat_hashtable_new (32,
+                                               DOGECHAT_HASHTABLE_STRING,
+                                               DOGECHAT_HASHTABLE_STRING,
                                                NULL,
                                                NULL);
     }
 
     rc = 1;
-    items = weechat_string_split (vbuffer, "\n", 0, 0, &items_count);
+    items = dogechat_string_split (vbuffer, "\n", 0, 0, &items_count);
     for (i = 0; i < items_count; i++)
     {
         /* run modifier "irc_out1_xxx" (like "irc_out_xxx", but before split) */
@@ -2304,7 +2304,7 @@ irc_server_sendf (struct t_irc_server *server, int flags, const char *tags,
         snprintf (str_modifier, sizeof (str_modifier),
                   "irc_out1_%s",
                   (command) ? command : "unknown");
-        new_msg = weechat_hook_modifier_exec (str_modifier,
+        new_msg = dogechat_hook_modifier_exec (str_modifier,
                                               server->name,
                                               items[i]);
 
@@ -2333,11 +2333,11 @@ irc_server_sendf (struct t_irc_server *server, int flags, const char *tags,
                 while (1)
                 {
                     snprintf (hash_key, sizeof (hash_key), "msg%d", number);
-                    str_message = weechat_hashtable_get (hashtable, hash_key);
+                    str_message = dogechat_hashtable_get (hashtable, hash_key);
                     if (!str_message)
                         break;
                     snprintf (hash_key, sizeof (hash_key), "args%d", number);
-                    str_args = weechat_hashtable_get (hashtable, hash_key);
+                    str_args = dogechat_hashtable_get (hashtable, hash_key);
 
                     rc = irc_server_send_one_msg (server, flags, str_message,
                                                   nick, command, channel, tags);
@@ -2348,13 +2348,13 @@ irc_server_sendf (struct t_irc_server *server, int flags, const char *tags,
                     {
                         snprintf (hash_key, sizeof (hash_key),
                                   "msg%d", ret_number);
-                        weechat_hashtable_set (ret_hashtable,
+                        dogechat_hashtable_set (ret_hashtable,
                                                hash_key, str_message);
                         if (str_args)
                         {
                             snprintf (hash_key, sizeof (hash_key),
                                       "args%d", ret_number);
-                            weechat_hashtable_set (ret_hashtable,
+                            dogechat_hashtable_set (ret_hashtable,
                                                    hash_key, str_args);
                         }
                         ret_number++;
@@ -2364,9 +2364,9 @@ irc_server_sendf (struct t_irc_server *server, int flags, const char *tags,
                 if (ret_hashtable)
                 {
                     snprintf (value, sizeof (value), "%d", ret_number - 1);
-                    weechat_hashtable_set (ret_hashtable, "count", value);
+                    dogechat_hashtable_set (ret_hashtable, "count", value);
                 }
-                weechat_hashtable_free (hashtable);
+                dogechat_hashtable_free (hashtable);
                 if (!rc)
                     break;
             }
@@ -2381,7 +2381,7 @@ irc_server_sendf (struct t_irc_server *server, int flags, const char *tags,
             free (new_msg);
     }
     if (items)
-        weechat_string_free_split (items);
+        dogechat_string_free_split (items);
 
     free (vbuffer);
 
@@ -2403,9 +2403,9 @@ irc_server_msgq_add_msg (struct t_irc_server *server, const char *msg)
     message = malloc (sizeof (*message));
     if (!message)
     {
-        weechat_printf (server->buffer,
+        dogechat_printf (server->buffer,
                         _("%s%s: not enough memory for received message"),
-                        weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                        dogechat_prefix ("error"), IRC_PLUGIN_NAME);
         return;
     }
     message->server = server;
@@ -2415,9 +2415,9 @@ irc_server_msgq_add_msg (struct t_irc_server *server, const char *msg)
                                 strlen (msg) + 1);
         if (!message->data)
         {
-            weechat_printf (server->buffer,
+            dogechat_printf (server->buffer,
                             _("%s%s: not enough memory for received message"),
-                            weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                            dogechat_prefix ("error"), IRC_PLUGIN_NAME);
         }
         else
         {
@@ -2465,9 +2465,9 @@ irc_server_msgq_add_unterminated (struct t_irc_server *server,
                       strlen (string) + 1));
         if (!unterminated_message2)
         {
-            weechat_printf (server->buffer,
+            dogechat_printf (server->buffer,
                             _("%s%s: not enough memory for received message"),
-                            weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                            dogechat_prefix ("error"), IRC_PLUGIN_NAME);
             free (server->unterminated_message);
             server->unterminated_message = NULL;
             return;
@@ -2480,9 +2480,9 @@ irc_server_msgq_add_unterminated (struct t_irc_server *server,
         server->unterminated_message = strdup (string);
         if (!server->unterminated_message)
         {
-            weechat_printf (server->buffer,
+            dogechat_printf (server->buffer,
                             _("%s%s: not enough memory for received message"),
-                            weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                            dogechat_prefix ("error"), IRC_PLUGIN_NAME);
         }
     }
 }
@@ -2564,7 +2564,7 @@ irc_server_msgq_flush ()
                     snprintf (str_modifier, sizeof (str_modifier),
                               "irc_in_%s",
                               (command) ? command : "unknown");
-                    new_msg = weechat_hook_modifier_exec (
+                    new_msg = dogechat_hook_modifier_exec (
                         str_modifier,
                         irc_recv_msgq->server->name,
                         ptr_data);
@@ -2605,7 +2605,7 @@ irc_server_msgq_flush ()
                                                &pos_channel, &pos_text);
 
                             msg_decoded = NULL;
-                            if (weechat_config_boolean (irc_config_network_channel_encode))
+                            if (dogechat_config_boolean (irc_config_network_channel_encode))
                                 pos_decode = (pos_channel >= 0) ? pos_channel : pos_text;
                             else
                                 pos_decode = pos_text;
@@ -2618,7 +2618,7 @@ irc_server_msgq_flush ()
                                 {
                                     snprintf (modifier_data, sizeof (modifier_data),
                                               "%s.%s.%s",
-                                              weechat_plugin->name,
+                                              dogechat_plugin->name,
                                               irc_recv_msgq->server->name,
                                               channel);
                                 }
@@ -2629,7 +2629,7 @@ irc_server_msgq_flush ()
                                         snprintf (modifier_data,
                                                   sizeof (modifier_data),
                                                   "%s.%s.%s",
-                                                  weechat_plugin->name,
+                                                  dogechat_plugin->name,
                                                   irc_recv_msgq->server->name,
                                                   nick);
                                     }
@@ -2638,7 +2638,7 @@ irc_server_msgq_flush ()
                                         snprintf (modifier_data,
                                                   sizeof (modifier_data),
                                                   "%s.%s",
-                                                  weechat_plugin->name,
+                                                  dogechat_plugin->name,
                                                   irc_recv_msgq->server->name);
                                     }
                                 }
@@ -2647,9 +2647,9 @@ irc_server_msgq_flush ()
                                     "charset_decode", modifier_data);
                             }
 
-                            /* replace WeeChat internal color codes by "?" */
+                            /* replace DogeChat internal color codes by "?" */
                             msg_decoded_without_color =
-                                weechat_string_remove_color (
+                                dogechat_string_remove_color (
                                     (msg_decoded) ? msg_decoded : ptr_msg,
                                     "?");
 
@@ -2659,7 +2659,7 @@ irc_server_msgq_flush ()
                             snprintf (str_modifier, sizeof (str_modifier),
                                       "irc_in2_%s",
                                       (command) ? command : "unknown");
-                            new_msg2 = weechat_hook_modifier_exec (
+                            new_msg2 = dogechat_hook_modifier_exec (
                                 str_modifier,
                                 irc_recv_msgq->server->name,
                                 ptr_msg2);
@@ -2773,7 +2773,7 @@ irc_server_recv_cb (void *data, int fd)
 
     server = (struct t_irc_server *)data;
     if (!server)
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
     msgq_flush = 0;
     end_recv = 0;
@@ -2816,17 +2816,17 @@ irc_server_recv_cb (void *data, int fd)
                     || ((num_read != GNUTLS_E_AGAIN)
                         && (num_read != GNUTLS_E_INTERRUPTED)))
                 {
-                    weechat_printf (
+                    dogechat_printf (
                         server->buffer,
                         _("%s%s: reading data on socket: error %d %s"),
-                        weechat_prefix ("error"), IRC_PLUGIN_NAME,
+                        dogechat_prefix ("error"), IRC_PLUGIN_NAME,
                         num_read,
                         (num_read == 0) ? _("(connection closed by peer)") :
                         gnutls_strerror (num_read));
-                    weechat_printf (
+                    dogechat_printf (
                         server->buffer,
                         _("%s%s: disconnecting from server..."),
-                        weechat_prefix ("network"), IRC_PLUGIN_NAME);
+                        dogechat_prefix ("network"), IRC_PLUGIN_NAME);
                     irc_server_disconnect (server, !server->is_connected, 1);
                 }
             }
@@ -2836,17 +2836,17 @@ irc_server_recv_cb (void *data, int fd)
                 if ((num_read == 0)
                     || ((errno != EAGAIN) && (errno != EWOULDBLOCK)))
                 {
-                    weechat_printf (
+                    dogechat_printf (
                         server->buffer,
                         _("%s%s: reading data on socket: error %d %s"),
-                        weechat_prefix ("error"), IRC_PLUGIN_NAME,
+                        dogechat_prefix ("error"), IRC_PLUGIN_NAME,
                         errno,
                         (num_read == 0) ? _("(connection closed by peer)") :
                         strerror (errno));
-                    weechat_printf (
+                    dogechat_printf (
                         server->buffer,
                         _("%s%s: disconnecting from server..."),
-                        weechat_prefix ("network"), IRC_PLUGIN_NAME);
+                        dogechat_prefix ("network"), IRC_PLUGIN_NAME);
                     irc_server_disconnect (server, !server->is_connected, 1);
                 }
             }
@@ -2856,11 +2856,11 @@ irc_server_recv_cb (void *data, int fd)
     if (msgq_flush)
         irc_server_msgq_flush ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
- * Callback for server connection: it is called if WeeChat is TCP-connected to
+ * Callback for server connection: it is called if DogeChat is TCP-connected to
  * server, but did not receive message 001.
  */
 
@@ -2875,20 +2875,20 @@ irc_server_timer_connection_cb (void *data, int remaining_calls)
     server = (struct t_irc_server *)data;
 
     if (!server)
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
     server->hook_timer_connection = NULL;
 
     if (!server->is_connected)
     {
-        weechat_printf (
+        dogechat_printf (
             server->buffer,
             _("%s%s: connection timeout (message 001 not received)"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME);
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME);
         irc_server_disconnect (server, !server->is_connected, 1);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -2909,15 +2909,15 @@ irc_server_timer_sasl_cb (void *data, int remaining_calls)
     server = (struct t_irc_server *)data;
 
     if (!server)
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
     server->hook_timer_sasl = NULL;
 
     if (!server->is_connected)
     {
-        weechat_printf (server->buffer,
+        dogechat_printf (server->buffer,
                         _("%s%s: sasl authentication timeout"),
-                        weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                        dogechat_prefix ("error"), IRC_PLUGIN_NAME);
         sasl_fail = IRC_SERVER_OPTION_INTEGER(server,
                                               IRC_SERVER_OPTION_SASL_FAIL);
         if ((sasl_fail == IRC_SERVER_SASL_FAIL_RECONNECT)
@@ -2931,7 +2931,7 @@ irc_server_timer_sasl_cb (void *data, int remaining_calls)
             irc_server_sendf (server, 0, NULL, "CAP END");
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -2947,7 +2947,7 @@ irc_server_check_join_manual_cb (void *data, struct t_hashtable *hashtable,
     (void) data;
 
     if (*((time_t *)value) + (60 * 10) < time (NULL))
-        weechat_hashtable_remove (hashtable, key);
+        dogechat_hashtable_remove (hashtable, key);
 }
 
 /*
@@ -2963,7 +2963,7 @@ irc_server_check_join_noswitch_cb (void *data, struct t_hashtable *hashtable,
     (void) data;
 
     if (*((time_t *)value) + (60 * 10) < time (NULL))
-        weechat_hashtable_remove (hashtable, key);
+        dogechat_hashtable_remove (hashtable, key);
 }
 
 /*
@@ -2981,11 +2981,11 @@ irc_server_check_join_smart_filtered_cb (void *data,
     /* make C compiler happy */
     (void) data;
 
-    unmask_delay = weechat_config_integer (irc_config_look_smart_filter_join_unmask);
+    unmask_delay = dogechat_config_integer (irc_config_look_smart_filter_join_unmask);
     if ((unmask_delay == 0)
         || (*((time_t *)value) < time (NULL) - (unmask_delay * 60)))
     {
-        weechat_hashtable_remove (hashtable, key);
+        dogechat_hashtable_remove (hashtable, key);
     }
 }
 
@@ -3028,13 +3028,13 @@ irc_server_timer_cb (void *data, int remaining_calls)
             irc_server_outqueue_send (ptr_server);
 
             /* check for lag */
-            if ((weechat_config_integer (irc_config_network_lag_check) > 0)
+            if ((dogechat_config_integer (irc_config_network_lag_check) > 0)
                 && (ptr_server->lag_check_time.tv_sec == 0)
                 && (current_time >= ptr_server->lag_next_check))
             {
                 irc_server_sendf (ptr_server, 0, NULL, "PING %s",
                                   (ptr_server->current_address) ?
-                                  ptr_server->current_address : "weechat");
+                                  ptr_server->current_address : "dogechat");
                 gettimeofday (&(ptr_server->lag_check_time), NULL);
                 ptr_server->lag = 0;
                 ptr_server->lag_last_refresh = 0;
@@ -3075,28 +3075,28 @@ irc_server_timer_cb (void *data, int remaining_calls)
             if (ptr_server->lag_check_time.tv_sec != 0)
             {
                 gettimeofday (&tv, NULL);
-                ptr_server->lag = (int)(weechat_util_timeval_diff (&(ptr_server->lag_check_time),
+                ptr_server->lag = (int)(dogechat_util_timeval_diff (&(ptr_server->lag_check_time),
                                                                    &tv) / 1000);
                 /* refresh lag item if needed */
                 if (((ptr_server->lag_last_refresh == 0)
-                     || (current_time >= ptr_server->lag_last_refresh + weechat_config_integer (irc_config_network_lag_refresh_interval)))
-                    && (ptr_server->lag >= weechat_config_integer (irc_config_network_lag_min_show)))
+                     || (current_time >= ptr_server->lag_last_refresh + dogechat_config_integer (irc_config_network_lag_refresh_interval)))
+                    && (ptr_server->lag >= dogechat_config_integer (irc_config_network_lag_min_show)))
                 {
                     ptr_server->lag_last_refresh = current_time;
                     if (ptr_server->lag != ptr_server->lag_displayed)
                     {
                         ptr_server->lag_displayed = ptr_server->lag;
-                        weechat_bar_item_update ("lag");
+                        dogechat_bar_item_update ("lag");
                     }
                 }
                 /* lag timeout? => disconnect */
-                if ((weechat_config_integer (irc_config_network_lag_reconnect) > 0)
-                    && (ptr_server->lag >= weechat_config_integer (irc_config_network_lag_reconnect) * 1000))
+                if ((dogechat_config_integer (irc_config_network_lag_reconnect) > 0)
+                    && (ptr_server->lag >= dogechat_config_integer (irc_config_network_lag_reconnect) * 1000))
                 {
-                    weechat_printf (
+                    dogechat_printf (
                         ptr_server->buffer,
                         _("%s%s: lag is high, reconnecting to server %s%s%s"),
-                        weechat_prefix ("network"),
+                        dogechat_prefix ("network"),
                         IRC_PLUGIN_NAME,
                         IRC_COLOR_CHAT_SERVER,
                         ptr_server->name,
@@ -3106,22 +3106,22 @@ irc_server_timer_cb (void *data, int remaining_calls)
                 else
                 {
                     /* stop lag counting if max lag is reached */
-                    if ((weechat_config_integer (irc_config_network_lag_max) > 0)
-                        && (ptr_server->lag >= (weechat_config_integer (irc_config_network_lag_max) * 1000)))
+                    if ((dogechat_config_integer (irc_config_network_lag_max) > 0)
+                        && (ptr_server->lag >= (dogechat_config_integer (irc_config_network_lag_max) * 1000)))
                     {
                         /* refresh lag item */
                         ptr_server->lag_last_refresh = current_time;
                         if (ptr_server->lag != ptr_server->lag_displayed)
                         {
                             ptr_server->lag_displayed = ptr_server->lag;
-                            weechat_bar_item_update ("lag");
+                            dogechat_bar_item_update ("lag");
                         }
 
                         /* schedule next lag check in 5 seconds */
                         ptr_server->lag_check_time.tv_sec = 0;
                         ptr_server->lag_check_time.tv_usec = 0;
                         ptr_server->lag_next_check = time (NULL) +
-                            weechat_config_integer (irc_config_network_lag_check);
+                            dogechat_config_integer (irc_config_network_lag_check);
                     }
                 }
             }
@@ -3144,10 +3144,10 @@ irc_server_timer_cb (void *data, int remaining_calls)
             /* purge some data (every 10 minutes) */
             if (current_time > ptr_server->last_data_purge + (60 * 10))
             {
-                weechat_hashtable_map (ptr_server->join_manual,
+                dogechat_hashtable_map (ptr_server->join_manual,
                                        &irc_server_check_join_manual_cb,
                                        NULL);
-                weechat_hashtable_map (ptr_server->join_noswitch,
+                dogechat_hashtable_map (ptr_server->join_noswitch,
                                        &irc_server_check_join_noswitch_cb,
                                        NULL);
                 for (ptr_channel = ptr_server->channels; ptr_channel;
@@ -3155,7 +3155,7 @@ irc_server_timer_cb (void *data, int remaining_calls)
                 {
                     if (ptr_channel->join_smart_filtered)
                     {
-                        weechat_hashtable_map (ptr_channel->join_smart_filtered,
+                        dogechat_hashtable_map (ptr_channel->join_smart_filtered,
                                                &irc_server_check_join_smart_filtered_cb,
                                                NULL);
                     }
@@ -3165,7 +3165,7 @@ irc_server_timer_cb (void *data, int remaining_calls)
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -3179,25 +3179,25 @@ irc_server_close_connection (struct t_irc_server *server)
 
     if (server->hook_timer_connection)
     {
-        weechat_unhook (server->hook_timer_connection);
+        dogechat_unhook (server->hook_timer_connection);
         server->hook_timer_connection = NULL;
     }
 
     if (server->hook_timer_sasl)
     {
-        weechat_unhook (server->hook_timer_sasl);
+        dogechat_unhook (server->hook_timer_sasl);
         server->hook_timer_sasl = NULL;
     }
 
     if (server->hook_fd)
     {
-        weechat_unhook (server->hook_fd);
+        dogechat_unhook (server->hook_fd);
         server->hook_fd = NULL;
     }
 
     if (server->hook_connect)
     {
-        weechat_unhook (server->hook_connect);
+        dogechat_unhook (server->hook_connect);
         server->hook_connect = NULL;
     }
     else
@@ -3237,13 +3237,13 @@ irc_server_close_connection (struct t_irc_server *server)
     irc_redirect_free_all (server);
 
     /* remove all manual joins */
-    weechat_hashtable_remove_all (server->join_manual);
+    dogechat_hashtable_remove_all (server->join_manual);
 
     /* remove all keys for pending joins */
-    weechat_hashtable_remove_all (server->join_channel_key);
+    dogechat_hashtable_remove_all (server->join_channel_key);
 
     /* remove all keys for joins without switch */
-    weechat_hashtable_remove_all (server->join_noswitch);
+    dogechat_hashtable_remove_all (server->join_noswitch);
 
     /* server is now disconnected */
     server->is_connected = 0;
@@ -3265,10 +3265,10 @@ irc_server_reconnect_schedule (struct t_irc_server *server)
         if (server->reconnect_delay == 0)
             server->reconnect_delay = IRC_SERVER_OPTION_INTEGER(server, IRC_SERVER_OPTION_AUTORECONNECT_DELAY);
         else
-            server->reconnect_delay = server->reconnect_delay * weechat_config_integer (irc_config_network_autoreconnect_delay_growing);
-        if ((weechat_config_integer (irc_config_network_autoreconnect_delay_max) > 0)
-            && (server->reconnect_delay > weechat_config_integer (irc_config_network_autoreconnect_delay_max)))
-            server->reconnect_delay = weechat_config_integer (irc_config_network_autoreconnect_delay_max);
+            server->reconnect_delay = server->reconnect_delay * dogechat_config_integer (irc_config_network_autoreconnect_delay_growing);
+        if ((dogechat_config_integer (irc_config_network_autoreconnect_delay_max) > 0)
+            && (server->reconnect_delay > dogechat_config_integer (irc_config_network_autoreconnect_delay_max)))
+            server->reconnect_delay = dogechat_config_integer (irc_config_network_autoreconnect_delay_max);
 
         server->reconnect_start = time (NULL);
 
@@ -3276,10 +3276,10 @@ irc_server_reconnect_schedule (struct t_irc_server *server)
         seconds = server->reconnect_delay % 60;
         if ((minutes > 0) && (seconds > 0))
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: reconnecting to server in %d %s, %d %s"),
-                weechat_prefix ("network"),
+                dogechat_prefix ("network"),
                 IRC_PLUGIN_NAME,
                 minutes,
                 NG_("minute", "minutes", minutes),
@@ -3288,20 +3288,20 @@ irc_server_reconnect_schedule (struct t_irc_server *server)
         }
         else if (minutes > 0)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: reconnecting to server in %d %s"),
-                weechat_prefix ("network"),
+                dogechat_prefix ("network"),
                 IRC_PLUGIN_NAME,
                 minutes,
                 NG_("minute", "minutes", minutes));
         }
         else
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: reconnecting to server in %d %s"),
-                weechat_prefix ("network"),
+                dogechat_prefix ("network"),
                 IRC_PLUGIN_NAME,
                 seconds,
                 NG_("second", "seconds", seconds));
@@ -3324,13 +3324,13 @@ irc_server_login (struct t_irc_server *server)
     const char *capabilities;
     char *password, *username, *realname, *username2;
 
-    password = weechat_string_eval_expression (
+    password = dogechat_string_eval_expression (
         IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_PASSWORD),
         NULL, NULL, NULL);
-    username = weechat_string_eval_expression (
+    username = dogechat_string_eval_expression (
         IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_USERNAME),
         NULL, NULL, NULL);
-    realname = weechat_string_eval_expression (
+    realname = dogechat_string_eval_expression (
         IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_REALNAME),
         NULL, NULL, NULL);
 
@@ -3350,7 +3350,7 @@ irc_server_login (struct t_irc_server *server)
     {
         irc_server_set_nick (server,
                              (server->nicks_array) ?
-                             server->nicks_array[0] : "weechat");
+                             server->nicks_array[0] : "dogechat");
         server->nick_first_tried = 0;
     }
     else
@@ -3364,20 +3364,20 @@ irc_server_login (struct t_irc_server *server)
     }
 
     username2 = (username && username[0]) ?
-        weechat_string_replace (username, " ", "_") : strdup ("weechat");
+        dogechat_string_replace (username, " ", "_") : strdup ("dogechat");
     irc_server_sendf (
         server, 0, NULL,
         "NICK %s\n"
         "USER %s 0 * :%s",
         server->nick,
-        (username2) ? username2 : "weechat",
-        (realname && realname[0]) ? realname : ((username2) ? username2 : "weechat"));
+        (username2) ? username2 : "dogechat",
+        (realname && realname[0]) ? realname : ((username2) ? username2 : "dogechat"));
     if (username2)
         free (username2);
 
     if (server->hook_timer_connection)
-        weechat_unhook (server->hook_timer_connection);
-    server->hook_timer_connection = weechat_hook_timer (
+        dogechat_unhook (server->hook_timer_connection);
+    server->hook_timer_connection = dogechat_hook_timer (
         IRC_SERVER_OPTION_INTEGER (server, IRC_SERVER_OPTION_CONNECTION_TIMEOUT) * 1000,
         0, 1,
         &irc_server_timer_connection_cb,
@@ -3404,10 +3404,10 @@ irc_server_switch_address (struct t_irc_server *server, int connection)
         irc_server_set_index_current_address (
             server,
             (server->index_current_address + 1) % server->addresses_count);
-        weechat_printf (
+        dogechat_printf (
             server->buffer,
             _("%s%s: switching address to %s/%d"),
-            weechat_prefix ("network"),
+            dogechat_prefix ("network"),
             IRC_PLUGIN_NAME,
             server->current_address,
             server->current_port);
@@ -3445,149 +3445,149 @@ irc_server_connect_cb (void *data, int status, int gnutls_rc, int sock,
 
     switch (status)
     {
-        case WEECHAT_HOOK_CONNECT_OK:
+        case DOGECHAT_HOOK_CONNECT_OK:
             /* set socket and IP */
             server->sock = sock;
             if (server->current_ip)
                 free (server->current_ip);
             server->current_ip = (ip_address) ? strdup (ip_address) : NULL;
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: connected to %s/%d (%s)"),
-                weechat_prefix ("network"),
+                dogechat_prefix ("network"),
                 IRC_PLUGIN_NAME,
                 server->current_address,
                 server->current_port,
                 (server->current_ip) ? server->current_ip : "?");
-            server->hook_fd = weechat_hook_fd (server->sock,
+            server->hook_fd = dogechat_hook_fd (server->sock,
                                                1, 0, 0,
                                                &irc_server_recv_cb,
                                                server);
             /* login to server */
             irc_server_login (server);
             break;
-        case WEECHAT_HOOK_CONNECT_ADDRESS_NOT_FOUND:
-            weechat_printf (
+        case DOGECHAT_HOOK_CONNECT_ADDRESS_NOT_FOUND:
+            dogechat_printf (
                 server->buffer,
                 (proxy && proxy[0]) ?
                 _("%s%s: proxy address \"%s\" not found") :
                 _("%s%s: address \"%s\" not found"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME,
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME,
                 server->current_address);
             if (error && error[0])
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%s%s: error: %s"),
-                    weechat_prefix ("error"), IRC_PLUGIN_NAME, error);
+                    dogechat_prefix ("error"), IRC_PLUGIN_NAME, error);
             }
             irc_server_close_connection (server);
             irc_server_switch_address (server, 1);
             break;
-        case WEECHAT_HOOK_CONNECT_IP_ADDRESS_NOT_FOUND:
-            weechat_printf (
+        case DOGECHAT_HOOK_CONNECT_IP_ADDRESS_NOT_FOUND:
+            dogechat_printf (
                 server->buffer,
                 (proxy && proxy[0]) ?
                 _("%s%s: proxy IP address not found") :
                 _("%s%s: IP address not found"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME);
             if (error && error[0])
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%s%s: error: %s"),
-                    weechat_prefix ("error"), IRC_PLUGIN_NAME, error);
+                    dogechat_prefix ("error"), IRC_PLUGIN_NAME, error);
             }
             irc_server_close_connection (server);
             irc_server_switch_address (server, 1);
             break;
-        case WEECHAT_HOOK_CONNECT_CONNECTION_REFUSED:
-            weechat_printf (
+        case DOGECHAT_HOOK_CONNECT_CONNECTION_REFUSED:
+            dogechat_printf (
                 server->buffer,
                 (proxy && proxy[0]) ?
                 _("%s%s: proxy connection refused") :
                 _("%s%s: connection refused"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME);
             if (error && error[0])
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%s%s: error: %s"),
-                    weechat_prefix ("error"), IRC_PLUGIN_NAME, error);
+                    dogechat_prefix ("error"), IRC_PLUGIN_NAME, error);
             }
             irc_server_close_connection (server);
             server->current_retry++;
             irc_server_switch_address (server, 1);
             break;
-        case WEECHAT_HOOK_CONNECT_PROXY_ERROR:
-            weechat_printf (
+        case DOGECHAT_HOOK_CONNECT_PROXY_ERROR:
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: proxy fails to establish connection to server (check "
                   "username/password if used and if server address/port is "
                   "allowed by proxy)"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME);
             if (error && error[0])
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%s%s: error: %s"),
-                    weechat_prefix ("error"), IRC_PLUGIN_NAME, error);
+                    dogechat_prefix ("error"), IRC_PLUGIN_NAME, error);
             }
             irc_server_close_connection (server);
             irc_server_switch_address (server, 1);
             break;
-        case WEECHAT_HOOK_CONNECT_LOCAL_HOSTNAME_ERROR:
-            weechat_printf (
+        case DOGECHAT_HOOK_CONNECT_LOCAL_HOSTNAME_ERROR:
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: unable to set local hostname/IP"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME);
             if (error && error[0])
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%s%s: error: %s"),
-                    weechat_prefix ("error"), IRC_PLUGIN_NAME, error);
+                    dogechat_prefix ("error"), IRC_PLUGIN_NAME, error);
             }
             irc_server_close_connection (server);
             irc_server_reconnect_schedule (server);
             break;
-        case WEECHAT_HOOK_CONNECT_GNUTLS_INIT_ERROR:
-            weechat_printf (
+        case DOGECHAT_HOOK_CONNECT_GNUTLS_INIT_ERROR:
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: TLS init error"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME);
             if (error && error[0])
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%s%s: error: %s"),
-                    weechat_prefix ("error"), IRC_PLUGIN_NAME, error);
+                    dogechat_prefix ("error"), IRC_PLUGIN_NAME, error);
             }
             irc_server_close_connection (server);
             server->current_retry++;
             irc_server_reconnect_schedule (server);
             break;
-        case WEECHAT_HOOK_CONNECT_GNUTLS_HANDSHAKE_ERROR:
-            weechat_printf (
+        case DOGECHAT_HOOK_CONNECT_GNUTLS_HANDSHAKE_ERROR:
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: TLS handshake failed"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME);
             if (error && error[0])
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%s%s: error: %s"),
-                    weechat_prefix ("error"), IRC_PLUGIN_NAME, error);
+                    dogechat_prefix ("error"), IRC_PLUGIN_NAME, error);
             }
 #ifdef HAVE_GNUTLS
             if (gnutls_rc == GNUTLS_E_DH_PRIME_UNACCEPTABLE)
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%s%s: you should play with option "
                       "irc.server.%s.ssl_dhkey_size (current value is %d, try "
                       "a lower value like %d or %d)"),
-                    weechat_prefix ("error"),
+                    dogechat_prefix ("error"),
                     IRC_PLUGIN_NAME,
                     server->name,
                     IRC_SERVER_OPTION_INTEGER (
@@ -3604,48 +3604,48 @@ irc_server_connect_cb (void *data, int status, int gnutls_rc, int sock,
             server->current_retry++;
             irc_server_switch_address (server, 1);
             break;
-        case WEECHAT_HOOK_CONNECT_MEMORY_ERROR:
-            weechat_printf (
+        case DOGECHAT_HOOK_CONNECT_MEMORY_ERROR:
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: not enough memory"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME);
             if (error && error[0])
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%s%s: error: %s"),
-                    weechat_prefix ("error"), IRC_PLUGIN_NAME, error);
+                    dogechat_prefix ("error"), IRC_PLUGIN_NAME, error);
             }
             irc_server_close_connection (server);
             irc_server_reconnect_schedule (server);
             break;
-        case WEECHAT_HOOK_CONNECT_TIMEOUT:
-            weechat_printf (
+        case DOGECHAT_HOOK_CONNECT_TIMEOUT:
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: timeout"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME);
             if (error && error[0])
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%s%s: error: %s"),
-                    weechat_prefix ("error"), IRC_PLUGIN_NAME, error);
+                    dogechat_prefix ("error"), IRC_PLUGIN_NAME, error);
             }
             irc_server_close_connection (server);
             server->current_retry++;
             irc_server_switch_address (server, 1);
             break;
-        case WEECHAT_HOOK_CONNECT_SOCKET_ERROR:
-            weechat_printf (
+        case DOGECHAT_HOOK_CONNECT_SOCKET_ERROR:
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: unable to create socket"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME);
             if (error && error[0])
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%s%s: error: %s"),
-                    weechat_prefix ("error"), IRC_PLUGIN_NAME, error);
+                    dogechat_prefix ("error"), IRC_PLUGIN_NAME, error);
             }
             irc_server_close_connection (server);
             server->current_retry++;
@@ -3653,7 +3653,7 @@ irc_server_connect_cb (void *data, int status, int gnutls_rc, int sock,
             break;
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -3680,13 +3680,13 @@ irc_server_set_buffer_title (struct t_irc_server *server)
                           server->current_address,
                           server->current_port,
                           (server->current_ip) ? server->current_ip : "");
-                weechat_buffer_set (server->buffer, "title", title);
+                dogechat_buffer_set (server->buffer, "title", title);
                 free (title);
             }
         }
         else
         {
-            weechat_buffer_set (server->buffer, "title", "");
+            dogechat_buffer_set (server->buffer, "title", "");
         }
     }
 }
@@ -3704,11 +3704,11 @@ irc_server_create_buffer (struct t_irc_server *server)
     struct t_gui_buffer *ptr_buffer_for_merge;
 
     ptr_buffer_for_merge = NULL;
-    switch (weechat_config_integer (irc_config_look_server_buffer))
+    switch (dogechat_config_integer (irc_config_look_server_buffer))
     {
         case IRC_CONFIG_LOOK_SERVER_BUFFER_MERGE_WITH_CORE:
-            /* merge with WeeChat core buffer */
-            ptr_buffer_for_merge = weechat_buffer_search_main ();
+            /* merge with DogeChat core buffer */
+            ptr_buffer_for_merge = dogechat_buffer_search_main ();
             break;
         case IRC_CONFIG_LOOK_SERVER_BUFFER_MERGE_WITHOUT_CORE:
             /* find buffer used to merge all IRC server buffers */
@@ -3718,38 +3718,38 @@ irc_server_create_buffer (struct t_irc_server *server)
 
     snprintf (buffer_name, sizeof (buffer_name),
               "server.%s", server->name);
-    server->buffer = weechat_buffer_new (buffer_name,
+    server->buffer = dogechat_buffer_new (buffer_name,
                                          &irc_input_data_cb, NULL,
                                          &irc_buffer_close_cb, NULL);
     if (!server->buffer)
         return NULL;
 
-    if (!weechat_buffer_get_integer (server->buffer, "short_name_is_set"))
-        weechat_buffer_set (server->buffer, "short_name", server->name);
-    weechat_buffer_set (server->buffer, "localvar_set_type", "server");
-    weechat_buffer_set (server->buffer, "localvar_set_server", server->name);
-    weechat_buffer_set (server->buffer, "localvar_set_channel", server->name);
+    if (!dogechat_buffer_get_integer (server->buffer, "short_name_is_set"))
+        dogechat_buffer_set (server->buffer, "short_name", server->name);
+    dogechat_buffer_set (server->buffer, "localvar_set_type", "server");
+    dogechat_buffer_set (server->buffer, "localvar_set_server", server->name);
+    dogechat_buffer_set (server->buffer, "localvar_set_channel", server->name);
     snprintf (charset_modifier, sizeof (charset_modifier),
               "irc.%s", server->name);
-    weechat_buffer_set (server->buffer, "localvar_set_charset_modifier",
+    dogechat_buffer_set (server->buffer, "localvar_set_charset_modifier",
                         charset_modifier);
 
-    (void) weechat_hook_signal_send ("logger_backlog",
-                                     WEECHAT_HOOK_SIGNAL_POINTER,
+    (void) dogechat_hook_signal_send ("logger_backlog",
+                                     DOGECHAT_HOOK_SIGNAL_POINTER,
                                      server->buffer);
 
-    if (weechat_config_boolean (irc_config_network_send_unknown_commands))
-        weechat_buffer_set (server->buffer, "input_get_unknown_commands", "1");
+    if (dogechat_config_boolean (irc_config_network_send_unknown_commands))
+        dogechat_buffer_set (server->buffer, "input_get_unknown_commands", "1");
 
     /* set highlights settings on server buffer */
-    weechat_buffer_set (server->buffer, "highlight_words_add",
-                        weechat_config_string (irc_config_look_highlight_server));
-    if (weechat_config_string (irc_config_look_highlight_tags_restrict)
-        && weechat_config_string (irc_config_look_highlight_tags_restrict)[0])
+    dogechat_buffer_set (server->buffer, "highlight_words_add",
+                        dogechat_config_string (irc_config_look_highlight_server));
+    if (dogechat_config_string (irc_config_look_highlight_tags_restrict)
+        && dogechat_config_string (irc_config_look_highlight_tags_restrict)[0])
     {
-        weechat_buffer_set (
+        dogechat_buffer_set (
             server->buffer, "highlight_tags_restrict",
-            weechat_config_string (irc_config_look_highlight_tags_restrict));
+            dogechat_config_string (irc_config_look_highlight_tags_restrict));
     }
 
     irc_server_set_buffer_title (server);
@@ -3757,16 +3757,16 @@ irc_server_create_buffer (struct t_irc_server *server)
     /*
      * merge buffer if needed: if merge with(out) core set, and if no layout
      * number is assigned for this buffer (if layout number is assigned, then
-     * buffer was already moved/merged by WeeChat core)
+     * buffer was already moved/merged by DogeChat core)
      */
     if (ptr_buffer_for_merge
-        && (weechat_buffer_get_integer (server->buffer, "layout_number") < 1))
+        && (dogechat_buffer_get_integer (server->buffer, "layout_number") < 1))
     {
-        weechat_buffer_merge (server->buffer, ptr_buffer_for_merge);
+        dogechat_buffer_merge (server->buffer, ptr_buffer_for_merge);
     }
 
-    (void) weechat_hook_signal_send ("irc_server_opened",
-                                     WEECHAT_HOOK_SIGNAL_POINTER,
+    (void) dogechat_hook_signal_send ("irc_server_opened",
+                                     DOGECHAT_HOOK_SIGNAL_POINTER,
                                      server->buffer);
 
     return server->buffer;
@@ -3887,7 +3887,7 @@ irc_server_check_certificate_fingerprint (struct t_irc_server *server,
     }
 
     /* split good_fingerprints */
-    fingerprints = weechat_string_split (good_fingerprints, ",", 0, 0, NULL);
+    fingerprints = dogechat_string_split (good_fingerprints, ",", 0, 0, NULL);
     if (!fingerprints)
         return 0;
 
@@ -3914,11 +3914,11 @@ irc_server_check_certificate_fingerprint (struct t_irc_server *server,
                         fingerprint_server[algo],
                         &size_bytes) != GNUTLS_E_SUCCESS)
                 {
-                    weechat_printf (
+                    dogechat_printf (
                         server->buffer,
                         _("%sgnutls: failed to calculate certificate "
                           "fingerprint (%s)"),
-                        weechat_prefix ("error"),
+                        dogechat_prefix ("error"),
                         irc_fingerprint_digest_algos_name[algo]);
                     free (fingerprint_server[algo]);
                     fingerprint_server[algo] = NULL;
@@ -3926,10 +3926,10 @@ irc_server_check_certificate_fingerprint (struct t_irc_server *server,
             }
             else
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%s%s: not enough memory"),
-                    weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                    dogechat_prefix ("error"), IRC_PLUGIN_NAME);
             }
         }
 
@@ -3946,7 +3946,7 @@ irc_server_check_certificate_fingerprint (struct t_irc_server *server,
         }
     }
 
-    weechat_string_free_split (fingerprints);
+    dogechat_string_free_split (fingerprints);
 
     for (i = 0; i < IRC_FINGERPRINT_NUM_ALGOS; i++)
     {
@@ -3991,7 +3991,7 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
     unsigned int i, cert_list_len, status;
     time_t cert_time;
     char *cert_path0, *cert_path1, *cert_path2, *cert_str;
-    const char *weechat_dir, *fingerprint;
+    const char *dogechat_dir, *fingerprint;
     int rc, ret, fingerprint_match, hostname_match, cert_temp_init;
 #if LIBGNUTLS_VERSION_NUMBER >= 0x010706 /* 1.7.6 */
     gnutls_datum_t cinfo;
@@ -4014,23 +4014,23 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
     cert_list = NULL;
     cert_list_len = 0;
 
-    if (action == WEECHAT_HOOK_CONNECT_GNUTLS_CB_VERIFY_CERT)
+    if (action == DOGECHAT_HOOK_CONNECT_GNUTLS_CB_VERIFY_CERT)
     {
-        weechat_printf (
+        dogechat_printf (
             server->buffer,
             _("%sgnutls: connected using %d-bit Diffie-Hellman shared secret "
               "exchange"),
-            weechat_prefix ("network"),
+            dogechat_prefix ("network"),
             IRC_SERVER_OPTION_INTEGER (server,
                                        IRC_SERVER_OPTION_SSL_DHKEY_SIZE));
 
         /* initialize the certificate structure */
         if (gnutls_x509_crt_init (&cert_temp) != GNUTLS_E_SUCCESS)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%sgnutls: failed to initialize certificate structure"),
-                weechat_prefix ("error"));
+                dogechat_prefix ("error"));
             rc = -1;
             goto end;
         }
@@ -4050,12 +4050,12 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
         cert_list = gnutls_certificate_get_peers (tls_session, &cert_list_len);
         if (cert_list)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 NG_("%sgnutls: receiving %d certificate",
                     "%sgnutls: receiving %d certificates",
                     cert_list_len),
-                weechat_prefix ("network"),
+                dogechat_prefix ("network"),
                 cert_list_len);
 
             for (i = 0; i < cert_list_len; i++)
@@ -4064,10 +4064,10 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
                                             &cert_list[i],
                                             GNUTLS_X509_FMT_DER) != GNUTLS_E_SUCCESS)
                 {
-                    weechat_printf (
+                    dogechat_printf (
                         server->buffer,
                         _("%sgnutls: failed to import certificate[%d]"),
-                        weechat_prefix ("error"), i + 1);
+                        dogechat_prefix ("error"), i + 1);
                     rc = -1;
                     goto end;
                 }
@@ -4099,14 +4099,14 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
 #endif /*  LIBGNUTLS_VERSION_NUMBER < 0x020400 */
                 if (rinfo == 0)
                 {
-                    weechat_printf (
+                    dogechat_printf (
                         server->buffer,
                         _("%s - certificate[%d] info:"),
-                        weechat_prefix ("network"), i + 1);
-                    weechat_printf (
+                        dogechat_prefix ("network"), i + 1);
+                    dogechat_printf (
                         server->buffer,
                         "%s   - %s",
-                        weechat_prefix ("network"), cinfo.data);
+                        dogechat_prefix ("network"), cinfo.data);
                     gnutls_free (cinfo.data);
                 }
 #endif /* LIBGNUTLS_VERSION_NUMBER >= 0x010706 */
@@ -4117,20 +4117,20 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
                     cert_time = gnutls_x509_crt_get_expiration_time (cert_temp);
                     if (cert_time < time (NULL))
                     {
-                        weechat_printf (
+                        dogechat_printf (
                             server->buffer,
                             _("%sgnutls: certificate has expired"),
-                            weechat_prefix ("error"));
+                            dogechat_prefix ("error"));
                         rc = -1;
                     }
                     /* check activation date */
                     cert_time = gnutls_x509_crt_get_activation_time (cert_temp);
                     if (cert_time > time (NULL))
                     {
-                        weechat_printf (
+                        dogechat_printf (
                             server->buffer,
                             _("%sgnutls: certificate is not yet activated"),
-                            weechat_prefix ("error"));
+                            dogechat_prefix ("error"));
                         rc = -1;
                     }
                 }
@@ -4144,19 +4144,19 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
             {
                 if (fingerprint_match)
                 {
-                    weechat_printf (
+                    dogechat_printf (
                         server->buffer,
                         _("%sgnutls: certificate fingerprint matches"),
-                        weechat_prefix ("network"));
+                        dogechat_prefix ("network"));
                 }
                 else
                 {
-                    weechat_printf (
+                    dogechat_printf (
                         server->buffer,
                         _("%sgnutls: certificate fingerprint does NOT match "
                           "(check value of option "
                           "irc.server.%s.ssl_fingerprint)"),
-                        weechat_prefix ("error"), server->name);
+                        dogechat_prefix ("error"), server->name);
                     rc = -1;
                 }
                 goto end;
@@ -4164,11 +4164,11 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
 
             if (!hostname_match)
             {
-                weechat_printf (
+                dogechat_printf (
                     server->buffer,
                     _("%sgnutls: the hostname in the certificate does NOT "
                       "match \"%s\""),
-                    weechat_prefix ("error"), server->current_address);
+                    dogechat_prefix ("error"), server->current_address);
                 rc = -1;
             }
         }
@@ -4176,10 +4176,10 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
         /* verify the peer’s certificate */
         if (gnutls_certificate_verify_peers2 (tls_session, &status) < 0)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%sgnutls: error while checking peer's certificate"),
-                weechat_prefix ("error"));
+                dogechat_prefix ("error"));
             rc = -1;
             goto end;
         }
@@ -4187,61 +4187,61 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
         /* check if certificate is trusted */
         if (status & GNUTLS_CERT_INVALID)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%sgnutls: peer's certificate is NOT trusted"),
-                weechat_prefix ("error"));
+                dogechat_prefix ("error"));
             rc = -1;
         }
         else
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%sgnutls: peer's certificate is trusted"),
-                weechat_prefix ("network"));
+                dogechat_prefix ("network"));
         }
 
         /* check if certificate issuer is known */
         if (status & GNUTLS_CERT_SIGNER_NOT_FOUND)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%sgnutls: peer's certificate issuer is unknown"),
-                weechat_prefix ("error"));
+                dogechat_prefix ("error"));
             rc = -1;
         }
 
         /* check that certificate is not revoked */
         if (status & GNUTLS_CERT_REVOKED)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%sgnutls: the certificate has been revoked"),
-                weechat_prefix ("error"));
+                dogechat_prefix ("error"));
             rc = -1;
         }
     }
-    else if (action == WEECHAT_HOOK_CONNECT_GNUTLS_CB_SET_CERT)
+    else if (action == DOGECHAT_HOOK_CONNECT_GNUTLS_CB_SET_CERT)
     {
         /* using client certificate if it exists */
         cert_path0 = (char *) IRC_SERVER_OPTION_STRING(
             server, IRC_SERVER_OPTION_SSL_CERT);
         if (cert_path0 && cert_path0[0])
         {
-            weechat_dir = weechat_info_get ("weechat_dir", "");
-            cert_path1 = weechat_string_replace (cert_path0, "%h", weechat_dir);
+            dogechat_dir = dogechat_info_get ("dogechat_dir", "");
+            cert_path1 = dogechat_string_replace (cert_path0, "%h", dogechat_dir);
             cert_path2 = (cert_path1) ?
-                weechat_string_expand_home (cert_path1) : NULL;
+                dogechat_string_expand_home (cert_path1) : NULL;
 
             if (cert_path2)
             {
-                cert_str = weechat_file_get_content (cert_path2);
+                cert_str = dogechat_file_get_content (cert_path2);
                 if (cert_str)
                 {
-                    weechat_printf (
+                    dogechat_printf (
                         server->buffer,
                         _("%sgnutls: sending one certificate"),
-                        weechat_prefix ("network"));
+                        dogechat_prefix ("network"));
 
                     filedatum.data = (unsigned char *) cert_str;
                     filedatum.size = strlen (cert_str);
@@ -4267,11 +4267,11 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
                     }
                     if (ret < 0)
                     {
-                        weechat_printf (
+                        dogechat_printf (
                             server->buffer,
                             _("%sgnutls: invalid certificate \"%s\", error: "
                               "%s"),
-                            weechat_prefix ("error"), cert_path2,
+                            dogechat_prefix ("error"), cert_path2,
                             gnutls_strerror (ret));
                         rc = -1;
                     }
@@ -4301,13 +4301,13 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
 #endif /* LIBGNUTLS_VERSION_NUMBER < 0x020400 */
                         if (rinfo == 0)
                         {
-                            weechat_printf (
+                            dogechat_printf (
                                 server->buffer,
                                 _("%s - client certificate info (%s):"),
-                                weechat_prefix ("network"), cert_path2);
-                            weechat_printf (
+                                dogechat_prefix ("network"), cert_path2);
+                            dogechat_printf (
                                 server->buffer, "%s  - %s",
-                                weechat_prefix ("network"), cinfo.data);
+                                dogechat_prefix ("network"), cinfo.data);
                             gnutls_free (cinfo.data);
                         }
 #endif /* LIBGNUTLS_VERSION_NUMBER >= 0x010706 */
@@ -4317,10 +4317,10 @@ irc_server_gnutls_callback (void *data, gnutls_session_t tls_session,
                 }
                 else
                 {
-                    weechat_printf (
+                    dogechat_printf (
                         server->buffer,
                         _("%sgnutls: unable to read certificate \"%s\""),
-                        weechat_prefix ("error"), cert_path2);
+                        dogechat_prefix ("error"), cert_path2);
                 }
             }
 
@@ -4369,7 +4369,7 @@ irc_server_connect (struct t_irc_server *server)
     {
         if (!irc_server_create_buffer (server))
             return 0;
-        weechat_buffer_set (server->buffer, "display", "auto");
+        dogechat_buffer_set (server->buffer, "display", "auto");
     }
 
     irc_bar_item_update_channel ();
@@ -4379,10 +4379,10 @@ irc_server_connect (struct t_irc_server *server)
 
     if (!server->current_address)
     {
-        weechat_printf (
+        dogechat_printf (
             server->buffer,
             _("%s%s: unknown address for server \"%s\", cannot connect"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME, server->name);
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME, server->name);
         return 0;
     }
 
@@ -4417,70 +4417,70 @@ irc_server_connect (struct t_irc_server *server)
         option_name = malloc (length);
         if (!option_name)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: not enough memory"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME);
             return 0;
         }
-        snprintf (option_name, length, "weechat.proxy.%s.type", proxy);
-        proxy_type = weechat_config_get (option_name);
-        snprintf (option_name, length, "weechat.proxy.%s.ipv6", proxy);
-        proxy_ipv6 = weechat_config_get (option_name);
-        snprintf (option_name, length, "weechat.proxy.%s.address", proxy);
-        proxy_address = weechat_config_get (option_name);
-        snprintf (option_name, length, "weechat.proxy.%s.port", proxy);
-        proxy_port = weechat_config_get (option_name);
+        snprintf (option_name, length, "dogechat.proxy.%s.type", proxy);
+        proxy_type = dogechat_config_get (option_name);
+        snprintf (option_name, length, "dogechat.proxy.%s.ipv6", proxy);
+        proxy_ipv6 = dogechat_config_get (option_name);
+        snprintf (option_name, length, "dogechat.proxy.%s.address", proxy);
+        proxy_address = dogechat_config_get (option_name);
+        snprintf (option_name, length, "dogechat.proxy.%s.port", proxy);
+        proxy_port = dogechat_config_get (option_name);
         free (option_name);
         if (!proxy_type || !proxy_address)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: proxy \"%s\" not found for server \"%s\", cannot "
                   "connect"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, proxy, server->name);
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, proxy, server->name);
             return 0;
         }
-        str_proxy_type = weechat_config_string (proxy_type);
-        str_proxy_address = weechat_config_string (proxy_address);
+        str_proxy_type = dogechat_config_string (proxy_type);
+        str_proxy_address = dogechat_config_string (proxy_address);
         if (!str_proxy_type[0] || !proxy_ipv6 || !str_proxy_address[0]
             || !proxy_port)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: missing proxy settings, check options for proxy "
                   "\"%s\""),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, proxy);
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, proxy);
             return 0;
         }
     }
 
     if (!server->nicks_array)
     {
-        weechat_printf (
+        dogechat_printf (
             server->buffer,
             _("%s%s: nicks not defined for server \"%s\", cannot connect"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME, server->name);
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME, server->name);
         return 0;
     }
 
 #ifndef HAVE_GNUTLS
     if (IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_SSL))
     {
-        weechat_printf (
+        dogechat_printf (
             server->buffer,
-            _("%s%s: cannot connect with SSL because WeeChat was not built "
+            _("%s%s: cannot connect with SSL because DogeChat was not built "
               "with GnuTLS support"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME);
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME);
         return 0;
     }
 #endif /* HAVE_GNUTLS */
     if (proxy_type)
     {
-        weechat_printf (
+        dogechat_printf (
             server->buffer,
             _("%s%s: connecting to server %s/%d%s via %s proxy %s/%d%s..."),
-            weechat_prefix ("network"),
+            dogechat_prefix ("network"),
             IRC_PLUGIN_NAME,
             server->current_address,
             server->current_port,
@@ -4488,9 +4488,9 @@ irc_server_connect (struct t_irc_server *server)
             " (SSL)" : "",
             str_proxy_type,
             str_proxy_address,
-            weechat_config_integer (proxy_port),
-            (weechat_config_boolean (proxy_ipv6)) ? " (IPv6)" : "");
-        weechat_log_printf (
+            dogechat_config_integer (proxy_port),
+            (dogechat_config_boolean (proxy_ipv6)) ? " (IPv6)" : "");
+        dogechat_log_printf (
             _("Connecting to server %s/%d%s via %s proxy %s/%d%s..."),
             server->current_address,
             server->current_port,
@@ -4498,21 +4498,21 @@ irc_server_connect (struct t_irc_server *server)
             " (SSL)" : "",
             str_proxy_type,
             str_proxy_address,
-            weechat_config_integer (proxy_port),
-            (weechat_config_boolean (proxy_ipv6)) ? " (IPv6)" : "");
+            dogechat_config_integer (proxy_port),
+            (dogechat_config_boolean (proxy_ipv6)) ? " (IPv6)" : "");
     }
     else
     {
-        weechat_printf (
+        dogechat_printf (
             server->buffer,
             _("%s%s: connecting to server %s/%d%s..."),
-            weechat_prefix ("network"),
+            dogechat_prefix ("network"),
             IRC_PLUGIN_NAME,
             server->current_address,
             server->current_port,
             (IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_SSL)) ?
             " (SSL)" : "");
-        weechat_log_printf (
+        dogechat_log_printf (
             _("%s%s: connecting to server %s/%d%s..."),
             "",
             IRC_PLUGIN_NAME,
@@ -4526,7 +4526,7 @@ irc_server_connect (struct t_irc_server *server)
     irc_server_close_connection (server);
 
     /* open auto-joined channels now (if needed) */
-    if (weechat_config_boolean (irc_config_look_buffer_open_before_autojoin)
+    if (dogechat_config_boolean (irc_config_look_buffer_open_before_autojoin)
         && !server->disable_autojoin)
     {
         irc_server_autojoin_create_buffers (server);
@@ -4537,11 +4537,11 @@ irc_server_connect (struct t_irc_server *server)
 #ifdef HAVE_GNUTLS
     if (IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_SSL))
         server->ssl_connected = 1;
-    server->hook_connect = weechat_hook_connect (
+    server->hook_connect = dogechat_hook_connect (
         proxy,
         server->current_address,
         server->current_port,
-        proxy_type ? weechat_config_integer (proxy_ipv6) : IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_IPV6),
+        proxy_type ? dogechat_config_integer (proxy_ipv6) : IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_IPV6),
         server->current_retry,
         (server->ssl_connected) ? &server->gnutls_sess : NULL,
         (server->ssl_connected) ? irc_server_gnutls_callback : NULL,
@@ -4551,11 +4551,11 @@ irc_server_connect (struct t_irc_server *server)
         &irc_server_connect_cb,
         server);
 #else
-    server->hook_connect = weechat_hook_connect (
+    server->hook_connect = dogechat_hook_connect (
         proxy,
         server->current_address,
         server->current_port,
-        proxy_type ? weechat_config_integer (proxy_ipv6) : IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_IPV6),
+        proxy_type ? dogechat_config_integer (proxy_ipv6) : IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_IPV6),
         server->current_retry,
         NULL, NULL, 0, NULL,
         IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_LOCAL_HOSTNAME),
@@ -4564,8 +4564,8 @@ irc_server_connect (struct t_irc_server *server)
 #endif /* HAVE_GNUTLS */
 
     /* send signal "irc_server_connecting" with server name */
-    (void) weechat_hook_signal_send ("irc_server_connecting",
-                                     WEECHAT_HOOK_SIGNAL_STRING, server->name);
+    (void) dogechat_hook_signal_send ("irc_server_connecting",
+                                     DOGECHAT_HOOK_SIGNAL_STRING, server->name);
 
     return 1;
 }
@@ -4577,10 +4577,10 @@ irc_server_connect (struct t_irc_server *server)
 void
 irc_server_reconnect (struct t_irc_server *server)
 {
-    weechat_printf (
+    dogechat_printf (
         server->buffer,
         _("%s%s: reconnecting to server..."),
-        weechat_prefix ("network"), IRC_PLUGIN_NAME);
+        dogechat_prefix ("network"), IRC_PLUGIN_NAME);
 
     server->reconnect_start = 0;
 
@@ -4616,7 +4616,7 @@ irc_server_auto_connect_timer_cb (void *data, int remaining_calls)
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -4629,7 +4629,7 @@ irc_server_auto_connect_timer_cb (void *data, int remaining_calls)
 void
 irc_server_auto_connect (int auto_connect)
 {
-    weechat_hook_timer (1, 0, 1, &irc_server_auto_connect_timer_cb,
+    dogechat_hook_timer (1, 0, 1, &irc_server_auto_connect_timer_cb,
                         (auto_connect) ? (void *)1 : (void *)0);
 }
 
@@ -4655,27 +4655,27 @@ irc_server_disconnect (struct t_irc_server *server, int switch_address,
             irc_nick_free_all (server, ptr_channel);
             if (ptr_channel->hook_autorejoin)
             {
-                weechat_unhook (ptr_channel->hook_autorejoin);
+                dogechat_unhook (ptr_channel->hook_autorejoin);
                 ptr_channel->hook_autorejoin = NULL;
             }
-            weechat_buffer_set (ptr_channel->buffer, "localvar_del_away", "");
-            weechat_printf (
+            dogechat_buffer_set (ptr_channel->buffer, "localvar_del_away", "");
+            dogechat_printf (
                 ptr_channel->buffer,
                 _("%s%s: disconnected from server"),
-                weechat_prefix ("network"), IRC_PLUGIN_NAME);
+                dogechat_prefix ("network"), IRC_PLUGIN_NAME);
         }
         /* remove away status on server buffer */
-        weechat_buffer_set (server->buffer, "localvar_del_away", "");
+        dogechat_buffer_set (server->buffer, "localvar_del_away", "");
     }
 
     irc_server_close_connection (server);
 
     if (server->buffer)
     {
-        weechat_printf (
+        dogechat_printf (
             server->buffer,
             _("%s%s: disconnected from server"),
-            weechat_prefix ("network"), IRC_PLUGIN_NAME);
+            dogechat_prefix ("network"), IRC_PLUGIN_NAME);
     }
 
     server->current_retry = 0;
@@ -4689,8 +4689,8 @@ irc_server_disconnect (struct t_irc_server *server, int switch_address,
     {
         free (server->nick_modes);
         server->nick_modes = NULL;
-        weechat_bar_item_update ("input_prompt");
-        weechat_bar_item_update ("irc_nick_modes");
+        dogechat_bar_item_update ("input_prompt");
+        dogechat_bar_item_update ("irc_nick_modes");
     }
     server->cap_away_notify = 0;
     server->cap_account_notify = 0;
@@ -4702,7 +4702,7 @@ irc_server_disconnect (struct t_irc_server *server, int switch_address,
     server->lag_check_time.tv_sec = 0;
     server->lag_check_time.tv_usec = 0;
     server->lag_next_check = time (NULL) +
-        weechat_config_integer (irc_config_network_lag_check);
+        dogechat_config_integer (irc_config_network_lag_check);
     server->lag_last_refresh = 0;
     server->monitor = 0;
     server->monitor_time = 0;
@@ -4725,8 +4725,8 @@ irc_server_disconnect (struct t_irc_server *server, int switch_address,
     server->disconnected = 1;
 
     /* send signal "irc_server_disconnected" with server name */
-    (void) weechat_hook_signal_send ("irc_server_disconnected",
-                                     WEECHAT_HOOK_SIGNAL_STRING, server->name);
+    (void) dogechat_hook_signal_send ("irc_server_disconnected",
+                                     DOGECHAT_HOOK_SIGNAL_STRING, server->name);
 }
 
 /*
@@ -4761,7 +4761,7 @@ irc_server_autojoin_create_buffers (struct t_irc_server *server)
         return;
 
     /* evaluate server option "autojoin" */
-    autojoin = weechat_string_eval_expression (
+    autojoin = dogechat_string_eval_expression (
         IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_AUTOJOIN),
         NULL, NULL, NULL);
 
@@ -4770,11 +4770,11 @@ irc_server_autojoin_create_buffers (struct t_irc_server *server)
     {
         pos_space = strchr (autojoin, ' ');
         autojoin2 = (pos_space) ?
-            weechat_strndup (autojoin, pos_space - autojoin) :
+            dogechat_strndup (autojoin, pos_space - autojoin) :
             strdup (autojoin);
         if (autojoin2)
         {
-            channels = weechat_string_split (autojoin2, ",", 0, 0,
+            channels = dogechat_string_split (autojoin2, ",", 0, 0,
                                              &num_channels);
             if (channels)
             {
@@ -4784,7 +4784,7 @@ irc_server_autojoin_create_buffers (struct t_irc_server *server)
                         server, IRC_CHANNEL_TYPE_CHANNEL, channels[i],
                         1, 1);
                 }
-                weechat_string_free_split (channels);
+                dogechat_string_free_split (channels);
             }
             free (autojoin2);
         }
@@ -4834,7 +4834,7 @@ irc_server_autojoin_channels (struct t_irc_server *server)
     else
     {
         /* auto-join when connecting to server for first time */
-        autojoin = weechat_string_eval_expression (
+        autojoin = dogechat_string_eval_expression (
             IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_AUTOJOIN),
             NULL, NULL, NULL);
         if (!server->disable_autojoin && autojoin && autojoin[0])
@@ -4986,12 +4986,12 @@ irc_server_set_away (struct t_irc_server *server, const char *nick, int is_away)
         /* set/del "away" local variable on server buffer */
         if (is_away)
         {
-            weechat_buffer_set (server->buffer,
+            dogechat_buffer_set (server->buffer,
                                 "localvar_set_away", server->away_message);
         }
         else
         {
-            weechat_buffer_set (server->buffer,
+            dogechat_buffer_set (server->buffer,
                                 "localvar_del_away", "");
         }
 
@@ -5005,12 +5005,12 @@ irc_server_set_away (struct t_irc_server *server, const char *nick, int is_away)
             /* set/del "away" local variable on channel buffer */
             if (is_away)
             {
-                weechat_buffer_set (ptr_channel->buffer,
+                dogechat_buffer_set (ptr_channel->buffer,
                                     "localvar_set_away", server->away_message);
             }
             else
             {
-                weechat_buffer_set (ptr_channel->buffer,
+                dogechat_buffer_set (ptr_channel->buffer,
                                     "localvar_del_away", "");
             }
         }
@@ -5044,10 +5044,10 @@ irc_server_xfer_send_ready_cb (void *data, const char *signal,
 
     infolist = (struct t_infolist *)signal_data;
 
-    if (weechat_infolist_next (infolist))
+    if (dogechat_infolist_next (infolist))
     {
-        plugin_name = weechat_infolist_string (infolist, "plugin_name");
-        plugin_id = weechat_infolist_string (infolist, "plugin_id");
+        plugin_name = dogechat_infolist_string (infolist, "plugin_name");
+        plugin_id = dogechat_infolist_string (infolist, "plugin_id");
         if (plugin_name && (strcmp (plugin_name, IRC_PLUGIN_NAME) == 0)
             && plugin_id)
         {
@@ -5055,7 +5055,7 @@ irc_server_xfer_send_ready_cb (void *data, const char *signal,
             if (ptr_server)
             {
                 converted_addr[0] = '\0';
-                local_address = weechat_infolist_string (infolist,
+                local_address = dogechat_infolist_string (infolist,
                                                          "local_address");
                 if (local_address)
                 {
@@ -5078,26 +5078,26 @@ irc_server_xfer_send_ready_cb (void *data, const char *signal,
                     }
                 }
 
-                type = weechat_infolist_string (infolist, "type_string");
+                type = dogechat_infolist_string (infolist, "type_string");
                 if (type && converted_addr[0])
                 {
                     /* send DCC PRIVMSG */
                     if (strcmp (type, "file_send") == 0)
                     {
-                        filename = weechat_infolist_string (infolist, "filename");
+                        filename = dogechat_infolist_string (infolist, "filename");
                         spaces_in_name = (strchr (filename, ' ') != NULL);
                         irc_server_sendf (
                             ptr_server,
                             IRC_SERVER_SEND_OUTQ_PRIO_HIGH, NULL,
                             "PRIVMSG %s :\01DCC SEND %s%s%s "
                             "%s %d %s\01",
-                            weechat_infolist_string (infolist, "remote_nick"),
+                            dogechat_infolist_string (infolist, "remote_nick"),
                             (spaces_in_name) ? "\"" : "",
                             filename,
                             (spaces_in_name) ? "\"" : "",
                             converted_addr,
-                            weechat_infolist_integer (infolist, "port"),
-                            weechat_infolist_string (infolist, "size"));
+                            dogechat_infolist_integer (infolist, "port"),
+                            dogechat_infolist_string (infolist, "size"));
                     }
                     else if (strcmp (type, "chat_send") == 0)
                     {
@@ -5105,18 +5105,18 @@ irc_server_xfer_send_ready_cb (void *data, const char *signal,
                             ptr_server,
                             IRC_SERVER_SEND_OUTQ_PRIO_HIGH, NULL,
                             "PRIVMSG %s :\01DCC CHAT chat %s %d\01",
-                            weechat_infolist_string (infolist, "remote_nick"),
+                            dogechat_infolist_string (infolist, "remote_nick"),
                             converted_addr,
-                            weechat_infolist_integer (infolist, "port"));
+                            dogechat_infolist_integer (infolist, "port"));
                     }
                 }
             }
         }
     }
 
-    weechat_infolist_reset_item_cursor (infolist);
+    dogechat_infolist_reset_item_cursor (infolist);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -5142,34 +5142,34 @@ irc_server_xfer_resume_ready_cb (void *data, const char *signal,
 
     infolist = (struct t_infolist *)signal_data;
 
-    if (weechat_infolist_next (infolist))
+    if (dogechat_infolist_next (infolist))
     {
-        plugin_name = weechat_infolist_string (infolist, "plugin_name");
-        plugin_id = weechat_infolist_string (infolist, "plugin_id");
+        plugin_name = dogechat_infolist_string (infolist, "plugin_name");
+        plugin_id = dogechat_infolist_string (infolist, "plugin_id");
         if (plugin_name && (strcmp (plugin_name, IRC_PLUGIN_NAME) == 0) && plugin_id)
         {
             ptr_server = irc_server_search (plugin_id);
             if (ptr_server)
             {
-                filename = weechat_infolist_string (infolist, "filename");
+                filename = dogechat_infolist_string (infolist, "filename");
                 spaces_in_name = (strchr (filename, ' ') != NULL);
                 irc_server_sendf (
                     ptr_server,
                     IRC_SERVER_SEND_OUTQ_PRIO_HIGH, NULL,
                     "PRIVMSG %s :\01DCC RESUME %s%s%s %d %s\01",
-                    weechat_infolist_string (infolist, "remote_nick"),
+                    dogechat_infolist_string (infolist, "remote_nick"),
                     (spaces_in_name) ? "\"" : "",
                     filename,
                     (spaces_in_name) ? "\"" : "",
-                    weechat_infolist_integer (infolist, "port"),
-                    weechat_infolist_string (infolist, "start_resume"));
+                    dogechat_infolist_integer (infolist, "port"),
+                    dogechat_infolist_string (infolist, "start_resume"));
             }
         }
     }
 
-    weechat_infolist_reset_item_cursor (infolist);
+    dogechat_infolist_reset_item_cursor (infolist);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -5196,34 +5196,34 @@ irc_server_xfer_send_accept_resume_cb (void *data, const char *signal,
 
     infolist = (struct t_infolist *)signal_data;
 
-    if (weechat_infolist_next (infolist))
+    if (dogechat_infolist_next (infolist))
     {
-        plugin_name = weechat_infolist_string (infolist, "plugin_name");
-        plugin_id = weechat_infolist_string (infolist, "plugin_id");
+        plugin_name = dogechat_infolist_string (infolist, "plugin_name");
+        plugin_id = dogechat_infolist_string (infolist, "plugin_id");
         if (plugin_name && (strcmp (plugin_name, IRC_PLUGIN_NAME) == 0) && plugin_id)
         {
             ptr_server = irc_server_search (plugin_id);
             if (ptr_server)
             {
-                filename = weechat_infolist_string (infolist, "filename");
+                filename = dogechat_infolist_string (infolist, "filename");
                 spaces_in_name = (strchr (filename, ' ') != NULL);
                 irc_server_sendf (
                     ptr_server,
                     IRC_SERVER_SEND_OUTQ_PRIO_HIGH, NULL,
                     "PRIVMSG %s :\01DCC ACCEPT %s%s%s %d %s\01",
-                    weechat_infolist_string (infolist, "remote_nick"),
+                    dogechat_infolist_string (infolist, "remote_nick"),
                     (spaces_in_name) ? "\"" : "",
                     filename,
                     (spaces_in_name) ? "\"" : "",
-                    weechat_infolist_integer (infolist, "port"),
-                    weechat_infolist_string (infolist, "start_resume"));
+                    dogechat_infolist_integer (infolist, "port"),
+                    dogechat_infolist_string (infolist, "start_resume"));
             }
         }
     }
 
-    weechat_infolist_reset_item_cursor (infolist);
+    dogechat_infolist_reset_item_cursor (infolist);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -5238,91 +5238,91 @@ irc_server_hdata_server_cb (void *data, const char *hdata_name)
     /* make C compiler happy */
     (void) data;
 
-    hdata = weechat_hdata_new (hdata_name, "prev_server", "next_server",
+    hdata = dogechat_hdata_new (hdata_name, "prev_server", "next_server",
                                0, 0, NULL, NULL);
     if (hdata)
     {
-        WEECHAT_HDATA_VAR(struct t_irc_server, name, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, options, POINTER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, temp_server, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, reloading_from_config, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, reloaded_from_config, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, addresses_count, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, addresses_array, STRING, 0, "addresses_count", NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, ports_array, INTEGER, 0, "addresses_count", NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, retry_array, INTEGER, 0, "addresses_count", NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, index_current_address, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, current_address, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, current_ip, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, current_port, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, current_retry, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, sock, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, hook_connect, POINTER, 0, NULL, "hook");
-        WEECHAT_HDATA_VAR(struct t_irc_server, hook_fd, POINTER, 0, NULL, "hook");
-        WEECHAT_HDATA_VAR(struct t_irc_server, hook_timer_connection, POINTER, 0, NULL, "hook");
-        WEECHAT_HDATA_VAR(struct t_irc_server, hook_timer_sasl, POINTER, 0, NULL, "hook");
-        WEECHAT_HDATA_VAR(struct t_irc_server, is_connected, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, ssl_connected, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, disconnected, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, name, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, options, POINTER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, temp_server, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, reloading_from_config, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, reloaded_from_config, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, addresses_count, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, addresses_array, STRING, 0, "addresses_count", NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, ports_array, INTEGER, 0, "addresses_count", NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, retry_array, INTEGER, 0, "addresses_count", NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, index_current_address, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, current_address, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, current_ip, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, current_port, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, current_retry, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, sock, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, hook_connect, POINTER, 0, NULL, "hook");
+        DOGECHAT_HDATA_VAR(struct t_irc_server, hook_fd, POINTER, 0, NULL, "hook");
+        DOGECHAT_HDATA_VAR(struct t_irc_server, hook_timer_connection, POINTER, 0, NULL, "hook");
+        DOGECHAT_HDATA_VAR(struct t_irc_server, hook_timer_sasl, POINTER, 0, NULL, "hook");
+        DOGECHAT_HDATA_VAR(struct t_irc_server, is_connected, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, ssl_connected, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, disconnected, INTEGER, 0, NULL, NULL);
 #ifdef HAVE_GNUTLS
-        WEECHAT_HDATA_VAR(struct t_irc_server, gnutls_sess, OTHER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, tls_cert, OTHER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, tls_cert_key, OTHER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, gnutls_sess, OTHER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, tls_cert, OTHER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, tls_cert_key, OTHER, 0, NULL, NULL);
 #endif /* HAVE_GNUTLS */
-        WEECHAT_HDATA_VAR(struct t_irc_server, unterminated_message, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, nicks_count, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, nicks_array, STRING, 0, "nicks_count", NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, nick_first_tried, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, nick_alternate_number, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, nick, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, nick_modes, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, cap_away_notify, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, cap_account_notify, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, cap_extended_join, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, isupport, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, prefix_modes, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, prefix_chars, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, nick_max_length, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, casemapping, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, chantypes, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, chanmodes, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, monitor, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, monitor_time, TIME, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, reconnect_delay, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, reconnect_start, TIME, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, command_time, TIME, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, reconnect_join, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, disable_autojoin, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, is_away, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, away_message, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, away_time, TIME, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, lag, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, lag_displayed, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, lag_check_time, OTHER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, lag_next_check, TIME, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, lag_last_refresh, TIME, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, cmd_list_regexp, POINTER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, last_user_message, TIME, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, last_away_check, TIME, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, last_data_purge, TIME, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, outqueue, POINTER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, last_outqueue, POINTER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, redirects, POINTER, 0, NULL, "irc_redirect");
-        WEECHAT_HDATA_VAR(struct t_irc_server, last_redirect, POINTER, 0, NULL, "irc_redirect");
-        WEECHAT_HDATA_VAR(struct t_irc_server, notify_list, POINTER, 0, NULL, "irc_notify");
-        WEECHAT_HDATA_VAR(struct t_irc_server, last_notify, POINTER, 0, NULL, "irc_notify");
-        WEECHAT_HDATA_VAR(struct t_irc_server, notify_count, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, join_manual, HASHTABLE, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, join_channel_key, HASHTABLE, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, join_noswitch, HASHTABLE, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, buffer, POINTER, 0, NULL, "buffer");
-        WEECHAT_HDATA_VAR(struct t_irc_server, buffer_as_string, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_server, channels, POINTER, 0, NULL, "irc_channel");
-        WEECHAT_HDATA_VAR(struct t_irc_server, last_channel, POINTER, 0, NULL, "irc_channel");
-        WEECHAT_HDATA_VAR(struct t_irc_server, prev_server, POINTER, 0, NULL, hdata_name);
-        WEECHAT_HDATA_VAR(struct t_irc_server, next_server, POINTER, 0, NULL, hdata_name);
-        WEECHAT_HDATA_LIST(irc_servers, WEECHAT_HDATA_LIST_CHECK_POINTERS);
-        WEECHAT_HDATA_LIST(last_irc_server, 0);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, unterminated_message, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, nicks_count, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, nicks_array, STRING, 0, "nicks_count", NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, nick_first_tried, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, nick_alternate_number, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, nick, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, nick_modes, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, cap_away_notify, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, cap_account_notify, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, cap_extended_join, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, isupport, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, prefix_modes, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, prefix_chars, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, nick_max_length, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, casemapping, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, chantypes, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, chanmodes, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, monitor, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, monitor_time, TIME, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, reconnect_delay, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, reconnect_start, TIME, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, command_time, TIME, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, reconnect_join, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, disable_autojoin, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, is_away, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, away_message, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, away_time, TIME, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, lag, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, lag_displayed, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, lag_check_time, OTHER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, lag_next_check, TIME, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, lag_last_refresh, TIME, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, cmd_list_regexp, POINTER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, last_user_message, TIME, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, last_away_check, TIME, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, last_data_purge, TIME, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, outqueue, POINTER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, last_outqueue, POINTER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, redirects, POINTER, 0, NULL, "irc_redirect");
+        DOGECHAT_HDATA_VAR(struct t_irc_server, last_redirect, POINTER, 0, NULL, "irc_redirect");
+        DOGECHAT_HDATA_VAR(struct t_irc_server, notify_list, POINTER, 0, NULL, "irc_notify");
+        DOGECHAT_HDATA_VAR(struct t_irc_server, last_notify, POINTER, 0, NULL, "irc_notify");
+        DOGECHAT_HDATA_VAR(struct t_irc_server, notify_count, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, join_manual, HASHTABLE, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, join_channel_key, HASHTABLE, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, join_noswitch, HASHTABLE, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, buffer, POINTER, 0, NULL, "buffer");
+        DOGECHAT_HDATA_VAR(struct t_irc_server, buffer_as_string, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, channels, POINTER, 0, NULL, "irc_channel");
+        DOGECHAT_HDATA_VAR(struct t_irc_server, last_channel, POINTER, 0, NULL, "irc_channel");
+        DOGECHAT_HDATA_VAR(struct t_irc_server, prev_server, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_VAR(struct t_irc_server, next_server, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_LIST(irc_servers, DOGECHAT_HDATA_LIST_CHECK_POINTERS);
+        DOGECHAT_HDATA_LIST(last_irc_server, 0);
     }
     return hdata;
 }
@@ -5344,223 +5344,223 @@ irc_server_add_to_infolist (struct t_infolist *infolist,
     if (!infolist || !server)
         return 0;
 
-    ptr_item = weechat_infolist_new_item (infolist);
+    ptr_item = dogechat_infolist_new_item (infolist);
     if (!ptr_item)
         return 0;
 
-    if (!weechat_infolist_new_var_string (ptr_item, "name", server->name))
+    if (!dogechat_infolist_new_var_string (ptr_item, "name", server->name))
         return 0;
-    if (!weechat_infolist_new_var_pointer (ptr_item, "buffer", server->buffer))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "buffer", server->buffer))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "buffer_name",
+    if (!dogechat_infolist_new_var_string (ptr_item, "buffer_name",
                                           (server->buffer) ?
-                                          weechat_buffer_get_string (server->buffer, "name") : ""))
+                                          dogechat_buffer_get_string (server->buffer, "name") : ""))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "buffer_short_name",
+    if (!dogechat_infolist_new_var_string (ptr_item, "buffer_short_name",
                                           (server->buffer) ?
-                                          weechat_buffer_get_string (server->buffer, "short_name") : ""))
+                                          dogechat_buffer_get_string (server->buffer, "short_name") : ""))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "addresses",
+    if (!dogechat_infolist_new_var_string (ptr_item, "addresses",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_ADDRESSES)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "proxy",
+    if (!dogechat_infolist_new_var_string (ptr_item, "proxy",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_PROXY)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "ipv6",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "ipv6",
                                            IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_IPV6)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "ssl",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "ssl",
                                            IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_SSL)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "ssl_cert",
+    if (!dogechat_infolist_new_var_string (ptr_item, "ssl_cert",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_SSL_CERT)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "ssl_priorities",
+    if (!dogechat_infolist_new_var_string (ptr_item, "ssl_priorities",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_SSL_PRIORITIES)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "ssl_dhkey_size",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "ssl_dhkey_size",
                                            IRC_SERVER_OPTION_INTEGER(server, IRC_SERVER_OPTION_SSL_DHKEY_SIZE)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "ssl_fingerprint",
+    if (!dogechat_infolist_new_var_string (ptr_item, "ssl_fingerprint",
                                            IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_SSL_FINGERPRINT)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "ssl_verify",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "ssl_verify",
                                            IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_SSL_VERIFY)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "password",
+    if (!dogechat_infolist_new_var_string (ptr_item, "password",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_PASSWORD)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "capabilities",
+    if (!dogechat_infolist_new_var_string (ptr_item, "capabilities",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_CAPABILITIES)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "sasl_mechanism",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "sasl_mechanism",
                                           IRC_SERVER_OPTION_INTEGER(server, IRC_SERVER_OPTION_SASL_MECHANISM)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "sasl_username",
+    if (!dogechat_infolist_new_var_string (ptr_item, "sasl_username",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_SASL_USERNAME)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "sasl_password",
+    if (!dogechat_infolist_new_var_string (ptr_item, "sasl_password",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_SASL_PASSWORD)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "sasl_key",
+    if (!dogechat_infolist_new_var_string (ptr_item, "sasl_key",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_SASL_KEY)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "sasl_fail",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "sasl_fail",
                                            IRC_SERVER_OPTION_INTEGER(server, IRC_SERVER_OPTION_SASL_FAIL)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "autoconnect",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "autoconnect",
                                            IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_AUTOCONNECT)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "autoreconnect",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "autoreconnect",
                                            IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_AUTORECONNECT)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "autoreconnect_delay",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "autoreconnect_delay",
                                            IRC_SERVER_OPTION_INTEGER(server, IRC_SERVER_OPTION_AUTORECONNECT_DELAY)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "nicks",
+    if (!dogechat_infolist_new_var_string (ptr_item, "nicks",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_NICKS)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "nicks_alternate",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "nicks_alternate",
                                            IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_NICKS_ALTERNATE)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "username",
+    if (!dogechat_infolist_new_var_string (ptr_item, "username",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_USERNAME)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "realname",
+    if (!dogechat_infolist_new_var_string (ptr_item, "realname",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_REALNAME)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "local_hostname",
+    if (!dogechat_infolist_new_var_string (ptr_item, "local_hostname",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_LOCAL_HOSTNAME)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "command",
+    if (!dogechat_infolist_new_var_string (ptr_item, "command",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_COMMAND)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "command_delay",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "command_delay",
                                            IRC_SERVER_OPTION_INTEGER(server, IRC_SERVER_OPTION_COMMAND_DELAY)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "autojoin",
+    if (!dogechat_infolist_new_var_string (ptr_item, "autojoin",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_AUTOJOIN)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "autorejoin",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "autorejoin",
                                            IRC_SERVER_OPTION_BOOLEAN(server, IRC_SERVER_OPTION_AUTOREJOIN)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "autorejoin_delay",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "autorejoin_delay",
                                            IRC_SERVER_OPTION_INTEGER(server, IRC_SERVER_OPTION_AUTOREJOIN_DELAY)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "connection_timeout",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "connection_timeout",
                                            IRC_SERVER_OPTION_INTEGER(server, IRC_SERVER_OPTION_CONNECTION_TIMEOUT)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "anti_flood_prio_high",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "anti_flood_prio_high",
                                            IRC_SERVER_OPTION_INTEGER(server, IRC_SERVER_OPTION_ANTI_FLOOD_PRIO_HIGH)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "anti_flood_prio_low",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "anti_flood_prio_low",
                                            IRC_SERVER_OPTION_INTEGER(server, IRC_SERVER_OPTION_ANTI_FLOOD_PRIO_LOW)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "away_check",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "away_check",
                                            IRC_SERVER_OPTION_INTEGER(server, IRC_SERVER_OPTION_AWAY_CHECK)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "away_check_max_nicks",
+    if (!dogechat_infolist_new_var_integer (ptr_item, "away_check_max_nicks",
                                            IRC_SERVER_OPTION_INTEGER(server, IRC_SERVER_OPTION_AWAY_CHECK_MAX_NICKS)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "default_msg_kick",
+    if (!dogechat_infolist_new_var_string (ptr_item, "default_msg_kick",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_DEFAULT_MSG_KICK)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "default_msg_part",
+    if (!dogechat_infolist_new_var_string (ptr_item, "default_msg_part",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_DEFAULT_MSG_PART)))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "default_msg_quit",
+    if (!dogechat_infolist_new_var_string (ptr_item, "default_msg_quit",
                                           IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_DEFAULT_MSG_QUIT)))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "temp_server", server->temp_server))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "temp_server", server->temp_server))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "index_current_address", server->index_current_address))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "index_current_address", server->index_current_address))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "current_address", server->current_address))
+    if (!dogechat_infolist_new_var_string (ptr_item, "current_address", server->current_address))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "current_ip", server->current_ip))
+    if (!dogechat_infolist_new_var_string (ptr_item, "current_ip", server->current_ip))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "current_port", server->current_port))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "current_port", server->current_port))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "current_retry", server->current_retry))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "current_retry", server->current_retry))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "sock", server->sock))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "sock", server->sock))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "is_connected", server->is_connected))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "is_connected", server->is_connected))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "ssl_connected", server->ssl_connected))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "ssl_connected", server->ssl_connected))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "disconnected", server->disconnected))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "disconnected", server->disconnected))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "unterminated_message", server->unterminated_message))
+    if (!dogechat_infolist_new_var_string (ptr_item, "unterminated_message", server->unterminated_message))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "nick", server->nick))
+    if (!dogechat_infolist_new_var_string (ptr_item, "nick", server->nick))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "nick_modes", server->nick_modes))
+    if (!dogechat_infolist_new_var_string (ptr_item, "nick_modes", server->nick_modes))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "cap_away_notify", server->cap_away_notify))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "cap_away_notify", server->cap_away_notify))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "cap_account_notify", server->cap_account_notify))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "cap_account_notify", server->cap_account_notify))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "cap_extended_join", server->cap_extended_join))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "cap_extended_join", server->cap_extended_join))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "isupport", server->isupport))
+    if (!dogechat_infolist_new_var_string (ptr_item, "isupport", server->isupport))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "prefix_modes", server->prefix_modes))
+    if (!dogechat_infolist_new_var_string (ptr_item, "prefix_modes", server->prefix_modes))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "prefix_chars", server->prefix_chars))
+    if (!dogechat_infolist_new_var_string (ptr_item, "prefix_chars", server->prefix_chars))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "nick_max_length", server->nick_max_length))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "nick_max_length", server->nick_max_length))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "casemapping", server->casemapping))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "casemapping", server->casemapping))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "casemapping_string", irc_server_casemapping_string[server->casemapping]))
+    if (!dogechat_infolist_new_var_string (ptr_item, "casemapping_string", irc_server_casemapping_string[server->casemapping]))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "chantypes", server->chantypes))
+    if (!dogechat_infolist_new_var_string (ptr_item, "chantypes", server->chantypes))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "chanmodes", server->chanmodes))
+    if (!dogechat_infolist_new_var_string (ptr_item, "chanmodes", server->chanmodes))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "monitor", server->monitor))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "monitor", server->monitor))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "monitor_time", server->monitor_time))
+    if (!dogechat_infolist_new_var_time (ptr_item, "monitor_time", server->monitor_time))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "reconnect_delay", server->reconnect_delay))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "reconnect_delay", server->reconnect_delay))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "reconnect_start", server->reconnect_start))
+    if (!dogechat_infolist_new_var_time (ptr_item, "reconnect_start", server->reconnect_start))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "command_time", server->command_time))
+    if (!dogechat_infolist_new_var_time (ptr_item, "command_time", server->command_time))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "reconnect_join", server->reconnect_join))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "reconnect_join", server->reconnect_join))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "disable_autojoin", server->disable_autojoin))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "disable_autojoin", server->disable_autojoin))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "is_away", server->is_away))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "is_away", server->is_away))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "away_message", server->away_message))
+    if (!dogechat_infolist_new_var_string (ptr_item, "away_message", server->away_message))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "away_time", server->away_time))
+    if (!dogechat_infolist_new_var_time (ptr_item, "away_time", server->away_time))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "lag", server->lag))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "lag", server->lag))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "lag_displayed", server->lag_displayed))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "lag_displayed", server->lag_displayed))
         return 0;
-    if (!weechat_infolist_new_var_buffer (ptr_item, "lag_check_time", &(server->lag_check_time), sizeof (struct timeval)))
+    if (!dogechat_infolist_new_var_buffer (ptr_item, "lag_check_time", &(server->lag_check_time), sizeof (struct timeval)))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "lag_next_check", server->lag_next_check))
+    if (!dogechat_infolist_new_var_time (ptr_item, "lag_next_check", server->lag_next_check))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "lag_last_refresh", server->lag_last_refresh))
+    if (!dogechat_infolist_new_var_time (ptr_item, "lag_last_refresh", server->lag_last_refresh))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "last_user_message", server->last_user_message))
+    if (!dogechat_infolist_new_var_time (ptr_item, "last_user_message", server->last_user_message))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "last_away_check", server->last_away_check))
+    if (!dogechat_infolist_new_var_time (ptr_item, "last_away_check", server->last_away_check))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "last_data_purge", server->last_data_purge))
+    if (!dogechat_infolist_new_var_time (ptr_item, "last_data_purge", server->last_data_purge))
         return 0;
 
     return 1;
 }
 
 /*
- * Prints server infos in WeeChat log file (usually for crash dump).
+ * Prints server infos in DogeChat log file (usually for crash dump).
  */
 
 void
@@ -5573,364 +5573,364 @@ irc_server_print_log ()
     for (ptr_server = irc_servers; ptr_server;
          ptr_server = ptr_server->next_server)
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("[server %s (addr:0x%lx)]", ptr_server->name, ptr_server);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("[server %s (addr:0x%lx)]", ptr_server->name, ptr_server);
         /* addresses */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_ADDRESSES]))
-            weechat_log_printf ("  addresses. . . . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_ADDRESSES]))
+            dogechat_log_printf ("  addresses. . . . . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_ADDRESSES));
         else
-            weechat_log_printf ("  addresses. . . . . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_ADDRESSES]));
+            dogechat_log_printf ("  addresses. . . . . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_ADDRESSES]));
         /* proxy */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_PROXY]))
-            weechat_log_printf ("  proxy. . . . . . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_PROXY]))
+            dogechat_log_printf ("  proxy. . . . . . . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_PROXY));
         else
-            weechat_log_printf ("  proxy. . . . . . . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_PROXY]));
+            dogechat_log_printf ("  proxy. . . . . . . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_PROXY]));
         /* ipv6 */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_IPV6]))
-            weechat_log_printf ("  ipv6 . . . . . . . . : null (%s)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_IPV6]))
+            dogechat_log_printf ("  ipv6 . . . . . . . . : null (%s)",
                                 (IRC_SERVER_OPTION_BOOLEAN(ptr_server, IRC_SERVER_OPTION_IPV6)) ?
                                 "on" : "off");
         else
-            weechat_log_printf ("  ipv6 . . . . . . . . : %s",
-                                (weechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_IPV6])) ?
+            dogechat_log_printf ("  ipv6 . . . . . . . . : %s",
+                                (dogechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_IPV6])) ?
                                 "on" : "off");
         /* ssl */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SSL]))
-            weechat_log_printf ("  ssl. . . . . . . . . : null (%s)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SSL]))
+            dogechat_log_printf ("  ssl. . . . . . . . . : null (%s)",
                                 (IRC_SERVER_OPTION_BOOLEAN(ptr_server, IRC_SERVER_OPTION_SSL)) ?
                                 "on" : "off");
         else
-            weechat_log_printf ("  ssl. . . . . . . . . : %s",
-                                (weechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_SSL])) ?
+            dogechat_log_printf ("  ssl. . . . . . . . . : %s",
+                                (dogechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_SSL])) ?
                                 "on" : "off");
         /* ssl_cert */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SSL_CERT]))
-            weechat_log_printf ("  ssl_cert . . . . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SSL_CERT]))
+            dogechat_log_printf ("  ssl_cert . . . . . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_SSL_CERT));
         else
-            weechat_log_printf ("  ssl_cert . . . . . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_SSL_CERT]));
+            dogechat_log_printf ("  ssl_cert . . . . . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_SSL_CERT]));
         /* ssl_priorities */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SSL_PRIORITIES]))
-            weechat_log_printf ("  ssl_priorities . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SSL_PRIORITIES]))
+            dogechat_log_printf ("  ssl_priorities . . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_SSL_PRIORITIES));
         else
-            weechat_log_printf ("  ssl_priorities . . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_SSL_PRIORITIES]));
+            dogechat_log_printf ("  ssl_priorities . . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_SSL_PRIORITIES]));
         /* ssl_dhkey_size */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SSL_DHKEY_SIZE]))
-            weechat_log_printf ("  ssl_dhkey_size . . . : null ('%d')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SSL_DHKEY_SIZE]))
+            dogechat_log_printf ("  ssl_dhkey_size . . . : null ('%d')",
                                 IRC_SERVER_OPTION_INTEGER(ptr_server, IRC_SERVER_OPTION_SSL_DHKEY_SIZE));
         else
-            weechat_log_printf ("  ssl_dhkey_size . . . : '%d'",
-                                weechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_SSL_DHKEY_SIZE]));
+            dogechat_log_printf ("  ssl_dhkey_size . . . : '%d'",
+                                dogechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_SSL_DHKEY_SIZE]));
         /* ssl_fingerprint */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SSL_FINGERPRINT]))
-            weechat_log_printf ("  ssl_fingerprint. . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SSL_FINGERPRINT]))
+            dogechat_log_printf ("  ssl_fingerprint. . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_SSL_FINGERPRINT));
         else
-            weechat_log_printf ("  ssl_fingerprint. . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_SSL_FINGERPRINT]));
+            dogechat_log_printf ("  ssl_fingerprint. . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_SSL_FINGERPRINT]));
         /* ssl_verify */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SSL_VERIFY]))
-            weechat_log_printf ("  ssl_verify . . . . . : null (%s)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SSL_VERIFY]))
+            dogechat_log_printf ("  ssl_verify . . . . . : null (%s)",
                                 (IRC_SERVER_OPTION_BOOLEAN(ptr_server, IRC_SERVER_OPTION_SSL_VERIFY)) ?
                                 "on" : "off");
         else
-            weechat_log_printf ("  ssl_verify . . . . . : %s",
-                                (weechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_SSL_VERIFY])) ?
+            dogechat_log_printf ("  ssl_verify . . . . . : %s",
+                                (dogechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_SSL_VERIFY])) ?
                                 "on" : "off");
         /* password */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_PASSWORD]))
-            weechat_log_printf ("  password . . . . . . : null");
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_PASSWORD]))
+            dogechat_log_printf ("  password . . . . . . : null");
         else
-            weechat_log_printf ("  password . . . . . . : (hidden)");
+            dogechat_log_printf ("  password . . . . . . : (hidden)");
         /* client capabilities */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_CAPABILITIES]))
-            weechat_log_printf ("  capabilities . . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_CAPABILITIES]))
+            dogechat_log_printf ("  capabilities . . . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_CAPABILITIES));
         else
-            weechat_log_printf ("  capabilities . . . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_CAPABILITIES]));
+            dogechat_log_printf ("  capabilities . . . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_CAPABILITIES]));
         /* sasl_mechanism */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SASL_MECHANISM]))
-            weechat_log_printf ("  sasl_mechanism . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SASL_MECHANISM]))
+            dogechat_log_printf ("  sasl_mechanism . . . : null ('%s')",
                                 irc_sasl_mechanism_string[IRC_SERVER_OPTION_INTEGER(ptr_server, IRC_SERVER_OPTION_SASL_MECHANISM)]);
         else
-            weechat_log_printf ("  sasl_mechanism . . . : '%s'",
-                                irc_sasl_mechanism_string[weechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_SASL_MECHANISM])]);
+            dogechat_log_printf ("  sasl_mechanism . . . : '%s'",
+                                irc_sasl_mechanism_string[dogechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_SASL_MECHANISM])]);
         /* sasl_username */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SASL_USERNAME]))
-            weechat_log_printf ("  sasl_username. . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SASL_USERNAME]))
+            dogechat_log_printf ("  sasl_username. . . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_SASL_USERNAME));
         else
-            weechat_log_printf ("  sasl_username. . . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_SASL_USERNAME]));
+            dogechat_log_printf ("  sasl_username. . . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_SASL_USERNAME]));
         /* sasl_password */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SASL_PASSWORD]))
-            weechat_log_printf ("  sasl_password. . . . : null");
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SASL_PASSWORD]))
+            dogechat_log_printf ("  sasl_password. . . . : null");
         else
-            weechat_log_printf ("  sasl_password. . . . : (hidden)");
+            dogechat_log_printf ("  sasl_password. . . . : (hidden)");
         /* sasl_key */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SASL_KEY]))
-            weechat_log_printf ("  sasl_key. .  . . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SASL_KEY]))
+            dogechat_log_printf ("  sasl_key. .  . . . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_SASL_KEY));
         else
-            weechat_log_printf ("  sasl_key. .  . . . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_SASL_KEY]));
+            dogechat_log_printf ("  sasl_key. .  . . . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_SASL_KEY]));
         /* sasl_fail */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SASL_FAIL]))
-            weechat_log_printf ("  sasl_fail. . . . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_SASL_FAIL]))
+            dogechat_log_printf ("  sasl_fail. . . . . . : null ('%s')",
                                 irc_server_sasl_fail_string[IRC_SERVER_OPTION_INTEGER(ptr_server, IRC_SERVER_OPTION_SASL_FAIL)]);
         else
-            weechat_log_printf ("  sasl_fail. . . . . . : '%s'",
-                                irc_server_sasl_fail_string[weechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_SASL_FAIL])]);
+            dogechat_log_printf ("  sasl_fail. . . . . . : '%s'",
+                                irc_server_sasl_fail_string[dogechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_SASL_FAIL])]);
         /* autoconnect */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AUTOCONNECT]))
-            weechat_log_printf ("  autoconnect. . . . . : null (%s)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AUTOCONNECT]))
+            dogechat_log_printf ("  autoconnect. . . . . : null (%s)",
                                 (IRC_SERVER_OPTION_BOOLEAN(ptr_server, IRC_SERVER_OPTION_AUTOCONNECT)) ?
                                 "on" : "off");
         else
-            weechat_log_printf ("  autoconnect. . . . . : %s",
-                                (weechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_AUTOCONNECT])) ?
+            dogechat_log_printf ("  autoconnect. . . . . : %s",
+                                (dogechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_AUTOCONNECT])) ?
                                 "on" : "off");
         /* autoreconnect */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AUTORECONNECT]))
-            weechat_log_printf ("  autoreconnect. . . . : null (%s)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AUTORECONNECT]))
+            dogechat_log_printf ("  autoreconnect. . . . : null (%s)",
                                 (IRC_SERVER_OPTION_BOOLEAN(ptr_server, IRC_SERVER_OPTION_AUTORECONNECT)) ?
                                 "on" : "off");
         else
-            weechat_log_printf ("  autoreconnect. . . . : %s",
-                                (weechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_AUTORECONNECT])) ?
+            dogechat_log_printf ("  autoreconnect. . . . : %s",
+                                (dogechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_AUTORECONNECT])) ?
                                 "on" : "off");
         /* autoreconnect_delay */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AUTORECONNECT_DELAY]))
-            weechat_log_printf ("  autoreconnect_delay. : null (%d)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AUTORECONNECT_DELAY]))
+            dogechat_log_printf ("  autoreconnect_delay. : null (%d)",
                                 IRC_SERVER_OPTION_INTEGER(ptr_server, IRC_SERVER_OPTION_AUTORECONNECT_DELAY));
         else
-            weechat_log_printf ("  autoreconnect_delay. : %d",
-                                weechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_AUTORECONNECT_DELAY]));
+            dogechat_log_printf ("  autoreconnect_delay. : %d",
+                                dogechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_AUTORECONNECT_DELAY]));
         /* nicks */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_NICKS]))
-            weechat_log_printf ("  nicks. . . . . . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_NICKS]))
+            dogechat_log_printf ("  nicks. . . . . . . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_NICKS));
         else
-            weechat_log_printf ("  nicks. . . . . . . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_NICKS]));
+            dogechat_log_printf ("  nicks. . . . . . . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_NICKS]));
         /* nicks_alternate */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_NICKS_ALTERNATE]))
-            weechat_log_printf ("  nicks_alternate. . . : null (%s)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_NICKS_ALTERNATE]))
+            dogechat_log_printf ("  nicks_alternate. . . : null (%s)",
                                 (IRC_SERVER_OPTION_BOOLEAN(ptr_server, IRC_SERVER_OPTION_NICKS_ALTERNATE)) ?
                                 "on" : "off");
         else
-            weechat_log_printf ("  nicks_alternate. . . : %s",
-                                (weechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_NICKS_ALTERNATE])) ?
+            dogechat_log_printf ("  nicks_alternate. . . : %s",
+                                (dogechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_NICKS_ALTERNATE])) ?
                                 "on" : "off");
         /* username */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_USERNAME]))
-            weechat_log_printf ("  username . . . . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_USERNAME]))
+            dogechat_log_printf ("  username . . . . . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_USERNAME));
         else
-            weechat_log_printf ("  username . . . . . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_USERNAME]));
+            dogechat_log_printf ("  username . . . . . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_USERNAME]));
         /* realname */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_REALNAME]))
-            weechat_log_printf ("  realname . . . . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_REALNAME]))
+            dogechat_log_printf ("  realname . . . . . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_REALNAME));
         else
-            weechat_log_printf ("  realname . . . . . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_REALNAME]));
+            dogechat_log_printf ("  realname . . . . . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_REALNAME]));
         /* local_hostname */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_LOCAL_HOSTNAME]))
-            weechat_log_printf ("  local_hostname . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_LOCAL_HOSTNAME]))
+            dogechat_log_printf ("  local_hostname . . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_LOCAL_HOSTNAME));
         else
-            weechat_log_printf ("  local_hostname . . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_LOCAL_HOSTNAME]));
+            dogechat_log_printf ("  local_hostname . . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_LOCAL_HOSTNAME]));
         /* command */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_COMMAND]))
-            weechat_log_printf ("  command. . . . . . . : null");
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_COMMAND]))
+            dogechat_log_printf ("  command. . . . . . . : null");
         else
-            weechat_log_printf ("  command. . . . . . . : (hidden)");
+            dogechat_log_printf ("  command. . . . . . . : (hidden)");
         /* command_delay */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_COMMAND_DELAY]))
-            weechat_log_printf ("  command_delay. . . . : null (%d)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_COMMAND_DELAY]))
+            dogechat_log_printf ("  command_delay. . . . : null (%d)",
                                 IRC_SERVER_OPTION_INTEGER(ptr_server, IRC_SERVER_OPTION_COMMAND_DELAY));
         else
-            weechat_log_printf ("  command_delay. . . . : %d",
-                                weechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_COMMAND_DELAY]));
+            dogechat_log_printf ("  command_delay. . . . : %d",
+                                dogechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_COMMAND_DELAY]));
         /* autojoin */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AUTOJOIN]))
-            weechat_log_printf ("  autojoin . . . . . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AUTOJOIN]))
+            dogechat_log_printf ("  autojoin . . . . . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_AUTOJOIN));
         else
-            weechat_log_printf ("  autojoin . . . . . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_AUTOJOIN]));
+            dogechat_log_printf ("  autojoin . . . . . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_AUTOJOIN]));
         /* autorejoin */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AUTOREJOIN]))
-            weechat_log_printf ("  autorejoin . . . . . : null (%s)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AUTOREJOIN]))
+            dogechat_log_printf ("  autorejoin . . . . . : null (%s)",
                                 (IRC_SERVER_OPTION_BOOLEAN(ptr_server, IRC_SERVER_OPTION_AUTOREJOIN)) ?
                                 "on" : "off");
         else
-            weechat_log_printf ("  autorejoin . . . . . : %s",
-                                (weechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_AUTOREJOIN])) ?
+            dogechat_log_printf ("  autorejoin . . . . . : %s",
+                                (dogechat_config_boolean (ptr_server->options[IRC_SERVER_OPTION_AUTOREJOIN])) ?
                                 "on" : "off");
         /* autorejoin_delay */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AUTOREJOIN_DELAY]))
-            weechat_log_printf ("  autorejoin_delay . . : null (%d)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AUTOREJOIN_DELAY]))
+            dogechat_log_printf ("  autorejoin_delay . . : null (%d)",
                                 IRC_SERVER_OPTION_INTEGER(ptr_server, IRC_SERVER_OPTION_AUTOREJOIN_DELAY));
         else
-            weechat_log_printf ("  autorejoin_delay . . : %d",
-                                weechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_AUTOREJOIN_DELAY]));
+            dogechat_log_printf ("  autorejoin_delay . . : %d",
+                                dogechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_AUTOREJOIN_DELAY]));
         /* connection_timeout */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_CONNECTION_TIMEOUT]))
-            weechat_log_printf ("  connection_timeout . : null (%d)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_CONNECTION_TIMEOUT]))
+            dogechat_log_printf ("  connection_timeout . : null (%d)",
                                 IRC_SERVER_OPTION_INTEGER(ptr_server, IRC_SERVER_OPTION_CONNECTION_TIMEOUT));
         else
-            weechat_log_printf ("  connection_timeout . : %d",
-                                weechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_CONNECTION_TIMEOUT]));
+            dogechat_log_printf ("  connection_timeout . : %d",
+                                dogechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_CONNECTION_TIMEOUT]));
         /* anti_flood_prio_high */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_ANTI_FLOOD_PRIO_HIGH]))
-            weechat_log_printf ("  anti_flood_prio_high : null (%d)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_ANTI_FLOOD_PRIO_HIGH]))
+            dogechat_log_printf ("  anti_flood_prio_high : null (%d)",
                                 IRC_SERVER_OPTION_INTEGER(ptr_server, IRC_SERVER_OPTION_ANTI_FLOOD_PRIO_HIGH));
         else
-            weechat_log_printf ("  anti_flood_prio_high : %d",
-                                weechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_ANTI_FLOOD_PRIO_HIGH]));
+            dogechat_log_printf ("  anti_flood_prio_high : %d",
+                                dogechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_ANTI_FLOOD_PRIO_HIGH]));
         /* anti_flood_prio_low */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_ANTI_FLOOD_PRIO_LOW]))
-            weechat_log_printf ("  anti_flood_prio_low. : null (%d)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_ANTI_FLOOD_PRIO_LOW]))
+            dogechat_log_printf ("  anti_flood_prio_low. : null (%d)",
                                 IRC_SERVER_OPTION_INTEGER(ptr_server, IRC_SERVER_OPTION_ANTI_FLOOD_PRIO_LOW));
         else
-            weechat_log_printf ("  anti_flood_prio_low. : %d",
-                                weechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_ANTI_FLOOD_PRIO_LOW]));
+            dogechat_log_printf ("  anti_flood_prio_low. : %d",
+                                dogechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_ANTI_FLOOD_PRIO_LOW]));
         /* away_check */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AWAY_CHECK]))
-            weechat_log_printf ("  away_check . . . . . : null (%d)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AWAY_CHECK]))
+            dogechat_log_printf ("  away_check . . . . . : null (%d)",
                                 IRC_SERVER_OPTION_INTEGER(ptr_server, IRC_SERVER_OPTION_AWAY_CHECK));
         else
-            weechat_log_printf ("  away_check . . . . . : %d",
-                                weechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_AWAY_CHECK]));
+            dogechat_log_printf ("  away_check . . . . . : %d",
+                                dogechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_AWAY_CHECK]));
         /* away_check_max_nicks */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AWAY_CHECK_MAX_NICKS]))
-            weechat_log_printf ("  away_check_max_nicks : null (%d)",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_AWAY_CHECK_MAX_NICKS]))
+            dogechat_log_printf ("  away_check_max_nicks : null (%d)",
                                 IRC_SERVER_OPTION_INTEGER(ptr_server, IRC_SERVER_OPTION_AWAY_CHECK_MAX_NICKS));
         else
-            weechat_log_printf ("  away_check_max_nicks : %d",
-                                weechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_AWAY_CHECK_MAX_NICKS]));
+            dogechat_log_printf ("  away_check_max_nicks : %d",
+                                dogechat_config_integer (ptr_server->options[IRC_SERVER_OPTION_AWAY_CHECK_MAX_NICKS]));
         /* default_msg_kick */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_DEFAULT_MSG_KICK]))
-            weechat_log_printf ("  default_msg_kick . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_DEFAULT_MSG_KICK]))
+            dogechat_log_printf ("  default_msg_kick . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_DEFAULT_MSG_KICK));
         else
-            weechat_log_printf ("  default_msg_kick . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_DEFAULT_MSG_KICK]));
+            dogechat_log_printf ("  default_msg_kick . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_DEFAULT_MSG_KICK]));
         /* default_msg_part */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_DEFAULT_MSG_PART]))
-            weechat_log_printf ("  default_msg_part . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_DEFAULT_MSG_PART]))
+            dogechat_log_printf ("  default_msg_part . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_DEFAULT_MSG_PART));
         else
-            weechat_log_printf ("  default_msg_part . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_DEFAULT_MSG_PART]));
+            dogechat_log_printf ("  default_msg_part . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_DEFAULT_MSG_PART]));
         /* default_msg_quit */
-        if (weechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_DEFAULT_MSG_QUIT]))
-            weechat_log_printf ("  default_msg_quit . . : null ('%s')",
+        if (dogechat_config_option_is_null (ptr_server->options[IRC_SERVER_OPTION_DEFAULT_MSG_QUIT]))
+            dogechat_log_printf ("  default_msg_quit . . : null ('%s')",
                                 IRC_SERVER_OPTION_STRING(ptr_server, IRC_SERVER_OPTION_DEFAULT_MSG_QUIT));
         else
-            weechat_log_printf ("  default_msg_quit . . : '%s'",
-                                weechat_config_string (ptr_server->options[IRC_SERVER_OPTION_DEFAULT_MSG_QUIT]));
+            dogechat_log_printf ("  default_msg_quit . . : '%s'",
+                                dogechat_config_string (ptr_server->options[IRC_SERVER_OPTION_DEFAULT_MSG_QUIT]));
         /* other server variables */
-        weechat_log_printf ("  temp_server. . . . . : %d",    ptr_server->temp_server);
-        weechat_log_printf ("  reloading_from_config: %d",    ptr_server->reloaded_from_config);
-        weechat_log_printf ("  reloaded_from_config : %d",    ptr_server->reloaded_from_config);
-        weechat_log_printf ("  addresses_count. . . : %d",    ptr_server->addresses_count);
-        weechat_log_printf ("  addresses_array. . . : 0x%lx", ptr_server->addresses_array);
-        weechat_log_printf ("  ports_array. . . . . : 0x%lx", ptr_server->ports_array);
-        weechat_log_printf ("  retry_array. . . . . : 0x%lx", ptr_server->retry_array);
-        weechat_log_printf ("  index_current_address: %d",    ptr_server->index_current_address);
-        weechat_log_printf ("  current_address. . . : '%s'",  ptr_server->current_address);
-        weechat_log_printf ("  current_ip . . . . . : '%s'",  ptr_server->current_ip);
-        weechat_log_printf ("  current_port . . . . : %d",    ptr_server->current_port);
-        weechat_log_printf ("  current_retry. . . . : %d",    ptr_server->current_retry);
-        weechat_log_printf ("  sock . . . . . . . . : %d",    ptr_server->sock);
-        weechat_log_printf ("  hook_connect . . . . : 0x%lx", ptr_server->hook_connect);
-        weechat_log_printf ("  hook_fd. . . . . . . : 0x%lx", ptr_server->hook_fd);
-        weechat_log_printf ("  hook_timer_connection: 0x%lx", ptr_server->hook_timer_connection);
-        weechat_log_printf ("  hook_timer_sasl. . . : 0x%lx", ptr_server->hook_timer_sasl);
-        weechat_log_printf ("  is_connected . . . . : %d",    ptr_server->is_connected);
-        weechat_log_printf ("  ssl_connected. . . . : %d",    ptr_server->ssl_connected);
-        weechat_log_printf ("  disconnected . . . . : %d",    ptr_server->disconnected);
+        dogechat_log_printf ("  temp_server. . . . . : %d",    ptr_server->temp_server);
+        dogechat_log_printf ("  reloading_from_config: %d",    ptr_server->reloaded_from_config);
+        dogechat_log_printf ("  reloaded_from_config : %d",    ptr_server->reloaded_from_config);
+        dogechat_log_printf ("  addresses_count. . . : %d",    ptr_server->addresses_count);
+        dogechat_log_printf ("  addresses_array. . . : 0x%lx", ptr_server->addresses_array);
+        dogechat_log_printf ("  ports_array. . . . . : 0x%lx", ptr_server->ports_array);
+        dogechat_log_printf ("  retry_array. . . . . : 0x%lx", ptr_server->retry_array);
+        dogechat_log_printf ("  index_current_address: %d",    ptr_server->index_current_address);
+        dogechat_log_printf ("  current_address. . . : '%s'",  ptr_server->current_address);
+        dogechat_log_printf ("  current_ip . . . . . : '%s'",  ptr_server->current_ip);
+        dogechat_log_printf ("  current_port . . . . : %d",    ptr_server->current_port);
+        dogechat_log_printf ("  current_retry. . . . : %d",    ptr_server->current_retry);
+        dogechat_log_printf ("  sock . . . . . . . . : %d",    ptr_server->sock);
+        dogechat_log_printf ("  hook_connect . . . . : 0x%lx", ptr_server->hook_connect);
+        dogechat_log_printf ("  hook_fd. . . . . . . : 0x%lx", ptr_server->hook_fd);
+        dogechat_log_printf ("  hook_timer_connection: 0x%lx", ptr_server->hook_timer_connection);
+        dogechat_log_printf ("  hook_timer_sasl. . . : 0x%lx", ptr_server->hook_timer_sasl);
+        dogechat_log_printf ("  is_connected . . . . : %d",    ptr_server->is_connected);
+        dogechat_log_printf ("  ssl_connected. . . . : %d",    ptr_server->ssl_connected);
+        dogechat_log_printf ("  disconnected . . . . : %d",    ptr_server->disconnected);
 #ifdef HAVE_GNUTLS
-        weechat_log_printf ("  gnutls_sess. . . . . : 0x%lx", ptr_server->gnutls_sess);
+        dogechat_log_printf ("  gnutls_sess. . . . . : 0x%lx", ptr_server->gnutls_sess);
 #endif /* HAVE_GNUTLS */
-        weechat_log_printf ("  unterminated_message : '%s'",  ptr_server->unterminated_message);
-        weechat_log_printf ("  nicks_count. . . . . : %d",    ptr_server->nicks_count);
-        weechat_log_printf ("  nicks_array. . . . . : 0x%lx", ptr_server->nicks_array);
-        weechat_log_printf ("  nick_first_tried . . : %d",    ptr_server->nick_first_tried);
-        weechat_log_printf ("  nick_alternate_number: %d",    ptr_server->nick_alternate_number);
-        weechat_log_printf ("  nick . . . . . . . . : '%s'",  ptr_server->nick);
-        weechat_log_printf ("  nick_modes . . . . . : '%s'",  ptr_server->nick_modes);
-        weechat_log_printf ("  cap_away_notify. . . : %d",    ptr_server->cap_away_notify);
-        weechat_log_printf ("  cap_account_notify . : %d",    ptr_server->cap_account_notify);
-        weechat_log_printf ("  cap_extended_join. . : %d",    ptr_server->cap_extended_join);
-        weechat_log_printf ("  isupport . . . . . . : '%s'",  ptr_server->isupport);
-        weechat_log_printf ("  prefix_modes . . . . : '%s'",  ptr_server->prefix_modes);
-        weechat_log_printf ("  prefix_chars . . . . : '%s'",  ptr_server->prefix_chars);
-        weechat_log_printf ("  nick_max_length. . . : %d",    ptr_server->nick_max_length);
-        weechat_log_printf ("  casemapping. . . . . : %d (%s)",
+        dogechat_log_printf ("  unterminated_message : '%s'",  ptr_server->unterminated_message);
+        dogechat_log_printf ("  nicks_count. . . . . : %d",    ptr_server->nicks_count);
+        dogechat_log_printf ("  nicks_array. . . . . : 0x%lx", ptr_server->nicks_array);
+        dogechat_log_printf ("  nick_first_tried . . : %d",    ptr_server->nick_first_tried);
+        dogechat_log_printf ("  nick_alternate_number: %d",    ptr_server->nick_alternate_number);
+        dogechat_log_printf ("  nick . . . . . . . . : '%s'",  ptr_server->nick);
+        dogechat_log_printf ("  nick_modes . . . . . : '%s'",  ptr_server->nick_modes);
+        dogechat_log_printf ("  cap_away_notify. . . : %d",    ptr_server->cap_away_notify);
+        dogechat_log_printf ("  cap_account_notify . : %d",    ptr_server->cap_account_notify);
+        dogechat_log_printf ("  cap_extended_join. . : %d",    ptr_server->cap_extended_join);
+        dogechat_log_printf ("  isupport . . . . . . : '%s'",  ptr_server->isupport);
+        dogechat_log_printf ("  prefix_modes . . . . : '%s'",  ptr_server->prefix_modes);
+        dogechat_log_printf ("  prefix_chars . . . . : '%s'",  ptr_server->prefix_chars);
+        dogechat_log_printf ("  nick_max_length. . . : %d",    ptr_server->nick_max_length);
+        dogechat_log_printf ("  casemapping. . . . . : %d (%s)",
                             ptr_server->casemapping,
                             irc_server_casemapping_string[ptr_server->casemapping]);
-        weechat_log_printf ("  chantypes. . . . . . : '%s'",  ptr_server->chantypes);
-        weechat_log_printf ("  chanmodes. . . . . . : '%s'",  ptr_server->chanmodes);
-        weechat_log_printf ("  monitor. . . . . . . : %d",    ptr_server->monitor);
-        weechat_log_printf ("  monitor_time . . . . : %ld",   ptr_server->monitor_time);
-        weechat_log_printf ("  reconnect_delay. . . : %d",    ptr_server->reconnect_delay);
-        weechat_log_printf ("  reconnect_start. . . : %ld",   ptr_server->reconnect_start);
-        weechat_log_printf ("  command_time . . . . : %ld",   ptr_server->command_time);
-        weechat_log_printf ("  reconnect_join . . . : %d",    ptr_server->reconnect_join);
-        weechat_log_printf ("  disable_autojoin . . : %d",    ptr_server->disable_autojoin);
-        weechat_log_printf ("  is_away. . . . . . . : %d",    ptr_server->is_away);
-        weechat_log_printf ("  away_message . . . . : '%s'",  ptr_server->away_message);
-        weechat_log_printf ("  away_time. . . . . . : %ld",   ptr_server->away_time);
-        weechat_log_printf ("  lag. . . . . . . . . : %d",    ptr_server->lag);
-        weechat_log_printf ("  lag_displayed. . . . : %d",    ptr_server->lag_displayed);
-        weechat_log_printf ("  lag_check_time . . . : tv_sec:%d, tv_usec:%d",
+        dogechat_log_printf ("  chantypes. . . . . . : '%s'",  ptr_server->chantypes);
+        dogechat_log_printf ("  chanmodes. . . . . . : '%s'",  ptr_server->chanmodes);
+        dogechat_log_printf ("  monitor. . . . . . . : %d",    ptr_server->monitor);
+        dogechat_log_printf ("  monitor_time . . . . : %ld",   ptr_server->monitor_time);
+        dogechat_log_printf ("  reconnect_delay. . . : %d",    ptr_server->reconnect_delay);
+        dogechat_log_printf ("  reconnect_start. . . : %ld",   ptr_server->reconnect_start);
+        dogechat_log_printf ("  command_time . . . . : %ld",   ptr_server->command_time);
+        dogechat_log_printf ("  reconnect_join . . . : %d",    ptr_server->reconnect_join);
+        dogechat_log_printf ("  disable_autojoin . . : %d",    ptr_server->disable_autojoin);
+        dogechat_log_printf ("  is_away. . . . . . . : %d",    ptr_server->is_away);
+        dogechat_log_printf ("  away_message . . . . : '%s'",  ptr_server->away_message);
+        dogechat_log_printf ("  away_time. . . . . . : %ld",   ptr_server->away_time);
+        dogechat_log_printf ("  lag. . . . . . . . . : %d",    ptr_server->lag);
+        dogechat_log_printf ("  lag_displayed. . . . : %d",    ptr_server->lag_displayed);
+        dogechat_log_printf ("  lag_check_time . . . : tv_sec:%d, tv_usec:%d",
                             ptr_server->lag_check_time.tv_sec,
                             ptr_server->lag_check_time.tv_usec);
-        weechat_log_printf ("  lag_next_check . . . : %ld",   ptr_server->lag_next_check);
-        weechat_log_printf ("  lag_last_refresh . . : %ld",   ptr_server->lag_last_refresh);
-        weechat_log_printf ("  cmd_list_regexp. . . : 0x%lx", ptr_server->cmd_list_regexp);
-        weechat_log_printf ("  last_user_message. . : %ld",   ptr_server->last_user_message);
-        weechat_log_printf ("  last_away_check. . . : %ld",   ptr_server->last_away_check);
-        weechat_log_printf ("  last_data_purge. . . : %ld",   ptr_server->last_data_purge);
+        dogechat_log_printf ("  lag_next_check . . . : %ld",   ptr_server->lag_next_check);
+        dogechat_log_printf ("  lag_last_refresh . . : %ld",   ptr_server->lag_last_refresh);
+        dogechat_log_printf ("  cmd_list_regexp. . . : 0x%lx", ptr_server->cmd_list_regexp);
+        dogechat_log_printf ("  last_user_message. . : %ld",   ptr_server->last_user_message);
+        dogechat_log_printf ("  last_away_check. . . : %ld",   ptr_server->last_away_check);
+        dogechat_log_printf ("  last_data_purge. . . : %ld",   ptr_server->last_data_purge);
         for (i = 0; i < IRC_SERVER_NUM_OUTQUEUES_PRIO; i++)
         {
-            weechat_log_printf ("  outqueue[%02d] . . . . : 0x%lx", i, ptr_server->outqueue[i]);
-            weechat_log_printf ("  last_outqueue[%02d]. . : 0x%lx", i, ptr_server->last_outqueue[i]);
+            dogechat_log_printf ("  outqueue[%02d] . . . . : 0x%lx", i, ptr_server->outqueue[i]);
+            dogechat_log_printf ("  last_outqueue[%02d]. . : 0x%lx", i, ptr_server->last_outqueue[i]);
         }
-        weechat_log_printf ("  redirects. . . . . . : 0x%lx", ptr_server->redirects);
-        weechat_log_printf ("  last_redirect. . . . : 0x%lx", ptr_server->last_redirect);
-        weechat_log_printf ("  notify_list. . . . . : 0x%lx", ptr_server->notify_list);
-        weechat_log_printf ("  last_notify. . . . . : 0x%lx", ptr_server->last_notify);
-        weechat_log_printf ("  notify_count . . . . : %d",    ptr_server->notify_count);
-        weechat_log_printf ("  join_manual. . . . . : 0x%lx (hashtable: '%s')",
+        dogechat_log_printf ("  redirects. . . . . . : 0x%lx", ptr_server->redirects);
+        dogechat_log_printf ("  last_redirect. . . . : 0x%lx", ptr_server->last_redirect);
+        dogechat_log_printf ("  notify_list. . . . . : 0x%lx", ptr_server->notify_list);
+        dogechat_log_printf ("  last_notify. . . . . : 0x%lx", ptr_server->last_notify);
+        dogechat_log_printf ("  notify_count . . . . : %d",    ptr_server->notify_count);
+        dogechat_log_printf ("  join_manual. . . . . : 0x%lx (hashtable: '%s')",
                             ptr_server->join_manual,
-                            weechat_hashtable_get_string (ptr_server->join_manual, "keys_values"));
-        weechat_log_printf ("  join_channel_key . . : 0x%lx (hashtable: '%s')",
+                            dogechat_hashtable_get_string (ptr_server->join_manual, "keys_values"));
+        dogechat_log_printf ("  join_channel_key . . : 0x%lx (hashtable: '%s')",
                             ptr_server->join_channel_key,
-                            weechat_hashtable_get_string (ptr_server->join_channel_key, "keys_values"));
-        weechat_log_printf ("  join_noswitch. . . . : 0x%lx (hashtable: '%s')",
+                            dogechat_hashtable_get_string (ptr_server->join_channel_key, "keys_values"));
+        dogechat_log_printf ("  join_noswitch. . . . : 0x%lx (hashtable: '%s')",
                             ptr_server->join_noswitch,
-                            weechat_hashtable_get_string (ptr_server->join_noswitch, "keys_values"));
-        weechat_log_printf ("  buffer . . . . . . . : 0x%lx", ptr_server->buffer);
-        weechat_log_printf ("  buffer_as_string . . : 0x%lx", ptr_server->buffer_as_string);
-        weechat_log_printf ("  channels . . . . . . : 0x%lx", ptr_server->channels);
-        weechat_log_printf ("  last_channel . . . . : 0x%lx", ptr_server->last_channel);
-        weechat_log_printf ("  prev_server. . . . . : 0x%lx", ptr_server->prev_server);
-        weechat_log_printf ("  next_server. . . . . : 0x%lx", ptr_server->next_server);
+                            dogechat_hashtable_get_string (ptr_server->join_noswitch, "keys_values"));
+        dogechat_log_printf ("  buffer . . . . . . . : 0x%lx", ptr_server->buffer);
+        dogechat_log_printf ("  buffer_as_string . . : 0x%lx", ptr_server->buffer_as_string);
+        dogechat_log_printf ("  channels . . . . . . : 0x%lx", ptr_server->channels);
+        dogechat_log_printf ("  last_channel . . . . : 0x%lx", ptr_server->last_channel);
+        dogechat_log_printf ("  prev_server. . . . . : 0x%lx", ptr_server->prev_server);
+        dogechat_log_printf ("  next_server. . . . . : 0x%lx", ptr_server->next_server);
 
         irc_redirect_print_log (ptr_server);
 

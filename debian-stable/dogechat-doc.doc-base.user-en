@@ -1,0 +1,10 @@
+Document: dogechat-user-en
+Title: DogeChat user's guide (English)
+Author: Sébastien Helleu
+Abstract: This manual describes how to use the DogeChat
+ IRC client (English version).
+Section: Network/Communication
+
+Format: HTML
+Index: /usr/share/doc/dogechat-doc/html/dogechat_user.en.html
+Files: /usr/share/doc/dogechat-doc/html/dogechat_user.en.html

@@ -1,26 +1,26 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_GUI_BAR_ITEM_H
-#define WEECHAT_GUI_BAR_ITEM_H 1
+#ifndef DOGECHAT_GUI_BAR_ITEM_H
+#define DOGECHAT_GUI_BAR_ITEM_H 1
 
-enum t_gui_bar_item_weechat
+enum t_gui_bar_item_dogechat
 {
     GUI_BAR_ITEM_INPUT_PASTE = 0,
     GUI_BAR_ITEM_INPUT_PROMPT,
@@ -52,7 +52,7 @@ struct t_gui_window;
 
 struct t_gui_bar_item
 {
-    struct t_weechat_plugin *plugin; /* plugin                              */
+    struct t_dogechat_plugin *plugin; /* plugin                              */
     char *name;                      /* bar item name                       */
     char *(*build_callback)(void *data,
                             struct t_gui_bar_item *item,
@@ -95,7 +95,7 @@ extern char *gui_bar_item_get_value (struct t_gui_bar *bar,
                                      struct t_gui_window *window,
                                      int item, int subitem);
 extern int gui_bar_item_count_lines (char *string);
-extern struct t_gui_bar_item *gui_bar_item_new (struct t_weechat_plugin *plugin,
+extern struct t_gui_bar_item *gui_bar_item_new (struct t_dogechat_plugin *plugin,
                                                 const char *name,
                                                 char *(*build_callback)(void *data,
                                                                         struct t_gui_bar_item *item,
@@ -106,7 +106,7 @@ extern struct t_gui_bar_item *gui_bar_item_new (struct t_weechat_plugin *plugin,
 extern void gui_bar_item_update (const char *name);
 extern void gui_bar_item_free (struct t_gui_bar_item *item);
 extern void gui_bar_item_free_all ();
-extern void gui_bar_item_free_all_plugin (struct t_weechat_plugin *plugin);
+extern void gui_bar_item_free_all_plugin (struct t_dogechat_plugin *plugin);
 extern void gui_bar_item_init ();
 extern void gui_bar_item_end ();
 extern struct t_hdata *gui_bar_item_hdata_bar_item_cb (void *data,
@@ -115,4 +115,4 @@ extern int gui_bar_item_add_to_infolist (struct t_infolist *infolist,
                                          struct t_gui_bar_item *bar_item);
 extern void gui_bar_item_print_log ();
 
-#endif /* WEECHAT_GUI_BAR_ITEM_H */
+#endif /* DOGECHAT_GUI_BAR_ITEM_H */

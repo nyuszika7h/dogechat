@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -24,7 +24,7 @@
 #include <string.h>
 #include <limits.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-buffer.h"
 #include "irc-channel.h"
@@ -152,7 +152,7 @@ irc_buffer_close_cb (void *data, struct t_gui_buffer *buffer)
                 {
                     next_channel = ptr_channel->next_channel;
                     if (ptr_channel->buffer != buffer)
-                        weechat_buffer_close (ptr_channel->buffer);
+                        dogechat_buffer_close (ptr_channel->buffer);
                     ptr_channel = next_channel;
                 }
                 ptr_server->buffer = NULL;
@@ -160,7 +160,7 @@ irc_buffer_close_cb (void *data, struct t_gui_buffer *buffer)
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -194,7 +194,7 @@ irc_buffer_nickcmp_cb (void *data,
     else
     {
         /* default is RFC 1459 casemapping comparison */
-        return weechat_strcasecmp_range (nick1, nick2, 29);
+        return dogechat_strcasecmp_range (nick1, nick2, 29);
     }
 }
 
@@ -219,7 +219,7 @@ irc_buffer_search_server_lowest_number ()
     {
         if (ptr_server->buffer)
         {
-            number = weechat_buffer_get_integer (ptr_server->buffer, "number");
+            number = dogechat_buffer_get_integer (ptr_server->buffer, "number");
             if (number < number_found)
             {
                 number_found = number;
@@ -257,7 +257,7 @@ irc_buffer_search_private_lowest_number (struct t_irc_server *server)
             if ((ptr_channel->type == IRC_CHANNEL_TYPE_PRIVATE)
                 && ptr_channel->buffer)
             {
-                number = weechat_buffer_get_integer (ptr_channel->buffer,
+                number = dogechat_buffer_get_integer (ptr_channel->buffer,
                                                      "number");
                 if (number < number_found)
                 {

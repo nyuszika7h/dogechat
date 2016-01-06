@@ -1,22 +1,22 @@
 /*
- * plugin.c - WeeChat plugins management (load/unload dynamic C libraries)
+ * plugin.c - DogeChat plugins management (load/unload dynamic C libraries)
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -35,21 +35,21 @@
 #include <dirent.h>
 #include <dlfcn.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-arraylist.h"
-#include "../core/wee-config.h"
-#include "../core/wee-eval.h"
-#include "../core/wee-hashtable.h"
-#include "../core/wee-hdata.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-infolist.h"
-#include "../core/wee-list.h"
-#include "../core/wee-log.h"
-#include "../core/wee-network.h"
-#include "../core/wee-string.h"
-#include "../core/wee-upgrade-file.h"
-#include "../core/wee-utf8.h"
-#include "../core/wee-util.h"
+#include "../core/dogechat.h"
+#include "../core/doge-arraylist.h"
+#include "../core/doge-config.h"
+#include "../core/doge-eval.h"
+#include "../core/doge-hashtable.h"
+#include "../core/doge-hdata.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-infolist.h"
+#include "../core/doge-list.h"
+#include "../core/doge-log.h"
+#include "../core/doge-network.h"
+#include "../core/doge-string.h"
+#include "../core/doge-upgrade-file.h"
+#include "../core/doge-utf8.h"
+#include "../core/doge-util.h"
 #include "../gui/gui-bar.h"
 #include "../gui/gui-bar-item.h"
 #include "../gui/gui-buffer.h"
@@ -64,8 +64,8 @@
 
 
 int plugin_quiet = 0;
-struct t_weechat_plugin *weechat_plugins = NULL;
-struct t_weechat_plugin *last_weechat_plugin = NULL;
+struct t_dogechat_plugin *dogechat_plugins = NULL;
+struct t_dogechat_plugin *last_dogechat_plugin = NULL;
 
 /* structure used to give arguments to callback of ... */
 struct t_plugin_args
@@ -76,10 +76,10 @@ struct t_plugin_args
 
 int plugin_autoload_count = 0;         /* number of items in autoload_array */
 char **plugin_autoload_array = NULL;   /* autoload array, this is split of  */
-                                       /* option "weechat.plugin.autoload"  */
+                                       /* option "dogechat.plugin.autoload"  */
 
 
-void plugin_remove (struct t_weechat_plugin *plugin);
+void plugin_remove (struct t_dogechat_plugin *plugin);
 
 
 /*
@@ -91,14 +91,14 @@ void plugin_remove (struct t_weechat_plugin *plugin);
  */
 
 int
-plugin_valid (struct t_weechat_plugin *plugin)
+plugin_valid (struct t_dogechat_plugin *plugin)
 {
-    struct t_weechat_plugin *ptr_plugin;
+    struct t_dogechat_plugin *ptr_plugin;
 
     if (!plugin)
         return 0;
 
-    for (ptr_plugin = weechat_plugins; ptr_plugin;
+    for (ptr_plugin = dogechat_plugins; ptr_plugin;
          ptr_plugin = ptr_plugin->next_plugin)
     {
         if (ptr_plugin == plugin)
@@ -115,15 +115,15 @@ plugin_valid (struct t_weechat_plugin *plugin)
  * Returns pointer to plugin found, NULL if not found.
  */
 
-struct t_weechat_plugin *
+struct t_dogechat_plugin *
 plugin_search (const char *name)
 {
-    struct t_weechat_plugin *ptr_plugin;
+    struct t_dogechat_plugin *ptr_plugin;
 
     if (!name)
         return NULL;
 
-    for (ptr_plugin = weechat_plugins; ptr_plugin;
+    for (ptr_plugin = dogechat_plugins; ptr_plugin;
          ptr_plugin = ptr_plugin->next_plugin)
     {
         if (string_strcasecmp (ptr_plugin->name, name) == 0)
@@ -139,7 +139,7 @@ plugin_search (const char *name)
  */
 
 const char *
-plugin_get_name (struct t_weechat_plugin *plugin)
+plugin_get_name (struct t_dogechat_plugin *plugin)
 {
     static char *plugin_core = PLUGIN_CORE;
 
@@ -148,7 +148,7 @@ plugin_get_name (struct t_weechat_plugin *plugin)
 
 /*
  * Checks if extension of filename is allowed by option
- * "weechat.plugin.extension".
+ * "dogechat.plugin.extension".
  *
  * Returns:
  *   1: extension allowed
@@ -186,7 +186,7 @@ plugin_check_extension_allowed (const char *filename)
 /*
  * Checks if a plugin can be autoloaded.
  *
- * List of autoloaded plugins is set in option "weechat.plugin.autoload".
+ * List of autoloaded plugins is set in option "dogechat.plugin.autoload".
  *
  * Returns:
  *   1: plugin can be autoloaded
@@ -283,13 +283,13 @@ plugin_check_autoload (const char *filename)
 
 /*
  * Returns arguments for plugins (only the relevant arguments for plugins,
- * arguments for WeeChat core not returned).
+ * arguments for DogeChat core not returned).
  *
  * Note: plugin_argv must be freed after use.
  */
 
 void
-plugin_get_args (struct t_weechat_plugin *plugin,
+plugin_get_args (struct t_dogechat_plugin *plugin,
                  int argc, char **argv,
                  int *plugin_argc, char ***plugin_argv)
 {
@@ -340,9 +340,9 @@ plugin_get_args (struct t_weechat_plugin *plugin,
  */
 
 int
-plugin_call_init (struct t_weechat_plugin *plugin, int argc, char **argv)
+plugin_call_init (struct t_dogechat_plugin *plugin, int argc, char **argv)
 {
-    t_weechat_init_func *init_func;
+    t_dogechat_init_func *init_func;
     int plugin_argc, rc;
     char **plugin_argv;
 
@@ -350,7 +350,7 @@ plugin_call_init (struct t_weechat_plugin *plugin, int argc, char **argv)
         return 1;
 
     /* look for plugin init function */
-    init_func = dlsym (plugin->handle, "weechat_plugin_init");
+    init_func = dlsym (plugin->handle, "dogechat_plugin_init");
     if (!init_func)
         return 0;
 
@@ -358,16 +358,16 @@ plugin_call_init (struct t_weechat_plugin *plugin, int argc, char **argv)
     plugin_get_args (plugin, argc, argv, &plugin_argc, &plugin_argv);
 
     /* init plugin */
-    if (weechat_debug_core >= 1)
+    if (dogechat_debug_core >= 1)
     {
         gui_chat_printf (NULL,
                          _("Initializing plugin \"%s\" (priority: %d)"),
                          plugin->name,
                          plugin->priority);
     }
-    rc = ((t_weechat_init_func *)init_func) (plugin,
+    rc = ((t_dogechat_init_func *)init_func) (plugin,
                                              plugin_argc, plugin_argv);
-    if (rc == WEECHAT_RC_OK)
+    if (rc == DOGECHAT_RC_OK)
     {
         plugin->initialized = 1;
     }
@@ -383,27 +383,27 @@ plugin_call_init (struct t_weechat_plugin *plugin, int argc, char **argv)
     if (plugin_argv)
         free (plugin_argv);
 
-    return (rc == WEECHAT_RC_OK) ? 1 : 0;
+    return (rc == DOGECHAT_RC_OK) ? 1 : 0;
 }
 
 /*
- * Loads a WeeChat plugin (a dynamic library).
+ * Loads a DogeChat plugin (a dynamic library).
  *
  * If init_plugin == 1, then the init() function in plugin is called
  * (with argc/argv), otherwise the plugin is just loaded but not initialized.
  *
- * Returns a pointer to new WeeChat plugin, NULL if error.
+ * Returns a pointer to new DogeChat plugin, NULL if error.
  */
 
-struct t_weechat_plugin *
+struct t_dogechat_plugin *
 plugin_load (const char *filename, int init_plugin, int argc, char **argv)
 {
     void *handle;
     char *name, *api_version, *author, *description, *version;
     char *license, *charset;
-    t_weechat_init_func *init_func;
+    t_dogechat_init_func *init_func;
     int *priority;
-    struct t_weechat_plugin *new_plugin;
+    struct t_dogechat_plugin *new_plugin;
     struct t_config_option *ptr_option;
 
     if (!filename)
@@ -412,7 +412,7 @@ plugin_load (const char *filename, int init_plugin, int argc, char **argv)
     /*
      * if plugin must not be autoloaded, then return immediately
      * Note: the "plugin_autoload_array" variable is set only during auto-load,
-     * ie when WeeChat is starting or when doing /plugin autoload
+     * ie when DogeChat is starting or when doing /plugin autoload
      */
     if (plugin_autoload_array && !plugin_check_autoload (filename))
         return NULL;
@@ -433,28 +433,28 @@ plugin_load (const char *filename, int init_plugin, int argc, char **argv)
     }
 
     /* look for plugin name */
-    name = dlsym (handle, "weechat_plugin_name");
+    name = dlsym (handle, "dogechat_plugin_name");
     if (!name)
     {
         gui_chat_printf (NULL,
                          _("%sError: symbol \"%s\" not found in "
                            "plugin \"%s\", failed to load"),
                          gui_chat_prefix[GUI_CHAT_PREFIX_ERROR],
-                         "weechat_plugin_name",
+                         "dogechat_plugin_name",
                          filename);
         dlclose (handle);
         return NULL;
     }
 
     /* look for API version */
-    api_version = dlsym (handle, "weechat_plugin_api_version");
+    api_version = dlsym (handle, "dogechat_plugin_api_version");
     if (!api_version)
     {
         gui_chat_printf (NULL,
                          _("%sError: symbol \"%s\" not found in "
                            "plugin \"%s\", failed to load"),
                          gui_chat_prefix[GUI_CHAT_PREFIX_ERROR],
-                         "weechat_plugin_api_version",
+                         "dogechat_plugin_api_version",
                          filename);
         gui_chat_printf (NULL,
                          _("%sIf plugin \"%s\" is old/obsolete, you can "
@@ -464,14 +464,14 @@ plugin_load (const char *filename, int init_plugin, int argc, char **argv)
         dlclose (handle);
         return NULL;
     }
-    if (strcmp (api_version, WEECHAT_PLUGIN_API_VERSION) != 0)
+    if (strcmp (api_version, DOGECHAT_PLUGIN_API_VERSION) != 0)
     {
         gui_chat_printf (NULL,
                          _("%sError: API mismatch for plugin \"%s\" (current "
                            "API: \"%s\", plugin API: \"%s\"), failed to load"),
                          gui_chat_prefix[GUI_CHAT_PREFIX_ERROR],
                          filename,
-                         WEECHAT_PLUGIN_API_VERSION,
+                         DOGECHAT_PLUGIN_API_VERSION,
                          api_version);
         gui_chat_printf (NULL,
                          _("%sIf plugin \"%s\" is old/obsolete, you can "
@@ -495,73 +495,73 @@ plugin_load (const char *filename, int init_plugin, int argc, char **argv)
     }
 
     /* look for plugin description */
-    description = dlsym (handle, "weechat_plugin_description");
+    description = dlsym (handle, "dogechat_plugin_description");
     if (!description)
     {
         gui_chat_printf (NULL,
                          _("%sError: symbol \"%s\" not found "
                            "in plugin \"%s\", failed to load"),
                          gui_chat_prefix[GUI_CHAT_PREFIX_ERROR],
-                         "weechat_plugin_description",
+                         "dogechat_plugin_description",
                          filename);
         dlclose (handle);
         return NULL;
     }
 
     /* look for plugin author */
-    author = dlsym (handle, "weechat_plugin_author");
+    author = dlsym (handle, "dogechat_plugin_author");
     if (!author)
     {
         gui_chat_printf (NULL,
                          _("%sError: symbol \"%s\" not found "
                            "in plugin \"%s\", failed to load"),
                          gui_chat_prefix[GUI_CHAT_PREFIX_ERROR],
-                         "weechat_plugin_author",
+                         "dogechat_plugin_author",
                          filename);
         dlclose (handle);
         return NULL;
     }
 
     /* look for plugin version */
-    version = dlsym (handle, "weechat_plugin_version");
+    version = dlsym (handle, "dogechat_plugin_version");
     if (!version)
     {
         gui_chat_printf (NULL,
                          _("%sError: symbol \"%s\" not found in "
                            "plugin \"%s\", failed to load"),
                          gui_chat_prefix[GUI_CHAT_PREFIX_ERROR],
-                         "weechat_plugin_version",
+                         "dogechat_plugin_version",
                          filename);
         dlclose (handle);
         return NULL;
     }
 
     /* look for plugin license */
-    license = dlsym (handle, "weechat_plugin_license");
+    license = dlsym (handle, "dogechat_plugin_license");
     if (!license)
     {
         gui_chat_printf (NULL,
                          _("%sError: symbol \"%s\" not found in "
                            "plugin \"%s\", failed to load"),
                          gui_chat_prefix[GUI_CHAT_PREFIX_ERROR],
-                         "weechat_plugin_license",
+                         "dogechat_plugin_license",
                          filename);
         dlclose (handle);
         return NULL;
     }
 
     /* look for plugin charset (optional, default is UTF-8) */
-    charset = dlsym (handle, "weechat_plugin_charset");
+    charset = dlsym (handle, "dogechat_plugin_charset");
 
     /* look for plugin init function */
-    init_func = dlsym (handle, "weechat_plugin_init");
+    init_func = dlsym (handle, "dogechat_plugin_init");
     if (!init_func)
     {
         gui_chat_printf (NULL,
                          _("%sError: function \"%s\" not "
                            "found in plugin \"%s\", failed to load"),
                          gui_chat_prefix[GUI_CHAT_PREFIX_ERROR],
-                         "weechat_plugin_init",
+                         "dogechat_plugin_init",
                          filename);
         dlclose (handle);
         return NULL;
@@ -572,7 +572,7 @@ plugin_load (const char *filename, int init_plugin, int argc, char **argv)
      * appropriate order: the important plugins that don't depend on other
      * plugins are initialized first
      */
-    priority = dlsym (handle, "weechat_plugin_priority");
+    priority = dlsym (handle, "dogechat_plugin_priority");
 
     /* create new plugin */
     new_plugin = malloc (sizeof (*new_plugin));
@@ -590,7 +590,7 @@ plugin_load (const char *filename, int init_plugin, int argc, char **argv)
         new_plugin->priority = (priority) ?
             *priority : PLUGIN_PRIORITY_DEFAULT;
         new_plugin->initialized = 0;
-        ptr_option = config_weechat_debug_get (name);
+        ptr_option = config_dogechat_debug_get (name);
         new_plugin->debug = (ptr_option) ? CONFIG_INTEGER(ptr_option) : 0;
 
         /* functions */
@@ -669,21 +669,21 @@ plugin_load (const char *filename, int init_plugin, int argc, char **argv)
         new_plugin->util_get_time_string = &util_get_time_string;
         new_plugin->util_version_number = &util_version_number;
 
-        new_plugin->list_new = &weelist_new;
-        new_plugin->list_add = &weelist_add;
-        new_plugin->list_search = &weelist_search;
-        new_plugin->list_search_pos = &weelist_search_pos;
-        new_plugin->list_casesearch = &weelist_casesearch;
-        new_plugin->list_casesearch_pos = &weelist_casesearch_pos;
-        new_plugin->list_get = &weelist_get;
-        new_plugin->list_set = &weelist_set;
-        new_plugin->list_next = &weelist_next;
-        new_plugin->list_prev = &weelist_prev;
-        new_plugin->list_string = &weelist_string;
-        new_plugin->list_size = &weelist_size;
-        new_plugin->list_remove = &weelist_remove;
-        new_plugin->list_remove_all = &weelist_remove_all;
-        new_plugin->list_free = &weelist_free;
+        new_plugin->list_new = &dogelist_new;
+        new_plugin->list_add = &dogelist_add;
+        new_plugin->list_search = &dogelist_search;
+        new_plugin->list_search_pos = &dogelist_search_pos;
+        new_plugin->list_casesearch = &dogelist_casesearch;
+        new_plugin->list_casesearch_pos = &dogelist_casesearch_pos;
+        new_plugin->list_get = &dogelist_get;
+        new_plugin->list_set = &dogelist_set;
+        new_plugin->list_next = &dogelist_next;
+        new_plugin->list_prev = &dogelist_prev;
+        new_plugin->list_string = &dogelist_string;
+        new_plugin->list_size = &dogelist_size;
+        new_plugin->list_remove = &dogelist_remove;
+        new_plugin->list_remove_all = &dogelist_remove_all;
+        new_plugin->list_free = &dogelist_free;
 
         new_plugin->hashtable_new = &hashtable_new;
         new_plugin->hashtable_set_with_size = &hashtable_set_with_size;
@@ -886,13 +886,13 @@ plugin_load (const char *filename, int init_plugin, int argc, char **argv)
         new_plugin->upgrade_close = &upgrade_file_close;
 
         /* add new plugin to list */
-        new_plugin->prev_plugin = last_weechat_plugin;
+        new_plugin->prev_plugin = last_dogechat_plugin;
         new_plugin->next_plugin = NULL;
-        if (weechat_plugins)
-            last_weechat_plugin->next_plugin = new_plugin;
+        if (dogechat_plugins)
+            last_dogechat_plugin->next_plugin = new_plugin;
         else
-            weechat_plugins = new_plugin;
-        last_weechat_plugin = new_plugin;
+            dogechat_plugins = new_plugin;
+        last_dogechat_plugin = new_plugin;
 
         /*
          * associate orphan buffers with this plugin (if asked during upgrade
@@ -920,7 +920,7 @@ plugin_load (const char *filename, int init_plugin, int argc, char **argv)
         return NULL;
     }
 
-    if ((weechat_debug_core >= 1) || !plugin_quiet)
+    if ((dogechat_debug_core >= 1) || !plugin_quiet)
     {
         gui_chat_printf (NULL,
                          _("Plugin \"%s\" loaded"),
@@ -928,7 +928,7 @@ plugin_load (const char *filename, int init_plugin, int argc, char **argv)
     }
 
     (void) hook_signal_send ("plugin_loaded",
-                             WEECHAT_HOOK_SIGNAL_STRING, (char *)filename);
+                             DOGECHAT_HOOK_SIGNAL_STRING, (char *)filename);
 
     return new_plugin;
 }
@@ -957,28 +957,28 @@ int
 plugin_arraylist_cmp_cb (void *data, struct t_arraylist *arraylist,
                          void *pointer1, void *pointer2)
 {
-    struct t_weechat_plugin *plugin1, *plugin2;
+    struct t_dogechat_plugin *plugin1, *plugin2;
 
     /* make C compiler happy */
     (void) data;
     (void) arraylist;
 
-    plugin1 = (struct t_weechat_plugin *)pointer1;
-    plugin2 = (struct t_weechat_plugin *)pointer2;
+    plugin1 = (struct t_dogechat_plugin *)pointer1;
+    plugin2 = (struct t_dogechat_plugin *)pointer2;
 
     return (plugin1->priority > plugin2->priority) ?
         -1 : ((plugin1->priority < plugin2->priority) ? 1 : 0);
 }
 
 /*
- * Auto-loads WeeChat plugins, from user and system directories.
+ * Auto-loads DogeChat plugins, from user and system directories.
  */
 
 void
 plugin_auto_load (int argc, char **argv)
 {
     char *dir_name, *plugin_path, *plugin_path2;
-    struct t_weechat_plugin *ptr_plugin;
+    struct t_dogechat_plugin *ptr_plugin;
     struct t_plugin_args plugin_args;
     struct t_arraylist *arraylist;
     int length, i;
@@ -997,14 +997,14 @@ plugin_auto_load (int argc, char **argv)
                                               &plugin_autoload_count);
     }
 
-    /* auto-load plugins in WeeChat home dir */
+    /* auto-load plugins in DogeChat home dir */
     if (CONFIG_STRING(config_plugin_path)
         && CONFIG_STRING(config_plugin_path)[0])
     {
         plugin_path = string_expand_home (CONFIG_STRING(config_plugin_path));
         plugin_path2 = string_replace ((plugin_path) ?
                                        plugin_path : CONFIG_STRING(config_plugin_path),
-                                       "%h", weechat_home);
+                                       "%h", dogechat_home);
         util_exec_on_files ((plugin_path2) ?
                             plugin_path2 : ((plugin_path) ?
                                             plugin_path : CONFIG_STRING(config_plugin_path)),
@@ -1017,12 +1017,12 @@ plugin_auto_load (int argc, char **argv)
             free (plugin_path2);
     }
 
-    /* auto-load plugins in WeeChat global lib dir */
-    length = strlen (WEECHAT_LIBDIR) + 16 + 1;
+    /* auto-load plugins in DogeChat global lib dir */
+    length = strlen (DOGECHAT_LIBDIR) + 16 + 1;
     dir_name = malloc (length);
     if (dir_name)
     {
-        snprintf (dir_name, length, "%s/plugins", WEECHAT_LIBDIR);
+        snprintf (dir_name, length, "%s/plugins", DOGECHAT_LIBDIR);
         util_exec_on_files (dir_name, 0, &plugin_args, &plugin_auto_load_file);
         free (dir_name);
     }
@@ -1040,7 +1040,7 @@ plugin_auto_load (int argc, char **argv)
                                &plugin_arraylist_cmp_cb, NULL, NULL, NULL);
     if (arraylist)
     {
-        for (ptr_plugin = weechat_plugins; ptr_plugin;
+        for (ptr_plugin = dogechat_plugins; ptr_plugin;
              ptr_plugin = ptr_plugin->next_plugin)
         {
             arraylist_add (arraylist, ptr_plugin);
@@ -1067,13 +1067,13 @@ plugin_auto_load (int argc, char **argv)
 }
 
 /*
- * Removes a WeeChat plugin.
+ * Removes a DogeChat plugin.
  */
 
 void
-plugin_remove (struct t_weechat_plugin *plugin)
+plugin_remove (struct t_dogechat_plugin *plugin)
 {
-    struct t_weechat_plugin *new_weechat_plugins;
+    struct t_dogechat_plugin *new_dogechat_plugins;
     struct t_gui_buffer *ptr_buffer, *next_buffer;
 
     /* close buffers created by this plugin */
@@ -1089,15 +1089,15 @@ plugin_remove (struct t_weechat_plugin *plugin)
     }
 
     /* remove plugin from list */
-    if (last_weechat_plugin == plugin)
-        last_weechat_plugin = plugin->prev_plugin;
+    if (last_dogechat_plugin == plugin)
+        last_dogechat_plugin = plugin->prev_plugin;
     if (plugin->prev_plugin)
     {
         (plugin->prev_plugin)->next_plugin = plugin->next_plugin;
-        new_weechat_plugins = weechat_plugins;
+        new_dogechat_plugins = dogechat_plugins;
     }
     else
-        new_weechat_plugins = plugin->next_plugin;
+        new_dogechat_plugins = plugin->next_plugin;
 
     if (plugin->next_plugin)
         (plugin->next_plugin)->prev_plugin = plugin->prev_plugin;
@@ -1120,7 +1120,7 @@ plugin_remove (struct t_weechat_plugin *plugin)
     /* free data */
     if (plugin->filename)
         free (plugin->filename);
-    if (!weechat_plugin_no_dlclose)
+    if (!dogechat_plugin_no_dlclose)
         dlclose (plugin->handle);
     if (plugin->name)
         free (plugin->name);
@@ -1137,50 +1137,50 @@ plugin_remove (struct t_weechat_plugin *plugin)
 
     free (plugin);
 
-    weechat_plugins = new_weechat_plugins;
+    dogechat_plugins = new_dogechat_plugins;
 }
 
 /*
- * Unloads a WeeChat plugin.
+ * Unloads a DogeChat plugin.
  */
 
 void
-plugin_unload (struct t_weechat_plugin *plugin)
+plugin_unload (struct t_dogechat_plugin *plugin)
 {
-    t_weechat_end_func *end_func;
+    t_dogechat_end_func *end_func;
     char *name;
 
     name = (plugin->name) ? strdup (plugin->name) : NULL;
 
     if (plugin->initialized)
     {
-        end_func = dlsym (plugin->handle, "weechat_plugin_end");
+        end_func = dlsym (plugin->handle, "dogechat_plugin_end");
         if (end_func)
             (void) (end_func) (plugin);
     }
 
     plugin_remove (plugin);
 
-    if ((weechat_debug_core >= 1) || !plugin_quiet)
+    if ((dogechat_debug_core >= 1) || !plugin_quiet)
     {
         gui_chat_printf (NULL,
                          _("Plugin \"%s\" unloaded"),
                          (name) ? name : "???");
     }
     (void) hook_signal_send ("plugin_unloaded",
-                             WEECHAT_HOOK_SIGNAL_STRING, name);
+                             DOGECHAT_HOOK_SIGNAL_STRING, name);
     if (name)
         free (name);
 }
 
 /*
- * Unloads a WeeChat plugin by name.
+ * Unloads a DogeChat plugin by name.
  */
 
 void
 plugin_unload_name (const char *name)
 {
-    struct t_weechat_plugin *ptr_plugin;
+    struct t_dogechat_plugin *ptr_plugin;
 
     ptr_plugin = plugin_search (name);
     if (ptr_plugin)
@@ -1195,7 +1195,7 @@ plugin_unload_name (const char *name)
 }
 
 /*
- * Unloads all WeeChat plugins.
+ * Unloads all DogeChat plugins.
  */
 
 void
@@ -1203,12 +1203,12 @@ plugin_unload_all ()
 {
     int plugins_loaded;
 
-    plugins_loaded = (weechat_plugins) ? 1 : 0;
+    plugins_loaded = (dogechat_plugins) ? 1 : 0;
 
     plugin_quiet = 1;
-    while (weechat_plugins)
+    while (dogechat_plugins)
     {
-        plugin_unload (last_weechat_plugin);
+        plugin_unload (last_dogechat_plugin);
     }
     plugin_quiet = 0;
 
@@ -1219,13 +1219,13 @@ plugin_unload_all ()
 }
 
 /*
- * Reloads a WeeChat plugin by name.
+ * Reloads a DogeChat plugin by name.
  */
 
 void
 plugin_reload_name (const char *name, int argc, char **argv)
 {
-    struct t_weechat_plugin *ptr_plugin;
+    struct t_dogechat_plugin *ptr_plugin;
     char *filename;
 
     ptr_plugin = plugin_search (name);
@@ -1258,24 +1258,24 @@ plugin_display_short_list ()
     const char *plugins_loaded;
     char *buf;
     int length;
-    struct t_weechat_plugin *ptr_plugin;
-    struct t_weelist *list;
-    struct t_weelist_item *ptr_item;
+    struct t_dogechat_plugin *ptr_plugin;
+    struct t_dogelist *list;
+    struct t_dogelist_item *ptr_item;
 
-    if (weechat_plugins)
+    if (dogechat_plugins)
     {
-        list = weelist_new ();
+        list = dogelist_new ();
         if (list)
         {
             plugins_loaded = _("Plugins loaded:");
 
             length = strlen (plugins_loaded) + 1;
 
-            for (ptr_plugin = weechat_plugins; ptr_plugin;
+            for (ptr_plugin = dogechat_plugins; ptr_plugin;
                  ptr_plugin = ptr_plugin->next_plugin)
             {
                 length += strlen (ptr_plugin->name) + 2;
-                weelist_add (list, ptr_plugin->name, WEECHAT_LIST_POS_SORT, NULL);
+                dogelist_add (list, ptr_plugin->name, DOGECHAT_LIST_POS_SORT, NULL);
             }
             length++;
 
@@ -1294,7 +1294,7 @@ plugin_display_short_list ()
                 gui_chat_printf (NULL, "%s", buf);
                 free (buf);
             }
-            weelist_free (list);
+            dogelist_free (list);
         }
     }
 }
@@ -1353,21 +1353,21 @@ plugin_hdata_plugin_cb (void *data, const char *hdata_name)
                        0, 0, NULL, NULL);
     if (hdata)
     {
-        HDATA_VAR(struct t_weechat_plugin, filename, STRING, 0, NULL, NULL);
-        HDATA_VAR(struct t_weechat_plugin, handle, POINTER, 0, NULL, NULL);
-        HDATA_VAR(struct t_weechat_plugin, name, STRING, 0, NULL, NULL);
-        HDATA_VAR(struct t_weechat_plugin, description, STRING, 0, NULL, NULL);
-        HDATA_VAR(struct t_weechat_plugin, author, STRING, 0, NULL, NULL);
-        HDATA_VAR(struct t_weechat_plugin, version, STRING, 0, NULL, NULL);
-        HDATA_VAR(struct t_weechat_plugin, license, STRING, 0, NULL, NULL);
-        HDATA_VAR(struct t_weechat_plugin, charset, STRING, 0, NULL, NULL);
-        HDATA_VAR(struct t_weechat_plugin, priority, INTEGER, 0, NULL, NULL);
-        HDATA_VAR(struct t_weechat_plugin, initialized, INTEGER, 0, NULL, NULL);
-        HDATA_VAR(struct t_weechat_plugin, debug, INTEGER, 0, NULL, NULL);
-        HDATA_VAR(struct t_weechat_plugin, prev_plugin, POINTER, 0, NULL, hdata_name);
-        HDATA_VAR(struct t_weechat_plugin, next_plugin, POINTER, 0, NULL, hdata_name);
-        HDATA_LIST(weechat_plugins, WEECHAT_HDATA_LIST_CHECK_POINTERS);
-        HDATA_LIST(last_weechat_plugin, 0);
+        HDATA_VAR(struct t_dogechat_plugin, filename, STRING, 0, NULL, NULL);
+        HDATA_VAR(struct t_dogechat_plugin, handle, POINTER, 0, NULL, NULL);
+        HDATA_VAR(struct t_dogechat_plugin, name, STRING, 0, NULL, NULL);
+        HDATA_VAR(struct t_dogechat_plugin, description, STRING, 0, NULL, NULL);
+        HDATA_VAR(struct t_dogechat_plugin, author, STRING, 0, NULL, NULL);
+        HDATA_VAR(struct t_dogechat_plugin, version, STRING, 0, NULL, NULL);
+        HDATA_VAR(struct t_dogechat_plugin, license, STRING, 0, NULL, NULL);
+        HDATA_VAR(struct t_dogechat_plugin, charset, STRING, 0, NULL, NULL);
+        HDATA_VAR(struct t_dogechat_plugin, priority, INTEGER, 0, NULL, NULL);
+        HDATA_VAR(struct t_dogechat_plugin, initialized, INTEGER, 0, NULL, NULL);
+        HDATA_VAR(struct t_dogechat_plugin, debug, INTEGER, 0, NULL, NULL);
+        HDATA_VAR(struct t_dogechat_plugin, prev_plugin, POINTER, 0, NULL, hdata_name);
+        HDATA_VAR(struct t_dogechat_plugin, next_plugin, POINTER, 0, NULL, hdata_name);
+        HDATA_LIST(dogechat_plugins, DOGECHAT_HDATA_LIST_CHECK_POINTERS);
+        HDATA_LIST(last_dogechat_plugin, 0);
     }
     return hdata;
 }
@@ -1382,7 +1382,7 @@ plugin_hdata_plugin_cb (void *data, const char *hdata_name)
 
 int
 plugin_add_to_infolist (struct t_infolist *infolist,
-                        struct t_weechat_plugin *plugin)
+                        struct t_dogechat_plugin *plugin)
 {
     struct t_infolist_item *ptr_item;
 
@@ -1426,15 +1426,15 @@ plugin_add_to_infolist (struct t_infolist *infolist,
 }
 
 /*
- * Prints plugins in WeeChat log file (usually for crash dump).
+ * Prints plugins in DogeChat log file (usually for crash dump).
  */
 
 void
 plugin_print_log ()
 {
-    struct t_weechat_plugin *ptr_plugin;
+    struct t_dogechat_plugin *ptr_plugin;
 
-    for (ptr_plugin = weechat_plugins; ptr_plugin;
+    for (ptr_plugin = dogechat_plugins; ptr_plugin;
          ptr_plugin = ptr_plugin->next_plugin)
     {
         log_printf ("");

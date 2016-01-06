@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-channel.h"
 #include "irc-color.h"
@@ -82,7 +82,7 @@ irc_info_info_irc_is_channel_cb (void *data, const char *info_name,
     if (pos_comma)
     {
         pos_channel = pos_comma + 1;
-        server = weechat_strndup (arguments, pos_comma - arguments);
+        server = dogechat_strndup (arguments, pos_comma - arguments);
         if (server)
         {
             ptr_server = irc_server_search (server);
@@ -214,11 +214,11 @@ irc_info_info_irc_buffer_cb (void *data, const char *info_name,
     pos_comma = strchr (arguments, ',');
     if (pos_comma)
     {
-        server = weechat_strndup (arguments, pos_comma - arguments);
+        server = dogechat_strndup (arguments, pos_comma - arguments);
         pos_comma2 = strchr (pos_comma + 1, ',');
         if (pos_comma2)
         {
-            channel = weechat_strndup (pos_comma + 1,
+            channel = dogechat_strndup (pos_comma + 1,
                                        pos_comma2 - pos_comma - 1);
             host = strdup (pos_comma2 + 1);
         }
@@ -298,7 +298,7 @@ irc_info_info_irc_server_isupport_cb (void *data, const char *info_name,
     pos_comma = strchr (arguments, ',');
     if (pos_comma)
     {
-        server = weechat_strndup (arguments, pos_comma - arguments);
+        server = dogechat_strndup (arguments, pos_comma - arguments);
         if (server)
         {
             ptr_server = irc_server_search (server);
@@ -332,7 +332,7 @@ irc_info_info_irc_server_isupport_value_cb (void *data, const char *info_name,
     pos_comma = strchr (arguments, ',');
     if (pos_comma)
     {
-        server = weechat_strndup (arguments, pos_comma - arguments);
+        server = dogechat_strndup (arguments, pos_comma - arguments);
         if (server)
         {
             ptr_server = irc_server_search (server);
@@ -366,9 +366,9 @@ irc_info_info_hashtable_irc_message_parse_cb (void *data,
     if (!hashtable)
         return NULL;
 
-    server = weechat_hashtable_get (hashtable, "server");
+    server = dogechat_hashtable_get (hashtable, "server");
     ptr_server = (server) ? irc_server_search (server) : NULL;
-    message = weechat_hashtable_get (hashtable, "message");
+    message = dogechat_hashtable_get (hashtable, "message");
     if (message)
     {
         value = irc_message_parse_to_hashtable (ptr_server, message);
@@ -398,9 +398,9 @@ irc_info_info_hashtable_irc_message_split_cb (void *data,
     if (!hashtable)
         return NULL;
 
-    server = weechat_hashtable_get (hashtable, "server");
+    server = dogechat_hashtable_get (hashtable, "server");
     ptr_server = (server) ? irc_server_search (server) : NULL;
-    message = weechat_hashtable_get (hashtable, "message");
+    message = dogechat_hashtable_get (hashtable, "message");
     if (message)
     {
         value = irc_message_split (ptr_server, message);
@@ -428,7 +428,7 @@ irc_info_infolist_irc_server_cb (void *data, const char *infolist_name,
     if (pointer && !irc_server_valid (pointer))
         return NULL;
 
-    ptr_infolist = weechat_infolist_new ();
+    ptr_infolist = dogechat_infolist_new ();
     if (!ptr_infolist)
         return NULL;
 
@@ -437,7 +437,7 @@ irc_info_infolist_irc_server_cb (void *data, const char *infolist_name,
         /* build list with only one server */
         if (!irc_server_add_to_infolist (ptr_infolist, pointer))
         {
-            weechat_infolist_free (ptr_infolist);
+            dogechat_infolist_free (ptr_infolist);
             return NULL;
         }
         return ptr_infolist;
@@ -449,11 +449,11 @@ irc_info_infolist_irc_server_cb (void *data, const char *infolist_name,
              ptr_server = ptr_server->next_server)
         {
             if (!arguments || !arguments[0]
-                || weechat_string_match (ptr_server->name, arguments, 0))
+                || dogechat_string_match (ptr_server->name, arguments, 0))
             {
                 if (!irc_server_add_to_infolist (ptr_infolist, ptr_server))
                 {
-                    weechat_infolist_free (ptr_infolist);
+                    dogechat_infolist_free (ptr_infolist);
                     return NULL;
                 }
             }
@@ -487,7 +487,7 @@ irc_info_infolist_irc_channel_cb (void *data, const char *infolist_name,
 
     ptr_server = NULL;
     ptr_channel = NULL;
-    argv = weechat_string_split (arguments, ",", 0, 0, &argc);
+    argv = dogechat_string_split (arguments, ",", 0, 0, &argc);
     if (!argv)
         return NULL;
 
@@ -496,7 +496,7 @@ irc_info_infolist_irc_channel_cb (void *data, const char *infolist_name,
         ptr_server = irc_server_search (argv[0]);
         if (!ptr_server)
         {
-            weechat_string_free_split (argv);
+            dogechat_string_free_split (argv);
             return NULL;
         }
         if (!pointer && (argc >= 2))
@@ -504,12 +504,12 @@ irc_info_infolist_irc_channel_cb (void *data, const char *infolist_name,
             pointer = irc_channel_search (ptr_server, argv[1]);
             if (!pointer)
             {
-                weechat_string_free_split (argv);
+                dogechat_string_free_split (argv);
                 return NULL;
             }
         }
     }
-    weechat_string_free_split (argv);
+    dogechat_string_free_split (argv);
 
     if (!ptr_server)
         return NULL;
@@ -517,7 +517,7 @@ irc_info_infolist_irc_channel_cb (void *data, const char *infolist_name,
     if (pointer && !irc_channel_valid (ptr_server, pointer))
         return NULL;
 
-    ptr_infolist = weechat_infolist_new ();
+    ptr_infolist = dogechat_infolist_new ();
     if (!ptr_infolist)
         return NULL;
 
@@ -526,7 +526,7 @@ irc_info_infolist_irc_channel_cb (void *data, const char *infolist_name,
         /* build list with only one channel */
         if (!irc_channel_add_to_infolist (ptr_infolist, pointer))
         {
-            weechat_infolist_free (ptr_infolist);
+            dogechat_infolist_free (ptr_infolist);
             return NULL;
         }
         return ptr_infolist;
@@ -539,7 +539,7 @@ irc_info_infolist_irc_channel_cb (void *data, const char *infolist_name,
         {
             if (!irc_channel_add_to_infolist (ptr_infolist, ptr_channel))
             {
-                weechat_infolist_free (ptr_infolist);
+                dogechat_infolist_free (ptr_infolist);
                 return NULL;
             }
         }
@@ -573,7 +573,7 @@ irc_info_infolist_irc_nick_cb (void *data, const char *infolist_name,
 
     ptr_server = NULL;
     ptr_channel = NULL;
-    argv = weechat_string_split (arguments, ",", 0, 0, &argc);
+    argv = dogechat_string_split (arguments, ",", 0, 0, &argc);
     if (!argv)
         return NULL;
 
@@ -582,13 +582,13 @@ irc_info_infolist_irc_nick_cb (void *data, const char *infolist_name,
         ptr_server = irc_server_search (argv[0]);
         if (!ptr_server)
         {
-            weechat_string_free_split (argv);
+            dogechat_string_free_split (argv);
             return NULL;
         }
         ptr_channel = irc_channel_search (ptr_server, argv[1]);
         if (!ptr_channel)
         {
-            weechat_string_free_split (argv);
+            dogechat_string_free_split (argv);
             return NULL;
         }
         if (!pointer && (argc >= 3))
@@ -597,12 +597,12 @@ irc_info_infolist_irc_nick_cb (void *data, const char *infolist_name,
                                        argv[2]);
             if (!pointer)
             {
-                weechat_string_free_split (argv);
+                dogechat_string_free_split (argv);
                 return NULL;
             }
         }
     }
-    weechat_string_free_split (argv);
+    dogechat_string_free_split (argv);
 
     if (!ptr_server || !ptr_channel)
         return NULL;
@@ -610,7 +610,7 @@ irc_info_infolist_irc_nick_cb (void *data, const char *infolist_name,
     if (pointer && !irc_nick_valid (ptr_channel, pointer))
         return NULL;
 
-    ptr_infolist = weechat_infolist_new ();
+    ptr_infolist = dogechat_infolist_new ();
     if (!ptr_infolist)
         return NULL;
 
@@ -620,7 +620,7 @@ irc_info_infolist_irc_nick_cb (void *data, const char *infolist_name,
         if (!irc_nick_add_to_infolist (ptr_infolist,
                                        pointer))
         {
-            weechat_infolist_free (ptr_infolist);
+            dogechat_infolist_free (ptr_infolist);
             return NULL;
         }
         return ptr_infolist;
@@ -634,7 +634,7 @@ irc_info_infolist_irc_nick_cb (void *data, const char *infolist_name,
             if (!irc_nick_add_to_infolist (ptr_infolist,
                                            ptr_nick))
             {
-                weechat_infolist_free (ptr_infolist);
+                dogechat_infolist_free (ptr_infolist);
                 return NULL;
             }
         }
@@ -663,7 +663,7 @@ irc_info_infolist_irc_ignore_cb (void *data, const char *infolist_name,
     if (pointer && !irc_ignore_valid (pointer))
         return NULL;
 
-    ptr_infolist = weechat_infolist_new ();
+    ptr_infolist = dogechat_infolist_new ();
     if (!ptr_infolist)
         return NULL;
 
@@ -672,7 +672,7 @@ irc_info_infolist_irc_ignore_cb (void *data, const char *infolist_name,
         /* build list with only one ignore */
         if (!irc_ignore_add_to_infolist (ptr_infolist, pointer))
         {
-            weechat_infolist_free (ptr_infolist);
+            dogechat_infolist_free (ptr_infolist);
             return NULL;
         }
         return ptr_infolist;
@@ -685,7 +685,7 @@ irc_info_infolist_irc_ignore_cb (void *data, const char *infolist_name,
         {
             if (!irc_ignore_add_to_infolist (ptr_infolist, ptr_ignore))
             {
-                weechat_infolist_free (ptr_infolist);
+                dogechat_infolist_free (ptr_infolist);
                 return NULL;
             }
         }
@@ -714,7 +714,7 @@ irc_info_infolist_irc_notify_cb (void *data, const char *infolist_name,
     if (pointer && !irc_notify_valid (NULL, pointer))
         return NULL;
 
-    ptr_infolist = weechat_infolist_new ();
+    ptr_infolist = dogechat_infolist_new ();
     if (!ptr_infolist)
         return NULL;
 
@@ -723,7 +723,7 @@ irc_info_infolist_irc_notify_cb (void *data, const char *infolist_name,
         /* build list with only one notify */
         if (!irc_notify_add_to_infolist (ptr_infolist, pointer))
         {
-            weechat_infolist_free (ptr_infolist);
+            dogechat_infolist_free (ptr_infolist);
             return NULL;
         }
         return ptr_infolist;
@@ -735,7 +735,7 @@ irc_info_infolist_irc_notify_cb (void *data, const char *infolist_name,
              ptr_server = ptr_server->next_server)
         {
             if (!arguments || !arguments[0]
-                || weechat_string_match (ptr_server->name, arguments, 0))
+                || dogechat_string_match (ptr_server->name, arguments, 0))
             {
                 for (ptr_notify = ptr_server->notify_list; ptr_notify;
                      ptr_notify = ptr_notify->next_notify)
@@ -743,7 +743,7 @@ irc_info_infolist_irc_notify_cb (void *data, const char *infolist_name,
                     if (!irc_notify_add_to_infolist (ptr_infolist,
                                                      ptr_notify))
                     {
-                        weechat_infolist_free (ptr_infolist);
+                        dogechat_infolist_free (ptr_infolist);
                         return NULL;
                     }
                 }
@@ -756,11 +756,11 @@ irc_info_infolist_irc_notify_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns IRC infolist "irc_color_weechat".
+ * Returns IRC infolist "irc_color_dogechat".
  */
 
 struct t_infolist *
-irc_info_infolist_irc_color_weechat_cb (void *data, const char *infolist_name,
+irc_info_infolist_irc_color_dogechat_cb (void *data, const char *infolist_name,
                                         void *pointer, const char *arguments)
 {
     struct t_infolist *ptr_infolist;
@@ -771,14 +771,14 @@ irc_info_infolist_irc_color_weechat_cb (void *data, const char *infolist_name,
     (void) pointer;
     (void) arguments;
 
-    ptr_infolist = weechat_infolist_new ();
+    ptr_infolist = dogechat_infolist_new ();
     if (!ptr_infolist)
         return NULL;
 
     /* build list with all IRC colors */
-    if (!irc_color_weechat_add_to_infolist (ptr_infolist))
+    if (!irc_color_dogechat_add_to_infolist (ptr_infolist))
     {
-        weechat_infolist_free (ptr_infolist);
+        dogechat_infolist_free (ptr_infolist);
         return NULL;
     }
     return ptr_infolist;
@@ -792,54 +792,54 @@ void
 irc_info_init ()
 {
     /* info hooks */
-    weechat_hook_info (
+    dogechat_hook_info (
         "irc_is_channel",
         N_("1 if string is a valid IRC channel name for server"),
         N_("server,channel (server is optional)"),
         &irc_info_info_irc_is_channel_cb, NULL);
-    weechat_hook_info (
+    dogechat_hook_info (
         "irc_is_nick",
         N_("1 if string is a valid IRC nick name"),
         N_("nickname"),
         &irc_info_info_irc_is_nick_cb, NULL);
-    weechat_hook_info (
+    dogechat_hook_info (
         "irc_nick",
         N_("get current nick on a server"),
         N_("server name"),
         &irc_info_info_irc_nick_cb, NULL);
-    weechat_hook_info (
+    dogechat_hook_info (
         "irc_nick_from_host",
         N_("get nick from IRC host"),
         N_("IRC host (like `:nick!name@server.com`)"),
         &irc_info_info_irc_nick_from_host_cb, NULL);
-    weechat_hook_info (
+    dogechat_hook_info (
         "irc_nick_color",
         N_("get nick color code"),
         N_("nickname"),
         &irc_info_info_irc_nick_color_cb, NULL);
-    weechat_hook_info (
+    dogechat_hook_info (
         "irc_nick_color_name",
         N_("get nick color name"),
         N_("nickname"),
         &irc_info_info_irc_nick_color_name_cb, NULL);
-    weechat_hook_info (
+    dogechat_hook_info (
         "irc_buffer",
         N_("get buffer pointer for an IRC server/channel/nick"),
         N_("server,channel,nick (channel and nicks are optional)"),
         &irc_info_info_irc_buffer_cb, NULL);
-    weechat_hook_info (
+    dogechat_hook_info (
         "irc_server_isupport",
         N_("1 if server supports this feature (from IRC message 005)"),
         N_("server,feature"),
         &irc_info_info_irc_server_isupport_cb, NULL);
-    weechat_hook_info (
+    dogechat_hook_info (
         "irc_server_isupport_value",
         N_("value of feature, if supported by server (from IRC message 005)"),
         N_("server,feature"),
         &irc_info_info_irc_server_isupport_value_cb, NULL);
 
     /* info_hashtable hooks */
-    weechat_hook_info_hashtable (
+    dogechat_hook_info_hashtable (
         "irc_message_parse",
         N_("parse an IRC message"),
         N_("\"message\": IRC message, \"server\": server name (optional)"),
@@ -861,7 +861,7 @@ irc_info_init ()
            "\"pos_text\": index of \"text\" message (\"-1\" if "
            "\"text\" was not found)"),
         &irc_info_info_hashtable_irc_message_parse_cb, NULL);
-    weechat_hook_info_hashtable (
+    dogechat_hook_info_hashtable (
         "irc_message_split",
         N_("split an IRC message (to fit in 512 bytes)"),
         N_("\"message\": IRC message, \"server\": server name (optional)"),
@@ -872,66 +872,66 @@ irc_info_init ()
         &irc_info_info_hashtable_irc_message_split_cb, NULL);
 
     /* infolist hooks */
-    weechat_hook_infolist (
+    dogechat_hook_infolist (
         "irc_server",
         N_("list of IRC servers"),
         N_("server pointer (optional)"),
         N_("server name (wildcard \"*\" is allowed) (optional)"),
         &irc_info_infolist_irc_server_cb, NULL);
-    weechat_hook_infolist (
+    dogechat_hook_infolist (
         "irc_channel",
         N_("list of channels for an IRC server"),
         N_("channel pointer (optional)"),
         N_("server,channel (channel is optional)"),
         &irc_info_infolist_irc_channel_cb, NULL);
-    weechat_hook_infolist (
+    dogechat_hook_infolist (
         "irc_nick",
         N_("list of nicks for an IRC channel"),
         N_("nick pointer (optional)"),
         N_("server,channel,nick (nick is optional)"),
         &irc_info_infolist_irc_nick_cb, NULL);
-    weechat_hook_infolist (
+    dogechat_hook_infolist (
         "irc_ignore",
         N_("list of IRC ignores"),
         N_("ignore pointer (optional)"),
         NULL,
         &irc_info_infolist_irc_ignore_cb, NULL);
-    weechat_hook_infolist (
+    dogechat_hook_infolist (
         "irc_notify",
         N_("list of notify"),
         N_("notify pointer (optional)"),
         N_("server name (wildcard \"*\" is allowed) (optional)"),
         &irc_info_infolist_irc_notify_cb, NULL);
-    weechat_hook_infolist (
-        "irc_color_weechat",
-        N_("mapping between IRC color codes and WeeChat color names"),
+    dogechat_hook_infolist (
+        "irc_color_dogechat",
+        N_("mapping between IRC color codes and DogeChat color names"),
         NULL,
         NULL,
-        &irc_info_infolist_irc_color_weechat_cb, NULL);
+        &irc_info_infolist_irc_color_dogechat_cb, NULL);
 
     /* hdata hooks */
-    weechat_hook_hdata (
+    dogechat_hook_hdata (
         "irc_nick", N_("irc nick"),
         &irc_nick_hdata_nick_cb, NULL);
-    weechat_hook_hdata (
+    dogechat_hook_hdata (
         "irc_channel", N_("irc channel"),
         &irc_channel_hdata_channel_cb, NULL);
-    weechat_hook_hdata (
+    dogechat_hook_hdata (
         "irc_channel_speaking", N_("irc channel_speaking"),
         &irc_channel_hdata_channel_speaking_cb, NULL);
-    weechat_hook_hdata (
+    dogechat_hook_hdata (
         "irc_ignore", N_("irc ignore"),
         &irc_ignore_hdata_ignore_cb, NULL);
-    weechat_hook_hdata (
+    dogechat_hook_hdata (
         "irc_notify", N_("irc notify"),
         &irc_notify_hdata_notify_cb, NULL);
-    weechat_hook_hdata (
+    dogechat_hook_hdata (
         "irc_redirect_pattern", N_("pattern for irc redirect"),
         &irc_redirect_hdata_redirect_pattern_cb, NULL);
-    weechat_hook_hdata (
+    dogechat_hook_hdata (
         "irc_redirect", N_("irc redirect"),
         &irc_redirect_hdata_redirect_cb, NULL);
-    weechat_hook_hdata (
+    dogechat_hook_hdata (
         "irc_server", N_("irc server"),
         &irc_server_hdata_server_cb, NULL);
 }

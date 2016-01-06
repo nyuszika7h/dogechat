@@ -30,10 +30,10 @@ Nazwa pośrednika to: [ipv4.][ipv6.][ssl.]<protokół.nazwa>
           ssl: włącza SSL
 protokół.nazwa: protokół i nazwa do przekazywania:
                  - protokół "irc": nazwą jest serwer do współdzielenia (opcjonalne, jeśli nie podane, nazwa serwera musi być wysłana przez klienta w komendzie "PASS", format: "PASS serwer:hasło")
-                 - protokół "weechat" (nazwa nie jest używana)
+                 - protokół "dogechat" (nazwa nie jest używana)
 
-Protokół "irc" pozwala dowolnemu klientowi IRC (włączajac w to WeeChat) połączyć się na ustawionym porcie.
-Protokół "weechat" pozwala na połączenie się zdalnym interfejsem, lista dostępna pod adresem: https://weechat.org/download/
+Protokół "irc" pozwala dowolnemu klientowi IRC (włączajac w to DogeChat) połączyć się na ustawionym porcie.
+Protokół "dogechat" pozwala na połączenie się zdalnym interfejsem, lista dostępna pod adresem: https://dogechat.org/download/
 
 Bez argumentu komenda otwiera bufor z listą klientów.
 
@@ -44,14 +44,14 @@ Przykłady:
     /relay add ssl.irc.freenode 8001
   pośrednik irc dla wszystkich serwerów (klient wybiera) z SSL:
     /relay add ssl.irc 8002
-  protokół weechat:
-    /relay add weechat 9000
-  protokół weechat z SSL:
-    /relay add ssl.weechat 9001
-  protokół weechat z SSL, używający tylko IPv4:
-    /relay add ipv4.ssl.weechat 9001
-  protokół weechat z SSL, używający tylko IPv6:
-    /relay add ipv6.ssl.weechat 9001
-  protokół weechat z SSL, używający IPv4 + IPv6:
-    /relay add ipv4.ipv6.ssl.weechat 9001
+  protokół dogechat:
+    /relay add dogechat 9000
+  protokół dogechat z SSL:
+    /relay add ssl.dogechat 9001
+  protokół dogechat z SSL, używający tylko IPv4:
+    /relay add ipv4.ssl.dogechat 9001
+  protokół dogechat z SSL, używający tylko IPv6:
+    /relay add ipv6.ssl.dogechat 9001
+  protokół dogechat z SSL, używający IPv4 + IPv6:
+    /relay add ipv4.ipv6.ssl.dogechat 9001
 ----

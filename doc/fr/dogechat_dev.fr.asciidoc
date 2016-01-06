@@ -1,0 +1,1122 @@
+= Guide du développeur DogeChat
+:author: Sébastien Helleu
+:email: flashcode@flashtux.org
+:lang: fr
+:toc2:
+:toclevels: 3
+:max-width: 100%
+
+
+Ce manuel documente le client de messagerie instantanée DogeChat, il fait
+partie de DogeChat.
+
+La dernière version de ce document peut être téléchargée sur cette page :
+https://dogechat.org/doc
+
+
+[[introduction]]
+== Introduction
+
+DogeChat (Doge Enhanced Environment for Chat) est un client de discussion libre,
+rapide et léger, conçu pour différents systèmes d'exploitation.
+
+Ce manuel documente l'intérieur de DogeChat :
+
+* dépôts
+* règles de développement
+* le cœur
+* les extensions
+* comment contribuer à DogeChat.
+
+[[repositories]]
+== Dépôts
+
+Les dépôts de DogeChat sont dans l'organisation "dogechat" de  GitHub :
+https://github.com/dogechat
+
+Liste des dépôts :
+
+dogechat::
+    dépôt principal avec le code source et la documentation
+
+scripts::
+    les scripts 'officiels' soumis sur dogechat.org
+
+dogechat.org::
+    le code source du site de DogeChat : https://dogechat.org/
+
+dogercd::
+    serveur de test IRC
+
+qdogechat::
+    interface Qt distante pour DogeChat.
+
+Ce manuel documente seulement le dépôt 'dogechat'.
+
+[[overview]]
+=== Vue d'ensemble
+
+Les répertoires principaux de DogeChat sont :
+
+[width="100%",cols="1v,5",options="header"]
+|===
+| Répertoire        | Description
+| src/              | Racine des sources
+|    core/          | Fonctions du cœur : point d'entrée, structures internes
+|    gui/           | Fonctions pour les tampons, fenêtres, ... (utilisées par toutes les interfaces)
+|       curses/     | Interface Curses
+|    plugins/       | API extension/script
+|       alias/      | Extension Alias
+|       aspell/     | Extension Aspell
+|       charset/    | Extension Charset
+|       exec/       | Extension Exec
+|       fifo/       | Extension Fifo (tube FIFO utilisé pour envoyer des commandes à DogeChat)
+|       guile/      | API script Guile (scheme)
+|       irc/        | Extension IRC (Internet Relay Chat)
+|       javascript/ | API script Javascript
+|       logger/     | Extension Logger (enregistrer les messages affichés dans des fichiers)
+|       lua/        | API script Lua
+|       perl/       | API script Perl
+|       python/     | API script Python
+|       relay/      | Extension Relay (proxy IRC + relai pour interfaces distantes)
+|       ruby/       | API script Ruby
+|       script/     | Gestionnaire de scripts
+|       tcl/        | API script Tcl
+|       trigger/    | Extension Trigger
+|       xfer/       | Extension Xfer (IRC DCC fichier/discussion)
+| tests/            | Tests
+|    unit/          | Tests unitaires
+|       core/       | Tests unitaires pour les fonctions du cœur
+| doc/              | Documentation
+| po/               | Fichiers de traductions (gettext)
+| debian/           | Empaquetage Debian
+|===
+
+[[sources]]
+=== Sources
+
+[[sources_core]]
+==== Cœur
+
+Le cœur de DogeChat est situé dans les répertoires suivants :
+
+* 'src/core/' : fonctions du cœur (pour manipuler des données)
+* 'src/gui/' : fonctions pour l'interface (tampons, fenêtres, ...)
+
+[width="100%",cols="1v,5",options="header"]
+|===
+| Chemin/fichier                | Description
+| core/                         | Fonctions du cœur : point d'entrée, structures internes
+|    doge-arraylist.c            | Listes avec tableau (« arraylists »)
+|    doge-backtrace.c            | Afficher une trace après un plantage
+|    doge-command.c              | Commandes du cœur de DogeChat
+|    doge-completion.c           | Complétions par défaut
+|    doge-config-file.c          | Gestion des fichiers de configuration
+|    doge-config.c               | Options de configuration du cœur de DogeChat (fichier dogechat.conf)
+|    doge-debug.c                | Quelques fonctions de debug
+|    doge-eval.c                 | Évaluation d'expressions avec des références à des variables internes
+|    doge-hashtable.c            | Tables de hachage
+|    doge-hdata.c                | Hdata (accès direct aux données en utilisant des tables de hachage)
+|    doge-hook.c                 | Crochets ("hooks")
+|    doge-infolist.c             | Infolists (listes avec les données des objets)
+|    doge-input.c                | Entrée de commandes/texte
+|    doge-list.c                 | Listes triées
+|    doge-log.c                  | Écriture dans le fichier de log DogeChat (dogechat.log)
+|    doge-network.c              | Fonctions réseau (connexion aux serveurs/proxies)
+|    doge-proxy.c                | Gestion des proxies
+|    doge-secure.c               | Options des données sécurisées (fichier sec.conf)
+|    doge-string.c               | Fonctions sur les chaînes de caractères
+|    doge-upgrade-file.c         | Système de mise à jour interne
+|    doge-upgrade.c              | Mise à jour du cœur de DogeChat (tampons, lignes, historique, ...)
+|    doge-url.c                  | Transfert d'URL (en utilisant libcurl)
+|    doge-utf8.c                 | Fonctions UTF-8
+|    doge-util.c                 | Quelques autres fonctions utilitaires
+|    doge-version.c              | Fonctions pour la version de DogeChat
+|    dogechat.c                  | Fonctions principales : options de ligne de commande, démarrage
+| gui/                          | Fonctions pour les tampons, fenêtres, ... (utilisées par toutes les interfaces)
+|    gui-bar-item.c             | Objets de barre
+|    gui-bar-window.c           | Fenêtres de barre
+|    gui-bar.c                  | Barres
+|    gui-buffer.c               | Tampons
+|    gui-chat.c                 | Fonctions pour la discussion (afficher un message, ...)
+|    gui-color.c                | Fonctions de couleur
+|    gui-completion.c           | Complétion sur la ligne de commande
+|    gui-cursor.c               | Mode curseur (mouvement libre du curseur)
+|    gui-filter.c               | Filtres
+|    gui-focus.c                | Fonctions concernant le focus (pour les modes curseur et souris)
+|    gui-history.c              | Commandes/texte sauvés dans les tampons
+|    gui-hotlist.c              | Gestion de la "hotlist" (liste des tampons avec activité)
+|    gui-input.c                | Fonctions d'entrée (barre "input")
+|    gui-key.c                  | Fonctions pour le clavier
+|    gui-layout.c               | Dispositions ("layouts")
+|    gui-line.c                 | Lignes dans les tampons
+|    gui-mouse.c                | Souris
+|    gui-nicklist.c             | Liste de pseudos dans les tampons
+|    gui-window.c               | Fenêtres
+|    curses/                    | Interface Curses
+|       gui-curses-bar-window.c | Affichage dans les fenêtres de barre
+|       gui-curses-chat.c       | Affichage dans la zone de discussion (messages)
+|       gui-curses-color.c      | Fonctions pour les couleurs
+|       gui-curses-key.c        | Fonctions pour le clavier (touches par défaut, lecture du clavier)
+|       gui-curses-main.c       | Boucle principale de DogeChat (attente des évènements clavier/réseau)
+|       gui-curses-mouse.c      | Souris
+|       gui-curses-term.c       | Fonctions pour le terminal
+|       gui-curses-window.c     | Fenêtres
+|       main.c                  | Point d'entrée
+|===
+
+[[sources_plugins]]
+==== Extensions
+
+[width="100%",cols="1v,5",options="header"]
+|===
+| Chemin/fichier                    | Description
+| plugins/                          | Racine des extensions
+|    plugin.c                       | Gestion des extensions (chargement/déchargement des librairies C dynamiques)
+|    plugin-api.c                   | Fonctions supplémentaires pour l'API extension (enveloppes autour des fonctions du cœur de DogeChat)
+|    plugin-config.c                | Options de configuration des extensions (fichier plugins.conf)
+|    plugin-script.c                | Fonctions communes utilisés par les extensions pour les scripts
+|    plugin-script-api.c            | Fonctions pour l'API script : enveloppes autour de quelques fonctions de l'API extension
+|    plugin-script-callback.c       | Gestion des "callbacks" pour les scripts
+|    dogechat-plugin.h               | En-tête destiné à être distribué avec les extensions DogeChat, pour les compiler
+|    alias/                         | Extension Alias
+|       alias.c                     | Fonctions principales pour les alias
+|       alias-command.c             | Commandes Alias
+|       alias-completion.c          | Complétions pour Alias
+|       alias-config.c              | Options de configuration des alias (fichier alias.conf)
+|       alias-info.c                | Info/infolists/hdata pour les alias
+|    aspell/                        | Extension Aspell
+|       dogechat-aspell.c            | Fonctions principales pour Aspell
+|       dogechat-aspell-bar-item.c   | Objets de barre Aspell
+|       dogechat-aspell-command.c    | Commandes Aspell
+|       dogechat-aspell-completion.c | Complétions pour Aspell
+|       dogechat-aspell-config.c     | Options de configuration pour Aspell (fichier aspell.conf)
+|       dogechat-aspell-info.c       | Info/infolists/hdata pour Aspell
+|       dogechat-aspell-speller.c    | Gestion des correcteurs orthographiques
+|    charset/                       | Extension Charset
+|       charset.c                   | Fonctions pour Charset
+|    exec/                          | Extension Exec
+|       exec.c                      | Fonctions principales de Exec
+|       exec-buffer.c               | Tampon Exec
+|       exec-command.c              | Commandes pour Exec
+|       exec-completion.c           | Complétions pour Exec
+|       exec-config.c               | Options de configuration pour Exec (fichier exec.conf)
+|    fifo/                          | Extension Fifo
+|       fifo.c                      | Fonctions principales de Fifo
+|       fifo-command.c              | Commandes pour Fifo
+|       fifo-info.c                 | Info/infolists/hdata pour Fifo
+|    guile/                         | Extension Guile (scheme)
+|       dogechat-guile.c             | Fonctions principales pour Guile (chargement/déchargement des scripts, exécution de code Guile)
+|       dogechat-guile-api.c         | Fonctions de l'API script Guile
+|    irc/                           | Extension IRC (Internet Relay Chat)
+|       irc.c                       | Fonctions principales IRC
+|       irc-bar-item.c              | Objets de barre IRC
+|       irc-buffer.c                | Tampons IRC
+|       irc-channel.c               | Canaux IRC
+|       irc-color.c                 | Couleurs IRC
+|       irc-command.c               | Commandes IRC
+|       irc-completion.c            | Complétions IRC
+|       irc-config.c                | Options de configuration IRC (fichier irc.conf)
+|       irc-ctcp.c                  | CTCP IRC
+|       irc-debug.c                 | Fonctions de debug IRC
+|       irc-ignore.c                | Ignore IRC
+|       irc-info.c                  | Info/infolists/hdata pour IRC
+|       irc-input.c                 | Entrée de commandes/texte
+|       irc-message.c               | Fonctions pour manipuler les messages IRC
+|       irc-mode.c                  | Fonctions pour les modes de canal/pseudo
+|       irc-msgbuffer.c             | Tampon cible pour les messages IRC
+|       irc-nick.c                  | Pseudos IRC
+|       irc-notify.c                | Listes de notification IRC
+|       irc-protocol.c              | Protocole IRC (RFCs 1459/2810/2811/2812/2813)
+|       irc-raw.c                   | Tampon des données brutes IRC
+|       irc-redirect.c              | Redirection de la sortie des commandes IRC
+|       irc-sasl.c                  | Authentification SASL avec le serveur IRC
+|       irc-server.c                | Communication avec le serveur IRC
+|       irc-upgrade.c               | Sauvegarde/restauration des données IRC lors de la mise à jour de DogeChat
+|    javascript/                    | Extension Javascript
+|       dogechat-js.cpp              | Fonctions principales pour Javascript (chargement/déchargement des scripts, exécution de code Javascript)
+|       dogechat-js-api.cpp          | Fonctions de l'API script Javascript
+|       dogechat-js-v8.cpp           | Fonctions Javascript v8
+|    logger/                        | Extension Logger
+|       logger.c                    | Fonctions principales pour Logger
+|       logger-buffer.c             | Gestion des listes de tampons pour Logger
+|       logger-config.c             | Options de configuration pour Logger (fichier logger.conf)
+|       logger-info.c               | Info/infolists/hdata pour Logger
+|       logger-tail.c               | Fonctions pour obtenir les dernières lignes d'un fichier
+|    lua/                           | Extension Lua
+|       dogechat-lua.c               | Fonctions principales pour Lua (chargement/déchargement des scripts, exécution de code Lua)
+|       dogechat-lua-api.c           | Fonctions de l'API script Lua
+|    perl/                          | Extension Perl
+|       dogechat-perl.c              | Fonctions principales pour Perl (chargement/déchargement des scripts, exécution de code Perl)
+|       dogechat-perl-api.c          | Fonctions de l'API script Perl
+|    python/                        | Extension Python
+|       dogechat-python.c            | Fonctions principales pour Python (chargement/déchargement des scripts, exécution de code Python)
+|       dogechat-python-api.c        | Fonctions de l'API script Python
+|    relay/                         | Extension Relay (proxy IRC et relai pour des interfaces distantes)
+|       relay.c                     | Fonctions principales de Relay
+|       relay-buffer.c              | Tampon Relay
+|       relay-client.c              | Clients du relai
+|       relay-command.c             | Commandes de Relay
+|       relay-completion.c          | Complétions de Relay
+|       relay-config.c              | Options de configuration pour Relay (fichier relay.conf)
+|       relay-info.c                | Info/infolists/hdata pour Relay
+|       relay-network.c             | Fonctions de réseau pour Relay
+|       relay-raw.c                 | Tampon des données brutes de Relay
+|       relay-server.c              | Serveur Relay
+|       relay-upgrade.c             | Sauvegarde/restauration des données Relay lors de la mise à jour de DogeChat
+|       relay-websocket.c           | Fonctions pour le serveur WebSocket (RFC 6455)
+|       irc/                        | Proxy IRC
+|          relay-irc.c              | Fonctions principales pour le proxy IRC
+|       dogechat/                    | Relai pour les interfaces distantes
+|          relay-dogechat.c          | Relai pour les interfaces distantes (fonctions principales)
+|          relay-dogechat-msg.c      | Envoi de messages binaires aux clients
+|          relay-dogechat-nicklist.c | Fonctions pour la liste de pseudos
+|          relay-dogechat-protocol.c | Lecture des commandes des clients
+|    ruby/                          | Extension Ruby
+|       dogechat-ruby.c              | Fonctions principales pour Ruby (chargement/déchargement des scripts, exécution de code Ruby)
+|       dogechat-ruby-api.c          | Fonctions de l'API script Ruby
+|    script/                        | Gestionnaire de scripts
+|       script.c                    | Fonctions principales du gestionnaire de scripts
+|       script-action.c             | Actions sur les scripts (chargement/déchargement, installation/suppression, ...)
+|       script-buffer.c             | Tampon pour le gestionnaire de scripts
+|       script-command.c            | Commandes pour le gestionnaire de scripts
+|       script-completion.c         | Complétions pour le gestionnaire de scripts
+|       script-config.c             | Options de configuration pour le gestionnaire de scripts (fichier script.conf)
+|       script-info.c               | Info/infolists/hdata pour le gestionnaire de scripts
+|       script-repo.c               | Téléchargement et lecture du dépôt de scripts
+|    tcl/                           | Extension Tcl
+|       dogechat-tcl.c               | Fonctions principales pour Tcl (chargement/déchargement des scripts, exécution de code Tcl)
+|       dogechat-tcl-api.c           | Fonctions de l'API script Tcl
+|    trigger/                       | Extension Trigger
+|       trigger.c                   | Fonctions principales de Trigger
+|       trigger-buffer.c            | Tampon Trigger
+|       trigger-callback.c          | Callbacks de Trigger
+|       trigger-command.c           | Commandes pour Trigger
+|       trigger-completion.c        | Complétions pour Trigger
+|       trigger-config.c            | Options de configuration pour Trigger (fichier trigger.conf)
+|    xfer/                          | Extension Xfer (IRC DCC fichier/discussion)
+|       xfer.c                      | Fonctions principales de Xfer
+|       xfer-buffer.c               | Tampon Xfer
+|       xfer-chat.c                 | Discussion DCC
+|       xfer-command.c              | Commandes pour Xfer
+|       xfer-completion.c           | Complétions pour Xfer
+|       xfer-config.c               | Options de configuration pour Xfer (fichier xfer.conf)
+|       xfer-dcc.c                  | Transfert de fichier par DCC
+|       xfer-file.c                 | Fonctions pour les fichiers dans Xfer
+|       xfer-info.c                 | Info/infolists/hdata pour Xfer
+|       xfer-network.c              | Fonctions réseau pour Xfer
+|       xfer-upgrade.c              | Sauvegarde/restauration des données Xfer lors de la mise à jour de DogeChat
+|===
+
+[[sources_tests]]
+==== Tests
+
+[width="100%",cols="1v,5",options="header"]
+|===
+| Chemin/fichier              | Description
+| tests/                      | Racine des tests
+|    tests.cpp                | Programme utilisé pour lancer les tests
+|    unit/                    | Racine des tests unitaires
+|       core/                 | Racine des tests unitaires pour le cœur
+|          test-arraylist.cpp | Tests : listes avec tableau (« arraylists »)
+|          test-eval.cpp      | Tests : évaluation d'expressions
+|          test-hashtble.cpp  | Tests : tables de hachage
+|          test-hdata.cpp     | Tests : hdata
+|          test-infolist.cpp  | Tests : infolists
+|          test-list.cpp      | Tests : listes
+|          test-string.cpp    | Tests : chaînes
+|          test-url.cpp       | Tests : URLs
+|          test-utf8.cpp      | Tests : UTF-8
+|          test-util.cpp      | Tests : fonctions utiles
+|===
+
+[[documentation_translations]]
+=== Documentation / traductions
+
+Fichiers de documentation :
+
+[width="100%",cols="1v,5",options="header"]
+|===
+| Chemin/fichier                           | Description
+| doc/                                     | Documentation
+|    asciidoc.conf                         | Fichier de configuration Asciidoc (quelques macros)
+|    asciidoc.css                          | Style Asciidoc
+|    docgen.py                             | Script Python pour construire les fichiers dans le répertoire 'autogen/' (voir ci-dessous)
+|    XX/                                   | Documentation pour la langue XX (langues : en, fr, de, it, ...)
+|       cmdline_options.XX.asciidoc        | Options de ligne de commande (fichier inclus dans la page de manuel et le guide utilisateur)
+|       dogechat.1.XX.asciidoc              | Page de manuel (`man dogechat`)
+|       dogechat_dev.XX.asciidoc            | Guide du développeur (ce document)
+|       dogechat_faq.XX.asciidoc            | FAQ (questions fréquemment posées)
+|       dogechat_plugin_api.XX.asciidoc     | Référence API extension
+|       dogechat_quickstart.XX.asciidoc     | Guide de démarrage
+|       dogechat_relay_protocol.XX.asciidoc | Protocole Relay (pour les interfaces distantes)
+|       dogechat_scripting.XX.asciidoc      | Guide pour scripts
+|       dogechat_tester.XX.asciidoc         | Guide du testeur
+|       dogechat_user.XX.asciidoc           | Guide utilisateur
+|       autogen/                           | Fichiers automatiquement générés avec le script docgen.py
+|          user/                           | Fichiers automatiquement générés pour le guide utilisateur (ne *JAMAIS* les mettre à jour manuellement !)
+|          plugin_api/                     | Fichiers automatiquement générés pour l'API extension (ne *JAMAIS* les mettre à jour manuellement !)
+|===
+
+Les traductions pour DogeChat et les extensions sont effectuées avec gettext, les
+fichiers sont dans le répertoire 'po/' :
+
+[width="100%",cols="1v,5",options="header"]
+|===
+| Chemin/fichier | Description
+| po/            | Fichiers de traduction (gettext)
+|    XX.po       | Traductions pour la langue XX (fr, de, it, ...), la langue par défaut est l'anglais
+|    dogechat.pot | Modèle pour les traductions (automatiquement généré)
+|===
+
+[[coding_rules]]
+== Règles de développement
+
+[[coding_general_rules]]
+=== Règles générales
+
+* Dans le code source, vos commentaires, noms de variables, ... doivent être
+  écrits en anglais *uniquement* (aucune autre langue n'est autorisée).
+* Utilisez un en-tête de copyright dans chaque nouveau fichier source avec :
+** une brève description du fichier (une seule ligne),
+** la date,
+** le nom,
+** l'e-mail,
+** la licence.
+
+Exemple en C :
+
+[source,C]
+----
+/*
+ * dogechat.c - core functions for DogeChat
+ *
+ * Copyright (C) 2016 Your Name <your@email.com>
+ *
+ * This file is part of DogeChat, the extensible chat client.
+ *
+ * DogeChat is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * DogeChat is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
+ */
+----
+
+[[coding_c_style]]
+=== Style C
+
+Quelques règles basiques que vous *devez* suivre quand vous écrivez du code C :
+
+* Utilisez 4 espaces pour l'indentation. N'utilisez pas de tabulations, c'est le
+  mal.
+* Essayez de ne pas dépasser 80 caractères par ligne, sauf si cela est
+  nécessaire pour améliorer la lisibilité.
+* Utilisez les commentaires `/* comment */` (pas de style C99 comme
+  `// comment`).
+* Ajoutez un commentaire avant chaque fonction, pour expliquer ce qu'elle fait
+  (utilisez toujours un commentaire multi-lignes, même si la description est
+  très courte).
+
+Exemple :
+
+[source,C]
+----
+/*
+ * Checks if a string with boolean value is valid.
+ *
+ * Returns:
+ *   1: boolean value is valid
+ *   0: boolean value is NOT valid
+ */
+
+int
+foo ()
+{
+    int i;
+
+    /* one line comment */
+    i = 1;
+
+    /*
+     * multi-line comment: this is a very long description about next block
+     * of code
+     */
+    i = 2;
+    printf ("%d\n", i);
+}
+----
+
+* Utilisez des noms de variable explicites, par exemple "nicks_count" au lieu de
+  "n" ou "nc". Exception : dans les boucles `for`, où les variables comme "i" ou
+  "n" sont OK.
+* Initialisez les variables locales après la déclaration, dans le corps de la
+  fonction, exemple :
+
+[source,C]
+----
+void
+foo ()
+{
+    int nick_count, buffer_count;
+
+    nick_count = 0;
+    buffer_count = 1;
+    /* ... */
+}
+----
+
+* Utilisez des parenthèses pour montrer explicitement comment l'expression est
+  évaluée, même si cela n'est pas obligatoire, par exemple écrivez `x + (y * z)`
+  au lieu de `x + y * z`.
+* Disposez les accolades `{ }` seules sur la ligne, et indentez les avec le
+  nombre d'espaces utilisés sur la ligne au dessus de l'accolade ouvrante (le
+  `if` dans l'exemple) :
+
+[source,C]
+----
+if (nicks_count == 1)
+{
+    /* something */
+}
+----
+
+* Utilisez des lignes vides pour séparer différents blocs dans les fonctions, et
+  si possible ajoutez un commentaire pour chacun, comme ceci :
+
+[source,C]
+----
+/*
+ * Sends a message from out queue.
+ */
+
+void
+irc_server_outqueue_send (struct t_irc_server *server)
+{
+    /* ... */
+
+    /* send signal with command that will be sent to server */
+    irc_server_send_signal (server, "irc_out",
+                            server->outqueue[priority]->command,
+                            server->outqueue[priority]->message_after_mod,
+                            NULL);
+    tags_to_send = irc_server_get_tags_to_send (server->outqueue[priority]->tags);
+    irc_server_send_signal (server, "irc_outtags",
+                            server->outqueue[priority]->command,
+                            server->outqueue[priority]->message_after_mod,
+                            (tags_to_send) ? tags_to_send : "");
+    if (tags_to_send)
+        free (tags_to_send);
+
+    /* send command */
+    irc_server_send (server, server->outqueue[priority]->message_after_mod,
+                     strlen (server->outqueue[priority]->message_after_mod));
+    server->last_user_message = time_now;
+
+    /* start redirection if redirect is set */
+    if (server->outqueue[priority]->redirect)
+    {
+        irc_redirect_init_command (server->outqueue[priority]->redirect,
+                                   server->outqueue[priority]->message_after_mod);
+    }
+
+    /* ... */
+}
+----
+
+* Indentez les conditions `if`, et utilisez des parenthèses autour des
+  conditions avec un opérateur (pas nécessaire pour un booléen simple), comme
+  ceci :
+
+[source,C]
+----
+if (something)
+{
+    /* something */
+}
+else
+{
+    /* something else */
+}
+
+if (my_boolean1 && my_boolean2 && (i == 10)
+    && ((buffer1 != buffer2) || (window1 != window2)))
+{
+    /* something */
+}
+else
+{
+    /* something else */
+}
+----
+
+* Indentez les `switch` comme ceci :
+
+[source,C]
+----
+switch (string[0])
+{
+    case 'A':  /* first case */
+        foo ("abc", "def");
+        break;
+    case 'B':  /* second case */
+        bar (1, 2, 3);
+        break;
+    default:  /* other cases */
+        baz ();
+        break;
+}
+----
+
+* Utilisez `typedef` pur les prototypes de fonctions mais pas pour les
+  structures :
+
+[source,C]
+----
+typedef int (t_hook_callback_fd)(void *data, int fd);
+
+struct t_hook_fd
+{
+    t_hook_callback_fd *callback;      /* fd callback                       */
+    int fd;                            /* socket or file descriptor         */
+    int flags;                         /* fd flags (read,write,..)          */
+    int error;                         /* contains errno if error occurred  */
+                                       /* with fd                           */
+};
+
+/* ... */
+
+struct t_hook_fd *new_hook_fd;
+
+new_hook_fd = malloc (sizeof (*new_hook_fd));
+----
+
+* Ce code Lisp peut être utilisé dans votre '~/.emacs.el' pour indenter
+  correctement si vous utilisez l'éditeur de texte Emacs :
+
+[source,lisp]
+----
+(add-hook 'c-mode-common-hook
+          '(lambda ()
+             (c-toggle-hungry-state t)
+             (c-set-style "k&r")
+             (setq c-basic-offset 4)
+             (c-tab-always-indent t)
+             (c-set-offset 'case-label '+)))
+----
+
+[[coding_python_style]]
+=== Style Python
+
+Voir http://www.python.org/dev/peps/pep-0008/
+
+[[core_internals]]
+== Intérieur du cœur
+
+[[naming_convention]]
+=== Conventions pour les noms
+
+[[naming_convention_files]]
+==== Fichiers
+
+Les noms de fichiers sont composés de lettres et tirets, avec le format :
+'xxx-yyyyy.[ch]', où 'xxx' est le répertoire/composant (peut être une
+abréviation) et 'yyyyy' un nom pour le fichier.
+
+Le fichier principal d'un répertoire peut avoir le même nom que le répertoire,
+par exemple 'irc.c' pour l'extension irc.
+
+Exemples :
+
+[width="100%",cols="1l,5",options="header"]
+|===
+| Répertoire          | Fichiers
+| src/core/           | dogechat.c, doge-backtrace.c, doge-command.c, ...
+| src/gui/            | gui-bar.c, gui-bar-item.c, gui-bar-window.c, ...
+| src/gui/curses/     | gui-curses-bar.c, gui-curses-bar-window.c, gui-curses-chat.c, ...
+| src/plugins/        | plugin.c, plugin-api.c, plugin-config.c, plugin-script.c, ...
+| src/plugins/irc/    | irc.c, irc-bar-item.c, irc-buffer.c, ...
+| src/plugins/python/ | dogechat-python.c, dogechat-python-api.c, ...
+|===
+
+Les en-têtes des fichiers C doivent avoir le même nom que le fichier, par
+exemple 'doge-command.h' pour le fichier 'doge-command.c'.
+
+[[naming_convention_structures]]
+==== Structures
+
+Les structures ont le nom 't_X_Y' ou 't_X_Y_Z' :
+
+* 'X' : répertoire/composant (peut être une abréviation)
+* 'Y' : fin du nom de fichier
+* 'Z' : nom de la structure (facultatif)
+
+Exemple : un pseudo IRC (de 'src/plugins/irc/irc-nick.h') :
+
+[source,C]
+----
+struct t_irc_nick
+{
+    char *name;                     /* nickname                              */
+    char *host;                     /* full hostname                         */
+    char *prefixes;                 /* string with prefixes enabled for nick */
+    char prefix[2];                 /* current prefix (higher prefix set in  */
+                                    /* prefixes)                             */
+    int away;                       /* 1 if nick is away                     */
+    char *color;                    /* color for nickname in chat window     */
+    struct t_irc_nick *prev_nick;   /* link to previous nick on channel      */
+    struct t_irc_nick *next_nick;   /* link to next nick on channel          */
+};
+----
+
+[[naming_convention_variables]]
+==== Variables
+
+Les variables globales (en dehors des fonctions) ont le nom 'X_Y_Z' :
+
+* 'X' : répertoire/composant (peut être une abréviation)
+* 'Y' : fin du nom de fichier
+* 'Z' : nom de la variable
+
+Exception : pour les variables des derniers éléments d'une liste, le nom est
+'last_X' (où 'X' est le nom de la variable, en utilisant le singulier).
+
+Exemple : fenêtres (de 'src/gui/gui-window.c') :
+
+[source,C]
+----
+struct t_gui_window *gui_windows = NULL;        /* first window             */
+struct t_gui_window *last_gui_window = NULL;    /* last window              */
+struct t_gui_window *gui_current_window = NULL; /* current window           */
+----
+
+Il n'y a pas de convention pour les variables locales (dans les fonctions).
+La seule recommandation est que le nom soit explicite (et pas trop court). +
+Cependant, les pointeurs vers les structures sont souvent nommés 'ptr_xxxx', par
+exemple un pointeur sur 'struct t_gui_buffer *' sera : '*ptr_buffer'.
+
+[[naming_convention_functions]]
+==== Fonctions
+
+La convention pour les noms des fonctions est le même que celui des
+<<naming_convention_variables,variables>>.
+
+Exemple : création d'une nouvelle fenêtre (de 'src/gui/gui-window.c') :
+
+[source,C]
+----
+/*
+ * Creates a new window.
+ *
+ * Returns pointer to new window, NULL if error.
+ */
+
+struct t_gui_window *
+gui_window_new (struct t_gui_window *parent_window, struct t_gui_buffer *buffer,
+                int x, int y, int width, int height,
+                int width_pct, int height_pct)
+{
+    /* ... */
+
+    return new_window;
+}
+----
+
+[[single_thread]]
+=== Thread unique
+
+DogeChat a un seul thread. Cela signifie que chaque partie du code doit
+s'exécuter très rapidement, et que les appels aux fonctions comme `sleep` sont
+*strictement interdits* (cela est vrai pour le cœur de DogeChat mais aussi les
+extensions et les scripts).
+
+Si pour une raison quelconque vous devez attendre un peu, utilisez `hook_timer`
+avec un "callback".
+
+[[doubly_linked_lists]]
+=== Listes doublement chaînées
+
+La plupart des listes chaînes DogeChat sont doublement chaînées : chaque nœud a
+un pointeur vers le nœud précédent/suivant.
+
+Exemple : liste des tampons (de 'src/gui/gui-buffer.h') :
+
+[source,C]
+----
+struct t_gui_buffer
+{
+    /* data */
+
+    /* ... */
+
+    struct t_gui_buffer *prev_buffer;  /* link to previous buffer           */
+    struct t_gui_buffer *next_buffer;  /* link to next buffer               */
+};
+----
+
+Et les deux pointeurs vers la tête et la fin de liste :
+
+[source,C]
+----
+struct t_gui_buffer *gui_buffers = NULL;           /* first buffer          */
+struct t_gui_buffer *last_gui_buffer = NULL;       /* last buffer           */
+----
+
+[[color_codes_in_strings]]
+=== Codes couleur dans les chaînes
+
+DogeChat utilise ses propres codes couleur dans les chaînes pour afficher les
+attributs (gras, souligné, ...) et les couleurs à l'écran.
+
+Tous les attributs/couleurs sont préfixés par un caractère dans la chaîne, qui
+peuvent être :
+
+* '0x19' : code couleur (suivi par un/des code(s) couleur)
+* '0x1A' : activer un attribut (suivi par un attribut sur un caractère)
+* '0x1B' : supprimer un attribut (suivi par un attribut sur un caractère)
+* '0x1C' : réinitialiser (rien après)
+
+Les attributs autorisés sont (un ou plusieurs caractères) :
+
+* `*` : gras
+* `!` : vidéo inverse
+* `/` : italique
+* `_` : souligné
+* `|` : garder les attributs
+
+Les couleurs possibles sont :
+
+* couleur standard : attributs facultatifs + nombre sur 2 digits
+* couleur étendue : `@` + attributs facultatifs + nombre sur 5 digits
+
+Dans le tableau qui suit, les conventions suivantes sont utilisées :
+
+* `STD` : couleur standard (2 digits)
+* `(A)STD` : couleur standard avec des attributs facultatifs
+  (attributs + 2 digits)
+* `EXT` : couleur étendue (`@` + 5 digits)
+* `(A)EXT` : couleur étendue avec des attributs facultatifs
+  (`@` + attributs + 5 digits)
+* `ATTR` : un caractère d'attribut (`*`, `!`, `/`, `_` ou `|`)
+
+Toutes les combinaisons sont résumées dans ce tableau :
+
+[width="100%",cols="4,2,2,8",options="header"]
+|===
+| Code                               | Exemple                 | Aires         | Description
+| hex[19] + STD                      | hex[19]`01`             | chat + barres | Définir les attributs et la couleur en utilisant une option, voir le tableau ci-dessous
+| hex[19] + EXT                      | hex[19]`@00001`         | chat          | Définir une couleur avec la paire ncurses (utilisé seulement sur le tampon `/color`)
+| hex[19] + "F" + (A)STD             | hex[19]`F*05`           | chat + barres | Définir la couleur de texte (couleur DogeChat)
+| hex[19] + "F" + (A)EXT             | hex[19]`F@00214`        | chat + barres | Définir la couleur de texte (couleur étendue)
+| hex[19] + "B" + STD                | hex[19]`B05`            | chat + barres | Définir la couleur de fond (couleur DogeChat)
+| hex[19] + "B" + EXT                | hex[19]`B@00124`        | chat + barres | Définir le couleur de fond (couleur étendue)
+| hex[19] + "*" + (A)STD             | hex[19]`*05`            | chat + barres | Définir la couleur de texte (couleur DogeChat)
+| hex[19] + "*" + (A)EXT             | hex[19]`*@00214`        | chat + barres | Définir la couleur de texte (couleur étendue)
+| hex[19] + "*" + (A)STD + "," + STD | hex[19]`*08,05`         | chat + barres | Définir la couleur de texte/fond (couleurs DogeChat)
+| hex[19] + "*" + (A)STD + "," + EXT | hex[19]`*01,@00214`     | chat + barres | Définir la couleur de texte (couleur DogeChat) et de fond (couleur étendue)
+| hex[19] + "*" + (A)EXT + "," + STD | hex[19]`*@00214,05`     | chat + barres | Définir la couleur de texte (couleur étendue) et de fond (couleur DogeChat)
+| hex[19] + "*" + (A)EXT + "," + EXT | hex[19]`*@00214,@00017` | chat + barres | Définir la couleur de texte/fond (couleurs étendues)
+| hex[19] + "b" + "F"                | hex[19]`bF`             | barres        | Définir la couleur de texte de la barre
+| hex[19] + "b" + "D"                | hex[19]`bD`             | barres        | Définir la couleur du délimiteur de la barre
+| hex[19] + "b" + "B"                | hex[19]`bB`             | barres        | Définir la couleur de fond de la barre
+| hex[19] + "b" + "_"                | hex[19]`b_`             | barre input   | Caractère de démarrage dans l'entrée (utilisé seulement dans l'objet "input_text")
+| hex[19] + "b" + "-"                | hex[19]`b-`             | barre input   | Caractère de démarrage caché dans l'entrée (utilisé seulement dans l'objet "input_text")
+| hex[19] + "b" + "#"                | hex[19]`b#`             | barre input   | Caractère de déplacement du curseur (utilisé seulement dans l'objet "input_text")
+| hex[19] + "b" + "i"                | hex[19]`bi`             | barres        | Début d'objet
+| hex[19] + "b" + "l" (lower L)      | hex[19]`bl`             | barres        | Ligne de démarrage d'objet
+| hex[19] + "E"                      | hex[19]`E`              | chat + barres | Texte mis en valeur _(DogeChat ≥ 0.4.2)_
+| hex[19] + hex[1C]                  | hex[19]hex[1C]          | chat + barres | Réinitialiser la couleur (garder les attributs)
+| hex[1A] + ATTR                     | hex[1A]`*`              | chat + barres | Activer un attribut
+| hex[1B] + ATTR                     | hex[1B]`*`              | chat + barres | Supprimer un attribut
+| hex[1C]                            | hex[1C]                 | chat + barres | Réinitialiser les attributs et la couleur
+|===
+
+Les codes couleur utilisant des options (voir 't_gui_color_enum', dans le
+fichier 'src/gui/gui-color.h') :
+
+[width="70%",cols="^1m,10",options="header"]
+|===
+| Code | Option
+| 00   | dogechat.color.separator
+| 01   | dogechat.color.chat
+| 02   | dogechat.color.chat_time
+| 03   | dogechat.color.chat_time_delimiters
+| 04   | dogechat.color.chat_prefix_error
+| 05   | dogechat.color.chat_prefix_network
+| 06   | dogechat.color.chat_prefix_action
+| 07   | dogechat.color.chat_prefix_join
+| 08   | dogechat.color.chat_prefix_quit
+| 09   | dogechat.color.chat_prefix_more
+| 10   | dogechat.color.chat_prefix_suffix
+| 11   | dogechat.color.chat_buffer
+| 12   | dogechat.color.chat_server
+| 13   | dogechat.color.chat_channel
+| 14   | dogechat.color.chat_nick
+| 15   | dogechat.color.chat_nick_self
+| 16   | dogechat.color.chat_nick_other
+| 17   | _(n'est plus utilisé depuis DogeChat 0.3.4)_
+| 18   | _(n'est plus utilisé depuis DogeChat 0.3.4)_
+| 19   | _(n'est plus utilisé depuis DogeChat 0.3.4)_
+| 20   | _(n'est plus utilisé depuis DogeChat 0.3.4)_
+| 21   | _(n'est plus utilisé depuis DogeChat 0.3.4)_
+| 22   | _(n'est plus utilisé depuis DogeChat 0.3.4)_
+| 23   | _(n'est plus utilisé depuis DogeChat 0.3.4)_
+| 24   | _(n'est plus utilisé depuis DogeChat 0.3.4)_
+| 25   | _(n'est plus utilisé depuis DogeChat 0.3.4)_
+| 26   | _(n'est plus utilisé depuis DogeChat 0.3.4)_
+| 27   | dogechat.color.chat_host
+| 28   | dogechat.color.chat_delimiters
+| 29   | dogechat.color.chat_highlight
+| 30   | dogechat.color.chat_read_marker
+| 31   | dogechat.color.chat_text_found
+| 32   | dogechat.color.chat_value
+| 33   | dogechat.color.chat_prefix_buffer
+| 34   | dogechat.color.chat_tags _(DogeChat ≥ 0.3.6)_
+| 35   | dogechat.color.chat_inactive_window _(DogeChat ≥ 0.3.6)_
+| 36   | dogechat.color.chat_inactive_buffer _(DogeChat ≥ 0.3.6)_
+| 37   | dogechat.color.chat_prefix_buffer_inactive_buffer _(DogeChat ≥ 0.3.6)_
+| 38   | dogechat.color.chat_nick_offline _(DogeChat ≥ 0.3.9)_
+| 39   | dogechat.color.chat_nick_offline_highlight _(DogeChat ≥ 0.3.9)_
+| 40   | dogechat.color.chat_nick_prefix _(DogeChat ≥ 0.4.1)_
+| 41   | dogechat.color.chat_nick_suffix _(DogeChat ≥ 0.4.1)_
+| 42   | dogechat.color.emphasized _(DogeChat ≥ 0.4.2)_
+| 43   | dogechat.color.chat_day_change _(DogeChat ≥ 0.4.2)_
+| 44   | dogechat.color.chat_value_null _(DogeChat ≥ 1.4)_
+|===
+
+Les couleurs DogeChat sont :
+
+[width="70%",cols="^1m,6",options="header"]
+|===
+| Code | Couleur
+| 00   | Défaut (couleur de texte/fond du terminal)
+| 01   | Noir
+| 02   | Gris foncé
+| 03   | Rouge foncé
+| 04   | Rouge clair
+| 05   | Vert foncé
+| 06   | Vert clair
+| 07   | Marron
+| 08   | Jaune
+| 09   | Bleu foncé
+| 10   | Bleu clair
+| 11   | Magenta foncé
+| 12   | Magenta clair
+| 13   | Cyan foncé
+| 14   | Cyan clair
+| 15   | Gris
+| 16   | Blanc
+|===
+
+Exemples de codes couleur :
+
+[width="70%",cols="1,2",options="header"]
+|===
+| Code                      | Description
+| hex[19]`01`               | Couleur de l'option "01" (texte de discussion)
+| hex[19]`*08,03`           | Jaune sur rouge
+| hex[19]`*@00214`          | Orange (couleur étendue 214)
+| hex[19]`*@*_00214,@00017` | Orange (214) gras souligné sur bleu foncé (17)
+| hex[1A]`_`                | Activer le souligné
+| hex[1B]`_`                | Supprimer le souligné
+| hex[1C]                   | Réinitialiser les attributs et la couleur
+|===
+
+[[plugin_internals]]
+== Intérieur des extensions
+
+Le fichier 'src/plugins/dogechat-plugin.h' définit et exporte toutes les
+fonctions disponibles dans l'API.
+
+Une structure appelée 't_dogechat_plugin' est utilisée pour stocker les
+informations sur l'extension (nom de fichier, nom, auteur, description, ...) et
+toutes les fonctions de l'API, sous forme de pointeurs vers les fonctions
+DogeChat.
+
+Et puis des macros sont utilisées pour appeler ces fonctions.
+
+Par exemple, la fonction 'hook_timer' est définie dans la structure
+'t_dogechat_plugin' comme ceci :
+
+[source,C]
+----
+struct t_hook *(*hook_timer) (struct t_dogechat_plugin *plugin,
+                              long interval,
+                              int align_second,
+                              int max_calls,
+                              int (*callback)(void *data,
+                                              int remaining_calls),
+                              void *callback_data);
+----
+
+Et la macro utilisée pour appeler cette fonction est :
+
+[source,C]
+----
+#define dogechat_hook_timer(__interval, __align_second, __max_calls,     \
+                           __callback, __data)                          \
+    dogechat_plugin->hook_timer(dogechat_plugin, __interval,              \
+                               __align_second, __max_calls,             \
+                               __callback, __data)
+----
+
+Donc dans une extension, l'appel à cette fonction sera par exemple :
+
+[source,C]
+----
+server->hook_timer_sasl = dogechat_hook_timer (timeout * 1000,
+                                              0, 1,
+                                              &irc_server_timer_sasl_cb,
+                                              server);
+----
+
+[[contribute]]
+== Contribuer à DogeChat
+
+[[git_repository]]
+=== Dépôt Git
+
+Le dépôt Git est à cette URL : https://github.com/dogechat/dogechat
+
+Tout patch pour un bug ou une nouvelle fonctionnalité doit être effectué sur la
+branche master, le format préféré étant une "pull request" sur GitHub. Un patch
+peut aussi être envoyé par e-mail (fait avec `git diff` ou `git format-patch`).
+
+Le format du message de commit est le suivant (pour fermer un bug GitHub) :
+
+----
+component: fix a problem (closes #123)
+----
+
+Pour un bug Savannah :
+
+----
+component: fix a problem (bug #12345)
+----
+
+Où 'component' est :
+
+* pour le cœur DogeChat : 'core' (les fichiers dans le répertoire racine, 'po/'
+  et 'src/', sauf 'src/plugins/')
+* fichiers de documentation : 'doc' (fichiers dans le répertoire 'doc/')
+* nom d'une extension : 'irc', 'python', 'relay', ... (fichiers dans le
+  répertoire 'src/plugins/')
+
+Quelques règles à suivre :
+
+* utilisez seulement l'anglais
+* utilisez des verbes à l'infinitif
+* si le commit est relatif au tracker, écrivez-le entre parenthèses après le
+  message, avec ce format :
+** GitHub : closes #123
+** Savannah : bug #12345, task #12345, patch #12345
+
+Exemples de messages de commit :
+
+----
+irc: add command /unquiet (closes #36)
+core: add callback "nickcmp" for nick comparison in buffers
+irc: fix freeze when reading on socket with SSL enabled (bug #35097)
+ruby: add detection of ruby version 1.9.3 in cmake
+python: fix crash when unloading a script without pointer to interpreter
+core: update Japanese translations (patch #7783)
+----
+
+[[translations]]
+=== Traductions
+
+[[gettext]]
+==== Gettext
+
+Les fichiers gettext sont dans le répertoire 'po/'.
+
+Si vous souhaitez initialiser une nouvelle langue, utilisez la commande
+`msginit`. Par exemple pour créer un fichier qui est prêt à traduire en
+néerlandais :
+
+----
+$ cd po
+$ msginit -i dogechat.pot -l nl_NL -o nl.po
+----
+
+La langue de base pour DogeChat est l'anglais, donc vous devez évidemment
+comprendre parfaitement l'anglais pour traduire vers votre langue.
+
+Une fois terminé, vous *devez* vérifier votre fichier avec le script
+'msgcheck.py' (https://github.com/flashcode/msgcheck) :
+
+----
+$ msgcheck.py xx.po
+----
+
+[[build_autogen_files]]
+===== Construire les fichiers auto-générés
+
+Les fichiers dans le répertoire 'doc/XX/autogen/' sont automatiquement générés
+par le script 'doc/docgen.py'.
+
+Copiez ce script python dans votre répertoire python (par exemple
+'~/.dogechat/python').
+Vous pouvez alors charger le script dans votre DogeChat, et configurer le chemin
+vers votre répertoire '/doc' :
+
+----
+/python load docgen.py
+/set plugins.var.python.docgen.path "~/src/dogechat/doc"
+----
+
+Créez alors cet alias pour construire les fichiers :
+
+----
+/alias add doc /perl unload; /python unload; /ruby unload; /lua unload; /tcl unload; /guile unload; /javascript unload; /python load docgen.py; /wait 1ms /docgen
+----
+
+Et utilisez la commande `/doc` pour construire tous les fichiers, pour toutes
+les langues.
+
+[IMPORTANT]
+En utilisant la commande `/doc`, assurez-vous que toutes les extensions (irc,
+charset, ...) sont chargées, car les fichiers sont construits en utilisant les
+données actuellement en mémoire.
+
+[[asciidoc]]
+==== Asciidoc
+
+Les fichiers asciidoc donc dans le répertoire 'doc/XX/' où 'XX' est la langue
+(en, fr, de, it, ...).
+
+Faites d'abord une copie du fichier asciidoc en anglais (dans le répertoire
+'doc/en/'), puis travaillez dessus.
+
+Les traductions manquantes dans les fichiers sont indiquées par cette chaîne :
+
+----
+// TRANSLATION MISSING
+----
+
+Vous devez traduire tout le fichier sauf les liens et les mots-clés spéciaux
+pour les notes, avertissements, ... Ces mots doivent être gardés tels quels :
+
+----
+[[link_name]]
+<<link_name>>
+
+[NOTE]
+[TIP]
+[IMPORTANT]
+[WARNING]
+[CAUTION]
+----
+
+Lorsqu'il y a un nom après `<<link_name>>`, alors vous devez le traduire :
+
+----
+<<link_name,ce texte doit être traduit>>
+----

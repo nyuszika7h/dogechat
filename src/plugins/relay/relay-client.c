@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -33,11 +33,11 @@
 #include <gnutls/gnutls.h>
 #endif
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "relay.h"
 #include "relay-client.h"
 #include "irc/relay-irc.h"
-#include "weechat/relay-weechat.h"
+#include "dogechat/relay-dogechat.h"
 #include "relay-config.h"
 #include "relay-buffer.h"
 #include "relay-network.h"
@@ -170,7 +170,7 @@ relay_client_send_signal (struct t_relay_client *client)
     snprintf (signal, sizeof (signal),
               "relay_client_%s",
               relay_client_status_name[client->status]);
-    weechat_hook_signal_send (signal, WEECHAT_HOOK_SIGNAL_POINTER, client);
+    dogechat_hook_signal_send (signal, DOGECHAT_HOOK_SIGNAL_POINTER, client);
 }
 
 /*
@@ -215,50 +215,50 @@ relay_client_handshake_timer_cb (void *data, int remaining_calls)
     if (rc == GNUTLS_E_SUCCESS)
     {
         /* handshake OK, set status to "connected" */
-        weechat_unhook (client->hook_timer_handshake);
+        dogechat_unhook (client->hook_timer_handshake);
         client->hook_timer_handshake = NULL;
         client->gnutls_handshake_ok = 1;
         relay_client_set_status (client, RELAY_STATUS_CONNECTED);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
     if (gnutls_error_is_fatal (rc))
     {
         /* handshake error, disconnect client */
-        weechat_printf_tags (NULL, "relay_client",
+        dogechat_printf_tags (NULL, "relay_client",
                              _("%s%s: TLS handshake failed for client %s%s%s: "
                                "error %d %s"),
-                             weechat_prefix ("error"),
+                             dogechat_prefix ("error"),
                              RELAY_PLUGIN_NAME,
                              RELAY_COLOR_CHAT_CLIENT,
                              client->desc,
                              RELAY_COLOR_CHAT,
                              rc,
                              gnutls_strerror (rc));
-        weechat_unhook (client->hook_timer_handshake);
+        dogechat_unhook (client->hook_timer_handshake);
         client->hook_timer_handshake = NULL;
         relay_client_set_status (client, RELAY_STATUS_DISCONNECTED);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
     if (remaining_calls == 0)
     {
         /* handshake timeout, disconnect client */
-        weechat_printf_tags (NULL, "relay_client",
+        dogechat_printf_tags (NULL, "relay_client",
                              _("%s%s: TLS handshake timeout for client %s%s%s"),
-                             weechat_prefix ("error"),
+                             dogechat_prefix ("error"),
                              RELAY_PLUGIN_NAME,
                              RELAY_COLOR_CHAT_CLIENT,
                              client->desc,
                              RELAY_COLOR_CHAT);
-        weechat_unhook (client->hook_timer_handshake);
+        dogechat_unhook (client->hook_timer_handshake);
         client->hook_timer_handshake = NULL;
         relay_client_set_status (client, RELAY_STATUS_DISCONNECTED);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
     /* handshake in progress, we will try again on next call to timer */
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 #endif /* HAVE_GNUTLS */
 
@@ -291,7 +291,7 @@ relay_client_recv_text (struct t_relay_client *client, const char *data)
     if (pos)
     {
         /* print message in raw buffer */
-        raw_msg = weechat_strndup (client->partial_message,
+        raw_msg = dogechat_strndup (client->partial_message,
                                    pos - client->partial_message + 1);
         if (raw_msg)
         {
@@ -302,7 +302,7 @@ relay_client_recv_text (struct t_relay_client *client, const char *data)
 
         pos[0] = '\0';
 
-        lines = weechat_string_split (client->partial_message, "\n",
+        lines = dogechat_string_split (client->partial_message, "\n",
                                       0, 0, &num_lines);
         if (lines)
         {
@@ -349,13 +349,13 @@ relay_client_recv_text (struct t_relay_client *client, const char *data)
                                 case -1:
                                     relay_websocket_send_http (client,
                                                                "400 Bad Request");
-                                    if (weechat_relay_plugin->debug >= 1)
+                                    if (dogechat_relay_plugin->debug >= 1)
                                     {
-                                        weechat_printf_tags (NULL, "relay_client",
+                                        dogechat_printf_tags (NULL, "relay_client",
                                                              _("%s%s: invalid websocket "
                                                                "handshake received for "
                                                                "client %s%s%s"),
-                                                             weechat_prefix ("error"),
+                                                             dogechat_prefix ("error"),
                                                              RELAY_PLUGIN_NAME,
                                                              RELAY_COLOR_CHAT_CLIENT,
                                                              client->desc,
@@ -365,14 +365,14 @@ relay_client_recv_text (struct t_relay_client *client, const char *data)
                                 case -2:
                                     relay_websocket_send_http (client,
                                                                "403 Forbidden");
-                                    if (weechat_relay_plugin->debug >= 1)
+                                    if (dogechat_relay_plugin->debug >= 1)
                                     {
-                                        weechat_printf_tags (NULL, "relay_client",
+                                        dogechat_printf_tags (NULL, "relay_client",
                                                              _("%s%s: origin \"%s\" "
                                                                "not allowed for websocket"),
-                                                             weechat_prefix ("error"),
+                                                             dogechat_prefix ("error"),
                                                              RELAY_PLUGIN_NAME,
-                                                             weechat_hashtable_get (client->http_headers,
+                                                             dogechat_hashtable_get (client->http_headers,
                                                                                     "Origin"));
                                     }
                                     break;
@@ -380,11 +380,11 @@ relay_client_recv_text (struct t_relay_client *client, const char *data)
                             relay_client_set_status (client, RELAY_STATUS_DISCONNECTED);
                         }
 
-                        ptr_real_ip = weechat_hashtable_get (
+                        ptr_real_ip = dogechat_hashtable_get (
                             client->http_headers, "X-Real-IP");
                         if (ptr_real_ip)
                         {
-                            weechat_printf_tags (
+                            dogechat_printf_tags (
                                 NULL, "relay_client",
                                 _("%s: websocket client %s%s%s has real IP "
                                   "address \"%s\""),
@@ -396,7 +396,7 @@ relay_client_recv_text (struct t_relay_client *client, const char *data)
                         }
 
                         /* remove HTTP headers */
-                        weechat_hashtable_free (client->http_headers);
+                        dogechat_hashtable_free (client->http_headers);
                         client->http_headers = NULL;
 
                         /*
@@ -405,7 +405,7 @@ relay_client_recv_text (struct t_relay_client *client, const char *data)
                          */
                         free (client->partial_message);
                         client->partial_message = NULL;
-                        weechat_string_free_split (lines);
+                        dogechat_string_free_split (lines);
                         return;
                     }
                 }
@@ -414,8 +414,8 @@ relay_client_recv_text (struct t_relay_client *client, const char *data)
                     /* receive text from client */
                     switch (client->protocol)
                     {
-                        case RELAY_PROTOCOL_WEECHAT:
-                            relay_weechat_recv (client, lines[i]);
+                        case RELAY_PROTOCOL_DOGECHAT:
+                            relay_dogechat_recv (client, lines[i]);
                             break;
                         case RELAY_PROTOCOL_IRC:
                             relay_irc_recv (client, lines[i]);
@@ -425,7 +425,7 @@ relay_client_recv_text (struct t_relay_client *client, const char *data)
                     }
                 }
             }
-            weechat_string_free_split (lines);
+            dogechat_string_free_split (lines);
         }
         if (pos[1])
         {
@@ -460,7 +460,7 @@ relay_client_recv_cb (void *arg_client, int fd)
     client = (struct t_relay_client *)arg_client;
 
     if (client->status != RELAY_STATUS_CONNECTED)
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
 
 #ifdef HAVE_GNUTLS
     if (client->ssl)
@@ -481,7 +481,7 @@ relay_client_recv_cb (void *arg_client, int fd)
          */
         if (client->bytes_recv == 0)
         {
-            if (relay_websocket_is_http_get_weechat (buffer))
+            if (relay_websocket_is_http_get_dogechat (buffer))
             {
                 /*
                  * web socket is just initializing for now, it's not accepted
@@ -489,9 +489,9 @@ relay_client_recv_cb (void *arg_client, int fd)
                  * valid or not)
                  */
                 client->websocket = 1;
-                client->http_headers = weechat_hashtable_new (32,
-                                                              WEECHAT_HASHTABLE_STRING,
-                                                              WEECHAT_HASHTABLE_STRING,
+                client->http_headers = dogechat_hashtable_new (32,
+                                                              DOGECHAT_HASHTABLE_STRING,
+                                                              DOGECHAT_HASHTABLE_STRING,
                                                               NULL,
                                                               NULL);
             }
@@ -518,20 +518,20 @@ relay_client_recv_cb (void *arg_client, int fd)
                  *   Pong
                  *   frame is not expected."
                  */
-                return WEECHAT_RC_OK;
+                return DOGECHAT_RC_OK;
             }
             if (!rc)
             {
                 /* error when decoding frame: close connection */
-                weechat_printf_tags (NULL, "relay_client",
+                dogechat_printf_tags (NULL, "relay_client",
                                      _("%s%s: error decoding websocket frame "
                                        "for client %s%s%s"),
-                                     weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                                     dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                                      RELAY_COLOR_CHAT_CLIENT,
                                      client->desc,
                                      RELAY_COLOR_CHAT);
                 relay_client_set_status (client, RELAY_STATUS_DISCONNECTED);
-                return WEECHAT_RC_OK;
+                return DOGECHAT_RC_OK;
             }
             ptr_buffer = decoded;
         }
@@ -557,10 +557,10 @@ relay_client_recv_cb (void *arg_client, int fd)
             if ((num_read == 0)
                 || ((num_read != GNUTLS_E_AGAIN) && (num_read != GNUTLS_E_INTERRUPTED)))
             {
-                weechat_printf_tags (NULL, "relay_client",
+                dogechat_printf_tags (NULL, "relay_client",
                                      _("%s%s: reading data on socket for "
                                        "client %s%s%s: error %d %s"),
-                                     weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                                     dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                                      RELAY_COLOR_CHAT_CLIENT,
                                      client->desc,
                                      RELAY_COLOR_CHAT,
@@ -576,10 +576,10 @@ relay_client_recv_cb (void *arg_client, int fd)
             if ((num_read == 0)
                 || ((errno != EAGAIN) && (errno != EWOULDBLOCK)))
             {
-                weechat_printf_tags (NULL, "relay_client",
+                dogechat_printf_tags (NULL, "relay_client",
                                      _("%s%s: reading data on socket for "
                                        "client %s%s%s: error %d %s"),
-                                     weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                                     dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                                      RELAY_COLOR_CHAT_CLIENT,
                                      client->desc,
                                      RELAY_COLOR_CHAT,
@@ -591,7 +591,7 @@ relay_client_recv_cb (void *arg_client, int fd)
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -732,7 +732,7 @@ relay_client_send (struct t_relay_client *client, const char *data,
     }
     if (message_raw_buffer)
     {
-        if (weechat_relay_plugin->debug >= 2)
+        if (dogechat_relay_plugin->debug >= 2)
         {
             raw_msg[0] = message_raw_buffer;
             raw_size[0] = strlen (message_raw_buffer) + 1;
@@ -841,10 +841,10 @@ relay_client_send (struct t_relay_client *client, const char *data,
                 }
                 else
                 {
-                    weechat_printf_tags (NULL, "relay_client",
+                    dogechat_printf_tags (NULL, "relay_client",
                                          _("%s%s: sending data to client %s%s%s: "
                                            "error %d %s"),
-                                         weechat_prefix ("error"),
+                                         dogechat_prefix ("error"),
                                          RELAY_PLUGIN_NAME,
                                          RELAY_COLOR_CHAT_CLIENT,
                                          client->desc,
@@ -865,10 +865,10 @@ relay_client_send (struct t_relay_client *client, const char *data,
                 }
                 else
                 {
-                    weechat_printf_tags (NULL, "relay_client",
+                    dogechat_printf_tags (NULL, "relay_client",
                                          _("%s%s: sending data to client %s%s%s: "
                                            "error %d %s"),
-                                         weechat_prefix ("error"),
+                                         dogechat_prefix ("error"),
                                          RELAY_PLUGIN_NAME,
                                          RELAY_COLOR_CHAT_CLIENT,
                                          client->desc,
@@ -903,7 +903,7 @@ relay_client_timer_cb (void *data, int remaining_calls)
     (void) data;
     (void) remaining_calls;
 
-    purge_delay = weechat_config_integer (relay_config_network_clients_purge_delay);
+    purge_delay = dogechat_config_integer (relay_config_network_clients_purge_delay);
 
     current_time = time (NULL);
 
@@ -1006,10 +1006,10 @@ relay_client_timer_cb (void *data, int remaining_calls)
                         }
                         else
                         {
-                            weechat_printf_tags (NULL, "relay_client",
+                            dogechat_printf_tags (NULL, "relay_client",
                                                  _("%s%s: sending data to client "
                                                    "%s%s%s: error %d %s"),
-                                                 weechat_prefix ("error"),
+                                                 dogechat_prefix ("error"),
                                                  RELAY_PLUGIN_NAME,
                                                  RELAY_COLOR_CHAT_CLIENT,
                                                  ptr_client->desc,
@@ -1030,10 +1030,10 @@ relay_client_timer_cb (void *data, int remaining_calls)
                         }
                         else
                         {
-                            weechat_printf_tags (NULL, "relay_client",
+                            dogechat_printf_tags (NULL, "relay_client",
                                                  _("%s%s: sending data to client "
                                                    "%s%s%s: error %d %s"),
-                                                 weechat_prefix ("error"),
+                                                 dogechat_prefix ("error"),
                                                  RELAY_PLUGIN_NAME,
                                                  RELAY_COLOR_CHAT_CLIENT,
                                                  ptr_client->desc,
@@ -1051,7 +1051,7 @@ relay_client_timer_cb (void *data, int remaining_calls)
         ptr_client = ptr_next_client;
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1096,7 +1096,7 @@ relay_client_new (int sock, const char *address, struct t_relay_server *server)
         new_client->bytes_sent = 0;
         switch (new_client->protocol)
         {
-            case RELAY_PROTOCOL_WEECHAT:
+            case RELAY_PROTOCOL_DOGECHAT:
                 new_client->recv_data_type = RELAY_CLIENT_DATA_TEXT;
                 new_client->send_data_type = RELAY_CLIENT_DATA_BINARY;
                 break;
@@ -1118,11 +1118,11 @@ relay_client_new (int sock, const char *address, struct t_relay_server *server)
         {
             if (!relay_network_init_ssl_cert_key_ok)
             {
-                weechat_printf_tags (NULL, "relay_client",
+                dogechat_printf_tags (NULL, "relay_client",
                                      _("%s%s: warning: no SSL certificate/key "
                                        "found (option "
                                        "relay.network.ssl_cert_key)"),
-                                     weechat_prefix ("error"),
+                                     dogechat_prefix ("error"),
                                      RELAY_PLUGIN_NAME);
             }
             new_client->status = RELAY_STATUS_CONNECTING;
@@ -1155,11 +1155,11 @@ relay_client_new (int sock, const char *address, struct t_relay_server *server)
             gnutls_certificate_server_set_request (new_client->gnutls_sess, GNUTLS_CERT_IGNORE);
             gnutls_transport_set_ptr (new_client->gnutls_sess,
                                       (gnutls_transport_ptr_t) ((ptrdiff_t) new_client->sock));
-            ptr_option = weechat_config_get ("weechat.network.gnutls_handshake_timeout");
-            new_client->hook_timer_handshake = weechat_hook_timer (1000 / 10,
+            ptr_option = dogechat_config_get ("dogechat.network.gnutls_handshake_timeout");
+            new_client->hook_timer_handshake = dogechat_hook_timer (1000 / 10,
                                                                    0,
                                                                    (ptr_option) ?
-                                                                   weechat_config_integer (ptr_option) * 10 : 30 * 10,
+                                                                   dogechat_config_integer (ptr_option) * 10 : 30 * 10,
                                                                    &relay_client_handshake_timer_cb,
                                                                    new_client);
         }
@@ -1168,8 +1168,8 @@ relay_client_new (int sock, const char *address, struct t_relay_server *server)
         new_client->protocol_data = NULL;
         switch (new_client->protocol)
         {
-            case RELAY_PROTOCOL_WEECHAT:
-                relay_weechat_alloc (new_client);
+            case RELAY_PROTOCOL_DOGECHAT:
+                relay_dogechat_alloc (new_client);
                 break;
             case RELAY_PROTOCOL_IRC:
                 relay_irc_alloc (new_client);
@@ -1189,7 +1189,7 @@ relay_client_new (int sock, const char *address, struct t_relay_server *server)
             last_relay_client = new_client;
         relay_clients = new_client;
 
-        weechat_printf_tags (NULL, "relay_client",
+        dogechat_printf_tags (NULL, "relay_client",
                              _("%s: new client on port %d: %s%s%s"),
                              RELAY_PLUGIN_NAME,
                              server->port,
@@ -1197,7 +1197,7 @@ relay_client_new (int sock, const char *address, struct t_relay_server *server)
                              new_client->desc,
                              RELAY_COLOR_CHAT);
 
-        new_client->hook_fd = weechat_hook_fd (new_client->sock,
+        new_client->hook_fd = dogechat_hook_fd (new_client->sock,
                                                1, 0, 0,
                                                &relay_client_recv_cb,
                                                new_client);
@@ -1205,20 +1205,20 @@ relay_client_new (int sock, const char *address, struct t_relay_server *server)
         relay_client_count++;
 
         if (!relay_buffer
-            && weechat_config_boolean (relay_config_look_auto_open_buffer))
+            && dogechat_config_boolean (relay_config_look_auto_open_buffer))
         {
             relay_buffer_open ();
         }
 
         relay_client_send_signal (new_client);
 
-        relay_buffer_refresh (WEECHAT_HOTLIST_PRIVATE);
+        relay_buffer_refresh (DOGECHAT_HOTLIST_PRIVATE);
     }
     else
     {
-        weechat_printf_tags (NULL, "relay_client",
+        dogechat_printf_tags (NULL, "relay_client",
                              _("%s%s: not enough memory for new client"),
-                             weechat_prefix ("error"), RELAY_PLUGIN_NAME);
+                             dogechat_prefix ("error"), RELAY_PLUGIN_NAME);
     }
 
     return new_client;
@@ -1239,47 +1239,47 @@ relay_client_new_with_infolist (struct t_infolist *infolist)
     new_client = malloc (sizeof (*new_client));
     if (new_client)
     {
-        new_client->id = weechat_infolist_integer (infolist, "id");
+        new_client->id = dogechat_infolist_integer (infolist, "id");
         new_client->desc = NULL;
-        new_client->sock = weechat_infolist_integer (infolist, "sock");
-        new_client->ssl = weechat_infolist_integer (infolist, "ssl");
+        new_client->sock = dogechat_infolist_integer (infolist, "sock");
+        new_client->ssl = dogechat_infolist_integer (infolist, "ssl");
 #ifdef HAVE_GNUTLS
         new_client->gnutls_sess = NULL;
         new_client->hook_timer_handshake = NULL;
         new_client->gnutls_handshake_ok = 0;
 #endif /* HAVE_GNUTLS */
-        new_client->websocket = weechat_infolist_integer (infolist, "websocket");
+        new_client->websocket = dogechat_infolist_integer (infolist, "websocket");
         new_client->http_headers = NULL;
-        new_client->address = strdup (weechat_infolist_string (infolist, "address"));
-        new_client->status = weechat_infolist_integer (infolist, "status");
-        new_client->protocol = weechat_infolist_integer (infolist, "protocol");
-        str = weechat_infolist_string (infolist, "protocol_string");
+        new_client->address = strdup (dogechat_infolist_string (infolist, "address"));
+        new_client->status = dogechat_infolist_integer (infolist, "status");
+        new_client->protocol = dogechat_infolist_integer (infolist, "protocol");
+        str = dogechat_infolist_string (infolist, "protocol_string");
         new_client->protocol_string = (str) ? strdup (str) : NULL;
-        str = weechat_infolist_string (infolist, "protocol_args");
+        str = dogechat_infolist_string (infolist, "protocol_args");
         new_client->protocol_args = (str) ? strdup (str) : NULL;
-        new_client->listen_start_time = weechat_infolist_time (infolist, "listen_start_time");
-        new_client->start_time = weechat_infolist_time (infolist, "start_time");
-        new_client->end_time = weechat_infolist_time (infolist, "end_time");
+        new_client->listen_start_time = dogechat_infolist_time (infolist, "listen_start_time");
+        new_client->start_time = dogechat_infolist_time (infolist, "start_time");
+        new_client->end_time = dogechat_infolist_time (infolist, "end_time");
         if (new_client->sock >= 0)
         {
-            new_client->hook_fd = weechat_hook_fd (new_client->sock,
+            new_client->hook_fd = dogechat_hook_fd (new_client->sock,
                                                    1, 0, 0,
                                                    &relay_client_recv_cb,
                                                    new_client);
         }
         else
             new_client->hook_fd = NULL;
-        new_client->last_activity = weechat_infolist_time (infolist, "last_activity");
-        sscanf (weechat_infolist_string (infolist, "bytes_recv"),
+        new_client->last_activity = dogechat_infolist_time (infolist, "last_activity");
+        sscanf (dogechat_infolist_string (infolist, "bytes_recv"),
                 "%llu", &(new_client->bytes_recv));
-        sscanf (weechat_infolist_string (infolist, "bytes_sent"),
+        sscanf (dogechat_infolist_string (infolist, "bytes_sent"),
                 "%llu", &(new_client->bytes_sent));
-        new_client->recv_data_type = weechat_infolist_integer (infolist, "recv_data_type");
-        new_client->send_data_type = weechat_infolist_integer (infolist, "send_data_type");
-        str = weechat_infolist_string (infolist, "partial_message");
+        new_client->recv_data_type = dogechat_infolist_integer (infolist, "recv_data_type");
+        new_client->send_data_type = dogechat_infolist_integer (infolist, "send_data_type");
+        str = dogechat_infolist_string (infolist, "partial_message");
         new_client->partial_message = (str) ? strdup (str) : NULL;
 
-        str = weechat_infolist_string (infolist, "desc");
+        str = dogechat_infolist_string (infolist, "desc");
         if (str)
             new_client->desc = strdup (str);
         else
@@ -1287,8 +1287,8 @@ relay_client_new_with_infolist (struct t_infolist *infolist)
 
         switch (new_client->protocol)
         {
-            case RELAY_PROTOCOL_WEECHAT:
-                relay_weechat_alloc_with_infolist (new_client,
+            case RELAY_PROTOCOL_DOGECHAT:
+                relay_dogechat_alloc_with_infolist (new_client,
                                                    infolist);
                 break;
             case RELAY_PROTOCOL_IRC:
@@ -1341,20 +1341,20 @@ relay_client_set_status (struct t_relay_client *client,
 #ifdef HAVE_GNUTLS
         if (client->hook_timer_handshake)
         {
-            weechat_unhook (client->hook_timer_handshake);
+            dogechat_unhook (client->hook_timer_handshake);
             client->hook_timer_handshake = NULL;
         }
         client->gnutls_handshake_ok = 0;
 #endif /* HAVE_GNUTLS */
         if (client->hook_fd)
         {
-            weechat_unhook (client->hook_fd);
+            dogechat_unhook (client->hook_fd);
             client->hook_fd = NULL;
         }
         switch (client->protocol)
         {
-            case RELAY_PROTOCOL_WEECHAT:
-                relay_weechat_close_connection (client);
+            case RELAY_PROTOCOL_DOGECHAT:
+                relay_dogechat_close_connection (client);
                 break;
             case RELAY_PROTOCOL_IRC:
                 relay_irc_close_connection (client);
@@ -1365,17 +1365,17 @@ relay_client_set_status (struct t_relay_client *client,
         switch (client->status)
         {
             case RELAY_STATUS_AUTH_FAILED:
-                weechat_printf_tags (NULL, "relay_client",
+                dogechat_printf_tags (NULL, "relay_client",
                                      _("%s%s: authentication failed with "
                                        "client %s%s%s"),
-                                     weechat_prefix ("error"),
+                                     dogechat_prefix ("error"),
                                      RELAY_PLUGIN_NAME,
                                      RELAY_COLOR_CHAT_CLIENT,
                                      client->desc,
                                      RELAY_COLOR_CHAT);
                 break;
             case RELAY_STATUS_DISCONNECTED:
-                weechat_printf_tags (NULL, "relay_client",
+                dogechat_printf_tags (NULL, "relay_client",
                                      _("%s: disconnected from client %s%s%s"),
                                      RELAY_PLUGIN_NAME,
                                      RELAY_COLOR_CHAT_CLIENT,
@@ -1403,7 +1403,7 @@ relay_client_set_status (struct t_relay_client *client,
 
     relay_client_send_signal (client);
 
-    relay_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+    relay_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
 }
 
 /*
@@ -1442,20 +1442,20 @@ relay_client_free (struct t_relay_client *client)
         free (client->protocol_args);
 #ifdef HAVE_GNUTLS
     if (client->hook_timer_handshake)
-        weechat_unhook (client->hook_timer_handshake);
+        dogechat_unhook (client->hook_timer_handshake);
 #endif /* HAVE_GNUTLS */
     if (client->http_headers)
-        weechat_hashtable_free (client->http_headers);
+        dogechat_hashtable_free (client->http_headers);
     if (client->hook_fd)
-        weechat_unhook (client->hook_fd);
+        dogechat_unhook (client->hook_fd);
     if (client->partial_message)
         free (client->partial_message);
     if (client->protocol_data)
     {
         switch (client->protocol)
         {
-            case RELAY_PROTOCOL_WEECHAT:
-                relay_weechat_free (client);
+            case RELAY_PROTOCOL_DOGECHAT:
+                relay_dogechat_free (client);
                 break;
             case RELAY_PROTOCOL_IRC:
                 relay_irc_free (client);
@@ -1538,67 +1538,67 @@ relay_client_add_to_infolist (struct t_infolist *infolist,
     if (!infolist || !client)
         return 0;
 
-    ptr_item = weechat_infolist_new_item (infolist);
+    ptr_item = dogechat_infolist_new_item (infolist);
     if (!ptr_item)
         return 0;
 
-    if (!weechat_infolist_new_var_integer (ptr_item, "id", client->id))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "id", client->id))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "desc", client->desc))
+    if (!dogechat_infolist_new_var_string (ptr_item, "desc", client->desc))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "sock", client->sock))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "sock", client->sock))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "ssl", client->ssl))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "ssl", client->ssl))
         return 0;
 #ifdef HAVE_GNUTLS
-    if (!weechat_infolist_new_var_pointer (ptr_item, "hook_timer_handshake", client->hook_timer_handshake))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "hook_timer_handshake", client->hook_timer_handshake))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "gnutls_handshake_ok", client->gnutls_handshake_ok))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "gnutls_handshake_ok", client->gnutls_handshake_ok))
         return 0;
 #endif /* HAVE_GNUTLS */
-    if (!weechat_infolist_new_var_integer (ptr_item, "websocket", client->websocket))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "websocket", client->websocket))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "address", client->address))
+    if (!dogechat_infolist_new_var_string (ptr_item, "address", client->address))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "status", client->status))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "status", client->status))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "status_string", relay_client_status_string[client->status]))
+    if (!dogechat_infolist_new_var_string (ptr_item, "status_string", relay_client_status_string[client->status]))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "protocol", client->protocol))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "protocol", client->protocol))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "protocol_string", relay_protocol_string[client->protocol]))
+    if (!dogechat_infolist_new_var_string (ptr_item, "protocol_string", relay_protocol_string[client->protocol]))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "protocol_string", client->protocol_string))
+    if (!dogechat_infolist_new_var_string (ptr_item, "protocol_string", client->protocol_string))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "protocol_args", client->protocol_args))
+    if (!dogechat_infolist_new_var_string (ptr_item, "protocol_args", client->protocol_args))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "listen_start_time", client->listen_start_time))
+    if (!dogechat_infolist_new_var_time (ptr_item, "listen_start_time", client->listen_start_time))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "start_time", client->start_time))
+    if (!dogechat_infolist_new_var_time (ptr_item, "start_time", client->start_time))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "end_time", client->end_time))
+    if (!dogechat_infolist_new_var_time (ptr_item, "end_time", client->end_time))
         return 0;
-    if (!weechat_infolist_new_var_pointer (ptr_item, "hook_fd", client->hook_fd))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "hook_fd", client->hook_fd))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "last_activity", client->last_activity))
+    if (!dogechat_infolist_new_var_time (ptr_item, "last_activity", client->last_activity))
         return 0;
     snprintf (value, sizeof (value), "%llu", client->bytes_recv);
-    if (!weechat_infolist_new_var_string (ptr_item, "bytes_recv", value))
+    if (!dogechat_infolist_new_var_string (ptr_item, "bytes_recv", value))
         return 0;
     snprintf (value, sizeof (value), "%llu", client->bytes_sent);
-    if (!weechat_infolist_new_var_string (ptr_item, "bytes_sent", value))
+    if (!dogechat_infolist_new_var_string (ptr_item, "bytes_sent", value))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "recv_data_type", client->recv_data_type))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "recv_data_type", client->recv_data_type))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "send_data_type", client->send_data_type))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "send_data_type", client->send_data_type))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "partial_message", client->partial_message))
+    if (!dogechat_infolist_new_var_string (ptr_item, "partial_message", client->partial_message))
         return 0;
 
     switch (client->protocol)
     {
-        case RELAY_PROTOCOL_WEECHAT:
-            relay_weechat_add_to_infolist (ptr_item, client);
+        case RELAY_PROTOCOL_DOGECHAT:
+            relay_dogechat_add_to_infolist (ptr_item, client);
             break;
         case RELAY_PROTOCOL_IRC:
             relay_irc_add_to_infolist (ptr_item, client);
@@ -1611,7 +1611,7 @@ relay_client_add_to_infolist (struct t_infolist *infolist,
 }
 
 /*
- * Prints clients in WeeChat log file (usually for crash dump).
+ * Prints clients in DogeChat log file (usually for crash dump).
  */
 
 void
@@ -1622,49 +1622,49 @@ relay_client_print_log ()
     for (ptr_client = relay_clients; ptr_client;
          ptr_client = ptr_client->next_client)
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("[relay client (addr:0x%lx)]", ptr_client);
-        weechat_log_printf ("  id. . . . . . . . . . : %d",   ptr_client->id);
-        weechat_log_printf ("  desc. . . . . . . . . : '%s'", ptr_client->desc);
-        weechat_log_printf ("  sock. . . . . . . . . : %d",   ptr_client->sock);
-        weechat_log_printf ("  ssl . . . . . . . . . : %d",   ptr_client->ssl);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("[relay client (addr:0x%lx)]", ptr_client);
+        dogechat_log_printf ("  id. . . . . . . . . . : %d",   ptr_client->id);
+        dogechat_log_printf ("  desc. . . . . . . . . : '%s'", ptr_client->desc);
+        dogechat_log_printf ("  sock. . . . . . . . . : %d",   ptr_client->sock);
+        dogechat_log_printf ("  ssl . . . . . . . . . : %d",   ptr_client->ssl);
 #ifdef HAVE_GNUTLS
-        weechat_log_printf ("  gnutls_sess . . . . . : 0x%lx", ptr_client->gnutls_sess);
-        weechat_log_printf ("  hook_timer_handshake. : 0x%lx", ptr_client->hook_timer_handshake);
-        weechat_log_printf ("  gnutls_handshake_ok . : 0x%lx", ptr_client->gnutls_handshake_ok);
+        dogechat_log_printf ("  gnutls_sess . . . . . : 0x%lx", ptr_client->gnutls_sess);
+        dogechat_log_printf ("  hook_timer_handshake. : 0x%lx", ptr_client->hook_timer_handshake);
+        dogechat_log_printf ("  gnutls_handshake_ok . : 0x%lx", ptr_client->gnutls_handshake_ok);
 #endif /* HAVE_GNUTLS */
-        weechat_log_printf ("  websocket . . . . . . : %d",   ptr_client->websocket);
-        weechat_log_printf ("  http_headers. . . . . : 0x%lx (hashtable: '%s')",
+        dogechat_log_printf ("  websocket . . . . . . : %d",   ptr_client->websocket);
+        dogechat_log_printf ("  http_headers. . . . . : 0x%lx (hashtable: '%s')",
                             ptr_client->http_headers,
-                            weechat_hashtable_get_string (ptr_client->http_headers, "keys_values"));
-        weechat_log_printf ("  address . . . . . . . : '%s'", ptr_client->address);
-        weechat_log_printf ("  status. . . . . . . . : %d (%s)",
+                            dogechat_hashtable_get_string (ptr_client->http_headers, "keys_values"));
+        dogechat_log_printf ("  address . . . . . . . : '%s'", ptr_client->address);
+        dogechat_log_printf ("  status. . . . . . . . : %d (%s)",
                             ptr_client->status,
                             relay_client_status_string[ptr_client->status]);
-        weechat_log_printf ("  protocol. . . . . . . : %d (%s)",
+        dogechat_log_printf ("  protocol. . . . . . . : %d (%s)",
                             ptr_client->protocol,
                             relay_protocol_string[ptr_client->protocol]);
-        weechat_log_printf ("  protocol_string . . . : '%s'",  ptr_client->protocol_string);
-        weechat_log_printf ("  protocol_args . . . . : '%s'",  ptr_client->protocol_args);
-        weechat_log_printf ("  listen_start_time . . : %ld",   ptr_client->listen_start_time);
-        weechat_log_printf ("  start_time. . . . . . : %ld",   ptr_client->start_time);
-        weechat_log_printf ("  end_time. . . . . . . : %ld",   ptr_client->end_time);
-        weechat_log_printf ("  hook_fd . . . . . . . : 0x%lx", ptr_client->hook_fd);
-        weechat_log_printf ("  last_activity . . . . : %ld",   ptr_client->last_activity);
-        weechat_log_printf ("  bytes_recv. . . . . . : %llu",  ptr_client->bytes_recv);
-        weechat_log_printf ("  bytes_sent. . . . . . : %llu",  ptr_client->bytes_sent);
-        weechat_log_printf ("  recv_data_type. . . . : %d (%s)",
+        dogechat_log_printf ("  protocol_string . . . : '%s'",  ptr_client->protocol_string);
+        dogechat_log_printf ("  protocol_args . . . . : '%s'",  ptr_client->protocol_args);
+        dogechat_log_printf ("  listen_start_time . . : %ld",   ptr_client->listen_start_time);
+        dogechat_log_printf ("  start_time. . . . . . : %ld",   ptr_client->start_time);
+        dogechat_log_printf ("  end_time. . . . . . . : %ld",   ptr_client->end_time);
+        dogechat_log_printf ("  hook_fd . . . . . . . : 0x%lx", ptr_client->hook_fd);
+        dogechat_log_printf ("  last_activity . . . . : %ld",   ptr_client->last_activity);
+        dogechat_log_printf ("  bytes_recv. . . . . . : %llu",  ptr_client->bytes_recv);
+        dogechat_log_printf ("  bytes_sent. . . . . . : %llu",  ptr_client->bytes_sent);
+        dogechat_log_printf ("  recv_data_type. . . . : %d (%s)",
                             ptr_client->recv_data_type,
                             relay_client_data_type_string[ptr_client->recv_data_type]);
-        weechat_log_printf ("  send_data_type. . . . : %d (%s)",
+        dogechat_log_printf ("  send_data_type. . . . : %d (%s)",
                             ptr_client->send_data_type,
                             relay_client_data_type_string[ptr_client->send_data_type]);
-        weechat_log_printf ("  partial_message . . . : '%s'",  ptr_client->partial_message);
-        weechat_log_printf ("  protocol_data . . . . : 0x%lx", ptr_client->protocol_data);
+        dogechat_log_printf ("  partial_message . . . : '%s'",  ptr_client->partial_message);
+        dogechat_log_printf ("  protocol_data . . . . : 0x%lx", ptr_client->protocol_data);
         switch (ptr_client->protocol)
         {
-            case RELAY_PROTOCOL_WEECHAT:
-                relay_weechat_print_log (ptr_client);
+            case RELAY_PROTOCOL_DOGECHAT:
+                relay_dogechat_print_log (ptr_client);
                 break;
             case RELAY_PROTOCOL_IRC:
                 relay_irc_print_log (ptr_client);
@@ -1672,9 +1672,9 @@ relay_client_print_log ()
             case RELAY_NUM_PROTOCOLS:
                 break;
         }
-        weechat_log_printf ("  outqueue. . . . . . . : 0x%lx", ptr_client->outqueue);
-        weechat_log_printf ("  last_outqueue . . . . : 0x%lx", ptr_client->last_outqueue);
-        weechat_log_printf ("  prev_client . . . . . : 0x%lx", ptr_client->prev_client);
-        weechat_log_printf ("  next_client . . . . . : 0x%lx", ptr_client->next_client);
+        dogechat_log_printf ("  outqueue. . . . . . . : 0x%lx", ptr_client->outqueue);
+        dogechat_log_printf ("  last_outqueue . . . . : 0x%lx", ptr_client->last_outqueue);
+        dogechat_log_printf ("  prev_client . . . . . : 0x%lx", ptr_client->prev_client);
+        dogechat_log_printf ("  next_client . . . . . : 0x%lx", ptr_client->next_client);
     }
 }

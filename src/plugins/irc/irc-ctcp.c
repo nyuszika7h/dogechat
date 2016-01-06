@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -27,7 +27,7 @@
 #include <sys/utsname.h>
 #include <locale.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-ctcp.h"
 #include "irc-channel.h"
@@ -41,11 +41,11 @@
 
 struct t_irc_ctcp_reply irc_ctcp_default_reply[] =
 { { "clientinfo", "$clientinfo" },
-  { "finger",     "WeeChat $versiongit" },
+  { "finger",     "DogeChat $versiongit" },
   { "source",     "$download" },
   { "time",       "$time" },
   { "userinfo",   "$username ($realname)" },
-  { "version",    "WeeChat $versiongit ($compilation)" },
+  { "version",    "DogeChat $versiongit ($compilation)" },
   { NULL,         NULL },
 };
 
@@ -63,7 +63,7 @@ irc_ctcp_get_default_reply (const char *ctcp)
 
     for (i = 0; irc_ctcp_default_reply[i].name; i++)
     {
-        if (weechat_strcasecmp (irc_ctcp_default_reply[i].name, ctcp) == 0)
+        if (dogechat_strcasecmp (irc_ctcp_default_reply[i].name, ctcp) == 0)
             return irc_ctcp_default_reply[i].reply;
     }
 
@@ -84,18 +84,18 @@ irc_ctcp_get_reply (struct t_irc_server *server, const char *ctcp)
     snprintf (option_name, sizeof (option_name), "%s.%s", server->name, ctcp);
 
     /* search for CTCP in configuration file, for server */
-    ptr_option = weechat_config_search_option (irc_config_file,
+    ptr_option = dogechat_config_search_option (irc_config_file,
                                                irc_config_section_ctcp,
                                                option_name);
     if (ptr_option)
-        return weechat_config_string (ptr_option);
+        return dogechat_config_string (ptr_option);
 
     /* search for CTCP in configuration file */
-    ptr_option = weechat_config_search_option (irc_config_file,
+    ptr_option = dogechat_config_search_option (irc_config_file,
                                                irc_config_section_ctcp,
                                                ctcp);
     if (ptr_option)
-        return weechat_config_string (ptr_option);
+        return dogechat_config_string (ptr_option);
 
     /*
      * no CTCP reply found in config, then return default reply, or NULL
@@ -121,17 +121,17 @@ irc_ctcp_display_request (struct t_irc_server *server,
 {
     /* CTCP blocked and user doesn't want to see message? then just return */
     if (reply && !reply[0]
-        && !weechat_config_boolean (irc_config_look_display_ctcp_blocked))
+        && !dogechat_config_boolean (irc_config_look_display_ctcp_blocked))
         return;
 
-    weechat_printf_date_tags (
+    dogechat_printf_date_tags (
         irc_msgbuffer_get_target_buffer (
             server, nick, NULL, "ctcp",
             (channel) ? channel->buffer : NULL),
         date,
         irc_protocol_tags (command, "irc_ctcp", NULL, address),
         _("%sCTCP requested by %s%s%s: %s%s%s%s%s%s"),
-        weechat_prefix ("network"),
+        dogechat_prefix ("network"),
         irc_nick_color_for_msg (server, 0, NULL, nick),
         nick,
         IRC_COLOR_RESET,
@@ -186,14 +186,14 @@ irc_ctcp_display_reply_from_nick (struct t_irc_server *server, time_t date,
 
                     difftime = ((sec2 * 1000000) + usec2) -
                         ((sec1 * 1000000) + usec1);
-                    weechat_printf_date_tags (
+                    dogechat_printf_date_tags (
                         irc_msgbuffer_get_target_buffer (
                             server, nick, NULL, "ctcp", NULL),
                         date,
                         irc_protocol_tags (command, "irc_ctcp", NULL, NULL),
                         /* TRANSLATORS: %.3fs is a float number + "s" ("seconds") */
                         _("%sCTCP reply from %s%s%s: %s%s%s %.3fs"),
-                        weechat_prefix ("network"),
+                        dogechat_prefix ("network"),
                         irc_nick_color_for_msg (server, 0, NULL, nick),
                         nick,
                         IRC_COLOR_RESET,
@@ -207,13 +207,13 @@ irc_ctcp_display_reply_from_nick (struct t_irc_server *server, time_t date,
             }
             else
             {
-                weechat_printf_date_tags (
+                dogechat_printf_date_tags (
                     irc_msgbuffer_get_target_buffer (
                         server, nick, NULL, "ctcp", NULL),
                     date,
                     irc_protocol_tags (command, "irc_ctcp", NULL, address),
                     _("%sCTCP reply from %s%s%s: %s%s%s%s%s"),
-                    weechat_prefix ("network"),
+                    dogechat_prefix ("network"),
                     irc_nick_color_for_msg (server, 0, NULL, nick),
                     nick,
                     IRC_COLOR_RESET,
@@ -227,13 +227,13 @@ irc_ctcp_display_reply_from_nick (struct t_irc_server *server, time_t date,
         }
         else
         {
-            weechat_printf_date_tags (
+            dogechat_printf_date_tags (
                 irc_msgbuffer_get_target_buffer (
                     server, nick, NULL, "ctcp", NULL),
                 date,
                 irc_protocol_tags (command, NULL, NULL, address),
                 _("%sCTCP reply from %s%s%s: %s%s%s%s%s"),
-                weechat_prefix ("network"),
+                dogechat_prefix ("network"),
                 irc_nick_color_for_msg (server, 0, NULL, nick),
                 nick,
                 IRC_COLOR_RESET,
@@ -279,19 +279,19 @@ irc_ctcp_reply_to_nick (struct t_irc_server *server,
 
     if (hashtable)
     {
-        if (weechat_config_boolean (irc_config_look_display_ctcp_reply))
+        if (dogechat_config_boolean (irc_config_look_display_ctcp_reply))
         {
             number = 1;
             while (1)
             {
                 snprintf (hash_key, sizeof (hash_key), "args%d", number);
-                str_args = weechat_hashtable_get (hashtable, hash_key);
+                str_args = dogechat_hashtable_get (hashtable, hash_key);
                 if (!str_args)
                     break;
                 str_args_color = irc_color_decode (str_args, 1);
                 if (!str_args_color)
                     break;
-                weechat_printf_tags (
+                dogechat_printf_tags (
                     irc_msgbuffer_get_target_buffer (
                         server, nick, NULL, "ctcp",
                         (channel) ? channel->buffer : NULL),
@@ -300,7 +300,7 @@ irc_ctcp_reply_to_nick (struct t_irc_server *server,
                         "irc_ctcp,irc_ctcp_reply,notify_none,no_highlight",
                         NULL, NULL),
                     _("%sCTCP reply to %s%s%s: %s%s%s%s%s"),
-                    weechat_prefix ("network"),
+                    dogechat_prefix ("network"),
                     irc_nick_color_for_msg (server, 0, NULL, nick),
                     nick,
                     IRC_COLOR_RESET,
@@ -313,7 +313,7 @@ irc_ctcp_reply_to_nick (struct t_irc_server *server,
                 number++;
             }
         }
-        weechat_hashtable_free (hashtable);
+        dogechat_hashtable_free (hashtable);
     }
 }
 
@@ -337,7 +337,7 @@ irc_ctcp_replace_variables (struct t_irc_server *server, const char *format)
      * $clientinfo: supported CTCP, example:
      *   ACTION DCC CLIENTINFO FINGER PING SOURCE TIME USERINFO VERSION
      */
-    temp = weechat_string_replace (
+    temp = dogechat_string_replace (
         format, "$clientinfo",
         "ACTION DCC CLIENTINFO FINGER PING SOURCE TIME USERINFO VERSION");
     if (!temp)
@@ -349,38 +349,38 @@ irc_ctcp_replace_variables (struct t_irc_server *server, const char *format)
      * only, empty string if unknown), example:
      *   v0.3.9-104-g7eb5cc4
      */
-    info = weechat_info_get ("version_git", "");
-    temp = weechat_string_replace (res, "$git", info);
+    info = dogechat_info_get ("version_git", "");
+    temp = dogechat_string_replace (res, "$git", info);
     free (res);
     if (!temp)
         return NULL;
     res = temp;
 
     /*
-     * $versiongit: WeeChat version + git version (if known), examples:
+     * $versiongit: DogeChat version + git version (if known), examples:
      *   0.3.9
      *   0.4.0-dev
      *   0.4.0-dev (git: v0.3.9-104-g7eb5cc4)
      */
-    info = weechat_info_get ("version_git", "");
+    info = dogechat_info_get ("version_git", "");
     snprintf (buf, sizeof (buf), "%s%s%s%s",
-              weechat_info_get ("version", ""),
+              dogechat_info_get ("version", ""),
               (info && info[0]) ? " (git: " : "",
               (info && info[0]) ? info : "",
               (info && info[0]) ? ")" : "");
-    temp = weechat_string_replace (res, "$versiongit", buf);
+    temp = dogechat_string_replace (res, "$versiongit", buf);
     free (res);
     if (!temp)
         return NULL;
     res = temp;
 
     /*
-     * $version: WeeChat version, examples:
+     * $version: DogeChat version, examples:
      *   0.3.9
      *   0.4.0-dev
      */
-    info = weechat_info_get ("version", "");
-    temp = weechat_string_replace (res, "$version", info);
+    info = dogechat_info_get ("version", "");
+    temp = dogechat_string_replace (res, "$version", info);
     free (res);
     if (!temp)
         return NULL;
@@ -390,8 +390,8 @@ irc_ctcp_replace_variables (struct t_irc_server *server, const char *format)
      * $compilation: compilation date, example:
      *   Dec 16 2012
      */
-    info = weechat_info_get ("date", "");
-    temp = weechat_string_replace (res, "$compilation", info);
+    info = dogechat_info_get ("date", "");
+    temp = dogechat_string_replace (res, "$compilation", info);
     free (res);
     if (!temp)
         return NULL;
@@ -409,7 +409,7 @@ irc_ctcp_replace_variables (struct t_irc_server *server, const char *format)
             snprintf (buf, sizeof (buf), "%s %s / %s",
                       buf_uname->sysname, buf_uname->release,
                       buf_uname->machine);
-            temp = weechat_string_replace (res, "$osinfo", buf);
+            temp = dogechat_string_replace (res, "$osinfo", buf);
             free (res);
             if (!temp)
             {
@@ -422,22 +422,22 @@ irc_ctcp_replace_variables (struct t_irc_server *server, const char *format)
     }
 
     /*
-     * $site: WeeChat web site, example:
-     *   https://weechat.org/
+     * $site: DogeChat web site, example:
+     *   https://dogechat.org/
      */
-    info = weechat_info_get ("weechat_site", "");
-    temp = weechat_string_replace (res, "$site", info);
+    info = dogechat_info_get ("dogechat_site", "");
+    temp = dogechat_string_replace (res, "$site", info);
     free (res);
     if (!temp)
         return NULL;
     res = temp;
 
     /*
-     * $download: WeeChat download page, example:
-     *   https://weechat.org/download
+     * $download: DogeChat download page, example:
+     *   https://dogechat.org/download
      */
-    info = weechat_info_get ("weechat_site_download", "");
-    temp = weechat_string_replace (res, "$download", info);
+    info = dogechat_info_get ("dogechat_site_download", "");
+    temp = dogechat_string_replace (res, "$download", info);
     free (res);
     if (!temp)
         return NULL;
@@ -451,10 +451,10 @@ irc_ctcp_replace_variables (struct t_irc_server *server, const char *format)
     local_time = localtime (&now);
     setlocale (LC_ALL, "C");
     strftime (buf, sizeof (buf),
-              weechat_config_string (irc_config_look_ctcp_time_format),
+              dogechat_config_string (irc_config_look_ctcp_time_format),
               local_time);
     setlocale (LC_ALL, "");
-    temp = weechat_string_replace (res, "$time", buf);
+    temp = dogechat_string_replace (res, "$time", buf);
     free (res);
     if (!temp)
         return NULL;
@@ -464,12 +464,12 @@ irc_ctcp_replace_variables (struct t_irc_server *server, const char *format)
      * $username: user name, example:
      *   name
      */
-    username = weechat_string_eval_expression (
+    username = dogechat_string_eval_expression (
         IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_USERNAME),
         NULL, NULL, NULL);
     if (username)
     {
-        temp = weechat_string_replace (res, "$username", username);
+        temp = dogechat_string_replace (res, "$username", username);
         free (res);
         if (!temp)
             return NULL;
@@ -481,12 +481,12 @@ irc_ctcp_replace_variables (struct t_irc_server *server, const char *format)
      * $realname: real name, example:
      *   John doe
      */
-    realname = weechat_string_eval_expression (
+    realname = dogechat_string_eval_expression (
         IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_REALNAME),
         NULL, NULL, NULL);
     if (realname)
     {
-        temp = weechat_string_replace (res, "$realname", realname);
+        temp = dogechat_string_replace (res, "$realname", realname);
         free (res);
         if (!temp)
             return NULL;
@@ -513,7 +513,7 @@ irc_ctcp_dcc_filename_without_quotes (const char *filename)
     if (length > 0)
     {
         if ((filename[0] == '\"') && (filename[length - 1] == '\"'))
-            return weechat_strndup (filename + 1, length - 2);
+            return dogechat_strndup (filename + 1, length - 2);
     }
     return strdup (filename);
 }
@@ -546,10 +546,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
 
         if (!dcc_args)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: not enough memory for \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             return;
         }
 
@@ -564,10 +564,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         pos_size = strrchr (pos_file, ' ');
         if (!pos_size)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: cannot parse \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             free (dcc_args);
             return;
         }
@@ -584,10 +584,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         pos_port = strrchr (pos_file, ' ');
         if (!pos_port)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: cannot parse \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             free (dcc_args);
             return;
         }
@@ -604,10 +604,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         pos_addr = strrchr (pos_file, ' ');
         if (!pos_addr)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: cannot parse \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             free (dcc_args);
             return;
         }
@@ -624,34 +624,34 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         filename = irc_ctcp_dcc_filename_without_quotes (pos_file);
 
         /* add DCC file via xfer plugin */
-        infolist = weechat_infolist_new ();
+        infolist = dogechat_infolist_new ();
         if (infolist)
         {
-            item = weechat_infolist_new_item (infolist);
+            item = dogechat_infolist_new_item (infolist);
             if (item)
             {
-                weechat_infolist_new_var_string (item, "plugin_name", weechat_plugin->name);
-                weechat_infolist_new_var_string (item, "plugin_id", server->name);
-                weechat_infolist_new_var_string (item, "type_string", "file_recv");
-                weechat_infolist_new_var_string (item, "protocol_string", "dcc");
-                weechat_infolist_new_var_string (item, "remote_nick", nick);
-                weechat_infolist_new_var_string (item, "local_nick", server->nick);
-                weechat_infolist_new_var_string (item, "filename",
+                dogechat_infolist_new_var_string (item, "plugin_name", dogechat_plugin->name);
+                dogechat_infolist_new_var_string (item, "plugin_id", server->name);
+                dogechat_infolist_new_var_string (item, "type_string", "file_recv");
+                dogechat_infolist_new_var_string (item, "protocol_string", "dcc");
+                dogechat_infolist_new_var_string (item, "remote_nick", nick);
+                dogechat_infolist_new_var_string (item, "local_nick", server->nick);
+                dogechat_infolist_new_var_string (item, "filename",
                                                  (filename) ? filename : pos_file);
-                weechat_infolist_new_var_string (item, "size", pos_size);
-                weechat_infolist_new_var_string (item, "proxy",
+                dogechat_infolist_new_var_string (item, "size", pos_size);
+                dogechat_infolist_new_var_string (item, "proxy",
                                                  IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_PROXY));
-                weechat_infolist_new_var_string (item, "remote_address", pos_addr);
-                weechat_infolist_new_var_integer (item, "port", atoi (pos_port));
-                (void) weechat_hook_signal_send ("xfer_add",
-                                                 WEECHAT_HOOK_SIGNAL_POINTER,
+                dogechat_infolist_new_var_string (item, "remote_address", pos_addr);
+                dogechat_infolist_new_var_integer (item, "port", atoi (pos_port));
+                (void) dogechat_hook_signal_send ("xfer_add",
+                                                 DOGECHAT_HOOK_SIGNAL_POINTER,
                                                  infolist);
             }
-            weechat_infolist_free (infolist);
+            dogechat_infolist_free (infolist);
         }
 
-        (void) weechat_hook_signal_send ("irc_dcc",
-                                         WEECHAT_HOOK_SIGNAL_STRING,
+        (void) dogechat_hook_signal_send ("irc_dcc",
+                                         DOGECHAT_HOOK_SIGNAL_STRING,
                                          message);
 
         if (filename)
@@ -670,10 +670,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
 
         if (!dcc_args)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: not enough memory for \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             return;
         }
 
@@ -688,10 +688,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         pos_start_resume = strrchr (pos_file, ' ');
         if (!pos_start_resume)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: cannot parse \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             free (dcc_args);
             return;
         }
@@ -707,10 +707,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         pos_port = strrchr (pos_file, ' ');
         if (!pos_port)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: cannot parse \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             free (dcc_args);
             return;
         }
@@ -726,28 +726,28 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         filename = irc_ctcp_dcc_filename_without_quotes (pos_file);
 
         /* accept resume via xfer plugin */
-        infolist = weechat_infolist_new ();
+        infolist = dogechat_infolist_new ();
         if (infolist)
         {
-            item = weechat_infolist_new_item (infolist);
+            item = dogechat_infolist_new_item (infolist);
             if (item)
             {
-                weechat_infolist_new_var_string (item, "plugin_name", weechat_plugin->name);
-                weechat_infolist_new_var_string (item, "plugin_id", server->name);
-                weechat_infolist_new_var_string (item, "type_string", "file_recv");
-                weechat_infolist_new_var_string (item, "filename",
+                dogechat_infolist_new_var_string (item, "plugin_name", dogechat_plugin->name);
+                dogechat_infolist_new_var_string (item, "plugin_id", server->name);
+                dogechat_infolist_new_var_string (item, "type_string", "file_recv");
+                dogechat_infolist_new_var_string (item, "filename",
                                                  (filename) ? filename : pos_file);
-                weechat_infolist_new_var_integer (item, "port", atoi (pos_port));
-                weechat_infolist_new_var_string (item, "start_resume", pos_start_resume);
-                (void) weechat_hook_signal_send ("xfer_accept_resume",
-                                                 WEECHAT_HOOK_SIGNAL_POINTER,
+                dogechat_infolist_new_var_integer (item, "port", atoi (pos_port));
+                dogechat_infolist_new_var_string (item, "start_resume", pos_start_resume);
+                (void) dogechat_hook_signal_send ("xfer_accept_resume",
+                                                 DOGECHAT_HOOK_SIGNAL_POINTER,
                                                  infolist);
             }
-            weechat_infolist_free (infolist);
+            dogechat_infolist_free (infolist);
         }
 
-        (void) weechat_hook_signal_send ("irc_dcc",
-                                         WEECHAT_HOOK_SIGNAL_STRING,
+        (void) dogechat_hook_signal_send ("irc_dcc",
+                                         DOGECHAT_HOOK_SIGNAL_STRING,
                                          message);
 
         if (filename)
@@ -766,10 +766,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
 
         if (!dcc_args)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: not enough memory for \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             return;
         }
 
@@ -784,10 +784,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         pos_start_resume = strrchr (pos_file, ' ');
         if (!pos_start_resume)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: cannot parse \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             free (dcc_args);
             return;
         }
@@ -803,10 +803,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         pos_port = strrchr (pos_file, ' ');
         if (!pos_port)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: cannot parse \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             free (dcc_args);
             return;
         }
@@ -822,28 +822,28 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         filename = irc_ctcp_dcc_filename_without_quotes (pos_file);
 
         /* resume file via xfer plugin */
-        infolist = weechat_infolist_new ();
+        infolist = dogechat_infolist_new ();
         if (infolist)
         {
-            item = weechat_infolist_new_item (infolist);
+            item = dogechat_infolist_new_item (infolist);
             if (item)
             {
-                weechat_infolist_new_var_string (item, "plugin_name", weechat_plugin->name);
-                weechat_infolist_new_var_string (item, "plugin_id", server->name);
-                weechat_infolist_new_var_string (item, "type_string", "file_recv");
-                weechat_infolist_new_var_string (item, "filename",
+                dogechat_infolist_new_var_string (item, "plugin_name", dogechat_plugin->name);
+                dogechat_infolist_new_var_string (item, "plugin_id", server->name);
+                dogechat_infolist_new_var_string (item, "type_string", "file_recv");
+                dogechat_infolist_new_var_string (item, "filename",
                                                  (filename) ? filename : pos_file);
-                weechat_infolist_new_var_integer (item, "port", atoi (pos_port));
-                weechat_infolist_new_var_string (item, "start_resume", pos_start_resume);
-                (void) weechat_hook_signal_send ("xfer_start_resume",
-                                                 WEECHAT_HOOK_SIGNAL_POINTER,
+                dogechat_infolist_new_var_integer (item, "port", atoi (pos_port));
+                dogechat_infolist_new_var_string (item, "start_resume", pos_start_resume);
+                (void) dogechat_hook_signal_send ("xfer_start_resume",
+                                                 DOGECHAT_HOOK_SIGNAL_POINTER,
                                                  infolist);
             }
-            weechat_infolist_free (infolist);
+            dogechat_infolist_free (infolist);
         }
 
-        (void) weechat_hook_signal_send ("irc_dcc",
-                                         WEECHAT_HOOK_SIGNAL_STRING,
+        (void) dogechat_hook_signal_send ("irc_dcc",
+                                         DOGECHAT_HOOK_SIGNAL_STRING,
                                          message);
 
         if (filename)
@@ -862,10 +862,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
 
         if (!dcc_args)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: not enough memory for \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             return;
         }
 
@@ -880,10 +880,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         pos_addr = strchr (pos_file, ' ');
         if (!pos_addr)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: cannot parse \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             free (dcc_args);
             return;
         }
@@ -898,10 +898,10 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         pos_port = strchr (pos_addr, ' ');
         if (!pos_port)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: cannot parse \"%s\" command"),
-                weechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
+                dogechat_prefix ("error"), IRC_PLUGIN_NAME, "privmsg");
             free (dcc_args);
             return;
         }
@@ -912,12 +912,12 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
             pos_port++;
         }
 
-        if (weechat_strcasecmp (pos_file, "chat") != 0)
+        if (dogechat_strcasecmp (pos_file, "chat") != 0)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%s%s: unknown DCC CHAT type received from %s%s%s: \"%s\""),
-                weechat_prefix ("error"),
+                dogechat_prefix ("error"),
                 IRC_PLUGIN_NAME,
                 irc_nick_color_for_msg (server, 0, NULL, nick),
                 nick,
@@ -928,33 +928,33 @@ irc_ctcp_recv_dcc (struct t_irc_server *server, const char *nick,
         }
 
         /* add DCC chat via xfer plugin */
-        infolist = weechat_infolist_new ();
+        infolist = dogechat_infolist_new ();
         if (infolist)
         {
-            item = weechat_infolist_new_item (infolist);
+            item = dogechat_infolist_new_item (infolist);
             if (item)
             {
-                weechat_infolist_new_var_string (item, "plugin_name", weechat_plugin->name);
-                weechat_infolist_new_var_string (item, "plugin_id", server->name);
-                weechat_infolist_new_var_string (item, "type_string", "chat_recv");
-                weechat_infolist_new_var_string (item, "remote_nick", nick);
-                weechat_infolist_new_var_string (item, "local_nick", server->nick);
+                dogechat_infolist_new_var_string (item, "plugin_name", dogechat_plugin->name);
+                dogechat_infolist_new_var_string (item, "plugin_id", server->name);
+                dogechat_infolist_new_var_string (item, "type_string", "chat_recv");
+                dogechat_infolist_new_var_string (item, "remote_nick", nick);
+                dogechat_infolist_new_var_string (item, "local_nick", server->nick);
                 snprintf (charset_modifier, sizeof (charset_modifier),
                           "irc.%s.%s", server->name, nick);
-                weechat_infolist_new_var_string (item, "charset_modifier", charset_modifier);
-                weechat_infolist_new_var_string (item, "proxy",
+                dogechat_infolist_new_var_string (item, "charset_modifier", charset_modifier);
+                dogechat_infolist_new_var_string (item, "proxy",
                                                  IRC_SERVER_OPTION_STRING(server, IRC_SERVER_OPTION_PROXY));
-                weechat_infolist_new_var_string (item, "remote_address", pos_addr);
-                weechat_infolist_new_var_integer (item, "port", atoi (pos_port));
-                (void) weechat_hook_signal_send ("xfer_add",
-                                                 WEECHAT_HOOK_SIGNAL_POINTER,
+                dogechat_infolist_new_var_string (item, "remote_address", pos_addr);
+                dogechat_infolist_new_var_integer (item, "port", atoi (pos_port));
+                (void) dogechat_hook_signal_send ("xfer_add",
+                                                 DOGECHAT_HOOK_SIGNAL_POINTER,
                                                  infolist);
             }
-            weechat_infolist_free (infolist);
+            dogechat_infolist_free (infolist);
         }
 
-        (void) weechat_hook_signal_send ("irc_dcc",
-                                         WEECHAT_HOOK_SIGNAL_STRING,
+        (void) dogechat_hook_signal_send ("irc_dcc",
+                                         DOGECHAT_HOOK_SIGNAL_STRING,
                                          message);
 
         free (dcc_args);
@@ -1006,12 +1006,12 @@ irc_ctcp_recv (struct t_irc_server *server, time_t date, const char *command,
                 irc_channel_nick_speaking_add (channel,
                                                nick,
                                                (pos_args) ?
-                                               weechat_string_has_highlight (pos_args,
+                                               dogechat_string_has_highlight (pos_args,
                                                                              server->nick) : 0);
                 irc_channel_nick_speaking_time_remove_old (channel);
                 irc_channel_nick_speaking_time_add (server, channel, nick,
                                                     time (NULL));
-                weechat_printf_date_tags (
+                dogechat_printf_date_tags (
                     channel->buffer,
                     date,
                     irc_protocol_tags (command,
@@ -1020,7 +1020,7 @@ irc_ctcp_recv (struct t_irc_server *server, time_t date, const char *command,
                                        "irc_action,notify_message",
                                        nick, address),
                     "%s%s%s%s%s%s%s",
-                    weechat_prefix ("action"),
+                    dogechat_prefix ("action"),
                     irc_nick_mode_for_display (server, ptr_nick, 0),
                     (ptr_nick) ? ptr_nick->color : ((nick) ? irc_nick_find_color (nick) : IRC_COLOR_CHAT_NICK),
                     nick,
@@ -1038,10 +1038,10 @@ irc_ctcp_recv (struct t_irc_server *server, time_t date, const char *command,
                                                    remote_nick, 0, 0);
                     if (!ptr_channel)
                     {
-                        weechat_printf (
+                        dogechat_printf (
                             server->buffer,
                             _("%s%s: cannot create new private buffer \"%s\""),
-                            weechat_prefix ("error"), IRC_PLUGIN_NAME,
+                            dogechat_prefix ("error"), IRC_PLUGIN_NAME,
                             remote_nick);
                     }
                 }
@@ -1050,7 +1050,7 @@ irc_ctcp_recv (struct t_irc_server *server, time_t date, const char *command,
                     if (!ptr_channel->topic)
                         irc_channel_set_topic (ptr_channel, address);
 
-                    weechat_printf_date_tags (
+                    dogechat_printf_date_tags (
                         ptr_channel->buffer,
                         date,
                         irc_protocol_tags (command,
@@ -1059,15 +1059,15 @@ irc_ctcp_recv (struct t_irc_server *server, time_t date, const char *command,
                                            "irc_action,notify_private",
                                            nick, address),
                         "%s%s%s%s%s%s",
-                        weechat_prefix ("action"),
+                        dogechat_prefix ("action"),
                         (nick_is_me) ?
                         IRC_COLOR_CHAT_NICK_SELF : irc_nick_color_for_pv (ptr_channel, nick),
                         nick,
                         (pos_args) ? IRC_COLOR_RESET : "",
                         (pos_args) ? " " : "",
                         (pos_args) ? pos_args : "");
-                    (void) weechat_hook_signal_send ("irc_pv",
-                                                     WEECHAT_HOOK_SIGNAL_STRING,
+                    (void) dogechat_hook_signal_send ("irc_pv",
+                                                     DOGECHAT_HOOK_SIGNAL_STRING,
                                                      message);
                 }
             }
@@ -1112,16 +1112,16 @@ irc_ctcp_recv (struct t_irc_server *server, time_t date, const char *command,
             }
             else
             {
-                if (weechat_config_boolean (irc_config_look_display_ctcp_unknown))
+                if (dogechat_config_boolean (irc_config_look_display_ctcp_unknown))
                 {
-                    weechat_printf_date_tags (
+                    dogechat_printf_date_tags (
                         irc_msgbuffer_get_target_buffer (
                             server, nick, NULL, "ctcp",
                             (channel) ? channel->buffer : NULL),
                         date,
                         irc_protocol_tags (command, "irc_ctcp", NULL, address),
                         _("%sUnknown CTCP requested by %s%s%s: %s%s%s%s%s"),
-                        weechat_prefix ("network"),
+                        dogechat_prefix ("network"),
                         irc_nick_color_for_msg (server, 0, NULL, nick),
                         nick,
                         IRC_COLOR_RESET,
@@ -1134,8 +1134,8 @@ irc_ctcp_recv (struct t_irc_server *server, time_t date, const char *command,
             }
         }
 
-        (void) weechat_hook_signal_send ("irc_ctcp",
-                                         WEECHAT_HOOK_SIGNAL_STRING,
+        (void) dogechat_hook_signal_send ("irc_ctcp",
+                                         DOGECHAT_HOOK_SIGNAL_STRING,
                                          message);
 
         if (pos_space)

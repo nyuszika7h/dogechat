@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2014-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "CppUTest/TestHarness.h"
@@ -27,7 +27,7 @@ extern "C"
 #include <string.h>
 #include <wctype.h>
 #include "tests/tests.h"
-#include "src/core/wee-utf8.h"
+#include "src/core/doge-utf8.h"
 }
 
 const char *noel_valid = "no\xc3\xabl";  /* noël */
@@ -441,10 +441,10 @@ TEST(Utf8, Duplicate)
 {
     char *str;
 
-    WEE_TEST_STR("", utf8_strndup (noel_valid, 0));
-    WEE_TEST_STR("n", utf8_strndup (noel_valid, 1));
-    WEE_TEST_STR("no", utf8_strndup (noel_valid, 2));
-    WEE_TEST_STR("noë", utf8_strndup (noel_valid, 3));
-    WEE_TEST_STR("noël", utf8_strndup (noel_valid, 4));
-    WEE_TEST_STR("noël", utf8_strndup (noel_valid, 5));
+    DOGE_TEST_STR("", utf8_strndup (noel_valid, 0));
+    DOGE_TEST_STR("n", utf8_strndup (noel_valid, 1));
+    DOGE_TEST_STR("no", utf8_strndup (noel_valid, 2));
+    DOGE_TEST_STR("noë", utf8_strndup (noel_valid, 3));
+    DOGE_TEST_STR("noël", utf8_strndup (noel_valid, 4));
+    DOGE_TEST_STR("noël", utf8_strndup (noel_valid, 5));
 }

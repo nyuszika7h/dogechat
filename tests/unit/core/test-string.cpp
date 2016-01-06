@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2014-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "CppUTest/TestHarness.h"
@@ -31,9 +31,9 @@ extern "C"
 #include <string.h>
 #include <regex.h>
 #include "tests/tests.h"
-#include "src/core/weechat.h"
-#include "src/core/wee-string.h"
-#include "src/core/wee-hashtable.h"
+#include "src/core/dogechat.h"
+#include "src/core/doge-string.h"
+#include "src/core/doge-hashtable.h"
 #include "src/plugins/plugin.h"
 }
 
@@ -42,13 +42,13 @@ extern "C"
 #define ONE_GB (ONE_MB * 1000ULL)
 #define ONE_TB (ONE_GB * 1000ULL)
 
-#define WEE_IS_WORD_CHAR(__result, __str)                               \
+#define DOGE_IS_WORD_CHAR(__result, __str)                               \
     LONGS_EQUAL(__result, string_is_word_char_highlight (__str));       \
     LONGS_EQUAL(__result, string_is_word_char_input (__str));
-#define WEE_HAS_HL_STR(__result, __str, __words)                        \
+#define DOGE_HAS_HL_STR(__result, __str, __words)                        \
     LONGS_EQUAL(__result, string_has_highlight (__str, __words));
 
-#define WEE_HAS_HL_REGEX(__result_regex, __result_hl, __str, __regex)   \
+#define DOGE_HAS_HL_REGEX(__result_regex, __result_hl, __str, __regex)   \
     LONGS_EQUAL(__result_hl,                                            \
                 string_has_highlight_regex (__str, __regex));           \
     LONGS_EQUAL(__result_regex,                                         \
@@ -59,7 +59,7 @@ extern "C"
     if (__result_regex == 0)                                            \
         regfree(&regex);
 
-#define WEE_REPLACE_REGEX(__result_regex, __result_replace, __str,      \
+#define DOGE_REPLACE_REGEX(__result_regex, __result_replace, __str,      \
                           __regex, __replace, __ref_char, __callback)   \
     LONGS_EQUAL(__result_regex,                                         \
                 string_regcomp (&regex, __regex,                        \
@@ -78,7 +78,7 @@ extern "C"
     if (__result_regex == 0)                                            \
         regfree(&regex);
 
-#define WEE_REPLACE_CB(__result_replace, __result_errors,               \
+#define DOGE_REPLACE_CB(__result_replace, __result_errors,               \
                        __str, __prefix, __suffix,                       \
                        __callback, __callback_data, __errors)           \
     errors = -1;                                                        \
@@ -99,7 +99,7 @@ extern "C"
         LONGS_EQUAL(__result_errors, errors);                           \
     }
 
-#define WEE_FORMAT_SIZE(__result, __size)                               \
+#define DOGE_FORMAT_SIZE(__result, __size)                               \
     str = string_format_size (__size);                                  \
     STRCMP_EQUAL(__result, str);                                        \
     free (str);
@@ -354,13 +354,13 @@ TEST(String, ExpandHome)
 TEST(String, EvalPathHome)
 {
     char *home, *result;
-    int length_home, length_weechat_home;
+    int length_home, length_dogechat_home;
     struct t_hashtable *extra_vars;
 
     home = getenv ("HOME");
     length_home = strlen (home);
 
-    length_weechat_home = strlen (weechat_home);
+    length_dogechat_home = strlen (dogechat_home);
 
     POINTERS_EQUAL(NULL, string_eval_path_home (NULL, NULL, NULL, NULL));
 
@@ -375,32 +375,32 @@ TEST(String, EvalPathHome)
     free (result);
 
     result = string_eval_path_home ("%h/test", NULL, NULL, NULL);
-    CHECK(strncmp (result, weechat_home, length_weechat_home) == 0);
-    LONGS_EQUAL(length_weechat_home + 5, strlen (result));
-    STRCMP_EQUAL(result + length_weechat_home, "/test");
+    CHECK(strncmp (result, dogechat_home, length_dogechat_home) == 0);
+    LONGS_EQUAL(length_dogechat_home + 5, strlen (result));
+    STRCMP_EQUAL(result + length_dogechat_home, "/test");
     free (result);
 
-    setenv ("WEECHAT_TEST_PATH", "path1", 1);
+    setenv ("DOGECHAT_TEST_PATH", "path1", 1);
 
-    result = string_eval_path_home ("%h/${env:WEECHAT_TEST_PATH}/path2",
+    result = string_eval_path_home ("%h/${env:DOGECHAT_TEST_PATH}/path2",
                                     NULL, NULL, NULL);
-    CHECK(strncmp (result, weechat_home, length_weechat_home) == 0);
-    LONGS_EQUAL(length_weechat_home + 12, strlen (result));
-    STRCMP_EQUAL(result + length_weechat_home, "/path1/path2");
+    CHECK(strncmp (result, dogechat_home, length_dogechat_home) == 0);
+    LONGS_EQUAL(length_dogechat_home + 12, strlen (result));
+    STRCMP_EQUAL(result + length_dogechat_home, "/path1/path2");
     free (result);
 
     extra_vars = hashtable_new (32,
-                                WEECHAT_HASHTABLE_STRING,
-                                WEECHAT_HASHTABLE_STRING,
+                                DOGECHAT_HASHTABLE_STRING,
+                                DOGECHAT_HASHTABLE_STRING,
                                 NULL, NULL);
     CHECK(extra_vars);
     hashtable_set (extra_vars, "path2", "value");
 
-    result = string_eval_path_home ("%h/${env:WEECHAT_TEST_PATH}/${path2}",
+    result = string_eval_path_home ("%h/${env:DOGECHAT_TEST_PATH}/${path2}",
                                     NULL, extra_vars, NULL);
-    CHECK(strncmp (result, weechat_home, length_weechat_home) == 0);
-    LONGS_EQUAL(length_weechat_home + 12, strlen (result));
-    STRCMP_EQUAL(result + length_weechat_home, "/path1/value");
+    CHECK(strncmp (result, dogechat_home, length_dogechat_home) == 0);
+    LONGS_EQUAL(length_dogechat_home + 12, strlen (result));
+    STRCMP_EQUAL(result + length_dogechat_home, "/path1/value");
     free (result);
 
     hashtable_free (extra_vars);
@@ -415,19 +415,19 @@ TEST(String, RemoveQuotes)
 {
     char *str;
 
-    WEE_TEST_STR(NULL, string_remove_quotes (NULL, NULL));
-    WEE_TEST_STR(NULL, string_remove_quotes (NULL, "abc"));
-    WEE_TEST_STR(NULL, string_remove_quotes ("abc", NULL));
-    WEE_TEST_STR("", string_remove_quotes("", ""));
-    WEE_TEST_STR("", string_remove_quotes("", "\"'"));
-    WEE_TEST_STR("abc", string_remove_quotes("abc", "\"'"));
-    WEE_TEST_STR(" abc ", string_remove_quotes(" abc ", "\"'"));
-    WEE_TEST_STR("abc", string_remove_quotes("'abc'", "\"'"));
-    WEE_TEST_STR("abc", string_remove_quotes(" 'abc' ", "\"'"));
-    WEE_TEST_STR("'abc'", string_remove_quotes("\"'abc'\"", "\"'"));
-    WEE_TEST_STR("'abc'", string_remove_quotes(" \"'abc'\" ", "\"'"));
-    WEE_TEST_STR("'a'b'c'", string_remove_quotes("\"'a'b'c'\"", "\"'"));
-    WEE_TEST_STR("'a'b'c'", string_remove_quotes(" \"'a'b'c'\" ", "\"'"));
+    DOGE_TEST_STR(NULL, string_remove_quotes (NULL, NULL));
+    DOGE_TEST_STR(NULL, string_remove_quotes (NULL, "abc"));
+    DOGE_TEST_STR(NULL, string_remove_quotes ("abc", NULL));
+    DOGE_TEST_STR("", string_remove_quotes("", ""));
+    DOGE_TEST_STR("", string_remove_quotes("", "\"'"));
+    DOGE_TEST_STR("abc", string_remove_quotes("abc", "\"'"));
+    DOGE_TEST_STR(" abc ", string_remove_quotes(" abc ", "\"'"));
+    DOGE_TEST_STR("abc", string_remove_quotes("'abc'", "\"'"));
+    DOGE_TEST_STR("abc", string_remove_quotes(" 'abc' ", "\"'"));
+    DOGE_TEST_STR("'abc'", string_remove_quotes("\"'abc'\"", "\"'"));
+    DOGE_TEST_STR("'abc'", string_remove_quotes(" \"'abc'\" ", "\"'"));
+    DOGE_TEST_STR("'a'b'c'", string_remove_quotes("\"'a'b'c'\"", "\"'"));
+    DOGE_TEST_STR("'a'b'c'", string_remove_quotes(" \"'a'b'c'\" ", "\"'"));
 }
 
 /*
@@ -439,14 +439,14 @@ TEST(String, Strip)
 {
     char *str;
 
-    WEE_TEST_STR(NULL, string_strip (NULL, 1, 1, NULL));
-    WEE_TEST_STR(NULL, string_strip (NULL, 1, 1, ".;"));
-    WEE_TEST_STR("test", string_strip ("test", 1, 1, NULL));
-    WEE_TEST_STR("test", string_strip ("test", 1, 1, ".;"));
-    WEE_TEST_STR(".-test.-", string_strip (".-test.-", 0, 0, ".-"));
-    WEE_TEST_STR("test", string_strip (".-test.-", 1, 1, ".-"));
-    WEE_TEST_STR("test.-", string_strip (".-test.-", 1, 0, ".-"));
-    WEE_TEST_STR(".-test", string_strip (".-test.-", 0, 1, ".-"));
+    DOGE_TEST_STR(NULL, string_strip (NULL, 1, 1, NULL));
+    DOGE_TEST_STR(NULL, string_strip (NULL, 1, 1, ".;"));
+    DOGE_TEST_STR("test", string_strip ("test", 1, 1, NULL));
+    DOGE_TEST_STR("test", string_strip ("test", 1, 1, ".;"));
+    DOGE_TEST_STR(".-test.-", string_strip (".-test.-", 0, 0, ".-"));
+    DOGE_TEST_STR("test", string_strip (".-test.-", 1, 1, ".-"));
+    DOGE_TEST_STR("test.-", string_strip (".-test.-", 1, 0, ".-"));
+    DOGE_TEST_STR(".-test", string_strip (".-test.-", 0, 1, ".-"));
 }
 
 /*
@@ -458,30 +458,30 @@ TEST(String, ConvertEscapedChars)
 {
     char *str;
 
-    WEE_TEST_STR(NULL, string_convert_escaped_chars (NULL));
-    WEE_TEST_STR("", string_convert_escaped_chars (""));
-    WEE_TEST_STR("", string_convert_escaped_chars ("\\"));
-    WEE_TEST_STR("\"", string_convert_escaped_chars ("\\\""));
-    WEE_TEST_STR("\\", string_convert_escaped_chars ("\\\\"));
-    WEE_TEST_STR("\a", string_convert_escaped_chars ("\\a"));
-    WEE_TEST_STR("\a", string_convert_escaped_chars ("\\a"));
-    WEE_TEST_STR("\b", string_convert_escaped_chars ("\\b"));
-    WEE_TEST_STR("\e", string_convert_escaped_chars ("\\e"));
-    WEE_TEST_STR("\f", string_convert_escaped_chars ("\\f"));
-    WEE_TEST_STR("\n", string_convert_escaped_chars ("\\n"));
-    WEE_TEST_STR("\r", string_convert_escaped_chars ("\\r"));
-    WEE_TEST_STR("\t", string_convert_escaped_chars ("\\t"));
-    WEE_TEST_STR("\v", string_convert_escaped_chars ("\\v"));
-    WEE_TEST_STR("\123", string_convert_escaped_chars ("\\0123"));
-    WEE_TEST_STR("\123",
+    DOGE_TEST_STR(NULL, string_convert_escaped_chars (NULL));
+    DOGE_TEST_STR("", string_convert_escaped_chars (""));
+    DOGE_TEST_STR("", string_convert_escaped_chars ("\\"));
+    DOGE_TEST_STR("\"", string_convert_escaped_chars ("\\\""));
+    DOGE_TEST_STR("\\", string_convert_escaped_chars ("\\\\"));
+    DOGE_TEST_STR("\a", string_convert_escaped_chars ("\\a"));
+    DOGE_TEST_STR("\a", string_convert_escaped_chars ("\\a"));
+    DOGE_TEST_STR("\b", string_convert_escaped_chars ("\\b"));
+    DOGE_TEST_STR("\e", string_convert_escaped_chars ("\\e"));
+    DOGE_TEST_STR("\f", string_convert_escaped_chars ("\\f"));
+    DOGE_TEST_STR("\n", string_convert_escaped_chars ("\\n"));
+    DOGE_TEST_STR("\r", string_convert_escaped_chars ("\\r"));
+    DOGE_TEST_STR("\t", string_convert_escaped_chars ("\\t"));
+    DOGE_TEST_STR("\v", string_convert_escaped_chars ("\\v"));
+    DOGE_TEST_STR("\123", string_convert_escaped_chars ("\\0123"));
+    DOGE_TEST_STR("\123",
                  string_convert_escaped_chars ("\\0123"));  /* invalid */
-    WEE_TEST_STR("\x41", string_convert_escaped_chars ("\\x41"));
-    WEE_TEST_STR("\x04z", string_convert_escaped_chars ("\\x4z"));
-    WEE_TEST_STR(" zz", string_convert_escaped_chars ("\\u20zz"));
-    WEE_TEST_STR("\U00012345", string_convert_escaped_chars ("\\U00012345"));
-    WEE_TEST_STR("\U00000123zzz",
+    DOGE_TEST_STR("\x41", string_convert_escaped_chars ("\\x41"));
+    DOGE_TEST_STR("\x04z", string_convert_escaped_chars ("\\x4z"));
+    DOGE_TEST_STR(" zz", string_convert_escaped_chars ("\\u20zz"));
+    DOGE_TEST_STR("\U00012345", string_convert_escaped_chars ("\\U00012345"));
+    DOGE_TEST_STR("\U00000123zzz",
                  string_convert_escaped_chars ("\\U00123zzz"));
-    WEE_TEST_STR("",
+    DOGE_TEST_STR("",
                  string_convert_escaped_chars ("\\U12345678")); /* invalid */
 }
 
@@ -493,22 +493,22 @@ TEST(String, ConvertEscapedChars)
 
 TEST(String, IsWordChar)
 {
-    WEE_IS_WORD_CHAR(0, NULL);
-    WEE_IS_WORD_CHAR(0, "");
-    WEE_IS_WORD_CHAR(0, " abc");       /* space */
-    WEE_IS_WORD_CHAR(0, "\u00A0abc");  /* unbreakable space */
-    WEE_IS_WORD_CHAR(0, "&abc");
-    WEE_IS_WORD_CHAR(0, "+abc");
-    WEE_IS_WORD_CHAR(0, "$abc");
-    WEE_IS_WORD_CHAR(0, "*abc");
-    WEE_IS_WORD_CHAR(0, "/abc");
-    WEE_IS_WORD_CHAR(0, "\\abc");
+    DOGE_IS_WORD_CHAR(0, NULL);
+    DOGE_IS_WORD_CHAR(0, "");
+    DOGE_IS_WORD_CHAR(0, " abc");       /* space */
+    DOGE_IS_WORD_CHAR(0, "\u00A0abc");  /* unbreakable space */
+    DOGE_IS_WORD_CHAR(0, "&abc");
+    DOGE_IS_WORD_CHAR(0, "+abc");
+    DOGE_IS_WORD_CHAR(0, "$abc");
+    DOGE_IS_WORD_CHAR(0, "*abc");
+    DOGE_IS_WORD_CHAR(0, "/abc");
+    DOGE_IS_WORD_CHAR(0, "\\abc");
 
-    WEE_IS_WORD_CHAR(1, "abc");
-    WEE_IS_WORD_CHAR(1, "1abc");
-    WEE_IS_WORD_CHAR(1, "-abc");
-    WEE_IS_WORD_CHAR(1, "_abc");
-    WEE_IS_WORD_CHAR(1, "|abc");
+    DOGE_IS_WORD_CHAR(1, "abc");
+    DOGE_IS_WORD_CHAR(1, "1abc");
+    DOGE_IS_WORD_CHAR(1, "-abc");
+    DOGE_IS_WORD_CHAR(1, "_abc");
+    DOGE_IS_WORD_CHAR(1, "|abc");
 }
 
 /*
@@ -520,13 +520,13 @@ TEST(String, MaskToRegex)
 {
     char *str;
 
-    WEE_TEST_STR(NULL, string_mask_to_regex (NULL));
-    WEE_TEST_STR("", string_mask_to_regex (""));
-    WEE_TEST_STR("test", string_mask_to_regex ("test"));
-    WEE_TEST_STR("test.*", string_mask_to_regex ("test*"));
-    WEE_TEST_STR(".*test.*", string_mask_to_regex ("*test*"));
-    WEE_TEST_STR(".*te.*st.*", string_mask_to_regex ("*te*st*"));
-    WEE_TEST_STR("test\\.\\[\\]\\{\\}\\(\\)\\?\\+\\|\\^\\$\\\\",
+    DOGE_TEST_STR(NULL, string_mask_to_regex (NULL));
+    DOGE_TEST_STR("", string_mask_to_regex (""));
+    DOGE_TEST_STR("test", string_mask_to_regex ("test"));
+    DOGE_TEST_STR("test.*", string_mask_to_regex ("test*"));
+    DOGE_TEST_STR(".*test.*", string_mask_to_regex ("*test*"));
+    DOGE_TEST_STR(".*te.*st.*", string_mask_to_regex ("*te*st*"));
+    DOGE_TEST_STR("test\\.\\[\\]\\{\\}\\(\\)\\?\\+\\|\\^\\$\\\\",
                  string_mask_to_regex ("test.[]{}()?+|^$\\"));
 }
 
@@ -602,41 +602,41 @@ TEST(String, Highlight)
     regex_t regex;
 
     /* check highlight with a string */
-    WEE_HAS_HL_STR(0, NULL, NULL);
-    WEE_HAS_HL_STR(0, NULL, "");
-    WEE_HAS_HL_STR(0, "", NULL);
-    WEE_HAS_HL_STR(0, "", "");
-    WEE_HAS_HL_STR(0, "test", "");
-    WEE_HAS_HL_STR(0, "", "test");
-    WEE_HAS_HL_STR(0, "test-here", "test");
-    WEE_HAS_HL_STR(0, "this is a test here", "abc,def");
-    WEE_HAS_HL_STR(1, "test", "test");
-    WEE_HAS_HL_STR(1, "this is a test", "test");
-    WEE_HAS_HL_STR(1, "test here", "test");
-    WEE_HAS_HL_STR(1, "test: here", "test");
-    WEE_HAS_HL_STR(1, "test : here", "test");
-    WEE_HAS_HL_STR(1, "test\u00A0here", "test");   /* unbreakable space */
-    WEE_HAS_HL_STR(1, "test\u00A0:here", "test");  /* unbreakable space */
-    WEE_HAS_HL_STR(1, "this is a test here", "test");
-    WEE_HAS_HL_STR(1, "this is a test here", "abc,test");
+    DOGE_HAS_HL_STR(0, NULL, NULL);
+    DOGE_HAS_HL_STR(0, NULL, "");
+    DOGE_HAS_HL_STR(0, "", NULL);
+    DOGE_HAS_HL_STR(0, "", "");
+    DOGE_HAS_HL_STR(0, "test", "");
+    DOGE_HAS_HL_STR(0, "", "test");
+    DOGE_HAS_HL_STR(0, "test-here", "test");
+    DOGE_HAS_HL_STR(0, "this is a test here", "abc,def");
+    DOGE_HAS_HL_STR(1, "test", "test");
+    DOGE_HAS_HL_STR(1, "this is a test", "test");
+    DOGE_HAS_HL_STR(1, "test here", "test");
+    DOGE_HAS_HL_STR(1, "test: here", "test");
+    DOGE_HAS_HL_STR(1, "test : here", "test");
+    DOGE_HAS_HL_STR(1, "test\u00A0here", "test");   /* unbreakable space */
+    DOGE_HAS_HL_STR(1, "test\u00A0:here", "test");  /* unbreakable space */
+    DOGE_HAS_HL_STR(1, "this is a test here", "test");
+    DOGE_HAS_HL_STR(1, "this is a test here", "abc,test");
 
     /*
      * check highlight with a regex, each call of macro
      * checks with a regex as string, and then a compiled regex
      */
-    WEE_HAS_HL_REGEX(-1, 0, NULL, NULL);
-    WEE_HAS_HL_REGEX(0, 0, NULL, "");
-    WEE_HAS_HL_REGEX(-1, 0,  "", NULL);
-    WEE_HAS_HL_REGEX(0, 0, "", "");
-    WEE_HAS_HL_REGEX(0, 0, "test", "");
-    WEE_HAS_HL_REGEX(0, 0, "", "test");
-    WEE_HAS_HL_REGEX(0, 1, "test", "test");
-    WEE_HAS_HL_REGEX(0, 1, "this is a test", "test");
-    WEE_HAS_HL_REGEX(0, 1, "abc tested", "test.*");
-    WEE_HAS_HL_REGEX(0, 1, "abc tested here", "test.*");
-    WEE_HAS_HL_REGEX(0, 1, "tested here", "test.*");
-    WEE_HAS_HL_REGEX(0, 0, "this is a test", "teste.*");
-    WEE_HAS_HL_REGEX(0, 0, "test here", "teste.*");
+    DOGE_HAS_HL_REGEX(-1, 0, NULL, NULL);
+    DOGE_HAS_HL_REGEX(0, 0, NULL, "");
+    DOGE_HAS_HL_REGEX(-1, 0,  "", NULL);
+    DOGE_HAS_HL_REGEX(0, 0, "", "");
+    DOGE_HAS_HL_REGEX(0, 0, "test", "");
+    DOGE_HAS_HL_REGEX(0, 0, "", "test");
+    DOGE_HAS_HL_REGEX(0, 1, "test", "test");
+    DOGE_HAS_HL_REGEX(0, 1, "this is a test", "test");
+    DOGE_HAS_HL_REGEX(0, 1, "abc tested", "test.*");
+    DOGE_HAS_HL_REGEX(0, 1, "abc tested here", "test.*");
+    DOGE_HAS_HL_REGEX(0, 1, "tested here", "test.*");
+    DOGE_HAS_HL_REGEX(0, 0, "this is a test", "teste.*");
+    DOGE_HAS_HL_REGEX(0, 0, "test here", "teste.*");
 }
 
 /*
@@ -670,17 +670,17 @@ TEST(String, Replace)
 {
     char *str;
 
-    WEE_TEST_STR(NULL, string_replace (NULL, NULL, NULL));
-    WEE_TEST_STR(NULL, string_replace ("string", NULL, NULL));
-    WEE_TEST_STR(NULL, string_replace (NULL, "search", NULL));
-    WEE_TEST_STR(NULL, string_replace (NULL, NULL, "replace"));
-    WEE_TEST_STR(NULL, string_replace ("string", "search", NULL));
-    WEE_TEST_STR(NULL, string_replace ("string", NULL, "replace"));
-    WEE_TEST_STR(NULL, string_replace (NULL, "search", "replace"));
+    DOGE_TEST_STR(NULL, string_replace (NULL, NULL, NULL));
+    DOGE_TEST_STR(NULL, string_replace ("string", NULL, NULL));
+    DOGE_TEST_STR(NULL, string_replace (NULL, "search", NULL));
+    DOGE_TEST_STR(NULL, string_replace (NULL, NULL, "replace"));
+    DOGE_TEST_STR(NULL, string_replace ("string", "search", NULL));
+    DOGE_TEST_STR(NULL, string_replace ("string", NULL, "replace"));
+    DOGE_TEST_STR(NULL, string_replace (NULL, "search", "replace"));
 
-    WEE_TEST_STR("test abc def", string_replace("test abc def", "xyz", "xxx"));
-    WEE_TEST_STR("test xxx def", string_replace("test abc def", "abc", "xxx"));
-    WEE_TEST_STR("xxx test xxx def xxx",
+    DOGE_TEST_STR("test abc def", string_replace("test abc def", "xyz", "xxx"));
+    DOGE_TEST_STR("test xxx def", string_replace("test abc def", "abc", "xxx"));
+    DOGE_TEST_STR("xxx test xxx def xxx",
                  string_replace("abc test abc def abc", "abc", "xxx"));
 }
 
@@ -694,17 +694,17 @@ TEST(String, ReplaceRegex)
     regex_t regex;
     char *result;
 
-    WEE_REPLACE_REGEX(-1, NULL, NULL, NULL, NULL, '$', NULL);
-    WEE_REPLACE_REGEX(0, NULL, NULL, "", NULL, '$', NULL);
-    WEE_REPLACE_REGEX(0, "string", "string", "", NULL, '$', NULL);
-    WEE_REPLACE_REGEX(0, "test abc def", "test abc def",
+    DOGE_REPLACE_REGEX(-1, NULL, NULL, NULL, NULL, '$', NULL);
+    DOGE_REPLACE_REGEX(0, NULL, NULL, "", NULL, '$', NULL);
+    DOGE_REPLACE_REGEX(0, "string", "string", "", NULL, '$', NULL);
+    DOGE_REPLACE_REGEX(0, "test abc def", "test abc def",
                       "xyz", "xxx", '$', NULL);
-    WEE_REPLACE_REGEX(0, "test xxx def", "test abc def",
+    DOGE_REPLACE_REGEX(0, "test xxx def", "test abc def",
                       "abc", "xxx", '$', NULL);
-    WEE_REPLACE_REGEX(0, "foo", "test foo", "^(test +)(.*)", "$2", '$', NULL);
-    WEE_REPLACE_REGEX(0, "test / ***", "test foo",
+    DOGE_REPLACE_REGEX(0, "foo", "test foo", "^(test +)(.*)", "$2", '$', NULL);
+    DOGE_REPLACE_REGEX(0, "test / ***", "test foo",
                       "^(test +)(.*)", "$1/ $.*2", '$', NULL);
-    WEE_REPLACE_REGEX(0, "%%%", "test foo",
+    DOGE_REPLACE_REGEX(0, "%%%", "test foo",
                       "^(test +)(.*)", "$.%+", '$', NULL);
 }
 
@@ -719,45 +719,45 @@ TEST(String, ReplaceWithCallback)
     int errors;
 
     /* tests with invalid arguments */
-    WEE_REPLACE_CB(NULL, -1, NULL, NULL, NULL, NULL, NULL, NULL);
-    WEE_REPLACE_CB(NULL, -1, "", NULL, NULL, NULL, NULL, NULL);
-    WEE_REPLACE_CB(NULL, -1, NULL, "", NULL, NULL, NULL, NULL);
-    WEE_REPLACE_CB(NULL, -1, NULL, NULL, "", NULL, NULL, NULL);
-    WEE_REPLACE_CB(NULL, -1, NULL, NULL, NULL, &test_replace_cb, NULL, NULL);
-    WEE_REPLACE_CB(NULL, 0, NULL, NULL, NULL, NULL, NULL, &errors);
-    WEE_REPLACE_CB(NULL, -1, "test", NULL, NULL, NULL, NULL, NULL);
-    WEE_REPLACE_CB(NULL, -1, "test", "${", NULL, NULL, NULL, NULL);
-    WEE_REPLACE_CB(NULL, -1, "test", NULL, "}", NULL, NULL, NULL);
-    WEE_REPLACE_CB(NULL, -1, "test", NULL, NULL, &test_replace_cb, NULL, NULL);
-    WEE_REPLACE_CB(NULL, 0, "test", NULL, NULL, NULL, NULL, &errors);
-    WEE_REPLACE_CB(NULL, -1, "test", "${", "}", NULL, NULL, NULL);
+    DOGE_REPLACE_CB(NULL, -1, NULL, NULL, NULL, NULL, NULL, NULL);
+    DOGE_REPLACE_CB(NULL, -1, "", NULL, NULL, NULL, NULL, NULL);
+    DOGE_REPLACE_CB(NULL, -1, NULL, "", NULL, NULL, NULL, NULL);
+    DOGE_REPLACE_CB(NULL, -1, NULL, NULL, "", NULL, NULL, NULL);
+    DOGE_REPLACE_CB(NULL, -1, NULL, NULL, NULL, &test_replace_cb, NULL, NULL);
+    DOGE_REPLACE_CB(NULL, 0, NULL, NULL, NULL, NULL, NULL, &errors);
+    DOGE_REPLACE_CB(NULL, -1, "test", NULL, NULL, NULL, NULL, NULL);
+    DOGE_REPLACE_CB(NULL, -1, "test", "${", NULL, NULL, NULL, NULL);
+    DOGE_REPLACE_CB(NULL, -1, "test", NULL, "}", NULL, NULL, NULL);
+    DOGE_REPLACE_CB(NULL, -1, "test", NULL, NULL, &test_replace_cb, NULL, NULL);
+    DOGE_REPLACE_CB(NULL, 0, "test", NULL, NULL, NULL, NULL, &errors);
+    DOGE_REPLACE_CB(NULL, -1, "test", "${", "}", NULL, NULL, NULL);
 
     /* valid arguments */
-    WEE_REPLACE_CB("test", -1, "test", "${", "}",
+    DOGE_REPLACE_CB("test", -1, "test", "${", "}",
                    &test_replace_cb, NULL, NULL);
-    WEE_REPLACE_CB("test", 0, "test", "${", "}",
+    DOGE_REPLACE_CB("test", 0, "test", "${", "}",
                    &test_replace_cb, NULL, &errors);
-    WEE_REPLACE_CB("test def", 0, "test ${abc}", "${", "}",
+    DOGE_REPLACE_CB("test def", 0, "test ${abc}", "${", "}",
                    &test_replace_cb, NULL, &errors);
-    WEE_REPLACE_CB("test ", 0, "test ${xxx}", "${", "}",
+    DOGE_REPLACE_CB("test ", 0, "test ${xxx}", "${", "}",
                    &test_replace_cb, NULL, &errors);
-    WEE_REPLACE_CB("test ${aaa}", 1, "test ${aaa}", "${", "}",
+    DOGE_REPLACE_CB("test ${aaa}", 1, "test ${aaa}", "${", "}",
                    &test_replace_cb, NULL, &errors);
-    WEE_REPLACE_CB("test def  ${aaa}", 1, "test ${abc} ${xxx} ${aaa}",
+    DOGE_REPLACE_CB("test def  ${aaa}", 1, "test ${abc} ${xxx} ${aaa}",
                    "${", "}", &test_replace_cb, NULL, &errors);
-    WEE_REPLACE_CB("test ", 1, "test ${abc", "${", "}",
+    DOGE_REPLACE_CB("test ", 1, "test ${abc", "${", "}",
                    &test_replace_cb, NULL, &errors);
-    WEE_REPLACE_CB("test abc}", 0, "test abc}", "${", "}",
+    DOGE_REPLACE_CB("test abc}", 0, "test abc}", "${", "}",
                    &test_replace_cb, NULL, &errors);
-    WEE_REPLACE_CB("test ${}", 1, "test ${}", "${", "}",
+    DOGE_REPLACE_CB("test ${}", 1, "test ${}", "${", "}",
                    &test_replace_cb, NULL, &errors);
-    WEE_REPLACE_CB("test ${ }", 1, "test ${ }", "${", "}",
+    DOGE_REPLACE_CB("test ${ }", 1, "test ${ }", "${", "}",
                    &test_replace_cb, NULL, &errors);
-    WEE_REPLACE_CB("def", 0, "${abc}", "${", "}",
+    DOGE_REPLACE_CB("def", 0, "${abc}", "${", "}",
                    &test_replace_cb, NULL, &errors);
-    WEE_REPLACE_CB("", 0, "${xxx}", "${", "}",
+    DOGE_REPLACE_CB("", 0, "${xxx}", "${", "}",
                    &test_replace_cb, NULL, &errors);
-    WEE_REPLACE_CB("${aaa}", 1, "${aaa}", "${", "}",
+    DOGE_REPLACE_CB("${aaa}", 1, "${aaa}", "${", "}",
                    &test_replace_cb, NULL, &errors);
 }
 
@@ -973,24 +973,24 @@ TEST(String, Iconv)
     FILE *f;
 
     /* string_iconv */
-    WEE_TEST_STR(NULL, string_iconv (0, NULL, NULL, NULL));
-    WEE_TEST_STR("", string_iconv (0, NULL, NULL, ""));
-    WEE_TEST_STR("abc", string_iconv (0, NULL, NULL, "abc"));
-    WEE_TEST_STR("abc", string_iconv (1, "UTF-8", "ISO-8859-15", "abc"));
-    WEE_TEST_STR(noel_iso, string_iconv (1, "UTF-8", "ISO-8859-15", noel_utf8));
-    WEE_TEST_STR(noel_utf8, string_iconv (0, "ISO-8859-15", "UTF-8", noel_iso));
+    DOGE_TEST_STR(NULL, string_iconv (0, NULL, NULL, NULL));
+    DOGE_TEST_STR("", string_iconv (0, NULL, NULL, ""));
+    DOGE_TEST_STR("abc", string_iconv (0, NULL, NULL, "abc"));
+    DOGE_TEST_STR("abc", string_iconv (1, "UTF-8", "ISO-8859-15", "abc"));
+    DOGE_TEST_STR(noel_iso, string_iconv (1, "UTF-8", "ISO-8859-15", noel_utf8));
+    DOGE_TEST_STR(noel_utf8, string_iconv (0, "ISO-8859-15", "UTF-8", noel_iso));
 
     /* string_iconv_to_internal */
-    WEE_TEST_STR(NULL, string_iconv_to_internal (NULL, NULL));
-    WEE_TEST_STR("", string_iconv_to_internal (NULL, ""));
-    WEE_TEST_STR("abc", string_iconv_to_internal (NULL, "abc"));
-    WEE_TEST_STR(noel_utf8, string_iconv_to_internal ("ISO-8859-15", noel_iso));
+    DOGE_TEST_STR(NULL, string_iconv_to_internal (NULL, NULL));
+    DOGE_TEST_STR("", string_iconv_to_internal (NULL, ""));
+    DOGE_TEST_STR("abc", string_iconv_to_internal (NULL, "abc"));
+    DOGE_TEST_STR(noel_utf8, string_iconv_to_internal ("ISO-8859-15", noel_iso));
 
     /* string_iconv_from_internal */
-    WEE_TEST_STR(NULL, string_iconv_from_internal (NULL, NULL));
-    WEE_TEST_STR("", string_iconv_from_internal (NULL, ""));
-    WEE_TEST_STR("abc", string_iconv_from_internal (NULL, "abc"));
-    WEE_TEST_STR(noel_iso, string_iconv_from_internal ("ISO-8859-15", noel_utf8));
+    DOGE_TEST_STR(NULL, string_iconv_from_internal (NULL, NULL));
+    DOGE_TEST_STR("", string_iconv_from_internal (NULL, ""));
+    DOGE_TEST_STR("abc", string_iconv_from_internal (NULL, "abc"));
+    DOGE_TEST_STR(noel_iso, string_iconv_from_internal ("ISO-8859-15", noel_utf8));
 
     /* string_iconv_fprintf */
     f = fopen ("/dev/null", "w");
@@ -1010,32 +1010,32 @@ TEST(String, FormatSize)
 {
     char *str;
 
-    WEE_FORMAT_SIZE("0 bytes", 0);
-    WEE_FORMAT_SIZE("1 byte", 1);
-    WEE_FORMAT_SIZE("2 bytes", 2);
-    WEE_FORMAT_SIZE("42 bytes", 42);
-    WEE_FORMAT_SIZE("999 bytes", ONE_KB - 1);
-    WEE_FORMAT_SIZE("1000 bytes", ONE_KB);
-    WEE_FORMAT_SIZE("9999 bytes", (10 * ONE_KB) - 1);
+    DOGE_FORMAT_SIZE("0 bytes", 0);
+    DOGE_FORMAT_SIZE("1 byte", 1);
+    DOGE_FORMAT_SIZE("2 bytes", 2);
+    DOGE_FORMAT_SIZE("42 bytes", 42);
+    DOGE_FORMAT_SIZE("999 bytes", ONE_KB - 1);
+    DOGE_FORMAT_SIZE("1000 bytes", ONE_KB);
+    DOGE_FORMAT_SIZE("9999 bytes", (10 * ONE_KB) - 1);
 
-    WEE_FORMAT_SIZE("10.0 KB", 10 * ONE_KB);
-    WEE_FORMAT_SIZE("10.1 KB", (10 * ONE_KB) + (ONE_KB / 10));
-    WEE_FORMAT_SIZE("42.0 KB", 42 * ONE_KB);
-    WEE_FORMAT_SIZE("1000.0 KB", ONE_MB - 1);
+    DOGE_FORMAT_SIZE("10.0 KB", 10 * ONE_KB);
+    DOGE_FORMAT_SIZE("10.1 KB", (10 * ONE_KB) + (ONE_KB / 10));
+    DOGE_FORMAT_SIZE("42.0 KB", 42 * ONE_KB);
+    DOGE_FORMAT_SIZE("1000.0 KB", ONE_MB - 1);
 
-    WEE_FORMAT_SIZE("1.00 MB", ONE_MB);
-    WEE_FORMAT_SIZE("1.10 MB", ONE_MB + (ONE_MB / 10));
-    WEE_FORMAT_SIZE("42.00 MB", 42 * ONE_MB);
-    WEE_FORMAT_SIZE("1000.00 MB", ONE_GB - 1);
+    DOGE_FORMAT_SIZE("1.00 MB", ONE_MB);
+    DOGE_FORMAT_SIZE("1.10 MB", ONE_MB + (ONE_MB / 10));
+    DOGE_FORMAT_SIZE("42.00 MB", 42 * ONE_MB);
+    DOGE_FORMAT_SIZE("1000.00 MB", ONE_GB - 1);
 
-    WEE_FORMAT_SIZE("1.00 GB", ONE_GB);
-    WEE_FORMAT_SIZE("1.10 GB", ONE_GB + (ONE_GB / 10));
-    WEE_FORMAT_SIZE("42.00 GB", 42 * ONE_GB);
-    WEE_FORMAT_SIZE("1000.00 GB", ONE_TB - 1);
+    DOGE_FORMAT_SIZE("1.00 GB", ONE_GB);
+    DOGE_FORMAT_SIZE("1.10 GB", ONE_GB + (ONE_GB / 10));
+    DOGE_FORMAT_SIZE("42.00 GB", 42 * ONE_GB);
+    DOGE_FORMAT_SIZE("1000.00 GB", ONE_TB - 1);
 
-    WEE_FORMAT_SIZE("1.00 TB", ONE_TB);
-    WEE_FORMAT_SIZE("1.10 TB", ONE_TB + (ONE_TB / 10));
-    WEE_FORMAT_SIZE("42.00 TB", 42 * ONE_TB);
+    DOGE_FORMAT_SIZE("1.00 TB", ONE_TB);
+    DOGE_FORMAT_SIZE("1.10 TB", ONE_TB + (ONE_TB / 10));
+    DOGE_FORMAT_SIZE("42.00 TB", 42 * ONE_TB);
 }
 
 /*

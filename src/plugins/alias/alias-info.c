@@ -3,25 +3,25 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "alias.h"
 
 
@@ -44,7 +44,7 @@ alias_info_infolist_alias_cb (void *data, const char *infolist_name,
     if (pointer && !alias_valid (pointer))
         return NULL;
 
-    ptr_infolist = weechat_infolist_new ();
+    ptr_infolist = dogechat_infolist_new ();
     if (!ptr_infolist)
         return NULL;
 
@@ -53,7 +53,7 @@ alias_info_infolist_alias_cb (void *data, const char *infolist_name,
         /* build list with only one alias */
         if (!alias_add_to_infolist (ptr_infolist, pointer))
         {
-            weechat_infolist_free (ptr_infolist);
+            dogechat_infolist_free (ptr_infolist);
             return NULL;
         }
         return ptr_infolist;
@@ -65,11 +65,11 @@ alias_info_infolist_alias_cb (void *data, const char *infolist_name,
              ptr_alias = ptr_alias->next_alias)
         {
             if (!arguments || !arguments[0]
-                || weechat_string_match (ptr_alias->name, arguments, 0))
+                || dogechat_string_match (ptr_alias->name, arguments, 0))
             {
                 if (!alias_add_to_infolist (ptr_infolist, ptr_alias))
                 {
-                    weechat_infolist_free (ptr_infolist);
+                    dogechat_infolist_free (ptr_infolist);
                     return NULL;
                 }
             }
@@ -86,7 +86,7 @@ alias_info_infolist_alias_cb (void *data, const char *infolist_name,
 void
 alias_info_init ()
 {
-    weechat_hook_infolist (
+    dogechat_hook_infolist (
         "alias", N_("list of aliases"),
         N_("alias pointer (optional)"),
         N_("alias name (wildcard \"*\" is allowed) (optional)"),

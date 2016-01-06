@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2011-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -26,9 +26,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-hashtable.h"
-#include "../core/wee-string.h"
+#include "../core/dogechat.h"
+#include "../core/doge-hashtable.h"
+#include "../core/doge-string.h"
 #include "../plugins/plugin.h"
 #include "gui-bar.h"
 #include "gui-bar-window.h"
@@ -169,8 +169,8 @@ gui_focus_to_hashtable (struct t_gui_focus_info *focus_info, const char *key)
     const char *nick;
 
     hashtable = hashtable_new (32,
-                               WEECHAT_HASHTABLE_STRING,
-                               WEECHAT_HASHTABLE_STRING,
+                               DOGECHAT_HASHTABLE_STRING,
+                               DOGECHAT_HASHTABLE_STRING,
                                NULL,
                                NULL);
     if (!hashtable)

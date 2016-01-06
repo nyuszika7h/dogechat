@@ -102,71 +102,71 @@
 
 | trigger | trigger_options | トリガに対するオプション
 
-| weechat | bars_names | バーの名前
+| dogechat | bars_names | バーの名前
 
-| weechat | bars_options | バーのオプション
+| dogechat | bars_options | バーのオプション
 
-| weechat | buffer_properties_get | バッファから読み取り可能なプロパティ
+| dogechat | buffer_properties_get | バッファから読み取り可能なプロパティ
 
-| weechat | buffer_properties_set | バッファに指定可能なプロパティ
+| dogechat | buffer_properties_set | バッファに指定可能なプロパティ
 
-| weechat | buffers_names | バッファの名前
+| dogechat | buffers_names | バッファの名前
 
-| weechat | buffers_numbers | バッファの数
+| dogechat | buffers_numbers | バッファの数
 
-| weechat | buffers_plugins_names | バッファの名前 (プラグインの名前を含めた)
+| dogechat | buffers_plugins_names | バッファの名前 (プラグインの名前を含めた)
 
-| weechat | colors | 色名
+| dogechat | colors | 色名
 
-| weechat | commands | コマンド (weechat とプラグイン)
+| dogechat | commands | コマンド (dogechat とプラグイン)
 
-| weechat | config_files | 設定ファイル
+| dogechat | config_files | 設定ファイル
 
-| weechat | config_option_values | 設定オプションの値
+| dogechat | config_option_values | 設定オプションの値
 
-| weechat | config_options | 設定オプション
+| dogechat | config_options | 設定オプション
 
-| weechat | cursor_areas | カーソルを自由に動かせるエリア ("chat" またはバーの名前)
+| dogechat | cursor_areas | カーソルを自由に動かせるエリア ("chat" またはバーの名前)
 
-| weechat | env_value | 環境変数の値
+| dogechat | env_value | 環境変数の値
 
-| weechat | env_vars | 環境変数
+| dogechat | env_vars | 環境変数
 
-| weechat | filename | ファイル名
+| dogechat | filename | ファイル名
 
-| weechat | filters_names | フィルタ名
+| dogechat | filters_names | フィルタ名
 
-| weechat | infolists | フックされた infolist の名前
+| dogechat | infolists | フックされた infolist の名前
 
-| weechat | infos | フックされた情報の名前
+| dogechat | infos | フックされた情報の名前
 
-| weechat | keys_codes | キーコード
+| dogechat | keys_codes | キーコード
 
-| weechat | keys_codes_for_reset | リセットできるキーコード (追加、再定義、削除されたキー)
+| dogechat | keys_codes_for_reset | リセットできるキーコード (追加、再定義、削除されたキー)
 
-| weechat | keys_contexts | キーコンテキスト
+| dogechat | keys_contexts | キーコンテキスト
 
-| weechat | layouts_names | レイアウトの名前
+| dogechat | layouts_names | レイアウトの名前
 
-| weechat | nicks | 現在のバッファのニックネームリストに含まれるニックネーム
+| dogechat | nicks | 現在のバッファのニックネームリストに含まれるニックネーム
 
-| weechat | palette_colors | パレットカラー
+| dogechat | palette_colors | パレットカラー
 
-| weechat | plugins_commands | プラグインの定義するコマンド
+| dogechat | plugins_commands | プラグインの定義するコマンド
 
-| weechat | plugins_installed | インストールされたプラグインの名前
+| dogechat | plugins_installed | インストールされたプラグインの名前
 
-| weechat | plugins_names | プラグイン名
+| dogechat | plugins_names | プラグイン名
 
-| weechat | proxies_names | プロキシの名前
+| dogechat | proxies_names | プロキシの名前
 
-| weechat | proxies_options | プロキシのオプション
+| dogechat | proxies_options | プロキシのオプション
 
-| weechat | secured_data | 保護データの名前 (sec.conf ファイル、セクションデータ)
+| dogechat | secured_data | 保護データの名前 (sec.conf ファイル、セクションデータ)
 
-| weechat | weechat_commands | weechat コマンド
+| dogechat | dogechat_commands | dogechat コマンド
 
-| weechat | windows_numbers | ウィンドウの数
+| dogechat | windows_numbers | ウィンドウの数
 
 | xfer | nick | DCC チャットのニックネーム
 

@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -25,13 +25,13 @@
 #include <ctype.h>
 #include <regex.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-color.h"
 #include "irc-config.h"
 
 
-char *irc_color_to_weechat[IRC_NUM_COLORS] =
+char *irc_color_to_dogechat[IRC_NUM_COLORS] =
 { /*     0 */ "white",
   /*     1 */ "black",
   /*     2 */ "blue",
@@ -84,7 +84,7 @@ regex_t *irc_color_regex_ansi = NULL;
 
 
 /*
- * Replaces IRC colors by WeeChat colors.
+ * Replaces IRC colors by DogeChat colors.
  *
  * If keep_colors == 0: removes any color/style in message otherwise keeps
  * colors.
@@ -133,7 +133,7 @@ irc_color_decode (const char *string, int keep_colors)
                 if (keep_colors)
                 {
                     snprintf (str_to_add, sizeof (str_to_add), "%s",
-                              weechat_color ((bold) ? "-bold" : "bold"));
+                              dogechat_color ((bold) ? "-bold" : "bold"));
                 }
                 bold ^= 1;
                 ptr_string++;
@@ -142,7 +142,7 @@ irc_color_decode (const char *string, int keep_colors)
                 if (keep_colors)
                 {
                     snprintf (str_to_add, sizeof (str_to_add), "%s",
-                              weechat_color ("reset"));
+                              dogechat_color ("reset"));
                 }
                 bold = 0;
                 reverse = 0;
@@ -157,7 +157,7 @@ irc_color_decode (const char *string, int keep_colors)
                 if (keep_colors)
                 {
                     snprintf (str_to_add, sizeof (str_to_add), "%s",
-                              weechat_color ((reverse) ? "-reverse" : "reverse"));
+                              dogechat_color ((reverse) ? "-reverse" : "reverse"));
                 }
                 reverse ^= 1;
                 ptr_string++;
@@ -166,7 +166,7 @@ irc_color_decode (const char *string, int keep_colors)
                 if (keep_colors)
                 {
                     snprintf (str_to_add, sizeof (str_to_add), "%s",
-                              weechat_color ((italic) ? "-italic" : "italic"));
+                              dogechat_color ((italic) ? "-italic" : "italic"));
                 }
                 italic ^= 1;
                 ptr_string++;
@@ -175,7 +175,7 @@ irc_color_decode (const char *string, int keep_colors)
                 if (keep_colors)
                 {
                     snprintf (str_to_add, sizeof (str_to_add), "%s",
-                              weechat_color ((underline) ? "-underline" : "underline"));
+                              dogechat_color ((underline) ? "-underline" : "underline"));
                 }
                 underline ^= 1;
                 ptr_string++;
@@ -233,7 +233,7 @@ irc_color_decode (const char *string, int keep_colors)
                         }
                         /* search "fg,bg" in hashtable of remapped colors */
                         snprintf (str_key, sizeof (str_key), "%d,%d", fg, bg);
-                        remapped_color = weechat_hashtable_get (
+                        remapped_color = dogechat_hashtable_get (
                             irc_config_hashtable_color_mirc_remap,
                             str_key);
                         if (remapped_color)
@@ -245,17 +245,17 @@ irc_color_decode (const char *string, int keep_colors)
                         {
                             snprintf (str_color, sizeof (str_color),
                                       "|%s%s%s",
-                                      (fg >= 0) ? irc_color_to_weechat[fg] : "",
+                                      (fg >= 0) ? irc_color_to_dogechat[fg] : "",
                                       (bg >= 0) ? "," : "",
-                                      (bg >= 0) ? irc_color_to_weechat[bg] : "");
+                                      (bg >= 0) ? irc_color_to_dogechat[bg] : "");
                         }
                         snprintf (str_to_add, sizeof (str_to_add), "%s",
-                                  weechat_color (str_color));
+                                  dogechat_color (str_color));
                     }
                     else
                     {
                         snprintf (str_to_add, sizeof (str_to_add), "%s",
-                                  weechat_color ("resetcolor"));
+                                  dogechat_color ("resetcolor"));
                     }
                 }
                 break;
@@ -264,7 +264,7 @@ irc_color_decode (const char *string, int keep_colors)
                  * we are not on an IRC color code, just copy the UTF-8 char
                  * into "str_to_add"
                  */
-                length = weechat_utf8_char_size ((char *)ptr_string);
+                length = dogechat_utf8_char_size ((char *)ptr_string);
                 if (length == 0)
                     length = 1;
                 memcpy (str_to_add, ptr_string, length);
@@ -380,7 +380,7 @@ irc_color_encode (const char *string, int keep_colors)
                 ptr_string++;
                 break;
             default:
-                length = weechat_utf8_char_size ((char *)ptr_string);
+                length = dogechat_utf8_char_size ((char *)ptr_string);
                 if (length == 0)
                     length = 1;
                 memcpy (out + out_pos, ptr_string, length);
@@ -412,7 +412,7 @@ irc_color_convert_rgb2irc (int rgb)
               rgb,
               IRC_COLOR_TERM2IRC_NUM_COLORS);
 
-    info_color = weechat_info_get ("color_rgb2term", str_color);
+    info_color = dogechat_info_get ("color_rgb2term", str_color);
     if (!info_color || !info_color[0])
         return -1;
 
@@ -442,7 +442,7 @@ irc_color_convert_term2irc (int color)
 
     snprintf (str_color, sizeof (str_color), "%d", color);
 
-    info_color = weechat_info_get ("color_term2rgb", str_color);
+    info_color = dogechat_info_get ("color_term2rgb", str_color);
     if (!info_color || !info_color[0])
         return -1;
 
@@ -481,18 +481,18 @@ irc_color_decode_ansi_cb (void *data, const char *text)
 
     /* sequence "\33[m" resets color */
     if (length < 4)
-        return strdup (weechat_color ("reset"));
+        return strdup (dogechat_color ("reset"));
 
     text2 = NULL;
     items = NULL;
     output = NULL;
 
     /* extract text between "\33[" and "m" */
-    text2 = weechat_strndup (text + 2, length - 3);
+    text2 = dogechat_strndup (text + 2, length - 3);
     if (!text2)
         goto end;
 
-    items = weechat_string_split (text2, ";", 0, 0, &num_items);
+    items = dogechat_string_split (text2, ";", 0, 0, &num_items);
     if (!items)
         goto end;
 
@@ -711,7 +711,7 @@ irc_color_decode_ansi_cb (void *data, const char *text)
 
 end:
     if (items)
-        weechat_string_free_split (items);
+        dogechat_string_free_split (items);
     if (text2)
         free (text2);
 
@@ -738,8 +738,8 @@ irc_color_decode_ansi (const char *string, int keep_colors)
         irc_color_regex_ansi = malloc (sizeof (*irc_color_regex_ansi));
         if (!irc_color_regex_ansi)
             return NULL;
-        if (weechat_string_regcomp (irc_color_regex_ansi,
-                                    weechat_info_get ("color_ansi_regex", NULL),
+        if (dogechat_string_regcomp (irc_color_regex_ansi,
+                                    dogechat_info_get ("color_ansi_regex", NULL),
                                     REG_EXTENDED) != 0)
         {
             free (irc_color_regex_ansi);
@@ -753,7 +753,7 @@ irc_color_decode_ansi (const char *string, int keep_colors)
     ansi_state.underline = 0;
     ansi_state.italic = 0;
 
-    return weechat_string_replace_regex (string, irc_color_regex_ansi,
+    return dogechat_string_replace_regex (string, irc_color_regex_ansi,
                                          "$0", '$',
                                          &irc_color_decode_ansi_cb,
                                          &ansi_state);
@@ -802,11 +802,11 @@ irc_color_for_tags (const char *color)
     if (!color)
         return NULL;
 
-    return weechat_string_replace (color, ",", ":");
+    return dogechat_string_replace (color, ",", ":");
 }
 
 /*
- * Adds mapping between IRC color codes and WeeChat color names in an infolist.
+ * Adds mapping between IRC color codes and DogeChat color names in an infolist.
  *
  * Returns:
  *   1: OK
@@ -814,7 +814,7 @@ irc_color_for_tags (const char *color)
  */
 
 int
-irc_color_weechat_add_to_infolist (struct t_infolist *infolist)
+irc_color_dogechat_add_to_infolist (struct t_infolist *infolist)
 {
     struct t_infolist_item *ptr_item;
     char str_color_irc[32];
@@ -825,14 +825,14 @@ irc_color_weechat_add_to_infolist (struct t_infolist *infolist)
 
     for (i = 0; i < IRC_NUM_COLORS; i++)
     {
-        ptr_item = weechat_infolist_new_item (infolist);
+        ptr_item = dogechat_infolist_new_item (infolist);
         if (!ptr_item)
             return 0;
 
         snprintf (str_color_irc, sizeof (str_color_irc), "%02d", i);
-        if (!weechat_infolist_new_var_string (ptr_item, "color_irc", str_color_irc))
+        if (!dogechat_infolist_new_var_string (ptr_item, "color_irc", str_color_irc))
             return 0;
-        if (!weechat_infolist_new_var_string (ptr_item, "color_weechat", irc_color_to_weechat[i]))
+        if (!dogechat_infolist_new_var_string (ptr_item, "color_dogechat", irc_color_to_dogechat[i]))
             return 0;
     }
 

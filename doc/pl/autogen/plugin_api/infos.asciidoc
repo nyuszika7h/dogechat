@@ -6,7 +6,7 @@
 |===
 | Wtyczka | Nazwa | Opis | Argumenty
 
-| aspell | aspell_dict | oddzielona przecinkami lista słowników używanych w buforze | wskaźnik na bufor ("0x12345678") lub jego pełna nazwa ("irc.freenode.#weechat")
+| aspell | aspell_dict | oddzielona przecinkami lista słowników używanych w buforze | wskaźnik na bufor ("0x12345678") lub jego pełna nazwa ("irc.freenode.#dogechat")
 
 | fifo | fifo_filename | nazwa strumienia FIFO | -
 
@@ -32,50 +32,50 @@
 
 | relay | relay_client_count | liczba podłączonych klientów | nazwa statusu (opcjonalne): łączenie, oczekiwanie na uwierzytelnienie, połączono, uwierzytelnienie nieudane, rozłączono
 
-| weechat | charset_internal | wewnętrzne kodowanie WeeChat | -
+| dogechat | charset_internal | wewnętrzne kodowanie DogeChat | -
 
-| weechat | charset_terminal | kodowanie terminala | -
+| dogechat | charset_terminal | kodowanie terminala | -
 
-| weechat | color_ansi_regex | Rozszerzone wyrażenia regularne POSIX do wyszukiwania kodów escapującyhc ANSI | -
+| dogechat | color_ansi_regex | Rozszerzone wyrażenia regularne POSIX do wyszukiwania kodów escapującyhc ANSI | -
 
-| weechat | color_rgb2term | kolor RGB skonwertowany na kolor terminala (0-255) | rgb,limit (limit jest opcjonalny i ustawiony domyślnie na 256)
+| dogechat | color_rgb2term | kolor RGB skonwertowany na kolor terminala (0-255) | rgb,limit (limit jest opcjonalny i ustawiony domyślnie na 256)
 
-| weechat | color_term2rgb | kolor terminala (0-255) skonwertowany na kolor RGB | kolor (kolor terminala: 0-255)
+| dogechat | color_term2rgb | kolor terminala (0-255) skonwertowany na kolor RGB | kolor (kolor terminala: 0-255)
 
-| weechat | cursor_mode | 1 jeśli tryb kursora jest aktywny | -
+| dogechat | cursor_mode | 1 jeśli tryb kursora jest aktywny | -
 
-| weechat | date | data kompilacji WeeChat | -
+| dogechat | date | data kompilacji DogeChat | -
 
-| weechat | dir_separator | separator katalogów | -
+| dogechat | dir_separator | separator katalogów | -
 
-| weechat | filters_enabled | 1 jeśli filtry są aktywne | -
+| dogechat | filters_enabled | 1 jeśli filtry są aktywne | -
 
-| weechat | inactivity | brak aktywności klawiatury (sekundy) | -
+| dogechat | inactivity | brak aktywności klawiatury (sekundy) | -
 
-| weechat | locale | zestaw znaków użyty do tłumaczenia wiadomości | -
+| dogechat | locale | zestaw znaków użyty do tłumaczenia wiadomości | -
 
-| weechat | term_height | wysokość terminala | -
+| dogechat | term_height | wysokość terminala | -
 
-| weechat | term_width | szerokość terminala | -
+| dogechat | term_width | szerokość terminala | -
 
-| weechat | version | wersja WeeChat | -
+| dogechat | version | wersja DogeChat | -
 
-| weechat | version_git | wersja git WeeChat (wyjście komendy "git describe" dla tylko dla wersji rozwojowej, puste dla wersji stabilnej) | -
+| dogechat | version_git | wersja git DogeChat (wyjście komendy "git describe" dla tylko dla wersji rozwojowej, puste dla wersji stabilnej) | -
 
-| weechat | version_number | wersja WeeChat (jako liczba) | -
+| dogechat | version_number | wersja DogeChat (jako liczba) | -
 
-| weechat | weechat_dir | katalog Weechat | -
+| dogechat | dogechat_dir | katalog Dogechat | -
 
-| weechat | weechat_libdir | katalog "lib" WeeChata | -
+| dogechat | dogechat_libdir | katalog "lib" DogeChata | -
 
-| weechat | weechat_localedir | katalog "locale" WeeChata | -
+| dogechat | dogechat_localedir | katalog "locale" DogeChata | -
 
-| weechat | weechat_sharedir | katalog "share" WeeChata | -
+| dogechat | dogechat_sharedir | katalog "share" DogeChata | -
 
-| weechat | weechat_site | Strona WeeChat | -
+| dogechat | dogechat_site | Strona DogeChat | -
 
-| weechat | weechat_site_download | Strona pobrań WeeChat | -
+| dogechat | dogechat_site_download | Strona pobrań DogeChat | -
 
-| weechat | weechat_upgrading | 1 jeżeli WeeChat jest aktualizowany (komenda `/upgrade`) | -
+| dogechat | dogechat_upgrading | 1 jeżeli DogeChat jest aktualizowany (komenda `/upgrade`) | -
 
 |===

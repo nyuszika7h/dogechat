@@ -1,26 +1,26 @@
 /*
  * Copyright (C) 2013-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_RELAY_WEBSOCKET_H
-#define WEECHAT_RELAY_WEBSOCKET_H 1
+#ifndef DOGECHAT_RELAY_WEBSOCKET_H
+#define DOGECHAT_RELAY_WEBSOCKET_H 1
 
-extern int relay_websocket_is_http_get_weechat (const char *message);
+extern int relay_websocket_is_http_get_dogechat (const char *message);
 extern void relay_websocket_save_header (struct t_relay_client *client,
                                          const char *message);
 extern int relay_websocket_client_handshake_valid (struct t_relay_client *client);
@@ -36,4 +36,4 @@ extern char *relay_websocket_encode_frame (struct t_relay_client *client,
                                            unsigned long long length,
                                            unsigned long long *length_frame);
 
-#endif /* WEECHAT_RELAY_WEBSOCKET_H */
+#endif /* DOGECHAT_RELAY_WEBSOCKET_H */

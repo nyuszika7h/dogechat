@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -33,14 +33,14 @@
 #include <time.h>
 #include <ctype.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-hdata.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-infolist.h"
-#include "../core/wee-log.h"
-#include "../core/wee-string.h"
-#include "../core/wee-utf8.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-hdata.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-infolist.h"
+#include "../core/doge-log.h"
+#include "../core/doge-string.h"
+#include "../core/doge-utf8.h"
 #include "../plugins/plugin.h"
 #include "gui-window.h"
 #include "gui-bar.h"
@@ -669,7 +669,7 @@ gui_window_new (struct t_gui_window *parent_window, struct t_gui_buffer *buffer,
 
     /* send signal */
     (void) hook_signal_send ("window_opened",
-                             WEECHAT_HOOK_SIGNAL_POINTER, new_window);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, new_window);
 
     return new_window;
 }
@@ -950,7 +950,7 @@ gui_window_free (struct t_gui_window *window)
     old_current_window = gui_current_window;
 
     (void) hook_signal_send ("window_closing",
-                             WEECHAT_HOOK_SIGNAL_POINTER, window);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, window);
 
     if (window->buffer)
         gui_buffer_add_value_num_displayed (window->buffer, -1);
@@ -1002,14 +1002,14 @@ gui_window_free (struct t_gui_window *window)
     }
 
     (void) hook_signal_send ("window_closed",
-                             WEECHAT_HOOK_SIGNAL_POINTER, window);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, window);
 
     free (window);
 
     if (gui_current_window != old_current_window)
     {
         (void) hook_signal_send ("window_switch",
-                                 WEECHAT_HOOK_SIGNAL_POINTER,
+                                 DOGECHAT_HOOK_SIGNAL_POINTER,
                                  gui_current_window);
     }
 }
@@ -1723,13 +1723,13 @@ gui_window_zoom (struct t_gui_window *window)
     {
         /* restore layout as it was before zooming a window */
         (void) hook_signal_send ("window_unzoom",
-                                 WEECHAT_HOOK_SIGNAL_POINTER,
+                                 DOGECHAT_HOOK_SIGNAL_POINTER,
                                  gui_current_window);
         gui_layout_window_apply (ptr_layout,
                                  ptr_layout->internal_id_current_window);
         gui_layout_remove (ptr_layout);
         (void) hook_signal_send ("window_unzoomed",
-                                 WEECHAT_HOOK_SIGNAL_POINTER,
+                                 DOGECHAT_HOOK_SIGNAL_POINTER,
                                  gui_current_window);
     }
     else
@@ -1740,12 +1740,12 @@ gui_window_zoom (struct t_gui_window *window)
         {
             gui_layout_add (ptr_layout);
             (void) hook_signal_send ("window_zoom",
-                                     WEECHAT_HOOK_SIGNAL_POINTER,
+                                     DOGECHAT_HOOK_SIGNAL_POINTER,
                                      gui_current_window);
             gui_layout_window_store (ptr_layout);
             gui_window_merge_all (window);
             (void) hook_signal_send ("window_zoomed",
-                                     WEECHAT_HOOK_SIGNAL_POINTER,
+                                     DOGECHAT_HOOK_SIGNAL_POINTER,
                                      gui_current_window);
         }
     }
@@ -1791,7 +1791,7 @@ gui_window_hdata_window_cb (void *data, const char *hdata_name)
         HDATA_VAR(struct t_gui_window, ptr_tree, POINTER, 0, NULL, "window_tree");
         HDATA_VAR(struct t_gui_window, prev_window, POINTER, 0, NULL, hdata_name);
         HDATA_VAR(struct t_gui_window, next_window, POINTER, 0, NULL, hdata_name);
-        HDATA_LIST(gui_windows, WEECHAT_HDATA_LIST_CHECK_POINTERS);
+        HDATA_LIST(gui_windows, DOGECHAT_HDATA_LIST_CHECK_POINTERS);
         HDATA_LIST(last_gui_window, 0);
         HDATA_LIST(gui_current_window, 0);
     }
@@ -1914,7 +1914,7 @@ gui_window_add_to_infolist (struct t_infolist *infolist,
 }
 
 /*
- * Prints window infos in WeeChat log file (usually for crash dump).
+ * Prints window infos in DogeChat log file (usually for crash dump).
  */
 
 void

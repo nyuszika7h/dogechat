@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "script.h"
 #include "script-command.h"
 #include "script-action.h"
@@ -88,8 +88,8 @@ script_command_action (struct t_gui_buffer *buffer, const char *action,
     {
         /* action on current line of script buffer */
         if (script_buffer_detail_script
-            && ((weechat_strcasecmp (action, "show") == 0)
-                || (weechat_strcasecmp (action, "showdiff") == 0)))
+            && ((dogechat_strcasecmp (action, "show") == 0)
+                || (dogechat_strcasecmp (action, "showdiff") == 0)))
         {
             /* if detail on script is displayed, back to list */
             snprintf (str_action, sizeof (str_action),
@@ -134,10 +134,10 @@ script_command_script (void *data, struct t_gui_buffer *buffer, int argc,
     if (argc == 1)
     {
         script_action_schedule ("buffer", 1, 0);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "go") == 0)
+    if (dogechat_strcasecmp (argv[1], "go") == 0)
     {
         if ((argc > 2) && script_buffer && !script_buffer_detail_script)
         {
@@ -148,66 +148,66 @@ script_command_script (void *data, struct t_gui_buffer *buffer, int argc,
                 script_buffer_set_current_line (value);
             }
         }
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "search") == 0)
+    if (dogechat_strcasecmp (argv[1], "search") == 0)
     {
         if (scripts_repo)
             script_repo_filter_scripts ((argc > 2) ? argv_eol[2] : NULL);
         else
             script_repo_set_filter ((argc > 2) ? argv_eol[2] : NULL);
         script_action_schedule ("buffer", 1, 0);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "list") == 0)
+    if (dogechat_strcasecmp (argv[1], "list") == 0)
     {
         script_action_schedule (argv_eol[1], 1, 0);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if ((weechat_strcasecmp (argv[1], "load") == 0)
-        || (weechat_strcasecmp (argv[1], "unload") == 0)
-        || (weechat_strcasecmp (argv[1], "reload") == 0)
-        || (weechat_strcasecmp (argv[1], "autoload") == 0)
-        || (weechat_strcasecmp (argv[1], "noautoload") == 0)
-        || (weechat_strcasecmp (argv[1], "toggleautoload") == 0))
+    if ((dogechat_strcasecmp (argv[1], "load") == 0)
+        || (dogechat_strcasecmp (argv[1], "unload") == 0)
+        || (dogechat_strcasecmp (argv[1], "reload") == 0)
+        || (dogechat_strcasecmp (argv[1], "autoload") == 0)
+        || (dogechat_strcasecmp (argv[1], "noautoload") == 0)
+        || (dogechat_strcasecmp (argv[1], "toggleautoload") == 0))
     {
         script_command_action (buffer,
                                argv[1],
                                (argc > 2) ? argv_eol[2] : NULL,
                                0);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if ((weechat_strcasecmp (argv[1], "install") == 0)
-        || (weechat_strcasecmp (argv[1], "remove") == 0)
-        || (weechat_strcasecmp (argv[1], "installremove") == 0)
-        || (weechat_strcasecmp (argv[1], "hold") == 0)
-        || (weechat_strcasecmp (argv[1], "show") == 0)
-        || (weechat_strcasecmp (argv[1], "showdiff") == 0))
+    if ((dogechat_strcasecmp (argv[1], "install") == 0)
+        || (dogechat_strcasecmp (argv[1], "remove") == 0)
+        || (dogechat_strcasecmp (argv[1], "installremove") == 0)
+        || (dogechat_strcasecmp (argv[1], "hold") == 0)
+        || (dogechat_strcasecmp (argv[1], "show") == 0)
+        || (dogechat_strcasecmp (argv[1], "showdiff") == 0))
     {
         script_command_action (buffer,
                                argv[1],
                                (argc > 2) ? argv_eol[2] : NULL,
                                1);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "upgrade") == 0)
+    if (dogechat_strcasecmp (argv[1], "upgrade") == 0)
     {
         script_action_schedule ("upgrade", 1, 0);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "update") == 0)
+    if (dogechat_strcasecmp (argv[1], "update") == 0)
     {
         script_repo_file_update (0);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "up") == 0)
+    if (dogechat_strcasecmp (argv[1], "up") == 0)
     {
         if (script_buffer)
         {
@@ -223,7 +223,7 @@ script_command_script (void *data, struct t_gui_buffer *buffer, int argc,
             {
                 snprintf (command, sizeof (command),
                           "/window scroll -%d", (int)value);
-                weechat_command (script_buffer, command);
+                dogechat_command (script_buffer, command);
             }
             else if ((script_buffer_selected_line >= 0)
                      && (script_repo_count_displayed > 0))
@@ -238,10 +238,10 @@ script_command_script (void *data, struct t_gui_buffer *buffer, int argc,
                 }
             }
         }
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "down") == 0)
+    if (dogechat_strcasecmp (argv[1], "down") == 0)
     {
         if (script_buffer)
         {
@@ -257,7 +257,7 @@ script_command_script (void *data, struct t_gui_buffer *buffer, int argc,
             {
                 snprintf (command, sizeof (command),
                           "/window scroll +%d", (int)value);
-                weechat_command (script_buffer, command);
+                dogechat_command (script_buffer, command);
             }
             else if ((script_buffer_selected_line >= 0)
                      && (script_repo_count_displayed > 0))
@@ -272,10 +272,10 @@ script_command_script (void *data, struct t_gui_buffer *buffer, int argc,
                 }
             }
         }
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    WEECHAT_COMMAND_ERROR;
+    DOGECHAT_COMMAND_ERROR;
 }
 
 /*
@@ -285,9 +285,9 @@ script_command_script (void *data, struct t_gui_buffer *buffer, int argc,
 void
 script_command_init ()
 {
-    weechat_hook_command (
+    dogechat_hook_command (
         "script",
-        N_("WeeChat scripts manager"),
+        N_("DogeChat scripts manager"),
         N_("list [-o|-i]"
            " || search <text>"
            " || show <script>"

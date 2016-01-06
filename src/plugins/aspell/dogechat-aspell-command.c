@@ -1,0 +1,503 @@
+/*
+ * dogechat-aspell-command.c - aspell commands
+ *
+ * Copyright (C) 2013-2016 Sébastien Helleu <flashcode@flashtux.org>
+ *
+ * This file is part of DogeChat, the extensible chat client.
+ *
+ * DogeChat is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * DogeChat is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+#include "../dogechat-plugin.h"
+#include "dogechat-aspell.h"
+#include "dogechat-aspell-config.h"
+#include "dogechat-aspell-speller.h"
+
+
+/*
+ * Converts an aspell ISO lang code in its English full name.
+ *
+ * Note: result must be freed after use.
+ */
+
+char *
+dogechat_aspell_command_iso_to_lang (const char *code)
+{
+    int i;
+
+    for (i = 0; aspell_langs[i].code; i++)
+    {
+        if (strcmp (aspell_langs[i].code, code) == 0)
+            return strdup (aspell_langs[i].name);
+    }
+
+    /* lang code not found */
+    return strdup ("Unknown");
+}
+
+/*
+ * Converts an aspell ISO country code in its English full name.
+ *
+ * Note: result must be freed after use.
+ */
+
+char *
+dogechat_aspell_command_iso_to_country (const char *code)
+{
+    int i;
+
+    for (i = 0; aspell_countries[i].code; i++)
+    {
+        if (strcmp (aspell_countries[i].code, code) == 0)
+            return strdup (aspell_countries[i].name);
+    }
+
+    /* country code not found */
+    return strdup ("Unknown");
+}
+
+/*
+ * Displays one dictionary when using enchant.
+ */
+
+#ifdef USE_ENCHANT
+void
+dogechat_aspell_enchant_dict_describe_cb (const char *lang_tag,
+                                         const char *provider_name,
+                                         const char *provider_desc,
+                                         const char *provider_file,
+                                         void *user_data)
+{
+    char *country, *lang, *pos, *iso;
+    char str_dict[256];
+
+    /* make C compiler happy */
+    (void) provider_name;
+    (void) provider_desc;
+    (void) provider_file;
+    (void) user_data;
+
+    lang = NULL;
+    country = NULL;
+
+    pos = strchr (lang_tag, '_');
+
+    if (pos)
+    {
+        iso = dogechat_strndup (lang_tag, pos - lang_tag);
+        if (iso)
+        {
+            lang = dogechat_aspell_command_iso_to_lang (iso);
+            country = dogechat_aspell_command_iso_to_country (pos + 1);
+            free (iso);
+        }
+    }
+    else
+        lang = dogechat_aspell_command_iso_to_lang ((char *)lang_tag);
+
+    if (lang)
+    {
+        if (country)
+        {
+            snprintf (str_dict, sizeof (str_dict), "%-22s %s (%s)",
+                      lang_tag, lang, country);
+        }
+        else
+        {
+            snprintf (str_dict, sizeof (str_dict), "%-22s %s",
+                      lang_tag, lang);
+        }
+        dogechat_printf (NULL, "  %s", str_dict);
+    }
+
+    if (lang)
+        free (lang);
+    if (country)
+        free (country);
+}
+#endif /* USE_ENCHANT */
+
+/*
+ * Displays list of aspell dictionaries installed on system.
+ */
+
+void
+dogechat_aspell_command_speller_list_dicts ()
+{
+#ifndef USE_ENCHANT
+    char *country, *lang, *pos, *iso;
+    char str_dict[256], str_country[128];
+    struct AspellConfig *config;
+    AspellDictInfoList *list;
+    AspellDictInfoEnumeration *elements;
+    const AspellDictInfo *dict;
+#endif /* USE_ENCHANT */
+
+    dogechat_printf (NULL, "");
+    dogechat_printf (NULL,
+                    /* TRANSLATORS: "%s" is "aspell" */
+                    _( "%s dictionaries list:"),
+                    ASPELL_PLUGIN_NAME);
+
+#ifdef USE_ENCHANT
+    enchant_broker_list_dicts (broker, dogechat_aspell_enchant_dict_describe_cb,
+                               NULL);
+#else
+    config = new_aspell_config();
+    list = get_aspell_dict_info_list (config);
+    elements = aspell_dict_info_list_elements (list);
+
+    while ((dict = aspell_dict_info_enumeration_next (elements)) != NULL)
+    {
+        lang = NULL;
+        country = NULL;
+        pos = strchr (dict->code, '_');
+
+        if (pos)
+        {
+            iso = dogechat_strndup (dict->code, pos - dict->code);
+            if (iso)
+            {
+                lang = dogechat_aspell_command_iso_to_lang (iso);
+                country = dogechat_aspell_command_iso_to_country (pos + 1);
+                free (iso);
+            }
+        }
+        else
+            lang = dogechat_aspell_command_iso_to_lang ((char*)dict->code);
+
+        str_country[0] = '\0';
+        if (country || dict->jargon[0])
+        {
+            snprintf (str_country, sizeof (str_country), " (%s%s%s)",
+                      (country) ? country : dict->jargon,
+                      (country && dict->jargon[0]) ? " - " : "",
+                      (country && dict->jargon[0]) ? ((dict->jargon[0]) ? dict->jargon : country) : "");
+        }
+
+        snprintf (str_dict, sizeof (str_dict), "%-22s %s%s",
+                  dict->name, lang, str_country);
+
+        dogechat_printf (NULL, "  %s", str_dict);
+
+        if (lang)
+            free (lang);
+        if (country)
+            free (country);
+    }
+
+    delete_aspell_dict_info_enumeration (elements);
+    delete_aspell_config (config);
+#endif /* USE_ENCHANT */
+}
+
+/*
+ * Sets a list of dictionaries for a buffer.
+ */
+
+void
+dogechat_aspell_command_set_dict (struct t_gui_buffer *buffer, const char *value)
+{
+    char *name;
+
+    name = dogechat_aspell_build_option_name (buffer);
+    if (!name)
+        return;
+
+    if (dogechat_aspell_config_set_dict (name, value) > 0)
+    {
+        if (value && value[0])
+            dogechat_printf (NULL, "%s: \"%s\" => %s",
+                            ASPELL_PLUGIN_NAME, name, value);
+        else
+            dogechat_printf (NULL, _("%s: \"%s\" removed"),
+                            ASPELL_PLUGIN_NAME, name);
+    }
+
+    free (name);
+}
+
+/*
+ * Adds a word in personal dictionary.
+ */
+
+void
+dogechat_aspell_command_add_word (struct t_gui_buffer *buffer, const char *dict,
+                                 const char *word)
+{
+    struct t_aspell_speller_buffer *ptr_speller_buffer;
+#ifdef USE_ENCHANT
+    EnchantDict *new_speller, *ptr_speller;
+#else
+    AspellSpeller *new_speller, *ptr_speller;
+#endif /* USE_ENCHANT */
+
+    new_speller = NULL;
+
+    if (dict)
+    {
+        ptr_speller = dogechat_hashtable_get (dogechat_aspell_spellers, dict);
+        if (!ptr_speller)
+        {
+            if (!dogechat_aspell_speller_dict_supported (dict))
+            {
+                dogechat_printf (NULL,
+                                _("%s: error: dictionary \"%s\" is not "
+                                  "available on your system"),
+                                ASPELL_PLUGIN_NAME, dict);
+                return;
+            }
+            new_speller = dogechat_aspell_speller_new (dict);
+            if (!new_speller)
+                return;
+            ptr_speller = new_speller;
+        }
+    }
+    else
+    {
+        ptr_speller_buffer = dogechat_hashtable_get (dogechat_aspell_speller_buffer,
+                                                    buffer);
+        if (!ptr_speller_buffer)
+            ptr_speller_buffer = dogechat_aspell_speller_buffer_new (buffer);
+        if (!ptr_speller_buffer)
+            goto error;
+        if (!ptr_speller_buffer->spellers || !ptr_speller_buffer->spellers[0])
+        {
+            dogechat_printf (NULL,
+                            _("%s%s: no dictionary on this buffer for "
+                              "adding word"),
+                            dogechat_prefix ("error"),
+                            ASPELL_PLUGIN_NAME);
+            return;
+        }
+        else if (ptr_speller_buffer->spellers[1])
+        {
+            dogechat_printf (NULL,
+                            _("%s%s: many dictionaries are defined for "
+                              "this buffer, please specify dictionary"),
+                            dogechat_prefix ("error"),
+                            ASPELL_PLUGIN_NAME);
+            return;
+        }
+        ptr_speller = ptr_speller_buffer->spellers[0];
+    }
+
+#ifdef USE_ENCHANT
+    enchant_dict_add (ptr_speller, word, strlen (word));
+#else
+    if (aspell_speller_add_to_personal (ptr_speller,
+                                        word,
+                                        strlen (word)) == 1)
+    {
+        dogechat_printf (NULL,
+                        _("%s: word \"%s\" added to personal dictionary"),
+                        ASPELL_PLUGIN_NAME, word);
+    }
+    else
+        goto error;
+#endif /* USE_ENCHANT */
+
+    goto end;
+
+error:
+    dogechat_printf (NULL,
+                    _("%s%s: failed to add word to personal "
+                      "dictionary"),
+                    dogechat_prefix ("error"), ASPELL_PLUGIN_NAME);
+
+end:
+    if (new_speller)
+        dogechat_hashtable_remove (dogechat_aspell_spellers, dict);
+}
+
+/*
+ * Callback for command "/aspell".
+ */
+
+int
+dogechat_aspell_command_cb (void *data, struct t_gui_buffer *buffer,
+                           int argc, char **argv, char **argv_eol)
+{
+    char *dicts;
+    const char *default_dict;
+    struct t_infolist *infolist;
+    int number;
+
+    /* make C compiler happy */
+    (void) data;
+
+    if (argc == 1)
+    {
+        /* display aspell status */
+        dogechat_printf (NULL, "");
+        dogechat_printf (NULL,
+                        /* TRANSLATORS: second "%s" is "aspell" or "enchant" */
+                        _("%s (using %s)"),
+                        (aspell_enabled) ? _("Spell checking is enabled") : _("Spell checking is disabled"),
+#ifdef USE_ENCHANT
+                        "enchant"
+#else
+                        "aspell"
+#endif /* USE_ENCHANT */
+            );
+        default_dict = dogechat_config_string (dogechat_aspell_config_check_default_dict);
+        dogechat_printf (NULL,
+                        _("Default dictionary: %s"),
+                        (default_dict && default_dict[0]) ?
+                        default_dict : _("(not set)"));
+        number = 0;
+        infolist = dogechat_infolist_get ("option", NULL, "aspell.dict.*");
+        if (infolist)
+        {
+            while (dogechat_infolist_next (infolist))
+            {
+                if (number == 0)
+                    dogechat_printf (NULL, _("Specific dictionaries on buffers:"));
+                number++;
+                dogechat_printf (NULL, "  %s: %s",
+                                dogechat_infolist_string (infolist, "option_name"),
+                                dogechat_infolist_string (infolist, "value"));
+            }
+            dogechat_infolist_free (infolist);
+        }
+        return DOGECHAT_RC_OK;
+    }
+
+    /* enable aspell */
+    if (dogechat_strcasecmp (argv[1], "enable") == 0)
+    {
+        dogechat_config_option_set (dogechat_aspell_config_check_enabled, "1", 1);
+        dogechat_printf (NULL, _("Aspell enabled"));
+        return DOGECHAT_RC_OK;
+    }
+
+    /* disable aspell */
+    if (dogechat_strcasecmp (argv[1], "disable") == 0)
+    {
+        dogechat_config_option_set (dogechat_aspell_config_check_enabled, "0", 1);
+        dogechat_printf (NULL, _("Aspell disabled"));
+        return DOGECHAT_RC_OK;
+    }
+
+    /* toggle aspell */
+    if (dogechat_strcasecmp (argv[1], "toggle") == 0)
+    {
+        if (aspell_enabled)
+        {
+            dogechat_config_option_set (dogechat_aspell_config_check_enabled, "0", 1);
+            dogechat_printf (NULL, _("Aspell disabled"));
+        }
+        else
+        {
+            dogechat_config_option_set (dogechat_aspell_config_check_enabled, "1", 1);
+            dogechat_printf (NULL, _("Aspell enabled"));
+        }
+        return DOGECHAT_RC_OK;
+    }
+
+    /* list of dictionaries */
+    if (dogechat_strcasecmp (argv[1], "listdict") == 0)
+    {
+        dogechat_aspell_command_speller_list_dicts ();
+        return DOGECHAT_RC_OK;
+    }
+
+    /* set dictionary for current buffer */
+    if (dogechat_strcasecmp (argv[1], "setdict") == 0)
+    {
+        DOGECHAT_COMMAND_MIN_ARGS(3, "setdict");
+        dicts = dogechat_string_replace (argv_eol[2], " ", "");
+        dogechat_aspell_command_set_dict (buffer,
+                                         (dicts) ? dicts : argv[2]);
+        if (dicts)
+            free (dicts);
+        return DOGECHAT_RC_OK;
+    }
+
+    /* delete dictionary used on current buffer */
+    if (dogechat_strcasecmp (argv[1], "deldict") == 0)
+    {
+        dogechat_aspell_command_set_dict (buffer, NULL);
+        return DOGECHAT_RC_OK;
+    }
+
+    /* add word to personal dictionary */
+    if (dogechat_strcasecmp (argv[1], "addword") == 0)
+    {
+        DOGECHAT_COMMAND_MIN_ARGS(3, "addword");
+        if (argc > 3)
+        {
+            /* use a given dict */
+            dogechat_aspell_command_add_word (buffer, argv[2], argv_eol[3]);
+        }
+        else
+        {
+            /* use default dict */
+            dogechat_aspell_command_add_word (buffer, NULL, argv_eol[2]);
+        }
+        return DOGECHAT_RC_OK;
+    }
+
+    DOGECHAT_COMMAND_ERROR;
+}
+
+/*
+ * Hooks aspell command.
+ */
+
+void
+dogechat_aspell_command_init ()
+{
+    dogechat_hook_command (
+        "aspell",
+        N_("aspell plugin configuration"),
+        N_("enable|disable|toggle"
+           " || listdict"
+           " || setdict <dict>[,<dict>...]"
+           " || deldict"
+           " || addword [<dict>] <word>"),
+        N_("  enable: enable aspell\n"
+           " disable: disable aspell\n"
+           "  toggle: toggle aspell\n"
+           "listdict: show installed dictionaries\n"
+           " setdict: set dictionary for current buffer (multiple dictionaries "
+           "can be separated by a comma)\n"
+           " deldict: delete dictionary used on current buffer\n"
+           " addword: add a word in personal aspell dictionary\n"
+           "\n"
+           "Input line beginning with a '/' is not checked, except for some "
+           "commands (see /set aspell.check.commands).\n"
+           "\n"
+           "To enable aspell on all buffers, use option \"default_dict\", then "
+           "enable aspell, for example:\n"
+           "  /set aspell.check.default_dict \"en\"\n"
+           "  /aspell enable\n"
+           "\n"
+           "To display a list of suggestions in a bar, use item "
+           "\"aspell_suggest\".\n"
+           "\n"
+           "Default key to toggle aspell is alt-s."),
+        "enable"
+        " || disable"
+        " || toggle"
+        " || listdict"
+        " || setdict %(aspell_dicts)"
+        " || deldict"
+        " || addword",
+        &dogechat_aspell_command_cb, NULL);
+}

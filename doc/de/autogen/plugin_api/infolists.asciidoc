@@ -12,7 +12,7 @@
 
 | irc | irc_channel | Liste der Channels eines IRC-Servers | Channel Pointer (optional) | Server,Channel (Channel ist optional)
 
-| irc | irc_color_weechat | Zuordnung der IRC Farbkodierung und der WeeChat Farbnamen | - | -
+| irc | irc_color_dogechat | Zuordnung der IRC Farbkodierung und der DogeChat Farbnamen | - | -
 
 | irc | irc_ignore | Liste von ignorierten IRCs | Ignore Pointer (optional) | -
 
@@ -40,39 +40,39 @@
 
 | tcl | tcl_script | Liste der Skripten | Skript Pointer (optional) | Name des Skriptes (Platzhalter "*" kann verwendet werden) (optional)
 
-| weechat | bar | Auflistung der Bars | Bar Pointer (optional) | Name der Bar (Platzhalter "*" kann verwendet werden) (optional)
+| dogechat | bar | Auflistung der Bars | Bar Pointer (optional) | Name der Bar (Platzhalter "*" kann verwendet werden) (optional)
 
-| weechat | bar_item | Auflistung der Bar-Items | Bar Item Pointer (optional) | Name des Bar-Item (Platzhalter "*" kann verwendet werden) (optional)
+| dogechat | bar_item | Auflistung der Bar-Items | Bar Item Pointer (optional) | Name des Bar-Item (Platzhalter "*" kann verwendet werden) (optional)
 
-| weechat | bar_window | Auflistung der Bar-Fenster | Bar-Fenster Pointer (optional) | -
+| dogechat | bar_window | Auflistung der Bar-Fenster | Bar-Fenster Pointer (optional) | -
 
-| weechat | buffer | Auflistung der Buffer | Buffer Pointer (optional) | Name des Buffers (Platzhalter "*" kann verwendet werden) (optional)
+| dogechat | buffer | Auflistung der Buffer | Buffer Pointer (optional) | Name des Buffers (Platzhalter "*" kann verwendet werden) (optional)
 
-| weechat | buffer_lines | Zeilen des Buffers | Buffer Pointer | -
+| dogechat | buffer_lines | Zeilen des Buffers | Buffer Pointer | -
 
-| weechat | filter | Auflistung der Filter | - | Name des Filters (Platzhalter "*" kann verwendet werden) (optional)
+| dogechat | filter | Auflistung der Filter | - | Name des Filters (Platzhalter "*" kann verwendet werden) (optional)
 
-| weechat | history | Verlaufspeicher der Befehle | Buffer Pointer (falls nicht gesetzt, wird der globale Verlauf zurückgegeben) (optional) | -
+| dogechat | history | Verlaufspeicher der Befehle | Buffer Pointer (falls nicht gesetzt, wird der globale Verlauf zurückgegeben) (optional) | -
 
-| weechat | hook | Auflistung der Hooks | Hook-Pointer (optional) | type,arguments (type ist ein command/timer/.., arguments dient dazu nur einige hooks abzufragen (Platzhalter "*" kann verwendet werden), beide Einstellungen sind optional)
+| dogechat | hook | Auflistung der Hooks | Hook-Pointer (optional) | type,arguments (type ist ein command/timer/.., arguments dient dazu nur einige hooks abzufragen (Platzhalter "*" kann verwendet werden), beide Einstellungen sind optional)
 
-| weechat | hotlist | Liste der Buffer in Hotlist | - | -
+| dogechat | hotlist | Liste der Buffer in Hotlist | - | -
 
-| weechat | key | Auflistung der Tastenzuweisungen | - | Kontext ("default", "search", "cursor" oder "mouse") (optional)
+| dogechat | key | Auflistung der Tastenzuweisungen | - | Kontext ("default", "search", "cursor" oder "mouse") (optional)
 
-| weechat | layout | Auflistung der Layouts | - | -
+| dogechat | layout | Auflistung der Layouts | - | -
 
-| weechat | nicklist | Nicks in Benutzerliste für einen Buffer | Buffer Pointer | nick_xxx oder group_xxx um nur den Nick/Group xxx abzufragen (optional)
+| dogechat | nicklist | Nicks in Benutzerliste für einen Buffer | Buffer Pointer | nick_xxx oder group_xxx um nur den Nick/Group xxx abzufragen (optional)
 
-| weechat | option | Auflistung der Einstellungen | - | Name einer Einstellung (Platzhalter "*" kann verwendet werden) (optional)
+| dogechat | option | Auflistung der Einstellungen | - | Name einer Einstellung (Platzhalter "*" kann verwendet werden) (optional)
 
-| weechat | plugin | Auflistung der Erweiterungen | Pointer der Erweiterung (optional) | Name einer Erweiterung (Platzhalter "*" kann verwendet werden) (optional)
+| dogechat | plugin | Auflistung der Erweiterungen | Pointer der Erweiterung (optional) | Name einer Erweiterung (Platzhalter "*" kann verwendet werden) (optional)
 
-| weechat | proxy | Liste der Proxys | Proxy Pointer (optional) | Name des Proxy (Platzhalter "*" kann verwendet werden) (optional)
+| dogechat | proxy | Liste der Proxys | Proxy Pointer (optional) | Name des Proxy (Platzhalter "*" kann verwendet werden) (optional)
 
-| weechat | url_options | Einstellungen für URL | - | -
+| dogechat | url_options | Einstellungen für URL | - | -
 
-| weechat | window | Auflistung der Fenster | Fenster Pointer (optional) | "current" für aktuelles Fenster oder die Nummer eines Fensters (optional)
+| dogechat | window | Auflistung der Fenster | Fenster Pointer (optional) | "current" für aktuelles Fenster oder die Nummer eines Fensters (optional)
 
 | xfer | xfer | Transferliste | Transferpointer (optional) | -
 

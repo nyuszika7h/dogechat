@@ -412,8 +412,8 @@
 *** 'description' (string)
 *** 'tags' (string)
 *** 'requirements' (string)
-*** 'min_weechat' (string)
-*** 'max_weechat' (string)
+*** 'min_dogechat' (string)
+*** 'max_dogechat' (string)
 *** 'md5sum' (string)
 *** 'url' (string)
 *** 'popularity' (integer)
@@ -463,7 +463,7 @@
 *** 'last_script'
 *** 'scripts'
 * [[hdata_bar]]<<hdata_bar,'bar'>>: Bar
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'name' (string)
 *** 'options' (pointer)
@@ -482,7 +482,7 @@
 *** 'gui_bars'
 *** 'last_gui_bar'
 * [[hdata_bar_item]]<<hdata_bar_item,'bar_item'>>: Bar-Item
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'plugin' (pointer, hdata: "plugin")
 *** 'name' (string)
@@ -494,7 +494,7 @@
 *** 'gui_bar_items'
 *** 'last_gui_bar_item'
 * [[hdata_bar_window]]<<hdata_bar_window,'bar_window'>>: Bar-Fenster
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'bar' (pointer, hdata: "bar")
 *** 'x' (integer)
@@ -519,7 +519,7 @@
 *** 'prev_bar_window' (pointer, hdata: "bar_window")
 *** 'next_bar_window' (pointer, hdata: "bar_window")
 * [[hdata_buffer]]<<hdata_buffer,'buffer'>>: Buffer
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'plugin' (pointer, hdata: "plugin")
 *** 'plugin_name_for_upgrade' (string)
@@ -607,7 +607,7 @@
 *** 'gui_buffers'
 *** 'last_gui_buffer'
 * [[hdata_buffer_visited]]<<hdata_buffer_visited,'buffer_visited'>>: besuchte Buffer
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'buffer' (pointer, hdata: "buffer")
 *** 'prev_buffer' (pointer, hdata: "buffer_visited")
@@ -616,7 +616,7 @@
 *** 'gui_buffers_visited'
 *** 'last_gui_buffer_visited'
 * [[hdata_completion]]<<hdata_completion,'completion'>>: Struktur mit Vervollständigung
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'buffer' (pointer, hdata: "buffer")
 *** 'context' (integer)
@@ -637,7 +637,7 @@
 *** 'diff_length' (integer)
 *** 'partial_list' (pointer)
 * [[hdata_config_file]]<<hdata_config_file,'config_file'>>: Konfigurationsdatei
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'plugin' (pointer, hdata: "plugin")
 *** 'name' (string)
@@ -653,7 +653,7 @@
 *** 'config_files'
 *** 'last_config_file'
 * [[hdata_config_option]]<<hdata_config_option,'config_option'>>: Konfigurationsoptionen
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'config_file' (pointer, hdata: "config_file")
 *** 'section' (pointer, hdata: "config_section")
@@ -677,7 +677,7 @@
 *** 'prev_option' (pointer, hdata: "config_option")
 *** 'next_option' (pointer, hdata: "config_option")
 * [[hdata_config_section]]<<hdata_config_section,'config_section'>>: Konfigurationssektion
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'config_file' (pointer, hdata: "config_file")
 *** 'name' (string)
@@ -698,7 +698,7 @@
 *** 'prev_section' (pointer, hdata: "config_section")
 *** 'next_section' (pointer, hdata: "config_section")
 * [[hdata_filter]]<<hdata_filter,'filter'>>: Filter
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'enabled' (integer)
 *** 'name' (string)
@@ -717,7 +717,7 @@
 *** 'gui_filters'
 *** 'last_gui_filter'
 * [[hdata_history]]<<hdata_history,'history'>>: Verlaufspeicher von Befehlen in einem Buffer
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'text' (string)
 *** 'next_history' (pointer, hdata: "history")
@@ -729,7 +729,7 @@
 *** 'gui_history'
 *** 'last_gui_history'
 * [[hdata_hotlist]]<<hdata_hotlist,'hotlist'>>: Hotliste
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'priority' (integer)
 *** 'creation_time.tv_sec' (time)
@@ -742,14 +742,14 @@
 *** 'gui_hotlist'
 *** 'last_gui_hotlist'
 * [[hdata_input_undo]]<<hdata_input_undo,'input_undo'>>: Struktur der Rücknahmen für die Befehlszeile
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'data' (string)
 *** 'pos' (integer)
 *** 'prev_undo' (pointer, hdata: "input_undo")
 *** 'next_undo' (pointer, hdata: "input_undo")
 * [[hdata_key]]<<hdata_key,'key'>>: Tastenbelegung (Tastaturkurzbefehl)
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'key' (string)
 *** 'area_type' (pointer)
@@ -777,7 +777,7 @@
 *** 'last_gui_key_mouse'
 *** 'last_gui_key_search'
 * [[hdata_layout]]<<hdata_layout,'layout'>>: Layout
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'name' (string)
 *** 'layout_buffers' (pointer, hdata: "layout_buffer")
@@ -792,7 +792,7 @@
 *** 'gui_layouts'
 *** 'last_gui_layout'
 * [[hdata_layout_buffer]]<<hdata_layout_buffer,'layout_buffer'>>: Buffer-Layout
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'plugin_name' (string)
 *** 'buffer_name' (string)
@@ -800,7 +800,7 @@
 *** 'prev_layout' (pointer, hdata: "layout_buffer")
 *** 'next_layout' (pointer, hdata: "layout_buffer")
 * [[hdata_layout_window]]<<hdata_layout_window,'layout_window'>>: Fenster-Layout
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'internal_id' (integer)
 *** 'parent_node' (pointer, hdata: "layout_window")
@@ -811,13 +811,13 @@
 *** 'plugin_name' (string)
 *** 'buffer_name' (string)
 * [[hdata_line]]<<hdata_line,'line'>>: Struktur mit einer Zeile
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'data' (pointer, hdata: "line_data")
 *** 'prev_line' (pointer, hdata: "line")
 *** 'next_line' (pointer, hdata: "line")
 * [[hdata_line_data]]<<hdata_line_data,'line_data'>>: Struktur mit einzeiligen Daten
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'buffer' (pointer, hdata: "buffer")
 *** 'y' (integer)
@@ -839,7 +839,7 @@
 *** 'prefix' (shared_string)
 *** 'message' (string)
 * [[hdata_lines]]<<hdata_lines,'lines'>>: Struktur mit Zeilen
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'first_line' (pointer, hdata: "line")
 *** 'last_line' (pointer, hdata: "line")
@@ -852,7 +852,7 @@
 *** 'prefix_max_length' (integer)
 *** 'prefix_max_length_refresh' (integer)
 * [[hdata_nick]]<<hdata_nick,'nick'>>: Nick in Benutzerliste
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'group' (pointer, hdata: "nick_group")
 *** 'name' (shared_string)
@@ -863,7 +863,7 @@
 *** 'prev_nick' (pointer, hdata: "nick")
 *** 'next_nick' (pointer, hdata: "nick")
 * [[hdata_nick_group]]<<hdata_nick_group,'nick_group'>>: Gruppen in Benutzerliste
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'name' (shared_string)
 *** 'color' (shared_string)
@@ -877,7 +877,7 @@
 *** 'prev_group' (pointer, hdata: "nick_group")
 *** 'next_group' (pointer, hdata: "nick_group")
 * [[hdata_plugin]]<<hdata_plugin,'plugin'>>: Erweiterung
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'filename' (string)
 *** 'handle' (pointer)
@@ -893,20 +893,20 @@
 *** 'prev_plugin' (pointer, hdata: "plugin")
 *** 'next_plugin' (pointer, hdata: "plugin")
 ** Listen:
-*** 'last_weechat_plugin'
-*** 'weechat_plugins'
+*** 'last_dogechat_plugin'
+*** 'dogechat_plugins'
 * [[hdata_proxy]]<<hdata_proxy,'proxy'>>: Proxy
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'name' (string)
 *** 'options' (pointer)
 *** 'prev_proxy' (pointer, hdata: "proxy")
 *** 'next_proxy' (pointer, hdata: "proxy")
 ** Listen:
-*** 'last_weechat_proxy'
-*** 'weechat_proxies'
+*** 'last_dogechat_proxy'
+*** 'dogechat_proxies'
 * [[hdata_window]]<<hdata_window,'window'>>: Fenster
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'number' (integer)
 *** 'win_x' (integer)
@@ -937,7 +937,7 @@
 *** 'gui_windows'
 *** 'last_gui_window'
 * [[hdata_window_scroll]]<<hdata_window_scroll,'window_scroll'>>: Scroll-Info in Fenstern
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'buffer' (pointer, hdata: "buffer")
 *** 'first_line_displayed' (integer)
@@ -950,7 +950,7 @@
 *** 'prev_scroll' (pointer, hdata: "window_scroll")
 *** 'next_scroll' (pointer, hdata: "window_scroll")
 * [[hdata_window_tree]]<<hdata_window_tree,'window_tree'>>: Baumstruktur der Fenster
-** Erweiterung: weechat
+** Erweiterung: dogechat
 ** Variablen:
 *** 'parent_node' (pointer, hdata: "window_tree")
 *** 'split_pct' (integer)

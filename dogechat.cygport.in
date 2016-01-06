@@ -1,0 +1,163 @@
+#
+# Copyright (C) 2013-2016 Sébastien Helleu <flashcode@flashtux.org>
+#
+# This file is part of DogeChat, the extensible chat client.
+#
+# DogeChat is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# DogeChat is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+#
+# This file is used to build Cygwin packages using the "cygport" command.
+#
+# It must be used *ONLY* for a stable release (version "X.Y.Z"), not for
+# a development version (version "X.Y.Z-dev" or "X.Y.Z-rcN").
+#
+# Instructions: execute these commands inside your build directory,
+# after running cmake or configure script (replace X.Y.Z by DogeChat version):
+#
+#     $ cygport dogechat-X.Y.Z-1.cygport fetch
+#     $ cygport dogechat-X.Y.Z-1.cygport almostall
+#
+#     ==> packages are built in directory:
+#             ./dogechat-X.Y.Z-1.<arch>/dist/dogechat/
+#
+
+inherit cmake
+
+NAME="dogechat"
+VERSION=@VERSION@
+RELEASE=1
+
+# Default category (some packages have extra category)
+CATEGORY="Net"
+
+HOMEPAGE="https://dogechat.org/"
+SRC_URI="https://dogechat.org/files/src/dogechat-${VERSION}.tar.bz2"
+
+# Build dependencies only
+DEPEND="asciidoc cmake docbook-xml-simple11 docbook-xsl gettext gettext-devel \
+gnutls-devel libaspell-devel libcurl-devel libgcrypt-devel libncursesw-devel \
+lua perl pkg-config python ruby source-highlight tcl zlib-devel"
+
+#
+# CMake compilation of DogeChat:
+#   1. set prefix to /usr
+#   2. enable build of man pages and documentation
+#   3. disable Guile plugin because DogeChat requires Guile >= 2.0,
+#      which is not yet available in Cygwin
+#   4. disable Javascript plugin because libv8 is not available in Cygwin
+#
+CYGCMAKE_ARGS="-DCMAKE_INSTALL_PREFIX=/usr -DENABLE_MAN=ON -DENABLE_DOC=ON \
+-DENABLE_GUILE=OFF -DENABLE_JAVASCRIPT=OFF"
+
+#
+# Build 8 Cygwin packages:
+#   dogechat
+#   dogechat-python
+#   dogechat-perl
+#   dogechat-ruby
+#   dogechat-lua
+#   dogechat-tcl
+#   dogechat-devel
+#   dogechat-doc
+#
+PKG_NAMES="${PN} ${PN}-python ${PN}-perl ${PN}-ruby ${PN}-lua ${PN}-tcl \
+${PN}-devel ${PN}-doc"
+PKG_HINTS="setup python perl ruby lua tcl devel doc"
+
+#
+# Package "dogechat": binary, all plugins except scripting languages,
+# translations, icon, man pages
+#
+dogechat_SUMMARY="Fast, light and extensible chat client (IRC/XMPP)"
+dogechat_DESCRIPTION="DogeChat (Doge Enhanced Environment for Chat) is a fast, \
+light and extensible chat client (IRC/XMPP). Everything can be done with a \
+keyboard, it is customizable and extensible with scripts."
+dogechat_CONTENTS="
+    usr/bin/
+    usr/lib/dogechat/plugins/alias.dll
+    usr/lib/dogechat/plugins/aspell.dll
+    usr/lib/dogechat/plugins/charset.dll
+    usr/lib/dogechat/plugins/exec.dll
+    usr/lib/dogechat/plugins/fifo.dll
+    usr/lib/dogechat/plugins/irc.dll
+    usr/lib/dogechat/plugins/logger.dll
+    usr/lib/dogechat/plugins/relay.dll
+    usr/lib/dogechat/plugins/script.dll
+    usr/lib/dogechat/plugins/trigger.dll
+    usr/lib/dogechat/plugins/xfer.dll
+    usr/share/locale/
+    usr/share/icons/
+    usr/share/man/
+    usr/share/doc/dogechat/AUTHORS.asciidoc
+    usr/share/doc/dogechat/ChangeLog.asciidoc
+    usr/share/doc/dogechat/Contributing.asciidoc
+    usr/share/doc/dogechat/COPYING
+    usr/share/doc/dogechat/README.asciidoc
+    usr/share/doc/dogechat/ReleaseNotes.asciidoc
+"
+
+#
+# Package "dogechat-python": python scripting plugin
+#
+dogechat_python_SUMMARY="Python scripting plugin for DogeChat"
+dogechat_python_DESCRIPTION="Python scripting plugin for DogeChat"
+dogechat_python_CONTENTS="usr/lib/dogechat/plugins/python.dll"
+dogechat_python_REQUIRES="dogechat"
+
+#
+# Package "dogechat-perl": perl scripting plugin
+#
+dogechat_perl_SUMMARY="Perl scripting plugin for DogeChat"
+dogechat_perl_DESCRIPTION="Perl scripting plugin for DogeChat"
+dogechat_perl_CONTENTS="usr/lib/dogechat/plugins/perl.dll"
+dogechat_perl_REQUIRES="dogechat"
+
+#
+# Package "dogechat-ruby": ruby scripting plugin
+#
+dogechat_ruby_SUMMARY="Ruby scripting plugin for DogeChat"
+dogechat_ruby_DESCRIPTION="Ruby scripting plugin for DogeChat"
+dogechat_ruby_CONTENTS="usr/lib/dogechat/plugins/ruby.dll"
+dogechat_ruby_REQUIRES="dogechat"
+
+#
+# Package "dogechat-lua": lua scripting plugin
+#
+dogechat_lua_SUMMARY="Lua scripting plugin for DogeChat"
+dogechat_lua_DESCRIPTION="Lua scripting plugin for DogeChat"
+dogechat_lua_CONTENTS="usr/lib/dogechat/plugins/lua.dll"
+dogechat_lua_REQUIRES="dogechat"
+
+#
+# Package "dogechat-tcl": tcl scripting plugin
+#
+dogechat_tcl_SUMMARY="Tcl scripting plugin for DogeChat"
+dogechat_tcl_DESCRIPTION="Tcl scripting plugin for DogeChat"
+dogechat_tcl_CONTENTS="usr/lib/dogechat/plugins/tcl.dll"
+dogechat_tcl_REQUIRES="dogechat"
+
+#
+# Package "dogechat-devel": header to build plugins
+#
+dogechat_devel_CATEGORY="Net Devel"
+dogechat_devel_SUMMARY="Development files to build DogeChat plugins"
+dogechat_devel_CONTENTS="usr/include/ usr/lib/pkgconfig/"
+
+#
+# Package "dogechat-doc": documentation
+#
+dogechat_doc_CATEGORY="Net Doc"
+dogechat_doc_SUMMARY="Documentation for DogeChat"
+dogechat_doc_CONTENTS="usr/share/doc/dogechat/*.html"

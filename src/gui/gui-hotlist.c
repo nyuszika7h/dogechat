@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -27,15 +27,15 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-eval.h"
-#include "../core/wee-hashtable.h"
-#include "../core/wee-hdata.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-infolist.h"
-#include "../core/wee-log.h"
-#include "../core/wee-util.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-eval.h"
+#include "../core/doge-hashtable.h"
+#include "../core/doge-hdata.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-infolist.h"
+#include "../core/doge-log.h"
+#include "../core/doge-util.h"
 #include "../plugins/plugin.h"
 #include "gui-hotlist.h"
 #include "gui-buffer.h"
@@ -62,7 +62,7 @@ void
 gui_hotlist_changed_signal ()
 {
     (void) hook_signal_send ("hotlist_changed",
-                             WEECHAT_HOOK_SIGNAL_STRING, NULL);
+                             DOGECHAT_HOOK_SIGNAL_STRING, NULL);
 }
 
 /*
@@ -300,7 +300,7 @@ gui_hotlist_add (struct t_gui_buffer *buffer,
         return NULL;
 
     /* do not add core buffer if upgrading */
-    if (weechat_upgrading && (buffer == gui_buffer_search_main ()))
+    if (dogechat_upgrading && (buffer == gui_buffer_search_main ()))
         return NULL;
 
     if (priority > GUI_HOTLIST_MAX)
@@ -315,8 +315,8 @@ gui_hotlist_add (struct t_gui_buffer *buffer,
     {
         gui_hotlist_hashtable_add_conditions_pointers = hashtable_new (
             32,
-            WEECHAT_HASHTABLE_STRING,
-            WEECHAT_HASHTABLE_POINTER,
+            DOGECHAT_HASHTABLE_STRING,
+            DOGECHAT_HASHTABLE_POINTER,
             NULL,
             NULL);
         if (!gui_hotlist_hashtable_add_conditions_pointers)
@@ -326,8 +326,8 @@ gui_hotlist_add (struct t_gui_buffer *buffer,
     {
         gui_hotlist_hashtable_add_conditions_vars = hashtable_new (
             32,
-            WEECHAT_HASHTABLE_STRING,
-            WEECHAT_HASHTABLE_STRING,
+            DOGECHAT_HASHTABLE_STRING,
+            DOGECHAT_HASHTABLE_STRING,
             NULL,
             NULL);
         if (!gui_hotlist_hashtable_add_conditions_vars)
@@ -337,8 +337,8 @@ gui_hotlist_add (struct t_gui_buffer *buffer,
     {
         gui_hotlist_hashtable_add_conditions_options = hashtable_new (
             32,
-            WEECHAT_HASHTABLE_STRING,
-            WEECHAT_HASHTABLE_STRING,
+            DOGECHAT_HASHTABLE_STRING,
+            DOGECHAT_HASHTABLE_STRING,
             NULL,
             NULL);
         if (!gui_hotlist_hashtable_add_conditions_options)
@@ -493,7 +493,7 @@ gui_hotlist_remove_buffer (struct t_gui_buffer *buffer,
     int hotlist_changed, hotlist_remove, buffer_to_remove;
     struct t_gui_hotlist *ptr_hotlist, *next_hotlist;
 
-    if (!buffer || weechat_upgrading)
+    if (!buffer || dogechat_upgrading)
         return;
 
     hotlist_changed = 0;
@@ -557,7 +557,7 @@ gui_hotlist_hdata_hotlist_cb (void *data, const char *hdata_name)
         HDATA_VAR(struct t_gui_hotlist, count, INTEGER, 0, GUI_HOTLIST_NUM_PRIORITIES_STR, NULL);
         HDATA_VAR(struct t_gui_hotlist, prev_hotlist, POINTER, 0, NULL, hdata_name);
         HDATA_VAR(struct t_gui_hotlist, next_hotlist, POINTER, 0, NULL, hdata_name);
-        HDATA_LIST(gui_hotlist, WEECHAT_HDATA_LIST_CHECK_POINTERS);
+        HDATA_LIST(gui_hotlist, DOGECHAT_HDATA_LIST_CHECK_POINTERS);
         HDATA_LIST(last_gui_hotlist, 0);
     }
     return hdata;
@@ -638,7 +638,7 @@ gui_hotlist_add_to_infolist (struct t_infolist *infolist,
 }
 
 /*
- * Prints hotlist in WeeChat log file (usually for crash dump).
+ * Prints hotlist in DogeChat log file (usually for crash dump).
  */
 
 void

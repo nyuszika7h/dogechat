@@ -4,7 +4,7 @@
 //
 [width="30%",cols="^2m,3",options="header"]
 |===
-| IRC 色 | WeeChat 色
+| IRC 色 | DogeChat 色
 
 | 00 | white
 | 01 | black

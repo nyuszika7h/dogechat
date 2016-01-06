@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -27,7 +27,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "logger.h"
 #include "logger-buffer.h"
 
@@ -77,13 +77,13 @@ logger_buffer_add (struct t_gui_buffer *buffer, int log_level)
     if (!buffer)
         return NULL;
 
-    if (weechat_logger_plugin->debug)
+    if (dogechat_logger_plugin->debug)
     {
-        weechat_printf_tags (NULL,
+        dogechat_printf_tags (NULL,
                              "no_log",
                              "%s: start logging for buffer \"%s\"",
                              LOGGER_PLUGIN_NAME,
-                             weechat_buffer_get_string (buffer, "name"));
+                             dogechat_buffer_get_string (buffer, "name"));
     }
 
     new_logger_buffer = malloc (sizeof (*new_logger_buffer));
@@ -195,13 +195,13 @@ logger_buffer_free (struct t_logger_buffer *logger_buffer)
 
     logger_buffers = new_logger_buffers;
 
-    if (weechat_logger_plugin->debug)
+    if (dogechat_logger_plugin->debug)
     {
-        weechat_printf_tags (NULL,
+        dogechat_printf_tags (NULL,
                              "no_log",
                              "%s: stop logging for buffer \"%s\"",
                              LOGGER_PLUGIN_NAME,
-                             weechat_buffer_get_string (ptr_buffer, "name"));
+                             dogechat_buffer_get_string (ptr_buffer, "name"));
     }
 }
 
@@ -222,23 +222,23 @@ logger_buffer_add_to_infolist (struct t_infolist *infolist,
     if (!infolist || !logger_buffer)
         return 0;
 
-    ptr_item = weechat_infolist_new_item (infolist);
+    ptr_item = dogechat_infolist_new_item (infolist);
     if (!ptr_item)
         return 0;
 
-    if (!weechat_infolist_new_var_pointer (ptr_item, "buffer", logger_buffer->buffer))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "buffer", logger_buffer->buffer))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "log_filename", logger_buffer->log_filename))
+    if (!dogechat_infolist_new_var_string (ptr_item, "log_filename", logger_buffer->log_filename))
         return 0;
-    if (!weechat_infolist_new_var_pointer (ptr_item, "log_file", logger_buffer->log_file))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "log_file", logger_buffer->log_file))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "log_enabled", logger_buffer->log_enabled))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "log_enabled", logger_buffer->log_enabled))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "log_level", logger_buffer->log_level))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "log_level", logger_buffer->log_level))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "write_start_info_line", logger_buffer->write_start_info_line))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "write_start_info_line", logger_buffer->write_start_info_line))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "flush_needed", logger_buffer->flush_needed))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "flush_needed", logger_buffer->flush_needed))
         return 0;
 
     return 1;

@@ -1,22 +1,22 @@
 /*
- * charset.c - charset plugin for WeeChat: encode/decode strings
+ * charset.c - charset plugin for DogeChat: encode/decode strings
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdio.h>
@@ -27,22 +27,22 @@
 #include <string.h>
 #include <iconv.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 
 
 #define CHARSET_PLUGIN_NAME "charset"
 
-WEECHAT_PLUGIN_NAME(CHARSET_PLUGIN_NAME);
-WEECHAT_PLUGIN_DESCRIPTION(N_("Charset conversions"));
-WEECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
-WEECHAT_PLUGIN_VERSION(WEECHAT_VERSION);
-WEECHAT_PLUGIN_LICENSE(WEECHAT_LICENSE);
-WEECHAT_PLUGIN_PRIORITY(13000);
+DOGECHAT_PLUGIN_NAME(CHARSET_PLUGIN_NAME);
+DOGECHAT_PLUGIN_DESCRIPTION(N_("Charset conversions"));
+DOGECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
+DOGECHAT_PLUGIN_VERSION(DOGECHAT_VERSION);
+DOGECHAT_PLUGIN_LICENSE(DOGECHAT_LICENSE);
+DOGECHAT_PLUGIN_PRIORITY(13000);
 
 #define CHARSET_CONFIG_NAME "charset"
 
-struct t_weechat_plugin *weechat_charset_plugin = NULL;
-#define weechat_plugin weechat_charset_plugin
+struct t_dogechat_plugin *dogechat_charset_plugin = NULL;
+#define dogechat_plugin dogechat_charset_plugin
 
 struct t_config_file *charset_config_file = NULL;
 struct t_config_option *charset_default_decode = NULL;
@@ -65,10 +65,10 @@ charset_config_reload (void *data, struct t_config_file *config_file)
     (void) data;
 
     /* free all decode/encode charsets */
-    weechat_config_section_free_options (charset_config_section_decode);
-    weechat_config_section_free_options (charset_config_section_encode);
+    dogechat_config_section_free_options (charset_config_section_decode);
+    dogechat_config_section_free_options (charset_config_section_encode);
 
-    return weechat_config_reload (config_file);
+    return dogechat_config_reload (config_file);
 }
 
 /*
@@ -83,15 +83,15 @@ charset_config_reload (void *data, struct t_config_file *config_file)
 int
 charset_decode_is_allowed (const char *charset)
 {
-    if (weechat_strcasestr (charset, "utf-8")
-        || weechat_strcasestr (charset, "utf8"))
+    if (dogechat_strcasestr (charset, "utf-8")
+        || dogechat_strcasestr (charset, "utf8"))
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: UTF-8 is not allowed in charset decoding "
                           "options (it is internal and default charset: decode "
                           "of UTF-8 is OK even if you specify another charset "
                           "to decode)"),
-                        weechat_prefix ("error"), CHARSET_PLUGIN_NAME);
+                        dogechat_prefix ("error"), CHARSET_PLUGIN_NAME);
         return 0;
     }
 
@@ -132,20 +132,20 @@ charset_config_create_option (void *data, struct t_config_file *config_file,
     /* make C compiler happy */
     (void) data;
 
-    rc = WEECHAT_CONFIG_OPTION_SET_ERROR;
+    rc = DOGECHAT_CONFIG_OPTION_SET_ERROR;
 
     if (option_name)
     {
-        ptr_option = weechat_config_search_option (config_file, section,
+        ptr_option = dogechat_config_search_option (config_file, section,
                                                    option_name);
         if (ptr_option)
         {
             if (value && value[0])
-                rc = weechat_config_option_set (ptr_option, value, 1);
+                rc = dogechat_config_option_set (ptr_option, value, 1);
             else
             {
-                weechat_config_option_free (ptr_option);
-                rc = WEECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE;
+                dogechat_config_option_free (ptr_option);
+                rc = DOGECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE;
             }
         }
         else
@@ -155,26 +155,26 @@ charset_config_create_option (void *data, struct t_config_file *config_file,
                 if ((section != charset_config_section_decode)
                     || charset_decode_is_allowed (value))
                 {
-                    ptr_option = weechat_config_new_option (
+                    ptr_option = dogechat_config_new_option (
                         config_file, section,
                         option_name, "string", NULL,
                         NULL, 0, 0, "", value, 0,
                         (section == charset_config_section_decode) ? &charset_check_charset_decode_cb : NULL, NULL,
                         NULL, NULL, NULL, NULL);
                     rc = (ptr_option) ?
-                        WEECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE : WEECHAT_CONFIG_OPTION_SET_ERROR;
+                        DOGECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE : DOGECHAT_CONFIG_OPTION_SET_ERROR;
                 }
             }
             else
-                rc = WEECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE;
+                rc = DOGECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE;
         }
     }
 
-    if (rc == WEECHAT_CONFIG_OPTION_SET_ERROR)
+    if (rc == DOGECHAT_CONFIG_OPTION_SET_ERROR)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: error creating charset \"%s\" => \"%s\""),
-                        weechat_prefix ("error"), CHARSET_PLUGIN_NAME,
+                        dogechat_prefix ("error"), CHARSET_PLUGIN_NAME,
                         option_name, value);
     }
 
@@ -194,43 +194,43 @@ charset_config_init ()
 {
     struct t_config_section *ptr_section;
 
-    charset_config_file = weechat_config_new (CHARSET_CONFIG_NAME,
+    charset_config_file = dogechat_config_new (CHARSET_CONFIG_NAME,
                                               &charset_config_reload, NULL);
     if (!charset_config_file)
         return 0;
 
-    ptr_section = weechat_config_new_section (charset_config_file, "default",
+    ptr_section = dogechat_config_new_section (charset_config_file, "default",
                                               0, 0,
                                               NULL, NULL, NULL, NULL,
                                               NULL, NULL, NULL, NULL,
                                               NULL, NULL);
     if (!ptr_section)
     {
-        weechat_config_free (charset_config_file);
+        dogechat_config_free (charset_config_file);
         return 0;
     }
 
-    charset_default_decode = weechat_config_new_option (
+    charset_default_decode = dogechat_config_new_option (
         charset_config_file, ptr_section,
         "decode", "string",
         N_("global decoding charset: charset used to decode incoming messages "
            "when they are not UTF-8 valid"),
         NULL, 0, 0,
         (charset_terminal && charset_internal
-         && (weechat_strcasecmp (charset_terminal,
+         && (dogechat_strcasecmp (charset_terminal,
                                  charset_internal) != 0)) ?
         charset_terminal : "iso-8859-1", NULL, 0,
         &charset_check_charset_decode_cb, NULL, NULL, NULL, NULL, NULL);
-    charset_default_encode = weechat_config_new_option (
+    charset_default_encode = dogechat_config_new_option (
         charset_config_file, ptr_section,
         "encode", "string",
         N_("global encoding charset: charset used to encode outgoing messages "
-           "(if empty, default is UTF-8 because it is the WeeChat internal "
+           "(if empty, default is UTF-8 because it is the DogeChat internal "
            "charset)"),
         NULL, 0, 0, "", NULL, 0,
         NULL, NULL, NULL, NULL, NULL, NULL);
 
-    ptr_section = weechat_config_new_section (charset_config_file, "decode",
+    ptr_section = dogechat_config_new_section (charset_config_file, "decode",
                                               1, 1,
                                               NULL, NULL, NULL, NULL,
                                               NULL, NULL,
@@ -238,13 +238,13 @@ charset_config_init ()
                                               NULL, NULL);
     if (!ptr_section)
     {
-        weechat_config_free (charset_config_file);
+        dogechat_config_free (charset_config_file);
         return 0;
     }
 
     charset_config_section_decode = ptr_section;
 
-    ptr_section = weechat_config_new_section (charset_config_file, "encode",
+    ptr_section = dogechat_config_new_section (charset_config_file, "encode",
                                               1, 1,
                                               NULL, NULL, NULL, NULL,
                                               NULL, NULL,
@@ -252,7 +252,7 @@ charset_config_init ()
                                               NULL, NULL);
     if (!ptr_section)
     {
-        weechat_config_free (charset_config_file);
+        dogechat_config_free (charset_config_file);
         return 0;
     }
 
@@ -268,7 +268,7 @@ charset_config_init ()
 int
 charset_config_read ()
 {
-    return weechat_config_read (charset_config_file);
+    return dogechat_config_read (charset_config_file);
 }
 
 /*
@@ -278,7 +278,7 @@ charset_config_read ()
 int
 charset_config_write ()
 {
-    return weechat_config_write (charset_config_file);
+    return dogechat_config_write (charset_config_file);
 }
 
 /*
@@ -325,13 +325,13 @@ charset_get (struct t_config_section *section, const char *name,
         ptr_end = option_name + strlen (option_name);
         while (ptr_end >= option_name)
         {
-            ptr_option = weechat_config_search_option (charset_config_file,
+            ptr_option = dogechat_config_search_option (charset_config_file,
                                                        section,
                                                        option_name);
             if (ptr_option)
             {
                 free (option_name);
-                return weechat_config_string (ptr_option);
+                return dogechat_config_string (ptr_option);
             }
             ptr_end--;
             while ((ptr_end >= option_name) && (ptr_end[0] != '.'))
@@ -341,20 +341,20 @@ charset_get (struct t_config_section *section, const char *name,
             if ((ptr_end >= option_name) && (ptr_end[0] == '.'))
                 ptr_end[0] = '\0';
         }
-        ptr_option = weechat_config_search_option (charset_config_file,
+        ptr_option = dogechat_config_search_option (charset_config_file,
                                                    section,
                                                    option_name);
 
         free (option_name);
 
         if (ptr_option)
-            return weechat_config_string (ptr_option);
+            return dogechat_config_string (ptr_option);
     }
 
     /* nothing found => return default decode/encode charset (if set) */
-    if (weechat_config_string (default_charset)
-        && weechat_config_string (default_charset)[0])
-        return weechat_config_string (default_charset);
+    if (dogechat_config_string (default_charset)
+        && dogechat_config_string (default_charset)[0])
+        return dogechat_config_string (default_charset);
 
     /* no default charset set */
     return NULL;
@@ -376,15 +376,15 @@ charset_decode_cb (void *data, const char *modifier, const char *modifier_data,
 
     charset = charset_get (charset_config_section_decode, modifier_data,
                            charset_default_decode);
-    if (weechat_charset_plugin->debug)
+    if (dogechat_charset_plugin->debug)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         "charset: debug: using 'decode' charset: %s "
                         "(modifier=\"%s\", modifier_data=\"%s\", string=\"%s\")",
                         charset, modifier, modifier_data, string);
     }
     if (charset && charset[0])
-        return weechat_iconv_to_internal (charset, string);
+        return dogechat_iconv_to_internal (charset, string);
 
     return NULL;
 }
@@ -405,15 +405,15 @@ charset_encode_cb (void *data, const char *modifier, const char *modifier_data,
 
     charset = charset_get (charset_config_section_encode, modifier_data,
                            charset_default_encode);
-    if (weechat_charset_plugin->debug)
+    if (dogechat_charset_plugin->debug)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         "charset: debug: using 'encode' charset: %s "
                         "(modifier=\"%s\", modifier_data=\"%s\", string=\"%s\")",
                         charset, modifier, modifier_data, string);
     }
     if (charset && charset[0])
-        return weechat_iconv_from_internal (charset, string);
+        return dogechat_iconv_from_internal (charset, string);
 
     return NULL;
 }
@@ -433,10 +433,10 @@ charset_set (struct t_config_section *section, const char *type,
                                       value) > 0)
     {
         if (value && value[0])
-            weechat_printf (NULL, "%s: %s, \"%s\" => %s",
+            dogechat_printf (NULL, "%s: %s, \"%s\" => %s",
                             CHARSET_PLUGIN_NAME, type, name, value);
         else
-            weechat_printf (NULL, _("%s: %s, \"%s\": removed"),
+            dogechat_printf (NULL, _("%s: %s, \"%s\": removed"),
                             CHARSET_PLUGIN_NAME, type, name);
     }
 }
@@ -448,7 +448,7 @@ charset_set (struct t_config_section *section, const char *type,
 void
 charset_display_charsets ()
 {
-    weechat_printf (NULL,
+    dogechat_printf (NULL,
                     _("%s: terminal: %s, internal: %s"),
                     CHARSET_PLUGIN_NAME, charset_terminal, charset_internal);
 }
@@ -472,15 +472,15 @@ charset_command_cb (void *data, struct t_gui_buffer *buffer, int argc,
     if (argc < 2)
     {
         charset_display_charsets ();
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
     ptr_section = NULL;
 
-    plugin_name = weechat_buffer_get_string (buffer, "plugin");
-    name = weechat_buffer_get_string (buffer, "name");
+    plugin_name = dogechat_buffer_get_string (buffer, "plugin");
+    name = dogechat_buffer_get_string (buffer, "name");
 
-    charset_modifier = weechat_buffer_get_string (buffer,
+    charset_modifier = dogechat_buffer_get_string (buffer,
                                                   "localvar_charset_modifier");
     if (charset_modifier)
         option_name = strdup (charset_modifier);
@@ -489,12 +489,12 @@ charset_command_cb (void *data, struct t_gui_buffer *buffer, int argc,
         length = strlen (plugin_name) + 1 + strlen (name) + 1;
         option_name = malloc (length);
         if (!option_name)
-            WEECHAT_COMMAND_ERROR;
+            DOGECHAT_COMMAND_ERROR;
 
         snprintf (option_name, length, "%s.%s", plugin_name, name);
     }
 
-    if (weechat_strcasecmp (argv[1], "reset") == 0)
+    if (dogechat_strcasecmp (argv[1], "reset") == 0)
     {
         charset_set (charset_config_section_decode, "decode", option_name,
                      NULL);
@@ -505,25 +505,25 @@ charset_command_cb (void *data, struct t_gui_buffer *buffer, int argc,
     {
         if (argc > 2)
         {
-            if (weechat_strcasecmp (argv[1], "decode") == 0)
+            if (dogechat_strcasecmp (argv[1], "decode") == 0)
             {
                 ptr_section = charset_config_section_decode;
                 ptr_charset = argv_eol[2];
             }
-            else if (weechat_strcasecmp (argv[1], "encode") == 0)
+            else if (dogechat_strcasecmp (argv[1], "encode") == 0)
             {
                 ptr_section = charset_config_section_encode;
                 ptr_charset = argv_eol[2];
             }
             if (!ptr_section)
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: wrong charset type (decode or encode "
                                   "expected)"),
-                                weechat_prefix ("error"), CHARSET_PLUGIN_NAME);
+                                dogechat_prefix ("error"), CHARSET_PLUGIN_NAME);
                 if (option_name)
                     free (option_name);
-                return WEECHAT_RC_OK;
+                return DOGECHAT_RC_OK;
             }
         }
         else
@@ -531,13 +531,13 @@ charset_command_cb (void *data, struct t_gui_buffer *buffer, int argc,
 
         if (!charset_check (ptr_charset))
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: invalid charset: \"%s\""),
-                            weechat_prefix ("error"), CHARSET_PLUGIN_NAME,
+                            dogechat_prefix ("error"), CHARSET_PLUGIN_NAME,
                             ptr_charset);
             if (option_name)
                 free (option_name);
-            return WEECHAT_RC_OK;
+            return DOGECHAT_RC_OK;
         }
         if (ptr_section)
         {
@@ -554,7 +554,7 @@ charset_command_cb (void *data, struct t_gui_buffer *buffer, int argc,
 
     free (option_name);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -562,29 +562,29 @@ charset_command_cb (void *data, struct t_gui_buffer *buffer, int argc,
  */
 
 int
-weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
+dogechat_plugin_init (struct t_dogechat_plugin *plugin, int argc, char *argv[])
 {
     /* make C compiler happy */
     (void) argc;
     (void) argv;
 
-    weechat_plugin = plugin;
+    dogechat_plugin = plugin;
 
     /* get terminal & internal charsets */
-    charset_terminal = weechat_info_get ("charset_terminal", "");
-    charset_internal = weechat_info_get ("charset_internal", "");
+    charset_terminal = dogechat_info_get ("charset_terminal", "");
+    charset_internal = dogechat_info_get ("charset_internal", "");
 
     /* display message */
-    if (weechat_charset_plugin->debug >= 1)
+    if (dogechat_charset_plugin->debug >= 1)
         charset_display_charsets ();
 
     if (!charset_config_init ())
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
     charset_config_read ();
 
     /* /charset command */
-    weechat_hook_command (
+    dogechat_hook_command (
         "charset",
         N_("change charset for current buffer"),
         N_("decode|encode <charset>"
@@ -597,10 +597,10 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
         &charset_command_cb, NULL);
 
     /* modifiers hooks */
-    weechat_hook_modifier ("charset_decode", &charset_decode_cb, NULL);
-    weechat_hook_modifier ("charset_encode", &charset_encode_cb, NULL);
+    dogechat_hook_modifier ("charset_decode", &charset_decode_cb, NULL);
+    dogechat_hook_modifier ("charset_encode", &charset_encode_cb, NULL);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -608,14 +608,14 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
  */
 
 int
-weechat_plugin_end (struct t_weechat_plugin *plugin)
+dogechat_plugin_end (struct t_dogechat_plugin *plugin)
 {
     /* make C compiler happy */
     (void) plugin;
 
     charset_config_write ();
 
-    weechat_config_free (charset_config_file);
+    dogechat_config_free (charset_config_file);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }

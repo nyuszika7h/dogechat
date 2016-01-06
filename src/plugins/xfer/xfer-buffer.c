@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "xfer.h"
 #include "xfer-buffer.h"
 #include "xfer-config.h"
@@ -52,14 +52,14 @@ xfer_buffer_refresh (const char *hotlist)
 
     if (xfer_buffer)
     {
-        weechat_buffer_clear (xfer_buffer);
+        dogechat_buffer_clear (xfer_buffer);
         line = 0;
         xfer_selected = xfer_search_by_number (xfer_buffer_selected_line);
-        weechat_printf_y (xfer_buffer, 0,
+        dogechat_printf_y (xfer_buffer, 0,
                           "%s%s%s%s%s%s%s%s",
-                          weechat_color("green"),
+                          dogechat_color("green"),
                           _("Actions (letter+enter):"),
-                          weechat_color("lightgreen"),
+                          dogechat_color("lightgreen"),
                           /* accept */
                           (xfer_selected && XFER_IS_RECV(xfer_selected->type)
                            && (xfer_selected->status == XFER_STATUS_WAITING)) ?
@@ -88,9 +88,9 @@ xfer_buffer_refresh (const char *hotlist)
             snprintf (str_color, sizeof (str_color),
                       "%s,%s",
                       (line == xfer_buffer_selected_line) ?
-                      weechat_config_string (xfer_config_color_text_selected) :
-                      weechat_config_string (xfer_config_color_text),
-                      weechat_config_string (xfer_config_color_text_bg));
+                      dogechat_config_string (xfer_config_color_text_selected) :
+                      dogechat_config_string (xfer_config_color_text),
+                      dogechat_config_string (xfer_config_color_text_bg));
 
             str_ip[0] = '\0';
             if (ptr_xfer->remote_address_str)
@@ -114,9 +114,9 @@ xfer_buffer_refresh (const char *hotlist)
             }
 
             /* display first line with remote nick, filename and plugin name/id */
-            weechat_printf_y (xfer_buffer, (line * 2) + 2,
+            dogechat_printf_y (xfer_buffer, (line * 2) + 2,
                               "%s%s%-24s %s%s%s%s (%s.%s)%s%s",
-                              weechat_color(str_color),
+                              dogechat_color(str_color),
                               (line == xfer_buffer_selected_line) ?
                               "*** " : "    ",
                               ptr_xfer->remote_nick,
@@ -132,7 +132,7 @@ xfer_buffer_refresh (const char *hotlist)
 
             snprintf (status, sizeof (status),
                       "%s", _(xfer_status_string[ptr_xfer->status]));
-            length = weechat_utf8_strlen_screen (status);
+            length = dogechat_utf8_strlen_screen (status);
             if (length < 20)
             {
                 for (i = 0; i < 20 - length; i++)
@@ -151,17 +151,17 @@ xfer_buffer_refresh (const char *hotlist)
                     strftime (date, sizeof (date),
                               "%a, %d %b %Y %H:%M:%S", date_tmp);
                 }
-                weechat_printf_y (xfer_buffer, (line * 2) + 3,
+                dogechat_printf_y (xfer_buffer, (line * 2) + 3,
                                   "%s%s%s %s%s%s%s%s",
-                                  weechat_color(str_color),
+                                  dogechat_color(str_color),
                                   (line == xfer_buffer_selected_line) ?
                                   "*** " : "    ",
                                   (XFER_IS_SEND(ptr_xfer->type)) ?
                                   "<<--" : "-->>",
-                                  weechat_color(weechat_config_string (xfer_config_color_status[ptr_xfer->status])),
+                                  dogechat_color(dogechat_config_string (xfer_config_color_status[ptr_xfer->status])),
                                   status,
-                                  weechat_color ("reset"),
-                                  weechat_color (str_color),
+                                  dogechat_color ("reset"),
+                                  dogechat_color (str_color),
                                   date);
             }
             else
@@ -169,7 +169,7 @@ xfer_buffer_refresh (const char *hotlist)
                 /* build progress bar */
                 pos = (ptr_xfer->pos <= ptr_xfer->size) ? ptr_xfer->pos : ptr_xfer->size;
                 progress_bar = NULL;
-                progress_bar_size = weechat_config_integer (xfer_config_look_progress_bar_size);
+                progress_bar_size = dogechat_config_integer (xfer_config_look_progress_bar_size);
                 if (progress_bar_size > 0)
                 {
                     progress_bar = malloc (1 + progress_bar_size + 1 + 1 + 1);
@@ -208,9 +208,9 @@ xfer_buffer_refresh (const char *hotlist)
                     pct_complete = (unsigned long long)(((float)(pos)/(float)(ptr_xfer->size)) * 100);
 
                 /* position, total and bytes per second */
-                str_pos = weechat_string_format_size (pos);
-                str_total = weechat_string_format_size (ptr_xfer->size);
-                str_bytes_per_sec = weechat_string_format_size (ptr_xfer->bytes_per_sec);
+                str_pos = dogechat_string_format_size (pos);
+                str_total = dogechat_string_format_size (ptr_xfer->size);
+                str_bytes_per_sec = dogechat_string_format_size (ptr_xfer->bytes_per_sec);
 
                 /* ETA */
                 eta[0] = '\0';
@@ -225,14 +225,14 @@ xfer_buffer_refresh (const char *hotlist)
                 }
 
                 /* display second line for file with status, progress bar and estimated time */
-                weechat_printf_y (xfer_buffer, (line * 2) + 3,
+                dogechat_printf_y (xfer_buffer, (line * 2) + 3,
                                   "%s%s%s %s%s%s%s%3llu%%   %s / %s  (%s%s/s)",
-                                  weechat_color(str_color),
+                                  dogechat_color(str_color),
                                   (line == xfer_buffer_selected_line) ? "*** " : "    ",
                                   (XFER_IS_SEND(ptr_xfer->type)) ? "<<--" : "-->>",
-                                  weechat_color(weechat_config_string (xfer_config_color_status[ptr_xfer->status])),
+                                  dogechat_color(dogechat_config_string (xfer_config_color_status[ptr_xfer->status])),
                                   status,
-                                  weechat_color (str_color),
+                                  dogechat_color (str_color),
                                   (progress_bar) ? progress_bar : "",
                                   pct_complete,
                                   (str_pos) ? str_pos : "?",
@@ -250,7 +250,7 @@ xfer_buffer_refresh (const char *hotlist)
             }
             line++;
         }
-        weechat_buffer_set (xfer_buffer, "hotlist", hotlist);
+        dogechat_buffer_set (xfer_buffer, "hotlist", hotlist);
     }
 }
 
@@ -270,7 +270,7 @@ xfer_buffer_input_cb (void *data, struct t_gui_buffer *buffer,
     xfer = xfer_search_by_number (xfer_buffer_selected_line);
 
     /* accept xfer */
-    if (weechat_strcasecmp (input_data, "a") == 0)
+    if (dogechat_strcasecmp (input_data, "a") == 0)
     {
         if (xfer && XFER_IS_RECV(xfer->type)
             && (xfer->status == XFER_STATUS_WAITING))
@@ -279,16 +279,16 @@ xfer_buffer_input_cb (void *data, struct t_gui_buffer *buffer,
         }
     }
     /* cancel xfer */
-    else if (weechat_strcasecmp (input_data, "c") == 0)
+    else if (dogechat_strcasecmp (input_data, "c") == 0)
     {
         if (xfer && !XFER_HAS_ENDED(xfer->status))
         {
             xfer_close (xfer, XFER_STATUS_ABORTED);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
         }
     }
     /* purge old xfer */
-    else if (weechat_strcasecmp (input_data, "p") == 0)
+    else if (dogechat_strcasecmp (input_data, "p") == 0)
     {
         ptr_xfer = xfer_list;
         while (ptr_xfer)
@@ -298,24 +298,24 @@ xfer_buffer_input_cb (void *data, struct t_gui_buffer *buffer,
                 xfer_free (ptr_xfer);
             ptr_xfer = next_xfer;
         }
-        xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+        xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
     }
     /* quit xfer buffer (close it) */
-    else if (weechat_strcasecmp (input_data, "q") == 0)
+    else if (dogechat_strcasecmp (input_data, "q") == 0)
     {
-        weechat_buffer_close (buffer);
+        dogechat_buffer_close (buffer);
     }
     /* remove xfer */
-    else if (weechat_strcasecmp (input_data, "r") == 0)
+    else if (dogechat_strcasecmp (input_data, "r") == 0)
     {
         if (xfer && XFER_HAS_ENDED(xfer->status))
         {
             xfer_free (xfer);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -331,7 +331,7 @@ xfer_buffer_close_cb (void *data, struct t_gui_buffer *buffer)
 
     xfer_buffer = NULL;
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -343,7 +343,7 @@ xfer_buffer_open ()
 {
     if (!xfer_buffer)
     {
-        xfer_buffer = weechat_buffer_new (XFER_BUFFER_NAME,
+        xfer_buffer = dogechat_buffer_new (XFER_BUFFER_NAME,
                                           &xfer_buffer_input_cb, NULL,
                                           &xfer_buffer_close_cb, NULL);
 
@@ -351,10 +351,10 @@ xfer_buffer_open ()
         if (!xfer_buffer)
             return;
 
-        weechat_buffer_set (xfer_buffer, "type", "free");
-        weechat_buffer_set (xfer_buffer, "title", _("Xfer list"));
-        weechat_buffer_set (xfer_buffer, "key_bind_meta2-A", "/xfer up");
-        weechat_buffer_set (xfer_buffer, "key_bind_meta2-B", "/xfer down");
-        weechat_buffer_set (xfer_buffer, "localvar_set_type", "xfer");
+        dogechat_buffer_set (xfer_buffer, "type", "free");
+        dogechat_buffer_set (xfer_buffer, "title", _("Xfer list"));
+        dogechat_buffer_set (xfer_buffer, "key_bind_meta2-A", "/xfer up");
+        dogechat_buffer_set (xfer_buffer, "key_bind_meta2-B", "/xfer down");
+        dogechat_buffer_set (xfer_buffer, "localvar_set_type", "xfer");
     }
 }

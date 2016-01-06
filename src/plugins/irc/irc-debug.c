@@ -3,26 +3,26 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-debug.h"
 #include "irc-ignore.h"
@@ -31,7 +31,7 @@
 
 
 /*
- * Dumps IRC data in WeeChat log file.
+ * Dumps IRC data in DogeChat log file.
  */
 
 int
@@ -44,22 +44,22 @@ irc_debug_signal_debug_dump_cb (void *data, const char *signal,
     (void) type_data;
 
     if (!signal_data
-        || (weechat_strcasecmp ((char *)signal_data, IRC_PLUGIN_NAME) == 0))
+        || (dogechat_strcasecmp ((char *)signal_data, IRC_PLUGIN_NAME) == 0))
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("***** \"%s\" plugin dump *****",
-                            weechat_plugin->name);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("***** \"%s\" plugin dump *****",
+                            dogechat_plugin->name);
 
         irc_server_print_log ();
         irc_ignore_print_log ();
         irc_redirect_pattern_print_log ();
 
-        weechat_log_printf ("");
-        weechat_log_printf ("***** End of \"%s\" plugin dump *****",
-                            weechat_plugin->name);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("***** End of \"%s\" plugin dump *****",
+                            dogechat_plugin->name);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -69,5 +69,5 @@ irc_debug_signal_debug_dump_cb (void *data, const char *signal,
 void
 irc_debug_init ()
 {
-    weechat_hook_signal ("debug_dump", &irc_debug_signal_debug_dump_cb, NULL);
+    dogechat_hook_signal ("debug_dump", &irc_debug_signal_debug_dump_cb, NULL);
 }

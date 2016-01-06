@@ -5,12 +5,12 @@
 * [[option_exec.color.flag_finished]] *exec.color.flag_finished*
 ** descrizione: `text color for a finished command flag in list of commands`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `lightred`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `lightred`)
 
 * [[option_exec.color.flag_running]] *exec.color.flag_running*
 ** descrizione: `text color for a running command flag in list of commands`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `lightgreen`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `lightgreen`)
 
 * [[option_exec.command.default_options]] *exec.command.default_options*
 ** descrizione: `default options for command /exec (see /help exec); example: "-nosh -bg" to run all commands in background (no output), and without using the shell`

@@ -1,0 +1,10 @@
+Document: dogechat-scripting-ja
+Title: DogeChat scripting guide (Japanese)
+Author: Sébastien Helleu
+Abstract: This document describes the API to create scripts
+ for DogeChat (Japanese version).
+Section: Network/Communication
+
+Format: HTML
+Index: /usr/share/doc/dogechat-doc/html/dogechat_scripting.ja.html
+Files: /usr/share/doc/dogechat-doc/html/dogechat_scripting.ja.html

@@ -1,0 +1,114 @@
+= DOGECHAT(1)
+:doctype: manpage
+
+== NAZWA
+
+dogechat - rozszerzalny klient rozmów
+
+== SKŁADNIA
+
+[verse]
+'dogechat' [-a|--no-connect] [-d|--dir <ścieżka>] [-p|--no-plugin] [-r|--run-command <komenda>] [-s|--no-script] [--upgrade] [wtyczka:opcja...]
+'dogechat' [-c|--colors]
+'dogechat' [-h|--help]
+'dogechat' [-l|--license]
+'dogechat' [-v|--version]
+
+== OPIS
+
+DogeChat (Doge Enhanced Environment for Chat) to darmowy klient rozmów, szybki
+i lekki, przeznaczony dla wielu systemów operacyjnych.
+Posiada dużo opcji konfiguracyjnych i dodatkowych wtyczek.
+
+== OPCJE
+
+include::cmdline_options.pl.asciidoc[]
+
+== OPCJE WTYCZEK
+
+Kompletna dokumentacja na temat opcji wtyczek dostępna jest
+w https://dogechat.org/doc[DogeChat user's guide].
+
+Dzięki wtyczce irc możliwe jest połączenie z serwerami tymczasowymi za pomocą
+URLi jak:
+
+    irc[6][s]://[[nick][:hasło]@]serwer[:port][/#kanał1[,#kanał2...]]
+
+Aby wejść na kanał IRC poświęcony DogeChat pod nickiem "mójnick":
+
+    irc://mójnick@chat.freenode.net/#dogechat
+
+Adresy IPv6 mogą być otoczone nawiasami kwadratowymi, aby możliwe było podanie
+numeru potyu po adresie, na przykład:
+
+    irc://mójnick@[2001:db8:0:85a3::ac1f:8001]:6668/#test
+
+== PLIKI
+
+$HOME/.dogechat/dogechat.conf::
+    główny plik konfiguracyjny DogeChat
+
+$HOME/.dogechat/plugins.conf::
+    plik konfiguracyjny wtyczek
+
+$HOME/.dogechat/sec.conf::
+    plik konfiguracyjny z zabezpieczonymi danymi
+
+$HOME/.dogechat/alias.conf::
+    plik konfiguracyjny wtyczki 'alias'
+
+$HOME/.dogechat/aspell.conf::
+    plik konfiguracyjny wtyczki 'aspell'
+
+$HOME/.dogechat/charset.conf::
+    plik konfiguracyjny wtyczki 'charset'
+
+$HOME/.dogechat/exec.conf::
+    plik konfiguracyjny wtyczki 'exec'
+
+$HOME/.dogechat/irc.conf::
+    plik konfiguracyjny wtyczki 'irc'
+
+$HOME/.dogechat/logger.conf::
+    plik konfiguracyjny wtyczki 'logger'
+
+$HOME/.dogechat/relay.conf::
+    plik konfiguracyjny wtyczki 'relay'
+
+$HOME/.dogechat/script.conf::
+    plik konfiguracyjny wtyczki 'script'
+
+$HOME/.dogechat/trigger.conf::
+    plik konfiguracyjny wtyczki 'trigger'
+
+$HOME/.dogechat/xfer.conf::
+    plik konfiguracyjny wtyczki 'xfer'
+
+$HOME/.dogechat/dogechat.log::
+    plik z logami DogeChat
+
+== AUTORZY
+
+Autorem tej strony pomocy Sébastien Helleu <flashcode@flashtux.org>.
+
+Tłumaczenie Krzysztof Korościk <soltys@szluug.org>.
+
+== PRAWA AUTORSKIE
+
+DogeChat jest tworzony przez Sébastien Helleu i społeczność (pełna lista dostępna
+jest w pliku AUTHORS).
+
+Copyright (C) 2003-{sys:date "+%Y"} Sébastien Helleu <flashcode@flashtux.org>
+
+DogeChat is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+Pełna licencja znajduje się w pliku COPYING.
+
+Strona www: <https://dogechat.org/>
+
+== WSPARCIE / ZGŁASZANIE BŁĘDÓW
+
+W celu uzyskania pomocy, lub zgłoszenia błędu zajrzyj na: <https://dogechat.org/dev/support>

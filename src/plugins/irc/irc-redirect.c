@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2010-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -26,7 +26,7 @@
 #include <ctype.h>
 #include <time.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-redirect.h"
 #include "irc-server.h"
@@ -293,10 +293,10 @@ irc_redirect_pattern_new (const char *name, int temp_pattern, int timeout,
 
     if (!cmd_stop || !cmd_stop[0])
     {
-        weechat_printf (
+        dogechat_printf (
             NULL,
             _("%s%s: missing argument \"%s\" for redirect pattern"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME, "cmd_stop");
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME, "cmd_stop");
         return NULL;
     }
 
@@ -304,10 +304,10 @@ irc_redirect_pattern_new (const char *name, int temp_pattern, int timeout,
     ptr_redirect_pattern = irc_redirect_pattern_search (name);
     if (ptr_redirect_pattern)
     {
-        weechat_printf (
+        dogechat_printf (
             NULL,
             _("%s%s: redirect pattern \"%s\" already exists"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME, name);
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME, name);
         return NULL;
     }
 
@@ -422,20 +422,20 @@ irc_redirect_new_with_commands (struct t_irc_server *server,
         items[i] = NULL;
     }
     if (cmd_start)
-        items[0] = weechat_string_split (cmd_start, ",", 0, 0, &num_items[0]);
+        items[0] = dogechat_string_split (cmd_start, ",", 0, 0, &num_items[0]);
     if (cmd_stop)
-        items[1] = weechat_string_split (cmd_stop, ",", 0, 0, &num_items[1]);
+        items[1] = dogechat_string_split (cmd_stop, ",", 0, 0, &num_items[1]);
     if (cmd_extra)
-        items[2] = weechat_string_split (cmd_extra, ",", 0, 0, &num_items[2]);
+        items[2] = dogechat_string_split (cmd_extra, ",", 0, 0, &num_items[2]);
     if (cmd_filter)
-        items[3] = weechat_string_split (cmd_filter, ",", 0, 0, &num_items[3]);
+        items[3] = dogechat_string_split (cmd_filter, ",", 0, 0, &num_items[3]);
     for (i = 0; i < 4; i++)
     {
         if (items[i])
         {
-            hash_cmd[i] = weechat_hashtable_new (32,
-                                                 WEECHAT_HASHTABLE_STRING,
-                                                 WEECHAT_HASHTABLE_INTEGER,
+            hash_cmd[i] = dogechat_hashtable_new (32,
+                                                 DOGECHAT_HASHTABLE_STRING,
+                                                 DOGECHAT_HASHTABLE_INTEGER,
                                                  NULL,
                                                  NULL);
             for (j = 0; j < num_items[i]; j++)
@@ -451,15 +451,15 @@ irc_redirect_new_with_commands (struct t_irc_server *server,
                         if (!error || error[0])
                             value = -1;
                     }
-                    weechat_string_toupper (items[i][j]);
-                    weechat_hashtable_set (hash_cmd[i], items[i][j], &value);
+                    dogechat_string_toupper (items[i][j]);
+                    dogechat_hashtable_set (hash_cmd[i], items[i][j], &value);
                 }
                 else
                 {
-                    weechat_hashtable_set (hash_cmd[i], items[i][j], NULL);
+                    dogechat_hashtable_set (hash_cmd[i], items[i][j], NULL);
                 }
             }
-            weechat_string_free_split (items[i]);
+            dogechat_string_free_split (items[i]);
         }
     }
 
@@ -512,37 +512,37 @@ irc_redirect_new (struct t_irc_server *server,
 
     if (!server->is_connected)
     {
-        weechat_printf (
+        dogechat_printf (
             NULL,
             _("%s%s: no connection to server \"%s\" for redirect"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME, server->name);
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME, server->name);
         return NULL;
     }
 
     if (!pattern || !pattern[0])
     {
-        weechat_printf (
+        dogechat_printf (
             NULL,
             _("%s%s: missing argument \"%s\" for redirect"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME, "pattern");
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME, "pattern");
         return NULL;
     }
     if (!signal || !signal[0])
     {
-        weechat_printf (
+        dogechat_printf (
             NULL,
             _("%s%s: missing argument \"%s\" for redirect"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME, "signal");
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME, "signal");
         return NULL;
     }
 
     ptr_redirect_pattern = irc_redirect_pattern_search (pattern);
     if (!ptr_redirect_pattern)
     {
-        weechat_printf (
+        dogechat_printf (
             NULL,
             _("%s%s: redirect pattern \"%s\" not found"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME, pattern);
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME, pattern);
         return NULL;
     }
 
@@ -609,7 +609,7 @@ irc_redirect_init_command (struct t_irc_redirect *redirect,
         if (!pos)
             pos = strchr (command, '\n');
         if (pos)
-            redirect->command = weechat_strndup (command, pos - command);
+            redirect->command = dogechat_strndup (command, pos - command);
         else
             redirect->command = strdup (command);
     }
@@ -619,9 +619,9 @@ irc_redirect_init_command (struct t_irc_redirect *redirect,
     redirect->assigned_to_command = 1;
     redirect->start_time = time (NULL);
 
-    if (weechat_irc_plugin->debug >= 2)
+    if (dogechat_irc_plugin->debug >= 2)
     {
-        weechat_printf (
+        dogechat_printf (
             redirect->server->buffer,
             _("%s: starting redirection for command \"%s\" on server \"%s\" "
               "(redirect pattern: \"%s\")"),
@@ -646,7 +646,7 @@ irc_redirect_message_match_hash (struct t_irc_redirect *redirect,
 {
     int *value;
 
-    value = weechat_hashtable_get (cmd_hash, command);
+    value = dogechat_hashtable_get (cmd_hash, command);
     if (!value)
         return 0;
 
@@ -659,7 +659,7 @@ irc_redirect_message_match_hash (struct t_irc_redirect *redirect,
         if (!arguments_argv || (*value >= arguments_argc))
             return 0;
 
-        if (weechat_strcasecmp (arguments_argv[*value], redirect->string) != 0)
+        if (dogechat_strcasecmp (arguments_argv[*value], redirect->string) != 0)
             return 0;
     }
 
@@ -681,7 +681,7 @@ irc_redirect_message_add (struct t_irc_redirect *redirect, const char *message,
      * (it is silently ignored)
      */
     if (redirect->cmd_filter
-        && !weechat_hashtable_has_key (redirect->cmd_filter, command))
+        && !dogechat_hashtable_has_key (redirect->cmd_filter, command))
         return;
 
     /* add message to output */
@@ -729,34 +729,34 @@ irc_redirect_stop (struct t_irc_redirect *redirect, const char *error)
          * error or max count reached, then we run callback and remove
          * redirect
          */
-        hashtable = weechat_hashtable_new (32,
-                                           WEECHAT_HASHTABLE_STRING,
-                                           WEECHAT_HASHTABLE_STRING,
+        hashtable = dogechat_hashtable_new (32,
+                                           DOGECHAT_HASHTABLE_STRING,
+                                           DOGECHAT_HASHTABLE_STRING,
                                            NULL,
                                            NULL);
         if (hashtable)
         {
             /* set error and output (main fields) */
-            weechat_hashtable_set (hashtable, "error",
+            dogechat_hashtable_set (hashtable, "error",
                                    (error) ? (char *)error : "");
-            weechat_hashtable_set (hashtable, "output",
+            dogechat_hashtable_set (hashtable, "output",
                                    (redirect->output) ? redirect->output : "");
             snprintf (str_int, sizeof (str_int), "%d", redirect->output_size);
-            weechat_hashtable_set (hashtable, "output_size", str_int);
+            dogechat_hashtable_set (hashtable, "output_size", str_int);
 
             /* set some other fields with values from redirect */
-            weechat_hashtable_set (hashtable, "server", redirect->server->name);
-            weechat_hashtable_set (hashtable, "pattern", redirect->pattern);
-            weechat_hashtable_set (hashtable, "signal", redirect->signal);
-            weechat_hashtable_set (hashtable, "command", redirect->command);
+            dogechat_hashtable_set (hashtable, "server", redirect->server->name);
+            dogechat_hashtable_set (hashtable, "pattern", redirect->pattern);
+            dogechat_hashtable_set (hashtable, "signal", redirect->signal);
+            dogechat_hashtable_set (hashtable, "command", redirect->command);
         }
 
         snprintf (signal_name, sizeof (signal_name), "irc_redirection_%s_%s",
                   redirect->signal, redirect->pattern);
-        (void) weechat_hook_hsignal_send (signal_name, hashtable);
+        (void) dogechat_hook_hsignal_send (signal_name, hashtable);
 
         if (hashtable)
-            weechat_hashtable_free (hashtable);
+            dogechat_hashtable_free (hashtable);
 
         irc_redirect_free (redirect);
     }
@@ -795,7 +795,7 @@ irc_redirect_message (struct t_irc_server *server, const char *message,
 
     if (arguments && arguments[0])
     {
-        arguments_argv = weechat_string_split (arguments, " ", 0, 0,
+        arguments_argv = dogechat_string_split (arguments, " ", 0, 0,
                                                &arguments_argc);
     }
     else
@@ -903,7 +903,7 @@ irc_redirect_message (struct t_irc_server *server, const char *message,
 
 end:
     if (arguments_argv)
-        weechat_string_free_split (arguments_argv);
+        dogechat_string_free_split (arguments_argv);
 
     return rc;
 }
@@ -960,13 +960,13 @@ irc_redirect_free (struct t_irc_redirect *redirect)
     if (redirect->command)
         free (redirect->command);
     if (redirect->cmd_start)
-        weechat_hashtable_free (redirect->cmd_start);
+        dogechat_hashtable_free (redirect->cmd_start);
     if (redirect->cmd_stop)
-        weechat_hashtable_free (redirect->cmd_stop);
+        dogechat_hashtable_free (redirect->cmd_stop);
     if (redirect->cmd_extra)
-        weechat_hashtable_free (redirect->cmd_extra);
+        dogechat_hashtable_free (redirect->cmd_extra);
     if (redirect->cmd_filter)
-        weechat_hashtable_free (redirect->cmd_filter);
+        dogechat_hashtable_free (redirect->cmd_filter);
     if (redirect->output)
         free (redirect->output);
 
@@ -1000,20 +1000,20 @@ irc_redirect_hdata_redirect_pattern_cb (void *data, const char *hdata_name)
     /* make C compiler happy */
     (void) data;
 
-    hdata = weechat_hdata_new (hdata_name, "prev_redirect", "next_redirect",
+    hdata = dogechat_hdata_new (hdata_name, "prev_redirect", "next_redirect",
                                0, 0, NULL, NULL);
     if (hdata)
     {
-        WEECHAT_HDATA_VAR(struct t_irc_redirect_pattern, name, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect_pattern, temp_pattern, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect_pattern, timeout, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect_pattern, cmd_start, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect_pattern, cmd_stop, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect_pattern, cmd_extra, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect_pattern, prev_redirect, POINTER, 0, NULL, hdata_name);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect_pattern, next_redirect, POINTER, 0, NULL, hdata_name);
-        WEECHAT_HDATA_LIST(irc_redirect_patterns, WEECHAT_HDATA_LIST_CHECK_POINTERS);
-        WEECHAT_HDATA_LIST(last_irc_redirect_pattern, 0);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect_pattern, name, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect_pattern, temp_pattern, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect_pattern, timeout, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect_pattern, cmd_start, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect_pattern, cmd_stop, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect_pattern, cmd_extra, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect_pattern, prev_redirect, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect_pattern, next_redirect, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_LIST(irc_redirect_patterns, DOGECHAT_HDATA_LIST_CHECK_POINTERS);
+        DOGECHAT_HDATA_LIST(last_irc_redirect_pattern, 0);
     }
     return hdata;
 }
@@ -1030,30 +1030,30 @@ irc_redirect_hdata_redirect_cb (void *data, const char *hdata_name)
     /* make C compiler happy */
     (void) data;
 
-    hdata = weechat_hdata_new (hdata_name, "prev_redirect", "next_redirect",
+    hdata = dogechat_hdata_new (hdata_name, "prev_redirect", "next_redirect",
                                0, 0, NULL, NULL);
     if (hdata)
     {
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, server, POINTER, 0, NULL, "irc_server");
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, pattern, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, signal, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, count, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, current_count, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, string, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, timeout, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, command, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, assigned_to_command, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, start_time, TIME, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, cmd_start, HASHTABLE, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, cmd_stop, HASHTABLE, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, cmd_extra, HASHTABLE, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, cmd_start_received, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, cmd_stop_received, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, cmd_filter, HASHTABLE, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, output, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, output_size, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, prev_redirect, POINTER, 0, NULL, hdata_name);
-        WEECHAT_HDATA_VAR(struct t_irc_redirect, next_redirect, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, server, POINTER, 0, NULL, "irc_server");
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, pattern, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, signal, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, count, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, current_count, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, string, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, timeout, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, command, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, assigned_to_command, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, start_time, TIME, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, cmd_start, HASHTABLE, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, cmd_stop, HASHTABLE, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, cmd_extra, HASHTABLE, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, cmd_start_received, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, cmd_stop_received, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, cmd_filter, HASHTABLE, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, output, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, output_size, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, prev_redirect, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_VAR(struct t_irc_redirect, next_redirect, POINTER, 0, NULL, hdata_name);
     }
     return hdata;
 }
@@ -1075,21 +1075,21 @@ irc_redirect_pattern_add_to_infolist (struct t_infolist *infolist,
     if (!infolist || !redirect_pattern)
         return 0;
 
-    ptr_item = weechat_infolist_new_item (infolist);
+    ptr_item = dogechat_infolist_new_item (infolist);
     if (!ptr_item)
         return 0;
 
-    if (!weechat_infolist_new_var_string (ptr_item, "name", redirect_pattern->name))
+    if (!dogechat_infolist_new_var_string (ptr_item, "name", redirect_pattern->name))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "temp_pattern", redirect_pattern->temp_pattern))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "temp_pattern", redirect_pattern->temp_pattern))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "timeout", redirect_pattern->timeout))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "timeout", redirect_pattern->timeout))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "cmd_start", redirect_pattern->cmd_start))
+    if (!dogechat_infolist_new_var_string (ptr_item, "cmd_start", redirect_pattern->cmd_start))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "cmd_stop", redirect_pattern->cmd_stop))
+    if (!dogechat_infolist_new_var_string (ptr_item, "cmd_stop", redirect_pattern->cmd_stop))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "cmd_extra", redirect_pattern->cmd_extra))
+    if (!dogechat_infolist_new_var_string (ptr_item, "cmd_extra", redirect_pattern->cmd_extra))
         return 0;
 
     return 1;
@@ -1112,54 +1112,54 @@ irc_redirect_add_to_infolist (struct t_infolist *infolist,
     if (!infolist || !redirect)
         return 0;
 
-    ptr_item = weechat_infolist_new_item (infolist);
+    ptr_item = dogechat_infolist_new_item (infolist);
     if (!ptr_item)
         return 0;
 
-    if (!weechat_infolist_new_var_pointer (ptr_item, "server", redirect->server))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "server", redirect->server))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "server_name", redirect->server->name))
+    if (!dogechat_infolist_new_var_string (ptr_item, "server_name", redirect->server->name))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "pattern", redirect->pattern))
+    if (!dogechat_infolist_new_var_string (ptr_item, "pattern", redirect->pattern))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "signal", redirect->signal))
+    if (!dogechat_infolist_new_var_string (ptr_item, "signal", redirect->signal))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "count", redirect->count))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "count", redirect->count))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "current_count", redirect->current_count))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "current_count", redirect->current_count))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "string", redirect->string))
+    if (!dogechat_infolist_new_var_string (ptr_item, "string", redirect->string))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "timeout", redirect->timeout))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "timeout", redirect->timeout))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "command", redirect->command))
+    if (!dogechat_infolist_new_var_string (ptr_item, "command", redirect->command))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "assigned_to_command", redirect->assigned_to_command))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "assigned_to_command", redirect->assigned_to_command))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "start_time", redirect->start_time))
+    if (!dogechat_infolist_new_var_time (ptr_item, "start_time", redirect->start_time))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "cmd_start", weechat_hashtable_get_string (redirect->cmd_start, "keys_values")))
+    if (!dogechat_infolist_new_var_string (ptr_item, "cmd_start", dogechat_hashtable_get_string (redirect->cmd_start, "keys_values")))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "cmd_stop", weechat_hashtable_get_string (redirect->cmd_stop, "keys_values")))
+    if (!dogechat_infolist_new_var_string (ptr_item, "cmd_stop", dogechat_hashtable_get_string (redirect->cmd_stop, "keys_values")))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "cmd_extra", weechat_hashtable_get_string (redirect->cmd_extra, "keys_values")))
+    if (!dogechat_infolist_new_var_string (ptr_item, "cmd_extra", dogechat_hashtable_get_string (redirect->cmd_extra, "keys_values")))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "cmd_start_received", redirect->cmd_start_received))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "cmd_start_received", redirect->cmd_start_received))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "cmd_stop_received", redirect->cmd_stop_received))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "cmd_stop_received", redirect->cmd_stop_received))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "cmd_filter", weechat_hashtable_get_string (redirect->cmd_filter, "keys_values")))
+    if (!dogechat_infolist_new_var_string (ptr_item, "cmd_filter", dogechat_hashtable_get_string (redirect->cmd_filter, "keys_values")))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "output", redirect->output))
+    if (!dogechat_infolist_new_var_string (ptr_item, "output", redirect->output))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "output_size", redirect->output_size))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "output_size", redirect->output_size))
         return 0;
 
     return 1;
 }
 
 /*
- * Prints redirect infos in WeeChat log file (usually for crash dump).
+ * Prints redirect infos in DogeChat log file (usually for crash dump).
  */
 
 void
@@ -1170,21 +1170,21 @@ irc_redirect_pattern_print_log ()
     for (ptr_redirect_pattern = irc_redirect_patterns; ptr_redirect_pattern;
          ptr_redirect_pattern = ptr_redirect_pattern->next_redirect)
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("[redirect_pattern (addr:0x%lx)]", ptr_redirect_pattern);
-        weechat_log_printf ("  name . . . . . . . . : '%s'",  ptr_redirect_pattern->name);
-        weechat_log_printf ("  temp_pattern . . . . : %d",    ptr_redirect_pattern->temp_pattern);
-        weechat_log_printf ("  timeout. . . . . . . : %d",    ptr_redirect_pattern->timeout);
-        weechat_log_printf ("  cmd_start. . . . . . : '%s'",  ptr_redirect_pattern->cmd_start);
-        weechat_log_printf ("  cmd_stop . . . . . . : '%s'",  ptr_redirect_pattern->cmd_stop);
-        weechat_log_printf ("  cmd_extra. . . . . . : '%s'",  ptr_redirect_pattern->cmd_extra);
-        weechat_log_printf ("  prev_redirect. . . . : 0x%lx", ptr_redirect_pattern->prev_redirect);
-        weechat_log_printf ("  next_redirect. . . . : 0x%lx", ptr_redirect_pattern->next_redirect);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("[redirect_pattern (addr:0x%lx)]", ptr_redirect_pattern);
+        dogechat_log_printf ("  name . . . . . . . . : '%s'",  ptr_redirect_pattern->name);
+        dogechat_log_printf ("  temp_pattern . . . . : %d",    ptr_redirect_pattern->temp_pattern);
+        dogechat_log_printf ("  timeout. . . . . . . : %d",    ptr_redirect_pattern->timeout);
+        dogechat_log_printf ("  cmd_start. . . . . . : '%s'",  ptr_redirect_pattern->cmd_start);
+        dogechat_log_printf ("  cmd_stop . . . . . . : '%s'",  ptr_redirect_pattern->cmd_stop);
+        dogechat_log_printf ("  cmd_extra. . . . . . : '%s'",  ptr_redirect_pattern->cmd_extra);
+        dogechat_log_printf ("  prev_redirect. . . . : 0x%lx", ptr_redirect_pattern->prev_redirect);
+        dogechat_log_printf ("  next_redirect. . . . : 0x%lx", ptr_redirect_pattern->next_redirect);
     }
 }
 
 /*
- * Prints redirect infos in WeeChat log file (usually for crash dump).
+ * Prints redirect infos in DogeChat log file (usually for crash dump).
  */
 
 void
@@ -1195,37 +1195,37 @@ irc_redirect_print_log (struct t_irc_server *server)
     for (ptr_redirect = server->redirects; ptr_redirect;
          ptr_redirect = ptr_redirect->next_redirect)
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("  => redirect (addr:0x%lx):", ptr_redirect);
-        weechat_log_printf ("       server. . . . . . . : 0x%lx ('%s')",
+        dogechat_log_printf ("");
+        dogechat_log_printf ("  => redirect (addr:0x%lx):", ptr_redirect);
+        dogechat_log_printf ("       server. . . . . . . : 0x%lx ('%s')",
                             ptr_redirect->server, ptr_redirect->server->name);
-        weechat_log_printf ("       pattern . . . . . . : '%s'",  ptr_redirect->pattern);
-        weechat_log_printf ("       signal. . . . . . . : '%s'",  ptr_redirect->signal);
-        weechat_log_printf ("       count . . . . . . . : %d",    ptr_redirect->count);
-        weechat_log_printf ("       current_count . . . : %d",    ptr_redirect->current_count);
-        weechat_log_printf ("       string. . . . . . . : '%s'",  ptr_redirect->string);
-        weechat_log_printf ("       timeout . . . . . . : %d",    ptr_redirect->timeout);
-        weechat_log_printf ("       command . . . . . . : '%s'",  ptr_redirect->command);
-        weechat_log_printf ("       assigned_to_command : %d",    ptr_redirect->assigned_to_command);
-        weechat_log_printf ("       start_time. . . . . : %ld",   ptr_redirect->start_time);
-        weechat_log_printf ("       cmd_start . . . . . : 0x%lx (hashtable: '%s')",
+        dogechat_log_printf ("       pattern . . . . . . : '%s'",  ptr_redirect->pattern);
+        dogechat_log_printf ("       signal. . . . . . . : '%s'",  ptr_redirect->signal);
+        dogechat_log_printf ("       count . . . . . . . : %d",    ptr_redirect->count);
+        dogechat_log_printf ("       current_count . . . : %d",    ptr_redirect->current_count);
+        dogechat_log_printf ("       string. . . . . . . : '%s'",  ptr_redirect->string);
+        dogechat_log_printf ("       timeout . . . . . . : %d",    ptr_redirect->timeout);
+        dogechat_log_printf ("       command . . . . . . : '%s'",  ptr_redirect->command);
+        dogechat_log_printf ("       assigned_to_command : %d",    ptr_redirect->assigned_to_command);
+        dogechat_log_printf ("       start_time. . . . . : %ld",   ptr_redirect->start_time);
+        dogechat_log_printf ("       cmd_start . . . . . : 0x%lx (hashtable: '%s')",
                             ptr_redirect->cmd_start,
-                            weechat_hashtable_get_string (ptr_redirect->cmd_start, "keys_values"));
-        weechat_log_printf ("       cmd_stop. . . . . . : 0x%lx (hashtable: '%s')",
+                            dogechat_hashtable_get_string (ptr_redirect->cmd_start, "keys_values"));
+        dogechat_log_printf ("       cmd_stop. . . . . . : 0x%lx (hashtable: '%s')",
                             ptr_redirect->cmd_stop,
-                            weechat_hashtable_get_string (ptr_redirect->cmd_stop, "keys_values"));
-        weechat_log_printf ("       cmd_extra . . . . . : 0x%lx (hashtable: '%s')",
+                            dogechat_hashtable_get_string (ptr_redirect->cmd_stop, "keys_values"));
+        dogechat_log_printf ("       cmd_extra . . . . . : 0x%lx (hashtable: '%s')",
                             ptr_redirect->cmd_extra,
-                            weechat_hashtable_get_string (ptr_redirect->cmd_extra, "keys_values"));
-        weechat_log_printf ("       cmd_start_received. : %d",    ptr_redirect->cmd_start_received);
-        weechat_log_printf ("       cmd_stop_received . : %d",    ptr_redirect->cmd_stop_received);
-        weechat_log_printf ("       cmd_filter. . . . . : 0x%lx (hashtable: '%s')",
+                            dogechat_hashtable_get_string (ptr_redirect->cmd_extra, "keys_values"));
+        dogechat_log_printf ("       cmd_start_received. : %d",    ptr_redirect->cmd_start_received);
+        dogechat_log_printf ("       cmd_stop_received . : %d",    ptr_redirect->cmd_stop_received);
+        dogechat_log_printf ("       cmd_filter. . . . . : 0x%lx (hashtable: '%s')",
                             ptr_redirect->cmd_filter,
-                            weechat_hashtable_get_string (ptr_redirect->cmd_filter, "keys_values"));
-        weechat_log_printf ("       output. . . . . . . : '%s'",  ptr_redirect->output);
-        weechat_log_printf ("       output_size . . . . : %d",    ptr_redirect->output_size);
-        weechat_log_printf ("       prev_redirect . . . : 0x%lx", ptr_redirect->prev_redirect);
-        weechat_log_printf ("       next_redirect . . . : 0x%lx", ptr_redirect->next_redirect);
+                            dogechat_hashtable_get_string (ptr_redirect->cmd_filter, "keys_values"));
+        dogechat_log_printf ("       output. . . . . . . : '%s'",  ptr_redirect->output);
+        dogechat_log_printf ("       output_size . . . . : %d",    ptr_redirect->output_size);
+        dogechat_log_printf ("       prev_redirect . . . : 0x%lx", ptr_redirect->prev_redirect);
+        dogechat_log_printf ("       next_redirect . . . : 0x%lx", ptr_redirect->next_redirect);
     }
 }
 
@@ -1249,30 +1249,30 @@ irc_redirect_pattern_hsignal_cb (void *data, const char *signal,
     (void) signal;
 
     if (!hashtable)
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
-    pattern = weechat_hashtable_get (hashtable, "pattern");
-    str_timeout = weechat_hashtable_get (hashtable, "timeout");
-    cmd_start = weechat_hashtable_get (hashtable, "cmd_start");
-    cmd_stop = weechat_hashtable_get (hashtable, "cmd_stop");
-    cmd_extra = weechat_hashtable_get (hashtable, "cmd_extra");
+    pattern = dogechat_hashtable_get (hashtable, "pattern");
+    str_timeout = dogechat_hashtable_get (hashtable, "timeout");
+    cmd_start = dogechat_hashtable_get (hashtable, "cmd_start");
+    cmd_stop = dogechat_hashtable_get (hashtable, "cmd_stop");
+    cmd_extra = dogechat_hashtable_get (hashtable, "cmd_extra");
 
     if (!pattern || !pattern[0])
     {
-        weechat_printf (
+        dogechat_printf (
             NULL,
             _("%s%s: missing argument \"%s\" for redirect pattern"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME, "pattern");
-        return WEECHAT_RC_ERROR;
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME, "pattern");
+        return DOGECHAT_RC_ERROR;
     }
 
     if (!cmd_stop || !cmd_stop[0])
     {
-        weechat_printf (
+        dogechat_printf (
             NULL,
             _("%s%s: missing argument \"%s\" for redirect pattern"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME, "cmd_stop");
-        return WEECHAT_RC_ERROR;
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME, "cmd_stop");
+        return DOGECHAT_RC_ERROR;
     }
 
     timeout = 0;
@@ -1290,7 +1290,7 @@ irc_redirect_pattern_hsignal_cb (void *data, const char *signal,
     irc_redirect_pattern_new (pattern, 1, timeout,
                               cmd_start, cmd_stop, cmd_extra);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1315,32 +1315,32 @@ irc_redirect_command_hsignal_cb (void *data, const char *signal,
     (void) signal;
 
     if (!hashtable)
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
-    server = weechat_hashtable_get (hashtable, "server");
-    pattern = weechat_hashtable_get (hashtable, "pattern");
-    redirect_signal = weechat_hashtable_get (hashtable, "signal");
-    str_count = weechat_hashtable_get (hashtable, "count");
-    string = weechat_hashtable_get (hashtable, "string");
-    str_timeout = weechat_hashtable_get (hashtable, "timeout");
-    cmd_filter = weechat_hashtable_get (hashtable, "cmd_filter");
+    server = dogechat_hashtable_get (hashtable, "server");
+    pattern = dogechat_hashtable_get (hashtable, "pattern");
+    redirect_signal = dogechat_hashtable_get (hashtable, "signal");
+    str_count = dogechat_hashtable_get (hashtable, "count");
+    string = dogechat_hashtable_get (hashtable, "string");
+    str_timeout = dogechat_hashtable_get (hashtable, "timeout");
+    cmd_filter = dogechat_hashtable_get (hashtable, "cmd_filter");
 
     if (!server || !server[0])
     {
-        weechat_printf (
+        dogechat_printf (
             NULL,
             _("%s%s: missing argument \"%s\" for redirect"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME, "server");
-        return WEECHAT_RC_ERROR;
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME, "server");
+        return DOGECHAT_RC_ERROR;
     }
     ptr_server = irc_server_search (server);
     if (!ptr_server)
     {
-        weechat_printf (
+        dogechat_printf (
             NULL,
             _("%s%s: server \"%s\" not found for redirect"),
-            weechat_prefix ("error"), IRC_PLUGIN_NAME, server);
-        return WEECHAT_RC_ERROR;
+            dogechat_prefix ("error"), IRC_PLUGIN_NAME, server);
+        return DOGECHAT_RC_ERROR;
     }
 
     count = 1;
@@ -1362,7 +1362,7 @@ irc_redirect_command_hsignal_cb (void *data, const char *signal,
     irc_redirect_new (ptr_server, pattern, redirect_signal,
                       count, string, timeout, cmd_filter);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*

@@ -1,1 +1,2 @@
-../debian-stable/watch
+version=3
+opts=pgpsigurlmangle=s/$/.asc/  https://dogechat.org/files/src/dogechat-(\d.*)\.tar\.bz2

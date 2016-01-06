@@ -25,10 +25,10 @@ arguments: コマンドの引数 (特殊変数 $nick、$channel、$server はそ
 例:
   全てのチャンネルに対して '/me is testing' を実行:
     /allchan me is testing
-  #weechat 以外の全てのチャンネルで 'hello' と発言:
-    /allchan -exclude=#weechat msg * hello
-  #weechat と #linux で始まるチャンネルを除く全てのチャンネルで 'hello' と発言:
-    /allchan -exclude=#weechat,#linux* msg * hello
+  #dogechat 以外の全てのチャンネルで 'hello' と発言:
+    /allchan -exclude=#dogechat msg * hello
+  #dogechat と #linux で始まるチャンネルを除く全てのチャンネルで 'hello' と発言:
+    /allchan -exclude=#dogechat,#linux* msg * hello
 ----
 
 [[command_irc_allpv]]
@@ -101,7 +101,7 @@ channel: チャンネル名
 
 引数無しの場合、"ls" と "list" を送信します。
 
-WeeChat がサポートする機能: account-notify、away-notify、cap-notify、extended-join、multi-prefix、server-time、userhost-in-names。
+DogeChat がサポートする機能: account-notify、away-notify、cap-notify、extended-join、multi-prefix、server-time、userhost-in-names。
 
 自動的に有効化する機能を設定するにはオプション irc.server_default.capabilities (または対象のサーバに関するオプション irc.server.xxx.capabilities) を使ってください。
 
@@ -268,8 +268,8 @@ nick: ニックネームまたはマスク (ワイルドカード "*" を使う�
     /ignore add toto
   freenode サーバ上のホスト名 "toto@domain.com" を無視:
     /ignore add toto@domain.com freenode
-  freenode サーバの #weechat チャンネル上のホスト名 "toto*@*.domain.com" を無視:
-    /ignore add toto*@*.domain.com freenode #weechat
+  freenode サーバの #dogechat チャンネル上のホスト名 "toto*@*.domain.com" を無視:
+    /ignore add toto*@*.domain.com freenode #dogechat
 ----
 
 [[command_irc_info]]
@@ -312,10 +312,10 @@ nick: ニックネーム
       key: チャンネルに参加するためのキー (キーが必要なチャンネルは最初に置くこと)
 
 例:
-  /join #weechat
-  /join #protectedchan,#weechat key
-  /join -server freenode #weechat
-  /join -noswitch #weechat
+  /join #dogechat
+  /join #protectedchan,#dogechat key
+  /join -server freenode #dogechat
+  /join -noswitch #dogechat
 ----
 
 [[command_irc_kick]]
@@ -379,10 +379,10 @@ channel: リストアップするチャンネル名
 例:
   サーバ上の全てのチャンネルをリストアップ (大きなネットワークでは非常に遅い):
     /list
-  #weechat チャンネルをリストアップ:
-    /list #weechat
-  "#weechat" で始まる全てのチャンネルをリストアップ (大きなネットワークでは非常に遅い):
-    /list -re #weechat.*
+  #dogechat チャンネルをリストアップ:
+    /list #dogechat
+  "#dogechat" で始まる全てのチャンネルをリストアップ (大きなネットワークでは非常に遅い):
+    /list -re #dogechat.*
 ----
 
 [[command_irc_lusers]]
@@ -441,8 +441,8 @@ message: 送信メッセージ
 上のモードのリストは完全なものではない、設定可能なモードを確認するために、サーバに関するドキュメントを読むこと。
 
 例:
-  #weechat チャンネルのトピックを保護:
-    /mode #weechat +t
+  #dogechat チャンネルのトピックを保護:
+    /mode #dogechat +t
   サーバ上で不可視にする:
     /mode nick +i
 ----
@@ -723,7 +723,7 @@ nooption: ブールオプションを 'off' に設定 (例: -nossl)
  reorder: サーバリストにおける順番を入れ替える
     keep: 設定ファイルにサーバを保存 (一時的なサーバ用)
      del: サーバを削除
- deloutq: 全てのサーバにメッセージの削除を要求 (WeeChat が送信している全てのメッセージ)
+ deloutq: 全てのサーバにメッセージの削除を要求 (DogeChat が送信している全てのメッセージ)
     jump: サーババッファに移動
      raw: 生 IRC データを表示するバッファを開く
 

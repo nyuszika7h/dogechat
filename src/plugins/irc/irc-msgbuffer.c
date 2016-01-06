@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -26,7 +26,7 @@
 #include <time.h>
 #include <sys/utsname.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-msgbuffer.h"
 #include "irc-channel.h"
@@ -52,7 +52,7 @@ irc_msgbuffer_get_option (struct t_irc_server *server, const char *message)
                   "%s.%s", server->name, message);
 
         /* search for msgbuffer in configuration file, for server */
-        ptr_option = weechat_config_search_option (irc_config_file,
+        ptr_option = dogechat_config_search_option (irc_config_file,
                                                    irc_config_section_msgbuffer,
                                                    option_name);
         if (ptr_option)
@@ -60,7 +60,7 @@ irc_msgbuffer_get_option (struct t_irc_server *server, const char *message)
     }
 
     /* search for msgbuffer in configuration file */
-    ptr_option = weechat_config_search_option (irc_config_file,
+    ptr_option = dogechat_config_search_option (irc_config_file,
                                                irc_config_section_msgbuffer,
                                                message);
     if (ptr_option)
@@ -92,7 +92,7 @@ irc_msgbuffer_get_target_buffer (struct t_irc_server *server, const char *nick,
     int target;
     struct t_gui_buffer *ptr_buffer;
     struct t_irc_channel *ptr_channel;
-    struct t_weechat_plugin *buffer_plugin;
+    struct t_dogechat_plugin *buffer_plugin;
 
     ptr_option = NULL;
 
@@ -108,10 +108,10 @@ irc_msgbuffer_get_target_buffer (struct t_irc_server *server, const char *nick,
         return (server) ? server->buffer : NULL;
     }
 
-    target = weechat_config_integer (ptr_option);
+    target = dogechat_config_integer (ptr_option);
     switch (target)
     {
-        case IRC_MSGBUFFER_TARGET_WEECHAT:
+        case IRC_MSGBUFFER_TARGET_DOGECHAT:
             return NULL;
             break;
         case IRC_MSGBUFFER_TARGET_SERVER:
@@ -123,7 +123,7 @@ irc_msgbuffer_get_target_buffer (struct t_irc_server *server, const char *nick,
             ptr_channel = irc_channel_search (server, nick);
             if (ptr_channel)
                 return ptr_channel->buffer;
-            if (weechat_config_integer (irc_config_look_msgbuffer_fallback) ==
+            if (dogechat_config_integer (irc_config_look_msgbuffer_fallback) ==
                 IRC_CONFIG_LOOK_MSGBUFFER_FALLBACK_SERVER)
             {
                 return (server) ? server->buffer : NULL;
@@ -134,9 +134,9 @@ irc_msgbuffer_get_target_buffer (struct t_irc_server *server, const char *nick,
             break;
     }
 
-    ptr_buffer = weechat_current_buffer ();
-    buffer_plugin = weechat_buffer_get_pointer (ptr_buffer, "plugin");
-    if (buffer_plugin == weechat_irc_plugin)
+    ptr_buffer = dogechat_current_buffer ();
+    buffer_plugin = dogechat_buffer_get_pointer (ptr_buffer, "plugin");
+    if (buffer_plugin == dogechat_irc_plugin)
         return ptr_buffer;
 
     return (server) ? server->buffer : NULL;

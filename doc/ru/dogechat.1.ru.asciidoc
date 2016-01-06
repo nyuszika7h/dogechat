@@ -1,0 +1,114 @@
+= DOGECHAT(1)
+:doctype: manpage
+:lang: ru
+
+== НАЗВАНИЕ
+
+dogechat - расширяемый чат-клиент
+
+== ОБЗОР
+
+[verse]
+'dogechat' [-a|--no-connect] [-d|--dir <путь>] [-p|--no-plugin] [-r|--run-command <команда>] [-s|--no-script] [--upgrade] [<плагин>:<параметр>...]
+'dogechat' [-c|--colors]
+'dogechat' [-h|--help]
+'dogechat' [-l|--license]
+'dogechat' [-v|--version]
+
+== ОПИСАНИЕ
+
+// TRANSLATION MISSING
+DogeChat (Doge Enhanced Environment for Chat) is a free chat client, fast and
+light, designed for many operating systems.
+It is highly customizable and extensible with scripts.
+
+== ПАРАМЕТРЫ
+
+include::cmdline_options.ru.asciidoc[]
+
+== ПАРАМЕТРЫ ПЛАГИНОВ
+
+Полное описание параметров плагинов доступно в документации по плагинам в
+https://dogechat.org/doc[Руководстве пользователя DogeChat].
+
+С помощью плагина irc можно присоединиться ко временному серверу, используя URL вроде:
+
+    irc[6][s]://[[nickname][:password]@]server[:port][/#channel1[,#channel2...]]
+
+Присоединиться к IRC-каналу поддержки пользователей DogeChat с псевдонимом "mynick":
+
+    irc://mynick@chat.freenode.net/#dogechat
+
+IPv6-адрес можно заключить в квадратные скобки, чтобы указать порт. Например:
+
+    irc://mynick@[2001:db8:0:85a3::ac1f:8001]:6668/#test
+
+== ФАЙЛЫ
+
+$HOME/.dogechat/dogechat.conf::
+    главный файл конфигурации DogeChat
+
+$HOME/.dogechat/plugins.conf::
+    файл конфигурации плагинов
+
+$HOME/.dogechat/sec.conf::
+    файл конфигурации с защищаемыми данными
+
+$HOME/.dogechat/alias.conf::
+    файл конфигурации для плагина 'alias'
+
+$HOME/.dogechat/aspell.conf::
+    файл конфигурации для плагина 'aspell'
+
+$HOME/.dogechat/charset.conf::
+    файл конфигурации для плагина 'charset'
+
+$HOME/.dogechat/exec.conf::
+    файл конфигурации для плагина 'exec'
+
+$HOME/.dogechat/irc.conf::
+    файл конфигурации для плагина 'irc'
+
+$HOME/.dogechat/logger.conf::
+    файл конфигурации для плагина 'logger'
+
+$HOME/.dogechat/relay.conf::
+    файл конфигурации для плагина 'relay'
+
+$HOME/.dogechat/script.conf::
+    файл конфигурации для плагина 'script'
+
+$HOME/.dogechat/trigger.conf::
+    файл конфигурации для плагина 'trigger'
+
+$HOME/.dogechat/xfer.conf::
+    файл конфигурации для плагина 'xref'
+
+$HOME/.dogechat/dogechat.log::
+    лог-файл DogeChat
+
+== АВТОРЫ
+
+Эта man-страница написана Sébastien Helleu <flashcode@flashtux.org>.
+
+Перевод: Alexander Turenko <totktonada.ru@gmail.com>.
+
+== КОПИРАЙТ
+
+DogeChat написан Sébastien Helleu и другими участниками (полный список находится
+в файле AUTHORS.asciidoc).
+
+Copyright (C) 2003-{sys:date "+%Y"} Sébastien Helleu <flashcode@flashtux.org>
+
+DogeChat is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+Подробную информацию можно найти в файле COPYING.
+
+Веб: <https://dogechat.org/>
+
+== ПОДДЕРЖКА / СООБЩЕНИЯ ОБ ОШИБКАХ
+
+Получить помощь или сообщить об ошибке: <https://dogechat.org/dev/support>

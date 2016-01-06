@@ -4,20 +4,20 @@
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  * Copyright (C) 2012 Simon Arlott
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -25,7 +25,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include "weechat-plugin.h"
+#include "dogechat-plugin.h"
 #include "plugin-script.h"
 #include "plugin-script-api.h"
 #include "plugin-script-callback.h"
@@ -52,7 +52,7 @@ plugin_script_api_charset_set (struct t_plugin_script *script,
  */
 
 struct t_config_file *
-plugin_script_api_config_new (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_config_new (struct t_dogechat_plugin *dogechat_plugin,
                               struct t_plugin_script *script,
                               const char *name,
                               int (*callback_reload)(void *data,
@@ -67,7 +67,7 @@ plugin_script_api_config_new (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_config_file = weechat_config_new (name, callback_reload,
+    new_config_file = dogechat_config_new (name, callback_reload,
                                           (function && function[0]) ? script_cb : NULL);
     if (new_config_file)
         script_cb->config_file = new_config_file;
@@ -84,7 +84,7 @@ plugin_script_api_config_new (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_config_section *
-plugin_script_api_config_new_section (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_config_new_section (struct t_dogechat_plugin *dogechat_plugin,
                                       struct t_plugin_script *script,
                                       struct t_config_file *config_file,
                                       const char *name,
@@ -147,7 +147,7 @@ plugin_script_api_config_new_section (struct t_weechat_plugin *weechat_plugin,
         return NULL;
     }
 
-    new_section = weechat_config_new_section (config_file,
+    new_section = dogechat_config_new_section (config_file,
                                               name,
                                               user_can_add_options,
                                               user_can_delete_options,
@@ -193,7 +193,7 @@ plugin_script_api_config_new_section (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_config_option *
-plugin_script_api_config_new_option (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_config_new_option (struct t_dogechat_plugin *dogechat_plugin,
                                      struct t_plugin_script *script,
                                      struct t_config_file *config_file,
                                      struct t_config_section *section,
@@ -235,7 +235,7 @@ plugin_script_api_config_new_option (struct t_weechat_plugin *weechat_plugin,
         return NULL;
     }
 
-    new_option = weechat_config_new_option (config_file, section, name, type,
+    new_option = dogechat_config_new_option (config_file, section, name, type,
                                             description, string_values, min,
                                             max, default_value, value,
                                             null_value_allowed,
@@ -272,16 +272,16 @@ plugin_script_api_config_new_option (struct t_weechat_plugin *weechat_plugin,
  */
 
 void
-plugin_script_api_config_option_free (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_config_option_free (struct t_dogechat_plugin *dogechat_plugin,
                                       struct t_plugin_script *script,
                                       struct t_config_option *option)
 {
     struct t_plugin_script_cb *ptr_script_cb, *next_callback;
 
-    if (!weechat_plugin || !script || !option)
+    if (!dogechat_plugin || !script || !option)
         return;
 
-    weechat_config_option_free (option);
+    dogechat_config_option_free (option);
 
     ptr_script_cb = script->callbacks;
     while (ptr_script_cb)
@@ -300,16 +300,16 @@ plugin_script_api_config_option_free (struct t_weechat_plugin *weechat_plugin,
  */
 
 void
-plugin_script_api_config_section_free_options (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_config_section_free_options (struct t_dogechat_plugin *dogechat_plugin,
                                                struct t_plugin_script *script,
                                                struct t_config_section *section)
 {
     struct t_plugin_script_cb *ptr_script_cb, *next_callback;
 
-    if (!weechat_plugin || !script || !section)
+    if (!dogechat_plugin || !script || !section)
         return;
 
-    weechat_config_section_free_options (section);
+    dogechat_config_section_free_options (section);
 
     ptr_script_cb = script->callbacks;
     while (ptr_script_cb)
@@ -329,16 +329,16 @@ plugin_script_api_config_section_free_options (struct t_weechat_plugin *weechat_
  */
 
 void
-plugin_script_api_config_section_free (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_config_section_free (struct t_dogechat_plugin *dogechat_plugin,
                                        struct t_plugin_script *script,
                                        struct t_config_section *section)
 {
     struct t_plugin_script_cb *ptr_script_cb, *next_callback;
 
-    if (!weechat_plugin || !script || !section)
+    if (!dogechat_plugin || !script || !section)
         return;
 
-    weechat_config_section_free (section);
+    dogechat_config_section_free (section);
 
     ptr_script_cb = script->callbacks;
     while (ptr_script_cb)
@@ -357,16 +357,16 @@ plugin_script_api_config_section_free (struct t_weechat_plugin *weechat_plugin,
  */
 
 void
-plugin_script_api_config_free (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_config_free (struct t_dogechat_plugin *dogechat_plugin,
                                struct t_plugin_script *script,
                                struct t_config_file *config_file)
 {
     struct t_plugin_script_cb *ptr_script_cb, *next_callback;
 
-    if (!weechat_plugin || !script || !config_file)
+    if (!dogechat_plugin || !script || !config_file)
         return;
 
-    weechat_config_free (config_file);
+    dogechat_config_free (config_file);
 
     ptr_script_cb = script->callbacks;
     while (ptr_script_cb)
@@ -385,19 +385,19 @@ plugin_script_api_config_free (struct t_weechat_plugin *weechat_plugin,
  */
 
 void
-plugin_script_api_printf (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_printf (struct t_dogechat_plugin *dogechat_plugin,
                           struct t_plugin_script *script,
                           struct t_gui_buffer *buffer, const char *format, ...)
 {
     char *buf2;
 
-    weechat_va_format (format);
+    dogechat_va_format (format);
     if (!vbuffer)
         return;
 
     buf2 = (script && script->charset && script->charset[0]) ?
-        weechat_iconv_to_internal (script->charset, vbuffer) : NULL;
-    weechat_printf (buffer, "%s", (buf2) ? buf2 : vbuffer);
+        dogechat_iconv_to_internal (script->charset, vbuffer) : NULL;
+    dogechat_printf (buffer, "%s", (buf2) ? buf2 : vbuffer);
     if (buf2)
         free (buf2);
 
@@ -409,7 +409,7 @@ plugin_script_api_printf (struct t_weechat_plugin *weechat_plugin,
  */
 
 void
-plugin_script_api_printf_date_tags (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_printf_date_tags (struct t_dogechat_plugin *dogechat_plugin,
                                     struct t_plugin_script *script,
                                     struct t_gui_buffer *buffer,
                                     time_t date, const char *tags,
@@ -417,13 +417,13 @@ plugin_script_api_printf_date_tags (struct t_weechat_plugin *weechat_plugin,
 {
     char *buf2;
 
-    weechat_va_format (format);
+    dogechat_va_format (format);
     if (!vbuffer)
         return;
 
     buf2 = (script->charset && script->charset[0]) ?
-        weechat_iconv_to_internal (script->charset, vbuffer) : NULL;
-    weechat_printf_date_tags (buffer, date, tags,
+        dogechat_iconv_to_internal (script->charset, vbuffer) : NULL;
+    dogechat_printf_date_tags (buffer, date, tags,
                               "%s", (buf2) ? buf2 : vbuffer);
     if (buf2)
         free (buf2);
@@ -436,20 +436,20 @@ plugin_script_api_printf_date_tags (struct t_weechat_plugin *weechat_plugin,
  */
 
 void
-plugin_script_api_printf_y (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_printf_y (struct t_dogechat_plugin *dogechat_plugin,
                             struct t_plugin_script *script,
                             struct t_gui_buffer *buffer, int y,
                             const char *format, ...)
 {
     char *buf2;
 
-    weechat_va_format (format);
+    dogechat_va_format (format);
     if (!vbuffer)
         return;
 
     buf2 = (script->charset && script->charset[0]) ?
-        weechat_iconv_to_internal (script->charset, vbuffer) : NULL;
-    weechat_printf_y (buffer, y, "%s", (buf2) ? buf2 : vbuffer);
+        dogechat_iconv_to_internal (script->charset, vbuffer) : NULL;
+    dogechat_printf_y (buffer, y, "%s", (buf2) ? buf2 : vbuffer);
     if (buf2)
         free (buf2);
 
@@ -457,23 +457,23 @@ plugin_script_api_printf_y (struct t_weechat_plugin *weechat_plugin,
 }
 
 /*
- * Prints a message in WeeChat log file.
+ * Prints a message in DogeChat log file.
  */
 
 void
-plugin_script_api_log_printf (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_log_printf (struct t_dogechat_plugin *dogechat_plugin,
                               struct t_plugin_script *script,
                               const char *format, ...)
 {
     char *buf2;
 
-    weechat_va_format (format);
+    dogechat_va_format (format);
     if (!vbuffer)
         return;
 
     buf2 = (script->charset && script->charset[0]) ?
-        weechat_iconv_to_internal (script->charset, vbuffer) : NULL;
-    weechat_log_printf ("%s", (buf2) ? buf2 : vbuffer);
+        dogechat_iconv_to_internal (script->charset, vbuffer) : NULL;
+    dogechat_log_printf ("%s", (buf2) ? buf2 : vbuffer);
     if (buf2)
         free (buf2);
 
@@ -487,7 +487,7 @@ plugin_script_api_log_printf (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_command (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_command (struct t_dogechat_plugin *dogechat_plugin,
                                 struct t_plugin_script *script,
                                 const char *command, const char *description,
                                 const char *args, const char *args_description,
@@ -506,12 +506,12 @@ plugin_script_api_hook_command (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_command (command, description, args,
+    new_hook = dogechat_hook_command (command, description, args,
                                      args_description, completion,
                                      callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -521,13 +521,13 @@ plugin_script_api_hook_command (struct t_weechat_plugin *weechat_plugin,
 }
 
 /*
- * Hooks a command when it's run by WeeChat.
+ * Hooks a command when it's run by DogeChat.
  *
  * Returns pointer to new hook, NULL if error.
  */
 
 struct t_hook *
-plugin_script_api_hook_command_run (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_command_run (struct t_dogechat_plugin *dogechat_plugin,
                                     struct t_plugin_script *script,
                                     const char *command,
                                     int (*callback)(void *data,
@@ -543,11 +543,11 @@ plugin_script_api_hook_command_run (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_command_run (command,
+    new_hook = dogechat_hook_command_run (command,
                                          callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -563,7 +563,7 @@ plugin_script_api_hook_command_run (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_timer (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_timer (struct t_dogechat_plugin *dogechat_plugin,
                               struct t_plugin_script *script,
                               int interval, int align_second, int max_calls,
                               int (*callback)(void *data,
@@ -578,11 +578,11 @@ plugin_script_api_hook_timer (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_timer (interval, align_second, max_calls,
+    new_hook = dogechat_hook_timer (interval, align_second, max_calls,
                                    callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -598,7 +598,7 @@ plugin_script_api_hook_timer (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_fd (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_fd (struct t_dogechat_plugin *dogechat_plugin,
                            struct t_plugin_script *script,
                            int fd, int flag_read, int flag_write,
                            int flag_exception,
@@ -613,11 +613,11 @@ plugin_script_api_hook_fd (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_fd (fd, flag_read, flag_write, flag_exception,
+    new_hook = dogechat_hook_fd (fd, flag_read, flag_write, flag_exception,
                                 callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -633,7 +633,7 @@ plugin_script_api_hook_fd (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_process_hashtable (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_process_hashtable (struct t_dogechat_plugin *dogechat_plugin,
                                           struct t_plugin_script *script,
                                           const char *command,
                                           struct t_hashtable *options,
@@ -653,11 +653,11 @@ plugin_script_api_hook_process_hashtable (struct t_weechat_plugin *weechat_plugi
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_process_hashtable (command, options, timeout,
+    new_hook = dogechat_hook_process_hashtable (command, options, timeout,
                                                callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -673,7 +673,7 @@ plugin_script_api_hook_process_hashtable (struct t_weechat_plugin *weechat_plugi
  */
 
 struct t_hook *
-plugin_script_api_hook_process (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_process (struct t_dogechat_plugin *dogechat_plugin,
                                 struct t_plugin_script *script,
                                 const char *command,
                                 int timeout,
@@ -685,7 +685,7 @@ plugin_script_api_hook_process (struct t_weechat_plugin *weechat_plugin,
                                 const char *function,
                                 const char *data)
 {
-    return plugin_script_api_hook_process_hashtable (weechat_plugin, script,
+    return plugin_script_api_hook_process_hashtable (dogechat_plugin, script,
                                                      command, NULL, timeout,
                                                      callback, function, data);
 }
@@ -697,7 +697,7 @@ plugin_script_api_hook_process (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_connect (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_connect (struct t_dogechat_plugin *dogechat_plugin,
                                 struct t_plugin_script *script,
                                 const char *proxy, const char *address, int port,
                                 int ipv6, int retry,
@@ -719,13 +719,13 @@ plugin_script_api_hook_connect (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_connect (proxy, address, port, ipv6, retry,
+    new_hook = dogechat_hook_connect (proxy, address, port, ipv6, retry,
                                      gnutls_sess, gnutls_cb, gnutls_dhkey_size,
                                      gnutls_priorities, local_hostname,
                                      callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -735,13 +735,13 @@ plugin_script_api_hook_connect (struct t_weechat_plugin *weechat_plugin,
 }
 
 /*
- * Hooks a message printed by WeeChat.
+ * Hooks a message printed by DogeChat.
  *
  * Returns pointer to new hook, NULL if error.
  */
 
 struct t_hook *
-plugin_script_api_hook_print (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_print (struct t_dogechat_plugin *dogechat_plugin,
                               struct t_plugin_script *script,
                               struct t_gui_buffer *buffer,
                               const char *tags, const char *message,
@@ -763,11 +763,11 @@ plugin_script_api_hook_print (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_print (buffer, tags, message, strip_colors,
+    new_hook = dogechat_hook_print (buffer, tags, message, strip_colors,
                                    callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -783,7 +783,7 @@ plugin_script_api_hook_print (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_signal (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_signal (struct t_dogechat_plugin *dogechat_plugin,
                                struct t_plugin_script *script,
                                const char *signal,
                                int (*callback)(void *data, const char *signal,
@@ -799,10 +799,10 @@ plugin_script_api_hook_signal (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_signal (signal, callback, script_cb);
+    new_hook = dogechat_hook_signal (signal, callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -818,7 +818,7 @@ plugin_script_api_hook_signal (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_hsignal (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_hsignal (struct t_dogechat_plugin *dogechat_plugin,
                                 struct t_plugin_script *script,
                                 const char *signal,
                                 int (*callback)(void *data, const char *signal,
@@ -833,10 +833,10 @@ plugin_script_api_hook_hsignal (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_hsignal (signal, callback, script_cb);
+    new_hook = dogechat_hook_hsignal (signal, callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -852,7 +852,7 @@ plugin_script_api_hook_hsignal (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_config (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_config (struct t_dogechat_plugin *dogechat_plugin,
                                struct t_plugin_script *script,
                                const char *option,
                                int (*callback)(void *data, const char *option,
@@ -867,10 +867,10 @@ plugin_script_api_hook_config (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_config (option, callback, script_cb);
+    new_hook = dogechat_hook_config (option, callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -886,7 +886,7 @@ plugin_script_api_hook_config (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_completion (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_completion (struct t_dogechat_plugin *dogechat_plugin,
                                    struct t_plugin_script *script,
                                    const char *completion,
                                    const char *description,
@@ -904,11 +904,11 @@ plugin_script_api_hook_completion (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_completion (completion, description,
+    new_hook = dogechat_hook_completion (completion, description,
                                         callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -924,7 +924,7 @@ plugin_script_api_hook_completion (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_modifier (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_modifier (struct t_dogechat_plugin *dogechat_plugin,
                                  struct t_plugin_script *script,
                                  const char *modifier,
                                  char *(*callback)(void *data, const char *modifier,
@@ -940,10 +940,10 @@ plugin_script_api_hook_modifier (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_modifier (modifier, callback, script_cb);
+    new_hook = dogechat_hook_modifier (modifier, callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -959,7 +959,7 @@ plugin_script_api_hook_modifier (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_info (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_info (struct t_dogechat_plugin *dogechat_plugin,
                              struct t_plugin_script *script,
                              const char *info_name,
                              const char *description,
@@ -977,11 +977,11 @@ plugin_script_api_hook_info (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_info (info_name, description, args_description,
+    new_hook = dogechat_hook_info (info_name, description, args_description,
                                   callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -997,7 +997,7 @@ plugin_script_api_hook_info (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_info_hashtable (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_info_hashtable (struct t_dogechat_plugin *dogechat_plugin,
                                        struct t_plugin_script *script,
                                        const char *info_name,
                                        const char *description,
@@ -1016,13 +1016,13 @@ plugin_script_api_hook_info_hashtable (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_info_hashtable (info_name, description,
+    new_hook = dogechat_hook_info_hashtable (info_name, description,
                                             args_description,
                                             output_description,
                                             callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -1038,7 +1038,7 @@ plugin_script_api_hook_info_hashtable (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_infolist (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_infolist (struct t_dogechat_plugin *dogechat_plugin,
                                  struct t_plugin_script *script,
                                  const char *infolist_name,
                                  const char *description,
@@ -1058,12 +1058,12 @@ plugin_script_api_hook_infolist (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_infolist (infolist_name, description,
+    new_hook = dogechat_hook_infolist (infolist_name, description,
                                       pointer_description, args_description,
                                       callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -1079,7 +1079,7 @@ plugin_script_api_hook_infolist (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_hook *
-plugin_script_api_hook_focus (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_hook_focus (struct t_dogechat_plugin *dogechat_plugin,
                               struct t_plugin_script *script,
                               const char *area,
                               struct t_hashtable *(*callback)(void *data,
@@ -1094,10 +1094,10 @@ plugin_script_api_hook_focus (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_hook = weechat_hook_focus (area, callback, script_cb);
+    new_hook = dogechat_hook_focus (area, callback, script_cb);
     if (new_hook)
     {
-        weechat_hook_set (new_hook, "subplugin", script->name);
+        dogechat_hook_set (new_hook, "subplugin", script->name);
         script_cb->hook = new_hook;
     }
     else
@@ -1111,16 +1111,16 @@ plugin_script_api_hook_focus (struct t_weechat_plugin *weechat_plugin,
  */
 
 void
-plugin_script_api_unhook (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_unhook (struct t_dogechat_plugin *dogechat_plugin,
                           struct t_plugin_script *script,
                           struct t_hook *hook)
 {
     struct t_plugin_script_cb *ptr_script_cb, *next_callback;
 
-    if (!weechat_plugin || !script || !hook)
+    if (!dogechat_plugin || !script || !hook)
         return;
 
-    weechat_unhook (hook);
+    dogechat_unhook (hook);
 
     ptr_script_cb = script->callbacks;
     while (ptr_script_cb)
@@ -1139,7 +1139,7 @@ plugin_script_api_unhook (struct t_weechat_plugin *weechat_plugin,
  */
 
 void
-plugin_script_api_unhook_all (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_unhook_all (struct t_dogechat_plugin *dogechat_plugin,
                               struct t_plugin_script *script)
 {
     struct t_plugin_script_cb *ptr_script_cb, *next_callback;
@@ -1151,7 +1151,7 @@ plugin_script_api_unhook_all (struct t_weechat_plugin *weechat_plugin,
 
         if (ptr_script_cb->hook)
         {
-            weechat_unhook (ptr_script_cb->hook);
+            dogechat_unhook (ptr_script_cb->hook);
             plugin_script_callback_remove (script, ptr_script_cb);
         }
 
@@ -1164,7 +1164,7 @@ plugin_script_api_unhook_all (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_gui_buffer *
-plugin_script_api_buffer_new (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_buffer_new (struct t_dogechat_plugin *dogechat_plugin,
                               struct t_plugin_script *script,
                               const char *name,
                               int (*input_callback)(void *data,
@@ -1192,7 +1192,7 @@ plugin_script_api_buffer_new (struct t_weechat_plugin *weechat_plugin,
         return NULL;
     }
 
-    new_buffer = weechat_buffer_new (name,
+    new_buffer = dogechat_buffer_new (name,
                                      (function_input && function_input[0]) ? input_callback : NULL,
                                      (function_input && function_input[0]) ? script_cb_input : NULL,
                                      (function_close && function_close[0]) ? close_callback : NULL,
@@ -1202,12 +1202,12 @@ plugin_script_api_buffer_new (struct t_weechat_plugin *weechat_plugin,
         script_cb_input->buffer = new_buffer;
         script_cb_close->buffer = new_buffer;
 
-        /* used when upgrading weechat, to set callbacks */
-        weechat_buffer_set (new_buffer, "localvar_set_script_name", script->name);
-        weechat_buffer_set (new_buffer, "localvar_set_script_input_cb", function_input);
-        weechat_buffer_set (new_buffer, "localvar_set_script_input_cb_data", data_input);
-        weechat_buffer_set (new_buffer, "localvar_set_script_close_cb", function_close);
-        weechat_buffer_set (new_buffer, "localvar_set_script_close_cb_data", data_close);
+        /* used when upgrading dogechat, to set callbacks */
+        dogechat_buffer_set (new_buffer, "localvar_set_script_name", script->name);
+        dogechat_buffer_set (new_buffer, "localvar_set_script_input_cb", function_input);
+        dogechat_buffer_set (new_buffer, "localvar_set_script_input_cb_data", data_input);
+        dogechat_buffer_set (new_buffer, "localvar_set_script_close_cb", function_close);
+        dogechat_buffer_set (new_buffer, "localvar_set_script_close_cb_data", data_close);
     }
     else
     {
@@ -1223,16 +1223,16 @@ plugin_script_api_buffer_new (struct t_weechat_plugin *weechat_plugin,
  */
 
 void
-plugin_script_api_buffer_close (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_buffer_close (struct t_dogechat_plugin *dogechat_plugin,
                                 struct t_plugin_script *script,
                                 struct t_gui_buffer *buffer)
 {
     struct t_plugin_script_cb *ptr_script_cb, *next_callback;
 
-    if (!weechat_plugin || !script || !buffer)
+    if (!dogechat_plugin || !script || !buffer)
         return;
 
-    weechat_buffer_close (buffer);
+    dogechat_buffer_close (buffer);
 
     ptr_script_cb = script->callbacks;
     while (ptr_script_cb)
@@ -1253,7 +1253,7 @@ plugin_script_api_buffer_close (struct t_weechat_plugin *weechat_plugin,
  */
 
 struct t_gui_bar_item *
-plugin_script_api_bar_item_new (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_bar_item_new (struct t_dogechat_plugin *dogechat_plugin,
                                 struct t_plugin_script *script,
                                 const char *name,
                                 char *(*build_callback)(void *data,
@@ -1288,7 +1288,7 @@ plugin_script_api_bar_item_new (struct t_weechat_plugin *weechat_plugin,
     if (!script_cb)
         return NULL;
 
-    new_item = weechat_bar_item_new (name,
+    new_item = dogechat_bar_item_new (name,
                                      (str_function[0]) ? build_callback : NULL,
                                      (str_function[0]) ? script_cb : NULL);
     if (new_item)
@@ -1304,16 +1304,16 @@ plugin_script_api_bar_item_new (struct t_weechat_plugin *weechat_plugin,
  */
 
 void
-plugin_script_api_bar_item_remove (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_bar_item_remove (struct t_dogechat_plugin *dogechat_plugin,
                                    struct t_plugin_script *script,
                                    struct t_gui_bar_item *item)
 {
     struct t_plugin_script_cb *ptr_script_cb, *next_callback;
 
-    if (!weechat_plugin || !script || !item)
+    if (!dogechat_plugin || !script || !item)
         return;
 
-    weechat_bar_item_remove (item);
+    dogechat_bar_item_remove (item);
 
     ptr_script_cb = script->callbacks;
     while (ptr_script_cb)
@@ -1332,7 +1332,7 @@ plugin_script_api_bar_item_remove (struct t_weechat_plugin *weechat_plugin,
  */
 
 int
-plugin_script_api_command (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_command (struct t_dogechat_plugin *dogechat_plugin,
                            struct t_plugin_script *script,
                            struct t_gui_buffer *buffer, const char *command)
 {
@@ -1340,9 +1340,9 @@ plugin_script_api_command (struct t_weechat_plugin *weechat_plugin,
     int rc;
 
     command2 = (script->charset && script->charset[0]) ?
-        weechat_iconv_to_internal (script->charset, command) : NULL;
+        dogechat_iconv_to_internal (script->charset, command) : NULL;
 
-    rc = weechat_command (buffer, (command2) ? command2 : command);
+    rc = dogechat_command (buffer, (command2) ? command2 : command);
 
     if (command2)
         free (command2);
@@ -1355,7 +1355,7 @@ plugin_script_api_command (struct t_weechat_plugin *weechat_plugin,
  */
 
 const char *
-plugin_script_api_config_get_plugin (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_config_get_plugin (struct t_dogechat_plugin *dogechat_plugin,
                                      struct t_plugin_script *script,
                                      const char *option)
 {
@@ -1371,7 +1371,7 @@ plugin_script_api_config_get_plugin (struct t_weechat_plugin *weechat_plugin,
     strcat (option_fullname, ".");
     strcat (option_fullname, option);
 
-    return_value = weechat_config_get_plugin (option_fullname);
+    return_value = dogechat_config_get_plugin (option_fullname);
     free (option_fullname);
 
     return return_value;
@@ -1386,7 +1386,7 @@ plugin_script_api_config_get_plugin (struct t_weechat_plugin *weechat_plugin,
  */
 
 int
-plugin_script_api_config_is_set_plugin (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_config_is_set_plugin (struct t_dogechat_plugin *dogechat_plugin,
                                         struct t_plugin_script *script,
                                         const char *option)
 {
@@ -1402,7 +1402,7 @@ plugin_script_api_config_is_set_plugin (struct t_weechat_plugin *weechat_plugin,
     strcat (option_fullname, ".");
     strcat (option_fullname, option);
 
-    return_code = weechat_config_is_set_plugin (option_fullname);
+    return_code = dogechat_config_is_set_plugin (option_fullname);
     free (option_fullname);
 
     return return_code;
@@ -1413,7 +1413,7 @@ plugin_script_api_config_is_set_plugin (struct t_weechat_plugin *weechat_plugin,
  */
 
 int
-plugin_script_api_config_set_plugin (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_config_set_plugin (struct t_dogechat_plugin *dogechat_plugin,
                                      struct t_plugin_script *script,
                                      const char *option, const char *value)
 {
@@ -1429,7 +1429,7 @@ plugin_script_api_config_set_plugin (struct t_weechat_plugin *weechat_plugin,
     strcat (option_fullname, ".");
     strcat (option_fullname, option);
 
-    return_code = weechat_config_set_plugin (option_fullname, value);
+    return_code = dogechat_config_set_plugin (option_fullname, value);
     free (option_fullname);
 
     return return_code;
@@ -1440,7 +1440,7 @@ plugin_script_api_config_set_plugin (struct t_weechat_plugin *weechat_plugin,
  */
 
 void
-plugin_script_api_config_set_desc_plugin (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_config_set_desc_plugin (struct t_dogechat_plugin *dogechat_plugin,
                                           struct t_plugin_script *script,
                                           const char *option, const char *description)
 {
@@ -1455,7 +1455,7 @@ plugin_script_api_config_set_desc_plugin (struct t_weechat_plugin *weechat_plugi
     strcat (option_fullname, ".");
     strcat (option_fullname, option);
 
-    weechat_config_set_desc_plugin (option_fullname, description);
+    dogechat_config_set_desc_plugin (option_fullname, description);
     free (option_fullname);
 }
 
@@ -1464,7 +1464,7 @@ plugin_script_api_config_set_desc_plugin (struct t_weechat_plugin *weechat_plugi
  */
 
 int
-plugin_script_api_config_unset_plugin (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_config_unset_plugin (struct t_dogechat_plugin *dogechat_plugin,
                                        struct t_plugin_script *script,
                                        const char *option)
 {
@@ -1480,7 +1480,7 @@ plugin_script_api_config_unset_plugin (struct t_weechat_plugin *weechat_plugin,
     strcat (option_fullname, ".");
     strcat (option_fullname, option);
 
-    return_code = weechat_config_unset_plugin (option_fullname);
+    return_code = dogechat_config_unset_plugin (option_fullname);
     free (option_fullname);
 
     return return_code;
@@ -1495,7 +1495,7 @@ plugin_script_api_config_unset_plugin (struct t_weechat_plugin *weechat_plugin,
  */
 
 int
-plugin_script_api_upgrade_read (struct t_weechat_plugin *weechat_plugin,
+plugin_script_api_upgrade_read (struct t_dogechat_plugin *dogechat_plugin,
                                 struct t_plugin_script *script,
                                 struct t_upgrade_file *upgrade_file,
                                 int (*callback_read)(void *data,
@@ -1516,7 +1516,7 @@ plugin_script_api_upgrade_read (struct t_weechat_plugin *weechat_plugin,
         return 0;
     script_cb->upgrade_file = upgrade_file;
 
-    rc = weechat_upgrade_read (upgrade_file,
+    rc = dogechat_upgrade_read (upgrade_file,
                                callback_read,
                                script_cb);
 

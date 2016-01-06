@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "xfer.h"
 #include "xfer-buffer.h"
 #include "xfer-chat.h"
@@ -49,28 +49,28 @@ xfer_command_me (void *data, struct t_gui_buffer *buffer, int argc,
 
     if (!ptr_xfer)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: can't find xfer for buffer \"%s\""),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME,
-                        weechat_buffer_get_string (buffer, "name"));
-        return WEECHAT_RC_OK;
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME,
+                        dogechat_buffer_get_string (buffer, "name"));
+        return DOGECHAT_RC_OK;
     }
 
     if (!XFER_HAS_ENDED(ptr_xfer->status))
     {
         xfer_chat_sendf (ptr_xfer, "\01ACTION %s\01\r\n",
                          (argv_eol[1]) ? argv_eol[1] : "");
-        weechat_printf_tags (buffer,
+        dogechat_printf_tags (buffer,
                              "no_highlight",
                              "%s%s%s %s%s",
-                             weechat_prefix ("action"),
-                             weechat_color ("chat_nick_self"),
+                             dogechat_prefix ("action"),
+                             dogechat_color ("chat_nick_self"),
                              ptr_xfer->local_nick,
-                             weechat_color ("chat"),
+                             dogechat_color ("chat"),
                              (argv_eol[1]) ? argv_eol[1] : "");
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -88,8 +88,8 @@ xfer_command_xfer_list (int full)
 
     if (xfer_list)
     {
-        weechat_printf (NULL, "");
-        weechat_printf (NULL, _("Xfer list:"));
+        dogechat_printf (NULL, "");
+        dogechat_printf (NULL, _("Xfer list:"));
         i = 1;
         for (ptr_xfer = xfer_list; ptr_xfer; ptr_xfer = ptr_xfer->next_xfer)
         {
@@ -106,7 +106,7 @@ xfer_command_xfer_list (int full)
                 else
                     pct_complete = (unsigned long long)(((float)(ptr_xfer->pos)/(float)(ptr_xfer->size)) * 100);
 
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%3d. %s (%s), file: \"%s\" (local: "
                                   "\"%s\"), %s %s, status: %s%s%s "
                                   "(%llu %%)"),
@@ -118,11 +118,11 @@ xfer_command_xfer_list (int full)
                                 (XFER_IS_SEND(ptr_xfer->type)) ?
                                 _("sent to") : _("received from"),
                                 ptr_xfer->remote_nick,
-                                weechat_color (
-                                    weechat_config_string (
+                                dogechat_color (
+                                    dogechat_config_string (
                                         xfer_config_color_status[ptr_xfer->status])),
                                 _(xfer_status_string[ptr_xfer->status]),
-                                weechat_color ("chat"),
+                                dogechat_color ("chat"),
                                 pct_complete);
             }
             else
@@ -134,7 +134,7 @@ xfer_command_xfer_list (int full)
                     strftime (date, sizeof (date),
                               "%a, %d %b %Y %H:%M:%S", date_tmp);
                 }
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 /* TRANSLATORS: "%s" after "started on" is a date */
                                 _("%3d. %s, chat with %s (local nick: %s), "
                                   "started on %s, status: %s%s"),
@@ -143,8 +143,8 @@ xfer_command_xfer_list (int full)
                                 ptr_xfer->remote_nick,
                                 ptr_xfer->local_nick,
                                 date,
-                                weechat_color(
-                                    weechat_config_string(
+                                dogechat_color(
+                                    dogechat_config_string(
                                         xfer_config_color_status[ptr_xfer->status])),
                                 _(xfer_status_string[ptr_xfer->status]));
             }
@@ -154,7 +154,7 @@ xfer_command_xfer_list (int full)
                 /* second line of xfer info */
                 if (XFER_IS_FILE(ptr_xfer->type))
                 {
-                    weechat_printf (NULL,
+                    dogechat_printf (NULL,
                                     _("     plugin: %s (id: %s), file: %llu "
                                       "bytes (position: %llu), address: "
                                       "%s (port %d)"),
@@ -171,7 +171,7 @@ xfer_command_xfer_list (int full)
                         strftime (date, sizeof (date),
                                   "%a, %d %b %Y %H:%M:%S", date_tmp);
                     }
-                    weechat_printf (NULL,
+                    dogechat_printf (NULL,
                                     /* TRANSLATORS: "%s" after "started on" is a date */
                                     _("     fast_send: %s, blocksize: %d, "
                                       "started on %s"),
@@ -184,7 +184,7 @@ xfer_command_xfer_list (int full)
         }
     }
     else
-        weechat_printf (NULL, _("No xfer"));
+        dogechat_printf (NULL, _("No xfer"));
 }
 
 /*
@@ -200,16 +200,16 @@ xfer_command_xfer (void *data, struct t_gui_buffer *buffer, int argc,
     (void) buffer;
     (void) argv_eol;
 
-    if ((argc > 1) && (weechat_strcasecmp (argv[1], "list") == 0))
+    if ((argc > 1) && (dogechat_strcasecmp (argv[1], "list") == 0))
     {
         xfer_command_xfer_list (0);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if ((argc > 1) && (weechat_strcasecmp (argv[1], "listfull") == 0))
+    if ((argc > 1) && (dogechat_strcasecmp (argv[1], "listfull") == 0))
     {
         xfer_command_xfer_list (1);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
     if (!xfer_buffer)
@@ -217,7 +217,7 @@ xfer_command_xfer (void *data, struct t_gui_buffer *buffer, int argc,
 
     if (xfer_buffer)
     {
-        weechat_buffer_set (xfer_buffer, "display", "1");
+        dogechat_buffer_set (xfer_buffer, "display", "1");
 
         if (argc > 1)
         {
@@ -236,7 +236,7 @@ xfer_command_xfer (void *data, struct t_gui_buffer *buffer, int argc,
 
     xfer_buffer_refresh (NULL);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -246,13 +246,13 @@ xfer_command_xfer (void *data, struct t_gui_buffer *buffer, int argc,
 void
 xfer_command_init ()
 {
-    weechat_hook_command (
+    dogechat_hook_command (
         "me",
         N_("send a CTCP action to remote host"),
         N_("<message>"),
         N_("message: message to send"),
         NULL, &xfer_command_me, NULL);
-    weechat_hook_command (
+    dogechat_hook_command (
         "xfer",
         N_("xfer control"),
         "[list|listfull]",

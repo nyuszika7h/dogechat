@@ -3,7 +3,7 @@
 // DO NOT EDIT BY HAND!
 //
 [[command_trigger_trigger]]
-[command]*`trigger`* トリガ (WeeChat 用のスイスアーミーナイフ) の管理::
+[command]*`trigger`* トリガ (DogeChat 用のスイスアーミーナイフ) の管理::
 
 ----
 /trigger  list|listfull|listdefault
@@ -72,7 +72,7 @@ return_code: コールバック内のリターンコード (ok (デフォルト)
 
 例 (/trigger listdefault でデフォルトトリガを見ることができます):
   テキスト属性 *太字*、_下線_、/イタリック/ を追加 (ユーザメッセージのみ):
-    /trigger add effects modifier weechat_print "${tg_tag_nick}" "==\*(\S+)\*==*${color:bold}${re:1}${color:-bold}*== ==_(\S+)_==_${color:underline}${re:1}${color:-underline}_== ==/(\S+)/==/${color:italic}${re:1}${color:-italic}/"
+    /trigger add effects modifier dogechat_print "${tg_tag_nick}" "==\*(\S+)\*==*${color:bold}${re:1}${color:-bold}*== ==_(\S+)_==_${color:underline}${re:1}${color:-underline}_== ==/(\S+)/==/${color:italic}${re:1}${color:-italic}/"
   狭い端末ではニックネームリストバーを隠す:
     /trigger add resize_small signal signal_sigwinch "${info:term_width} < 100" "" "/bar hide nicklist"
     /trigger add resize_big signal signal_sigwinch "${info:term_width} >= 100" "" "/bar show nicklist"

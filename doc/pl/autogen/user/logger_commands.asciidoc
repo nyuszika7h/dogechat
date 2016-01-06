@@ -33,8 +33,8 @@ Przykłady:
     /logger disable
   ustawia poziom na 3 dla wszystkich buforów IRC:
     /set logger.level.irc 3
-  wyłącza logowanie głównego bufora WeeChat:
-    /set logger.level.core.weechat 0
+  wyłącza logowanie głównego bufora DogeChat:
+    /set logger.level.core.dogechat 0
   użyj oddzielnych katalogów dla serwerów IRC, oraz oddzielnych plików dla kanałów:
-    /set logger.mask.irc "$server/$channel.weechatlog"
+    /set logger.mask.irc "$server/$channel.dogechatlog"
 ----

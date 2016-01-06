@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_GUI_COLOR_H
-#define WEECHAT_GUI_COLOR_H 1
+#ifndef DOGECHAT_GUI_COLOR_H
+#define DOGECHAT_GUI_COLOR_H 1
 
 #include <regex.h>
 
@@ -32,7 +32,7 @@ struct t_config_option;
  * - never remove a color (mark it as obsolete if needed)
  * - do not re-use an obsolete color
  * - add build of color in file src/gui/curses/gui-curses-color.c,
- *   function gui_color_init_weechat ()
+ *   function gui_color_init_dogechat ()
  * - update the Developer's guide
  */
 
@@ -58,18 +58,18 @@ enum t_gui_color_enum
     GUI_COLOR_CHAT_NICK_OTHER,
     /*
      * following obsolete colors are kept here for compatibility
-     * with WeeChat <= 0.3.3
+     * with DogeChat <= 0.3.3
      */
-    GUI_COLOR_CHAT_NICK1_OBSOLETE,  /* not used any more since WeeChat 0.3.4 */
-    GUI_COLOR_CHAT_NICK2_OBSOLETE,  /* not used any more since WeeChat 0.3.4 */
-    GUI_COLOR_CHAT_NICK3_OBSOLETE,  /* not used any more since WeeChat 0.3.4 */
-    GUI_COLOR_CHAT_NICK4_OBSOLETE,  /* not used any more since WeeChat 0.3.4 */
-    GUI_COLOR_CHAT_NICK5_OBSOLETE,  /* not used any more since WeeChat 0.3.4 */
-    GUI_COLOR_CHAT_NICK6_OBSOLETE,  /* not used any more since WeeChat 0.3.4 */
-    GUI_COLOR_CHAT_NICK7_OBSOLETE,  /* not used any more since WeeChat 0.3.4 */
-    GUI_COLOR_CHAT_NICK8_OBSOLETE,  /* not used any more since WeeChat 0.3.4 */
-    GUI_COLOR_CHAT_NICK9_OBSOLETE,  /* not used any more since WeeChat 0.3.4 */
-    GUI_COLOR_CHAT_NICK10_OBSOLETE, /* not used any more since WeeChat 0.3.4 */
+    GUI_COLOR_CHAT_NICK1_OBSOLETE,  /* not used any more since DogeChat 0.3.4 */
+    GUI_COLOR_CHAT_NICK2_OBSOLETE,  /* not used any more since DogeChat 0.3.4 */
+    GUI_COLOR_CHAT_NICK3_OBSOLETE,  /* not used any more since DogeChat 0.3.4 */
+    GUI_COLOR_CHAT_NICK4_OBSOLETE,  /* not used any more since DogeChat 0.3.4 */
+    GUI_COLOR_CHAT_NICK5_OBSOLETE,  /* not used any more since DogeChat 0.3.4 */
+    GUI_COLOR_CHAT_NICK6_OBSOLETE,  /* not used any more since DogeChat 0.3.4 */
+    GUI_COLOR_CHAT_NICK7_OBSOLETE,  /* not used any more since DogeChat 0.3.4 */
+    GUI_COLOR_CHAT_NICK8_OBSOLETE,  /* not used any more since DogeChat 0.3.4 */
+    GUI_COLOR_CHAT_NICK9_OBSOLETE,  /* not used any more since DogeChat 0.3.4 */
+    GUI_COLOR_CHAT_NICK10_OBSOLETE, /* not used any more since DogeChat 0.3.4 */
     GUI_COLOR_CHAT_HOST,
     GUI_COLOR_CHAT_DELIMITERS,
     GUI_COLOR_CHAT_HIGHLIGHT,
@@ -93,7 +93,7 @@ enum t_gui_color_enum
     GUI_COLOR_NUM_COLORS,
 };
 
-/* WeeChat internal color attributes (should never be in protocol messages) */
+/* DogeChat internal color attributes (should never be in protocol messages) */
 
 #define GUI_COLOR_COLOR_CHAR           '\x19'
 #define GUI_COLOR_SET_ATTR_CHAR        '\x1A'
@@ -159,7 +159,7 @@ struct t_gui_color
     int foreground;                /* foreground color                      */
     int background;                /* background color                      */
     int attributes;                /* attributes (bold, ..)                 */
-    char *string;                  /* WeeChat color: "\x19??", ?? is #color */
+    char *string;                  /* DogeChat color: "\x19??", ?? is #color */
 };
 
 /* custom color in palette */
@@ -175,7 +175,7 @@ struct t_gui_color_palette
 extern struct t_gui_color *gui_color[];
 extern struct t_hashtable *gui_color_hash_palette_color;
 extern struct t_hashtable *gui_color_hash_palette_alias;
-extern struct t_weelist *gui_color_list_with_alias;
+extern struct t_dogelist *gui_color_list_with_alias;
 
 /* color functions */
 
@@ -205,11 +205,11 @@ extern int gui_color_search (const char *color_name);
 extern int gui_color_assign (int *color, char const *color_name);
 extern int gui_color_assign_by_diff (int *color, const char *color_name,
                                      int diff);
-extern int gui_color_get_weechat_colors_number ();
+extern int gui_color_get_dogechat_colors_number ();
 extern int gui_color_get_term_colors ();
 extern const char *gui_color_get_name (int num_color);
 extern void gui_color_free_vars ();
-extern void gui_color_init_weechat ();
+extern void gui_color_init_dogechat ();
 extern void gui_color_display_terminal_colors ();
 extern void gui_color_info_term_colors (char *buffer, int size);
 extern void gui_color_buffer_display ();
@@ -223,4 +223,4 @@ extern struct t_gui_color_palette *gui_color_palette_new (int number,
 extern void gui_color_palette_free (struct t_gui_color_palette *color_palette);
 extern void gui_color_dump ();
 
-#endif /* WEECHAT_GUI_COLOR_H */
+#endif /* DOGECHAT_GUI_COLOR_H */

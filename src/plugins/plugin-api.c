@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -34,17 +34,17 @@
 #include <time.h>
 #include <locale.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-hashtable.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-infolist.h"
-#include "../core/wee-input.h"
-#include "../core/wee-proxy.h"
-#include "../core/wee-string.h"
-#include "../core/wee-url.h"
-#include "../core/wee-util.h"
-#include "../core/wee-version.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-hashtable.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-infolist.h"
+#include "../core/doge-input.h"
+#include "../core/doge-proxy.h"
+#include "../core/doge-string.h"
+#include "../core/doge-url.h"
+#include "../core/doge-util.h"
+#include "../core/doge-version.h"
 #include "../gui/gui-bar.h"
 #include "../gui/gui-bar-item.h"
 #include "../gui/gui-bar-window.h"
@@ -71,7 +71,7 @@
  */
 
 void
-plugin_api_charset_set (struct t_weechat_plugin *plugin, const char *charset)
+plugin_api_charset_set (struct t_dogechat_plugin *plugin, const char *charset)
 {
     if (!plugin || !charset)
         return;
@@ -125,7 +125,7 @@ plugin_api_config_get (const char *option_name)
  */
 
 const char *
-plugin_api_config_get_plugin (struct t_weechat_plugin *plugin,
+plugin_api_config_get_plugin (struct t_dogechat_plugin *plugin,
                               const char *option_name)
 {
     struct t_config_option *ptr_option;
@@ -150,7 +150,7 @@ plugin_api_config_get_plugin (struct t_weechat_plugin *plugin,
  */
 
 int
-plugin_api_config_is_set_plugin (struct t_weechat_plugin *plugin,
+plugin_api_config_is_set_plugin (struct t_dogechat_plugin *plugin,
                                  const char *option_name)
 {
     struct t_config_option *ptr_option;
@@ -170,11 +170,11 @@ plugin_api_config_is_set_plugin (struct t_weechat_plugin *plugin,
  */
 
 int
-plugin_api_config_set_plugin (struct t_weechat_plugin *plugin,
+plugin_api_config_set_plugin (struct t_dogechat_plugin *plugin,
                               const char *option_name, const char *value)
 {
     if (!plugin || !option_name)
-        return WEECHAT_CONFIG_OPTION_SET_OPTION_NOT_FOUND;
+        return DOGECHAT_CONFIG_OPTION_SET_OPTION_NOT_FOUND;
 
     return plugin_config_set (plugin->name, option_name, value);
 }
@@ -184,7 +184,7 @@ plugin_api_config_set_plugin (struct t_weechat_plugin *plugin,
  */
 
 void
-plugin_api_config_set_desc_plugin (struct t_weechat_plugin *plugin,
+plugin_api_config_set_desc_plugin (struct t_dogechat_plugin *plugin,
                                    const char *option_name,
                                    const char *description)
 {
@@ -197,17 +197,17 @@ plugin_api_config_set_desc_plugin (struct t_weechat_plugin *plugin,
  */
 
 int
-plugin_api_config_unset_plugin (struct t_weechat_plugin *plugin,
+plugin_api_config_unset_plugin (struct t_dogechat_plugin *plugin,
                                 const char *option_name)
 {
     struct t_config_option *ptr_option;
 
     if (!plugin || !option_name)
-        return WEECHAT_CONFIG_OPTION_UNSET_ERROR;
+        return DOGECHAT_CONFIG_OPTION_UNSET_ERROR;
 
     ptr_option = plugin_config_search (plugin->name, option_name);
     if (!ptr_option)
-        return WEECHAT_CONFIG_OPTION_UNSET_ERROR;
+        return DOGECHAT_CONFIG_OPTION_UNSET_ERROR;
 
     return config_file_option_unset (ptr_option);
 }
@@ -237,7 +237,7 @@ plugin_api_prefix (const char *prefix)
 }
 
 /*
- * Returns a WeeChat color for display with printf.
+ * Returns a DogeChat color for display with printf.
  */
 
 const char *
@@ -248,7 +248,7 @@ plugin_api_color (const char *color_name)
     if (!color_name)
         return GUI_NO_COLOR;
 
-    /* name is a weechat color option ? => then return this color */
+    /* name is a dogechat color option ? => then return this color */
     str_color = gui_color_search_config (color_name);
     if (str_color)
         return str_color;
@@ -261,14 +261,14 @@ plugin_api_color (const char *color_name)
  */
 
 int
-plugin_api_command (struct t_weechat_plugin *plugin,
+plugin_api_command (struct t_dogechat_plugin *plugin,
                     struct t_gui_buffer *buffer, const char *command)
 {
     char *command2;
     int rc;
 
     if (!plugin || !command)
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
     command2 = string_iconv_to_internal (plugin->charset, command);
     if (!buffer)
@@ -301,7 +301,7 @@ plugin_api_modifier_color_decode_ansi_cb (void *data,
 }
 
 /*
- * Returns WeeChat info "version".
+ * Returns DogeChat info "version".
  */
 
 const char *
@@ -317,7 +317,7 @@ plugin_api_info_version_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "version_number".
+ * Returns DogeChat info "version_number".
  */
 
 const char *
@@ -340,7 +340,7 @@ plugin_api_info_version_number_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "version_git".
+ * Returns DogeChat info "version_git".
  */
 
 const char *
@@ -356,7 +356,7 @@ plugin_api_info_version_git_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "date".
+ * Returns DogeChat info "date".
  */
 
 const char *
@@ -372,7 +372,7 @@ plugin_api_info_date_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "dir_separator".
+ * Returns DogeChat info "dir_separator".
  */
 
 const char *
@@ -388,35 +388,35 @@ plugin_api_info_dir_separator_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "weechat_dir".
+ * Returns DogeChat info "dogechat_dir".
  */
 
 const char *
-plugin_api_info_weechat_dir_cb (void *data, const char *info_name,
+plugin_api_info_dogechat_dir_cb (void *data, const char *info_name,
                                 const char *arguments)
 {
-    static char weechat_dir_absolute_path[PATH_MAX] = { '\0' };
+    static char dogechat_dir_absolute_path[PATH_MAX] = { '\0' };
 
     /* make C compiler happy */
     (void) data;
     (void) info_name;
     (void) arguments;
 
-    if (!weechat_dir_absolute_path[0])
+    if (!dogechat_dir_absolute_path[0])
     {
-        if (!realpath (weechat_home, weechat_dir_absolute_path))
+        if (!realpath (dogechat_home, dogechat_dir_absolute_path))
             return NULL;
     }
-    return (weechat_dir_absolute_path[0]) ?
-        weechat_dir_absolute_path : weechat_home;
+    return (dogechat_dir_absolute_path[0]) ?
+        dogechat_dir_absolute_path : dogechat_home;
 }
 
 /*
- * Returns WeeChat info "weechat_libdir".
+ * Returns DogeChat info "dogechat_libdir".
  */
 
 const char *
-plugin_api_info_weechat_libdir_cb (void *data, const char *info_name,
+plugin_api_info_dogechat_libdir_cb (void *data, const char *info_name,
                                    const char *arguments)
 {
     /* make C compiler happy */
@@ -424,15 +424,15 @@ plugin_api_info_weechat_libdir_cb (void *data, const char *info_name,
     (void) info_name;
     (void) arguments;
 
-    return WEECHAT_LIBDIR;
+    return DOGECHAT_LIBDIR;
 }
 
 /*
- * Returns WeeChat info "weechat_sharedir".
+ * Returns DogeChat info "dogechat_sharedir".
  */
 
 const char *
-plugin_api_info_weechat_sharedir_cb (void *data, const char *info_name,
+plugin_api_info_dogechat_sharedir_cb (void *data, const char *info_name,
                                      const char *arguments)
 {
     /* make C compiler happy */
@@ -440,15 +440,15 @@ plugin_api_info_weechat_sharedir_cb (void *data, const char *info_name,
     (void) info_name;
     (void) arguments;
 
-    return WEECHAT_SHAREDIR;
+    return DOGECHAT_SHAREDIR;
 }
 
 /*
- * Returns WeeChat info "weechat_localedir".
+ * Returns DogeChat info "dogechat_localedir".
  */
 
 const char *
-plugin_api_info_weechat_localedir_cb (void *data, const char *info_name,
+plugin_api_info_dogechat_localedir_cb (void *data, const char *info_name,
                                       const char *arguments)
 {
     /* make C compiler happy */
@@ -460,11 +460,11 @@ plugin_api_info_weechat_localedir_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "weechat_site".
+ * Returns DogeChat info "dogechat_site".
  */
 
 const char *
-plugin_api_info_weechat_site_cb (void *data, const char *info_name,
+plugin_api_info_dogechat_site_cb (void *data, const char *info_name,
                                  const char *arguments)
 {
     /* make C compiler happy */
@@ -472,15 +472,15 @@ plugin_api_info_weechat_site_cb (void *data, const char *info_name,
     (void) info_name;
     (void) arguments;
 
-    return WEECHAT_WEBSITE;
+    return DOGECHAT_WEBSITE;
 }
 
 /*
- * Returns WeeChat info "weechat_site_download".
+ * Returns DogeChat info "dogechat_site_download".
  */
 
 const char *
-plugin_api_info_weechat_site_download_cb (void *data, const char *info_name,
+plugin_api_info_dogechat_site_download_cb (void *data, const char *info_name,
                                           const char *arguments)
 {
     /* make C compiler happy */
@@ -488,15 +488,15 @@ plugin_api_info_weechat_site_download_cb (void *data, const char *info_name,
     (void) info_name;
     (void) arguments;
 
-    return WEECHAT_WEBSITE_DOWNLOAD;
+    return DOGECHAT_WEBSITE_DOWNLOAD;
 }
 
 /*
- * Returns WeeChat info "weechat_upgrading".
+ * Returns DogeChat info "dogechat_upgrading".
  */
 
 const char *
-plugin_api_info_weechat_upgrading_cb (void *data, const char *info_name,
+plugin_api_info_dogechat_upgrading_cb (void *data, const char *info_name,
                                       const char *arguments)
 {
     static char value[32];
@@ -506,12 +506,12 @@ plugin_api_info_weechat_upgrading_cb (void *data, const char *info_name,
     (void) info_name;
     (void) arguments;
 
-    snprintf (value, sizeof (value), "%d", weechat_upgrading);
+    snprintf (value, sizeof (value), "%d", dogechat_upgrading);
     return value;
 }
 
 /*
- * Returns WeeChat info "charset_terminal".
+ * Returns DogeChat info "charset_terminal".
  */
 
 const char *
@@ -523,11 +523,11 @@ plugin_api_info_charset_terminal_cb (void *data, const char *info_name,
     (void) info_name;
     (void) arguments;
 
-    return weechat_local_charset;
+    return dogechat_local_charset;
 }
 
 /*
- * Returns WeeChat info "charset_internal".
+ * Returns DogeChat info "charset_internal".
  */
 
 const char *
@@ -539,11 +539,11 @@ plugin_api_info_charset_internal_cb (void *data, const char *info_name,
     (void) info_name;
     (void) arguments;
 
-    return WEECHAT_INTERNAL_CHARSET;
+    return DOGECHAT_INTERNAL_CHARSET;
 }
 
 /*
- * Returns WeeChat info "locale".
+ * Returns DogeChat info "locale".
  */
 
 const char *
@@ -559,7 +559,7 @@ plugin_api_info_locale_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "inactivity".
+ * Returns DogeChat info "inactivity".
  */
 
 const char *
@@ -583,7 +583,7 @@ plugin_api_info_inactivity_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "filters_enabled".
+ * Returns DogeChat info "filters_enabled".
  */
 
 const char *
@@ -602,7 +602,7 @@ plugin_api_info_filters_enabled_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "cursor_mode".
+ * Returns DogeChat info "cursor_mode".
  */
 
 const char *
@@ -621,7 +621,7 @@ plugin_api_info_cursor_mode_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "term_width".
+ * Returns DogeChat info "term_width".
  */
 
 const char *
@@ -640,7 +640,7 @@ plugin_api_info_term_width_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "term_height".
+ * Returns DogeChat info "term_height".
  */
 
 const char *
@@ -659,7 +659,7 @@ plugin_api_info_term_height_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "color_ansi_regex".
+ * Returns DogeChat info "color_ansi_regex".
  */
 
 const char *
@@ -675,7 +675,7 @@ plugin_api_info_color_ansi_regex_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "color_term2rgb".
+ * Returns DogeChat info "color_term2rgb".
  */
 
 const char *
@@ -698,7 +698,7 @@ plugin_api_info_color_term2rgb_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat info "color_rgb2term".
+ * Returns DogeChat info "color_rgb2term".
  */
 
 const char *
@@ -739,9 +739,9 @@ plugin_api_info_color_rgb2term_cb (void *data, const char *info_name,
 }
 
 /*
- * Returns WeeChat infolist "bar".
+ * Returns DogeChat infolist "bar".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -795,9 +795,9 @@ plugin_api_infolist_bar_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "bar_item".
+ * Returns DogeChat infolist "bar_item".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -852,9 +852,9 @@ plugin_api_infolist_bar_item_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "bar_window".
+ * Returns DogeChat infolist "bar_window".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -924,9 +924,9 @@ plugin_api_infolist_bar_window_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "buffer".
+ * Returns DogeChat infolist "buffer".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -981,9 +981,9 @@ plugin_api_infolist_buffer_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "buffer_lines".
+ * Returns DogeChat infolist "buffer_lines".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1026,9 +1026,9 @@ plugin_api_infolist_buffer_lines_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "filter".
+ * Returns DogeChat infolist "filter".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1064,9 +1064,9 @@ plugin_api_infolist_filter_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "history".
+ * Returns DogeChat infolist "history".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1103,9 +1103,9 @@ plugin_api_infolist_history_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "hook".
+ * Returns DogeChat infolist "hook".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1135,9 +1135,9 @@ plugin_api_infolist_hook_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "hotlist".
+ * Returns DogeChat infolist "hotlist".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1170,9 +1170,9 @@ plugin_api_infolist_hotlist_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "key".
+ * Returns DogeChat infolist "key".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1212,9 +1212,9 @@ plugin_api_infolist_key_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "layout".
+ * Returns DogeChat infolist "layout".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1247,9 +1247,9 @@ plugin_api_infolist_layout_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "nicklist".
+ * Returns DogeChat infolist "nicklist".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1279,9 +1279,9 @@ plugin_api_infolist_nicklist_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "option".
+ * Returns DogeChat infolist "option".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1308,9 +1308,9 @@ plugin_api_infolist_option_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "plugin".
+ * Returns DogeChat infolist "plugin".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1318,7 +1318,7 @@ plugin_api_infolist_plugin_cb (void *data, const char *infolist_name,
                                void *pointer, const char *arguments)
 {
     struct t_infolist *ptr_infolist;
-    struct t_weechat_plugin *ptr_plugin;
+    struct t_dogechat_plugin *ptr_plugin;
 
     /* make C compiler happy */
     (void) data;
@@ -1345,7 +1345,7 @@ plugin_api_infolist_plugin_cb (void *data, const char *infolist_name,
     else
     {
         /* build list with all plugins matching arguments */
-        for (ptr_plugin = weechat_plugins; ptr_plugin;
+        for (ptr_plugin = dogechat_plugins; ptr_plugin;
              ptr_plugin = ptr_plugin->next_plugin)
         {
             if (!arguments || !arguments[0]
@@ -1365,9 +1365,9 @@ plugin_api_infolist_plugin_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "proxy".
+ * Returns DogeChat infolist "proxy".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1402,7 +1402,7 @@ plugin_api_infolist_proxy_cb (void *data, const char *infolist_name,
     else
     {
         /* build list with all proxies matching arguments */
-        for (ptr_proxy = weechat_proxies; ptr_proxy;
+        for (ptr_proxy = dogechat_proxies; ptr_proxy;
              ptr_proxy = ptr_proxy->next_proxy)
         {
             if (!arguments || !arguments[0]
@@ -1422,9 +1422,9 @@ plugin_api_infolist_proxy_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "url_options".
+ * Returns DogeChat infolist "url_options".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1446,7 +1446,7 @@ plugin_api_infolist_url_options_cb (void *data, const char *infolist_name,
 
     for (i = 0; url_options[i].name; i++)
     {
-        if (!weeurl_option_add_to_infolist (ptr_infolist, &url_options[i]))
+        if (!dogeurl_option_add_to_infolist (ptr_infolist, &url_options[i]))
         {
             infolist_free (ptr_infolist);
             return NULL;
@@ -1456,9 +1456,9 @@ plugin_api_infolist_url_options_cb (void *data, const char *infolist_name,
 }
 
 /*
- * Returns WeeChat infolist "window".
+ * Returns DogeChat infolist "window".
  *
- * Note: result must be freed after use with function weechat_infolist_free().
+ * Note: result must be freed after use with function dogechat_infolist_free().
  */
 
 struct t_infolist *
@@ -1695,54 +1695,54 @@ plugin_api_infolist_free (struct t_infolist *infolist)
 void
 plugin_api_init ()
 {
-    /* WeeChat core modifiers */
+    /* DogeChat core modifiers */
     hook_modifier (NULL, "color_decode_ansi",
                    &plugin_api_modifier_color_decode_ansi_cb, NULL);
 
-    /* WeeChat core info hooks */
+    /* DogeChat core info hooks */
     hook_info (NULL, "version",
-               N_("WeeChat version"),
+               N_("DogeChat version"),
                NULL, &plugin_api_info_version_cb, NULL);
     hook_info (NULL, "version_number",
-               N_("WeeChat version (as number)"),
+               N_("DogeChat version (as number)"),
                NULL, &plugin_api_info_version_number_cb, NULL);
     hook_info (NULL, "version_git",
-               N_("WeeChat git version (output of command \"git describe\" "
+               N_("DogeChat git version (output of command \"git describe\" "
                   "for a development version only, empty for a stable "
                   "release)"),
                NULL, &plugin_api_info_version_git_cb, NULL);
     hook_info (NULL, "date",
-               N_("WeeChat compilation date"),
+               N_("DogeChat compilation date"),
                NULL, &plugin_api_info_date_cb, NULL);
     hook_info (NULL, "dir_separator",
                N_("directory separator"),
                NULL, &plugin_api_info_dir_separator_cb, NULL);
-    hook_info (NULL, "weechat_dir",
-               N_("WeeChat directory"),
-               NULL, &plugin_api_info_weechat_dir_cb, NULL);
-    hook_info (NULL, "weechat_libdir",
-               N_("WeeChat \"lib\" directory"),
-               NULL, &plugin_api_info_weechat_libdir_cb, NULL);
-    hook_info (NULL, "weechat_sharedir",
-               N_("WeeChat \"share\" directory"),
-               NULL, &plugin_api_info_weechat_sharedir_cb, NULL);
-    hook_info (NULL, "weechat_localedir",
-               N_("WeeChat \"locale\" directory"),
-               NULL, &plugin_api_info_weechat_localedir_cb, NULL);
-    hook_info (NULL, "weechat_site",
-               N_("WeeChat site"),
-               NULL, &plugin_api_info_weechat_site_cb, NULL);
-    hook_info (NULL, "weechat_site_download",
-               N_("WeeChat site, download page"),
-               NULL, &plugin_api_info_weechat_site_download_cb, NULL);
-    hook_info (NULL, "weechat_upgrading",
-               N_("1 if WeeChat is upgrading (command `/upgrade`)"),
-               NULL, &plugin_api_info_weechat_upgrading_cb, NULL);
+    hook_info (NULL, "dogechat_dir",
+               N_("DogeChat directory"),
+               NULL, &plugin_api_info_dogechat_dir_cb, NULL);
+    hook_info (NULL, "dogechat_libdir",
+               N_("DogeChat \"lib\" directory"),
+               NULL, &plugin_api_info_dogechat_libdir_cb, NULL);
+    hook_info (NULL, "dogechat_sharedir",
+               N_("DogeChat \"share\" directory"),
+               NULL, &plugin_api_info_dogechat_sharedir_cb, NULL);
+    hook_info (NULL, "dogechat_localedir",
+               N_("DogeChat \"locale\" directory"),
+               NULL, &plugin_api_info_dogechat_localedir_cb, NULL);
+    hook_info (NULL, "dogechat_site",
+               N_("DogeChat site"),
+               NULL, &plugin_api_info_dogechat_site_cb, NULL);
+    hook_info (NULL, "dogechat_site_download",
+               N_("DogeChat site, download page"),
+               NULL, &plugin_api_info_dogechat_site_download_cb, NULL);
+    hook_info (NULL, "dogechat_upgrading",
+               N_("1 if DogeChat is upgrading (command `/upgrade`)"),
+               NULL, &plugin_api_info_dogechat_upgrading_cb, NULL);
     hook_info (NULL, "charset_terminal",
                N_("terminal charset"),
                NULL, &plugin_api_info_charset_terminal_cb, NULL);
     hook_info (NULL, "charset_internal",
-               N_("WeeChat internal charset"),
+               N_("DogeChat internal charset"),
                NULL, &plugin_api_info_charset_internal_cb, NULL);
     hook_info (NULL, "locale",
                N_("locale used for translating messages"),
@@ -1775,7 +1775,7 @@ plugin_api_init ()
                N_("rgb,limit (limit is optional and is set to 256 by default)"),
                &plugin_api_info_color_rgb2term_cb, NULL);
 
-    /* WeeChat core infolist hooks */
+    /* DogeChat core infolist hooks */
     hook_infolist (NULL, "bar",
                    N_("list of bars"),
                    N_("bar pointer (optional)"),
@@ -1866,7 +1866,7 @@ plugin_api_init ()
                    N_("\"current\" for current window or a window number (optional)"),
                    &plugin_api_infolist_window_cb, NULL);
 
-    /* WeeChat core hdata */
+    /* DogeChat core hdata */
     hook_hdata (NULL, "bar", N_("bar"),
                 &gui_bar_hdata_bar_cb, NULL);
     hook_hdata (NULL, "bar_item", N_("bar item"),

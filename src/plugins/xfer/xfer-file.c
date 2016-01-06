@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -29,7 +29,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "xfer.h"
 #include "xfer-file.h"
 #include "xfer-buffer.h"
@@ -49,7 +49,7 @@ xfer_file_resume (struct t_xfer *xfer, const char *filename)
 {
     struct stat st;
 
-    if (!weechat_config_boolean (xfer_config_file_auto_resume))
+    if (!dogechat_config_boolean (xfer_config_file_auto_resume))
         return 0;
 
     if (access (filename, W_OK) == 0)
@@ -87,8 +87,8 @@ xfer_file_find_filename (struct t_xfer *xfer)
     if (!XFER_IS_FILE(xfer->type))
         return;
 
-    path = weechat_string_eval_path_home (
-        weechat_config_string (xfer_config_file_download_path),
+    path = dogechat_string_eval_path_home (
+        dogechat_config_string (xfer_config_file_download_path),
         NULL, NULL, NULL);
     if (!path)
         return;
@@ -103,11 +103,11 @@ xfer_file_find_filename (struct t_xfer *xfer)
     }
 
     strcpy (xfer->local_filename, path);
-    dir_separator = weechat_info_get("dir_separator", "");
+    dir_separator = dogechat_info_get("dir_separator", "");
     if (dir_separator
         && (xfer->local_filename[strlen (xfer->local_filename) - 1] != dir_separator[0]))
         strcat (xfer->local_filename, dir_separator);
-    if (weechat_config_boolean (xfer_config_file_use_nick_in_filename))
+    if (dogechat_config_boolean (xfer_config_file_use_nick_in_filename))
     {
         strcat (xfer->local_filename, xfer->remote_nick);
         strcat (xfer->local_filename, ".");
@@ -126,7 +126,7 @@ xfer_file_find_filename (struct t_xfer *xfer)
         if (!xfer_config_file_auto_rename)
         {
             xfer_close (xfer, XFER_STATUS_FAILED);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             return;
         }
 
@@ -135,7 +135,7 @@ xfer_file_find_filename (struct t_xfer *xfer)
         if (!filename2)
         {
             xfer_close (xfer, XFER_STATUS_FAILED);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             return;
         }
         xfer->filename_suffix = 0;

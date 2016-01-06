@@ -1,22 +1,22 @@
 /*
- * xfer.c - file transfer and direct chat plugin for WeeChat
+ * xfer.c - file transfer and direct chat plugin for DogeChat
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -33,7 +33,7 @@
 #include <gcrypt.h>
 #include <arpa/inet.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "xfer.h"
 #include "xfer-buffer.h"
 #include "xfer-command.h"
@@ -45,14 +45,14 @@
 #include "xfer-upgrade.h"
 
 
-WEECHAT_PLUGIN_NAME(XFER_PLUGIN_NAME);
-WEECHAT_PLUGIN_DESCRIPTION(N_("DCC file transfer and direct chat"));
-WEECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
-WEECHAT_PLUGIN_VERSION(WEECHAT_VERSION);
-WEECHAT_PLUGIN_LICENSE(WEECHAT_LICENSE);
-WEECHAT_PLUGIN_PRIORITY(6000);
+DOGECHAT_PLUGIN_NAME(XFER_PLUGIN_NAME);
+DOGECHAT_PLUGIN_DESCRIPTION(N_("DCC file transfer and direct chat"));
+DOGECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
+DOGECHAT_PLUGIN_VERSION(DOGECHAT_VERSION);
+DOGECHAT_PLUGIN_LICENSE(DOGECHAT_LICENSE);
+DOGECHAT_PLUGIN_PRIORITY(6000);
 
-struct t_weechat_plugin *weechat_xfer_plugin = NULL;
+struct t_dogechat_plugin *dogechat_xfer_plugin = NULL;
 
 char *xfer_type_string[] =             /* strings for types                 */
 { "file_recv", "file_send", "chat_recv",
@@ -129,7 +129,7 @@ xfer_signal_upgrade_cb (void *data, const char *signal, const char *type_data,
     if (signal_data && (strcmp (signal_data, "quit") == 0))
         xfer_disconnect_all ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 
@@ -143,22 +143,22 @@ xfer_create_directories ()
     char *path;
 
     /* create download directory */
-    path = weechat_string_eval_path_home (
-        weechat_config_string (xfer_config_file_download_path),
+    path = dogechat_string_eval_path_home (
+        dogechat_config_string (xfer_config_file_download_path),
         NULL, NULL, NULL);
     if (path)
     {
-        (void) weechat_mkdir_parents (path, 0700);
+        (void) dogechat_mkdir_parents (path, 0700);
         free (path);
     }
 
     /* create upload directory */
-    path = weechat_string_eval_path_home (
-        weechat_config_string (xfer_config_file_upload_path),
+    path = dogechat_string_eval_path_home (
+        dogechat_config_string (xfer_config_file_upload_path),
         NULL, NULL, NULL);
     if (path)
     {
-        (void) weechat_mkdir_parents (path, 0700);
+        (void) dogechat_mkdir_parents (path, 0700);
         free (path);
     }
 }
@@ -176,7 +176,7 @@ xfer_search_type (const char *type)
 
     for (i = 0; i < XFER_NUM_TYPES; i++)
     {
-        if (weechat_strcasecmp (xfer_type_string[i], type) == 0)
+        if (dogechat_strcasecmp (xfer_type_string[i], type) == 0)
             return i;
     }
 
@@ -197,7 +197,7 @@ xfer_search_protocol (const char *protocol)
 
     for (i = 0; i < XFER_NUM_PROTOCOLS; i++)
     {
-        if (weechat_strcasecmp (xfer_protocol_string[i], protocol) == 0)
+        if (dogechat_strcasecmp (xfer_protocol_string[i], protocol) == 0)
             return i;
     }
 
@@ -219,8 +219,8 @@ xfer_search (const char *plugin_name, const char *plugin_id, enum t_xfer_type ty
 
     for (ptr_xfer = xfer_list; ptr_xfer; ptr_xfer = ptr_xfer->next_xfer)
     {
-        if ((weechat_strcasecmp (ptr_xfer->plugin_name, plugin_name) == 0)
-            && (weechat_strcasecmp (ptr_xfer->plugin_id, plugin_id) == 0)
+        if ((dogechat_strcasecmp (ptr_xfer->plugin_name, plugin_name) == 0)
+            && (dogechat_strcasecmp (ptr_xfer->plugin_id, plugin_id) == 0)
             && (ptr_xfer->type == type)
             && (ptr_xfer->status = status)
             && (ptr_xfer->port == port))
@@ -296,24 +296,24 @@ xfer_close (struct t_xfer *xfer, enum t_xfer_status status)
 
         if (xfer->hook_fd)
         {
-            weechat_unhook (xfer->hook_fd);
+            dogechat_unhook (xfer->hook_fd);
             xfer->hook_fd = NULL;
         }
         if (xfer->hook_timer)
         {
-            weechat_unhook (xfer->hook_timer);
+            dogechat_unhook (xfer->hook_timer);
             xfer->hook_timer = NULL;
         }
         if (xfer->hook_connect)
         {
-            weechat_unhook (xfer->hook_connect);
+            dogechat_unhook (xfer->hook_connect);
             xfer->hook_connect = NULL;
         }
         if (XFER_IS_FILE(xfer->type))
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: file %s %s %s (%s): %s"),
-                            (xfer->status == XFER_STATUS_DONE) ? "" : weechat_prefix ("error"),
+                            (xfer->status == XFER_STATUS_DONE) ? "" : dogechat_prefix ("error"),
                             XFER_PLUGIN_NAME,
                             xfer->filename,
                             (xfer->type == XFER_TYPE_FILE_SEND) ? _("sent to") : _("received from"),
@@ -327,10 +327,10 @@ xfer_close (struct t_xfer *xfer, enum t_xfer_status status)
     {
         if (XFER_IS_CHAT(xfer->type))
         {
-            weechat_printf (xfer->buffer,
+            dogechat_printf (xfer->buffer,
                             _("%s%s: chat closed with %s "
                               "(%s)"),
-                            weechat_prefix ("network"),
+                            dogechat_prefix ("network"),
                             XFER_PLUGIN_NAME,
                             xfer->remote_nick,
                             xfer->remote_address_str);
@@ -383,11 +383,11 @@ xfer_disconnect_all ()
         {
             if (ptr_xfer->status == XFER_STATUS_ACTIVE)
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: aborting active xfer: \"%s\" from %s"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                                 ptr_xfer->filename, ptr_xfer->remote_nick);
-                weechat_log_printf (_("%s%s: aborting active xfer: \"%s\" from %s"),
+                dogechat_log_printf (_("%s%s: aborting active xfer: \"%s\" from %s"),
                                     "", XFER_PLUGIN_NAME,
                                     ptr_xfer->filename,
                                     ptr_xfer->remote_nick);
@@ -430,16 +430,16 @@ xfer_send_signal (struct t_xfer *xfer, const char *signal)
 {
     struct t_infolist *infolist;
 
-    infolist = weechat_infolist_new ();
+    infolist = dogechat_infolist_new ();
     if (infolist)
     {
         if (xfer_add_to_infolist (infolist, xfer))
         {
-            (void) weechat_hook_signal_send (signal,
-                                             WEECHAT_HOOK_SIGNAL_POINTER,
+            (void) dogechat_hook_signal_send (signal,
+                                             DOGECHAT_HOOK_SIGNAL_POINTER,
                                              infolist);
         }
-        weechat_infolist_free (infolist);
+        dogechat_infolist_free (infolist);
     }
 }
 
@@ -480,8 +480,8 @@ xfer_alloc ()
     new_xfer->status = 0;
     new_xfer->buffer = NULL;
     new_xfer->remote_nick_color = NULL;
-    new_xfer->fast_send = weechat_config_boolean (xfer_config_network_fast_send);
-    new_xfer->blocksize = weechat_config_integer (xfer_config_network_blocksize);
+    new_xfer->fast_send = dogechat_config_boolean (xfer_config_network_fast_send);
+    new_xfer->blocksize = dogechat_config_integer (xfer_config_network_blocksize);
     new_xfer->start_time = time_now;
     new_xfer->start_transfer = time_now;
     new_xfer->sock = -1;
@@ -533,7 +533,7 @@ xfer_nick_auto_accepted (const char *server, const char *nick)
 
     rc = 0;
 
-    nicks = weechat_string_split (weechat_config_string (xfer_config_file_auto_accept_nicks),
+    nicks = dogechat_string_split (dogechat_config_string (xfer_config_file_auto_accept_nicks),
                                   ",", 0, 0, &num_nicks);
     if (nicks)
     {
@@ -542,8 +542,8 @@ xfer_nick_auto_accepted (const char *server, const char *nick)
             pos = strrchr (nicks[i], '.');
             if (pos)
             {
-                if ((weechat_strncasecmp (server, nicks[i], pos - nicks[i]) == 0)
-                    && (weechat_strcasecmp (nick, pos + 1) == 0))
+                if ((dogechat_strncasecmp (server, nicks[i], pos - nicks[i]) == 0)
+                    && (dogechat_strcasecmp (nick, pos + 1) == 0))
                 {
                     rc = 1;
                     break;
@@ -551,14 +551,14 @@ xfer_nick_auto_accepted (const char *server, const char *nick)
             }
             else
             {
-                if (weechat_strcasecmp (nick, nicks[i]) == 0)
+                if (dogechat_strcasecmp (nick, nicks[i]) == 0)
                 {
                     rc = 1;
                     break;
                 }
             }
         }
-        weechat_string_free_split (nicks);
+        dogechat_string_free_split (nicks);
     }
 
     return rc;
@@ -609,7 +609,7 @@ xfer_filename_crc32 (const char *filename)
             length = 0;
         }
 
-        ptr_string = weechat_utf8_next_char (ptr_string);
+        ptr_string = dogechat_utf8_next_char (ptr_string);
     }
     if (length == 8)
         ptr_crc32 = ptr_string - 8;
@@ -640,14 +640,14 @@ xfer_new (const char *plugin_name, const char *plugin_id,
     new_xfer = xfer_alloc ();
     if (!new_xfer)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: not enough memory for new xfer"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME);
         return NULL;
     }
 
     if (!xfer_buffer
-        && weechat_config_boolean (xfer_config_look_auto_open_buffer))
+        && dogechat_config_boolean (xfer_config_look_auto_open_buffer))
     {
         xfer_buffer_open ();
     }
@@ -658,7 +658,7 @@ xfer_new (const char *plugin_name, const char *plugin_id,
     new_xfer->type = type;
     new_xfer->protocol = protocol;
     new_xfer->remote_nick = strdup (remote_nick);
-    ptr_color = weechat_info_get ("irc_nick_color_name", remote_nick);
+    ptr_color = dogechat_info_get ("irc_nick_color_name", remote_nick);
     new_xfer->remote_nick_color = (ptr_color) ? strdup (ptr_color) : NULL;
     new_xfer->local_nick = (local_nick) ? strdup (local_nick) : NULL;
     new_xfer->charset_modifier = (charset_modifier) ? strdup (charset_modifier) : NULL;
@@ -674,9 +674,9 @@ xfer_new (const char *plugin_name, const char *plugin_id,
                       sizeof (str_address), NULL, 0, NI_NUMERICHOST);
     if (rc != 0)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: unable to interpret address: error %d %s"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                         rc, gai_strerror (rc));
         snprintf (str_address, sizeof (str_address), "?");
     }
@@ -704,7 +704,7 @@ xfer_new (const char *plugin_name, const char *plugin_id,
     new_xfer->hash_status = XFER_HASH_STATUS_UNKNOWN;
 
     if ((type == XFER_TYPE_FILE_RECV)
-        && weechat_config_boolean (xfer_config_file_auto_check_crc32))
+        && dogechat_config_boolean (xfer_config_file_auto_check_crc32))
     {
         ptr_crc32 = xfer_filename_crc32 (new_xfer->filename);
         if (ptr_crc32)
@@ -714,16 +714,16 @@ xfer_new (const char *plugin_name, const char *plugin_id,
             {
                 if (gcry_md_open (new_xfer->hash_handle, GCRY_MD_CRC32, 0) == 0)
                 {
-                    new_xfer->hash_target = weechat_strndup (ptr_crc32, 8);
+                    new_xfer->hash_target = dogechat_strndup (ptr_crc32, 8);
                     new_xfer->hash_status = XFER_HASH_STATUS_IN_PROGRESS;
                 }
                 else
                 {
                     free (new_xfer->hash_handle);
                     new_xfer->hash_handle = NULL;
-                    weechat_printf (NULL,
+                    dogechat_printf (NULL,
                                     _("%s%s: hashing error"),
-                                    weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                                    dogechat_prefix ("error"), XFER_PLUGIN_NAME);
                 }
             }
         }
@@ -733,7 +733,7 @@ xfer_new (const char *plugin_name, const char *plugin_id,
     switch (type)
     {
         case XFER_TYPE_FILE_RECV:
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s: incoming file from %s "
                               "(%s, %s.%s), name: %s, %llu bytes "
                               "(protocol: %s)"),
@@ -745,10 +745,10 @@ xfer_new (const char *plugin_name, const char *plugin_id,
                             filename,
                             size,
                             xfer_protocol_string[protocol]);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             break;
         case XFER_TYPE_FILE_SEND:
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s: offering file to %s (%s.%s), name: %s "
                               "(local filename: %s), %llu bytes (protocol: %s)"),
                             XFER_PLUGIN_NAME,
@@ -759,10 +759,10 @@ xfer_new (const char *plugin_name, const char *plugin_id,
                             local_filename,
                             size,
                             xfer_protocol_string[protocol]);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             break;
         case XFER_TYPE_CHAT_RECV:
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s: incoming chat request from %s "
                               "(%s, %s.%s)"),
                             XFER_PLUGIN_NAME,
@@ -770,16 +770,16 @@ xfer_new (const char *plugin_name, const char *plugin_id,
                             str_address,
                             plugin_name,
                             plugin_id);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             break;
         case XFER_TYPE_CHAT_SEND:
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s: sending chat request to %s (%s.%s)"),
                             XFER_PLUGIN_NAME,
                             remote_nick,
                             plugin_name,
                             plugin_id);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             break;
         case XFER_NUM_TYPES:
             break;
@@ -788,20 +788,20 @@ xfer_new (const char *plugin_name, const char *plugin_id,
     if (XFER_IS_FILE(type) && (!new_xfer->local_filename))
     {
         xfer_close (new_xfer, XFER_STATUS_FAILED);
-        xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+        xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
         return NULL;
     }
 
     if (XFER_IS_FILE(type) && (new_xfer->start_resume > 0))
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s: file %s (local filename: %s) "
                           "will be resumed at position %llu"),
                         XFER_PLUGIN_NAME,
                         new_xfer->filename,
                         new_xfer->local_filename,
                         new_xfer->start_resume);
-        xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+        xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
     }
 
     /* connect if needed and display again xfer buffer */
@@ -810,7 +810,7 @@ xfer_new (const char *plugin_name, const char *plugin_id,
         if (!xfer_network_connect (new_xfer))
         {
             xfer_close (new_xfer, XFER_STATUS_FAILED);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             return NULL;
         }
     }
@@ -821,15 +821,15 @@ xfer_new (const char *plugin_name, const char *plugin_id,
      */
     if (xfer_nick_auto_accepted (new_xfer->plugin_id, new_xfer->remote_nick)
         || ((type == XFER_TYPE_FILE_RECV)
-            && weechat_config_boolean (xfer_config_file_auto_accept_files))
+            && dogechat_config_boolean (xfer_config_file_auto_accept_files))
         || ((type == XFER_TYPE_CHAT_RECV)
-            && weechat_config_boolean (xfer_config_file_auto_accept_chats)))
+            && dogechat_config_boolean (xfer_config_file_auto_accept_chats)))
     {
         xfer_network_accept (new_xfer);
     }
     else
     {
-        xfer_buffer_refresh (WEECHAT_HOTLIST_PRIVATE);
+        xfer_buffer_refresh (DOGECHAT_HOTLIST_PRIVATE);
     }
 
     return new_xfer;
@@ -969,10 +969,10 @@ xfer_resolve_addr (const char *str_address, const char *str_port,
     {
         if (ainfo->ai_addrlen > *addr_len)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: address \"%s\" resolved to a larger "
                               "sockaddr than expected"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                             str_address);
             freeaddrinfo (ainfo);
             return 0;
@@ -983,9 +983,9 @@ xfer_resolve_addr (const char *str_address, const char *str_port,
         return 1;
     }
 
-    weechat_printf (NULL,
+    dogechat_printf (NULL,
                     _("%s%s: invalid address \"%s\": error %d %s"),
-                    weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                    dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                     str_address, rc, gai_strerror (rc));
     if ((rc == 0) && ainfo)
         freeaddrinfo (ainfo);
@@ -1020,20 +1020,20 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
 
     if (!signal_data)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: missing arguments (%s)"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME, "xfer_add");
-        return WEECHAT_RC_ERROR;
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME, "xfer_add");
+        return DOGECHAT_RC_ERROR;
     }
 
     infolist = (struct t_infolist *)signal_data;
 
-    if (!weechat_infolist_next (infolist))
+    if (!dogechat_infolist_next (infolist))
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: missing arguments (%s)"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME, "xfer_add");
-        return WEECHAT_RC_ERROR;
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME, "xfer_add");
+        return DOGECHAT_RC_ERROR;
     }
 
     filename2 = NULL;
@@ -1042,39 +1042,39 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
 
     sock = -1;
 
-    plugin_name = weechat_infolist_string (infolist, "plugin_name");
-    plugin_id = weechat_infolist_string (infolist, "plugin_id");
-    str_type = weechat_infolist_string (infolist, "type_string");
-    str_protocol = weechat_infolist_string (infolist, "protocol_string");
-    remote_nick = weechat_infolist_string (infolist, "remote_nick");
-    local_nick = weechat_infolist_string (infolist, "local_nick");
-    charset_modifier = weechat_infolist_string (infolist, "charset_modifier");
-    filename = weechat_infolist_string (infolist, "filename");
-    proxy = weechat_infolist_string (infolist, "proxy");
+    plugin_name = dogechat_infolist_string (infolist, "plugin_name");
+    plugin_id = dogechat_infolist_string (infolist, "plugin_id");
+    str_type = dogechat_infolist_string (infolist, "type_string");
+    str_protocol = dogechat_infolist_string (infolist, "protocol_string");
+    remote_nick = dogechat_infolist_string (infolist, "remote_nick");
+    local_nick = dogechat_infolist_string (infolist, "local_nick");
+    charset_modifier = dogechat_infolist_string (infolist, "charset_modifier");
+    filename = dogechat_infolist_string (infolist, "filename");
+    proxy = dogechat_infolist_string (infolist, "proxy");
     protocol = XFER_NO_PROTOCOL;
 
     if (!plugin_name || !plugin_id || !str_type || !remote_nick || !local_nick)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: missing arguments (%s)"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME, "xfer_add");
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME, "xfer_add");
         goto error;
     }
 
     type = xfer_search_type (str_type);
     if (type < 0)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: unknown xfer type \"%s\""),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME, str_type);
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME, str_type);
         goto error;
     }
 
     if (XFER_IS_FILE(type) && (!filename || !str_protocol))
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: missing arguments (%s)"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME, "xfer_add");
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME, "xfer_add");
         goto error;
     }
 
@@ -1083,9 +1083,9 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
         protocol = xfer_search_protocol (str_protocol);
         if (protocol < 0)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: unknown xfer protocol \"%s\""),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                             str_protocol);
             goto error;
         }
@@ -1094,7 +1094,7 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
     if (type == XFER_TYPE_FILE_RECV)
     {
         filename2 = strdup (filename);
-        sscanf (weechat_infolist_string (infolist, "size"), "%llu", &file_size);
+        sscanf (dogechat_infolist_string (infolist, "size"), "%llu", &file_size);
     }
 
     if (type == XFER_TYPE_FILE_SEND)
@@ -1106,25 +1106,25 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
         if (filename[0] == '/')
             filename2 = strdup (filename);
         else if (filename[0] == '~')
-            filename2 = weechat_string_expand_home (filename);
+            filename2 = dogechat_string_expand_home (filename);
         else
         {
-            path = weechat_string_eval_path_home (
-                weechat_config_string (xfer_config_file_upload_path),
+            path = dogechat_string_eval_path_home (
+                dogechat_config_string (xfer_config_file_upload_path),
                 NULL, NULL, NULL);
             if (!path)
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: not enough memory"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME);
                 goto error;
             }
             filename2 = malloc (strlen (path) + strlen (filename) + 4);
             if (!filename2)
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: not enough memory"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME);
                 free (path);
                 goto error;
             }
@@ -1138,20 +1138,20 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
         /* check if file exists */
         if (stat (filename2, &st) == -1)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: cannot access file \"%s\""),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                             filename2);
             goto error;
         }
         file_size = st.st_size;
     }
-    port = weechat_infolist_integer (infolist, "port");
+    port = dogechat_infolist_integer (infolist, "port");
 
     /* resolve address */
     if (XFER_IS_RECV(type))
     {
-        str_address = weechat_infolist_string (infolist, "remote_address");
+        str_address = dogechat_infolist_string (infolist, "remote_address");
         snprintf (str_port_temp, sizeof (str_port_temp), "%d", port);
         str_port = str_port_temp;
         length = sizeof (addr);
@@ -1167,11 +1167,11 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
         memset(&bind_addr, 0, sizeof(bind_addr));
 
         /* determine bind_addr family from either own_ip or default */
-        if (weechat_config_string (xfer_config_network_own_ip)
-            && weechat_config_string (xfer_config_network_own_ip)[0])
+        if (dogechat_config_string (xfer_config_network_own_ip)
+            && dogechat_config_string (xfer_config_network_own_ip)[0])
         {
             /* resolve own_ip to a numeric address */
-            str_address = weechat_config_string (xfer_config_network_own_ip);
+            str_address = dogechat_config_string (xfer_config_network_own_ip);
             length = sizeof (own_ip_addr);
 
             if (!xfer_resolve_addr (str_address, NULL,
@@ -1190,7 +1190,7 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
         else
         {
             /* no own_ip, so bind_addr's family comes from irc connection  */
-            str_address = weechat_infolist_string (infolist, "local_address");
+            str_address = dogechat_infolist_string (infolist, "local_address");
             length = sizeof (addr);
             if (!xfer_resolve_addr (str_address, NULL,
                                     (struct sockaddr*)&addr, &length,
@@ -1218,9 +1218,9 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
         sock = socket (bind_addr.ss_family, SOCK_STREAM, 0);
         if (sock < 0)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: cannot create socket for xfer: error %d %s"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                             errno, strerror (errno));
             goto error;
         }
@@ -1228,11 +1228,11 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
         /* look for port */
         port = 0;
 
-        if (weechat_config_string (xfer_config_network_port_range)
-            && weechat_config_string (xfer_config_network_port_range)[0])
+        if (dogechat_config_string (xfer_config_network_port_range)
+            && dogechat_config_string (xfer_config_network_port_range)[0])
         {
             /* find a free port in the specified range */
-            args = sscanf (weechat_config_string (xfer_config_network_port_range),
+            args = sscanf (dogechat_config_string (xfer_config_network_port_range),
                            "%d-%d", &port_start, &port_end);
             if (args > 0)
             {
@@ -1279,9 +1279,9 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
         if (port == -1)
         {
             /* Could not find any port to bind */
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: cannot find available port for xfer"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME);
             close (sock);
             goto error;
         }
@@ -1302,7 +1302,7 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
         {
             if (pos[0] == ' ')
             {
-                if (weechat_config_boolean (xfer_config_file_convert_spaces))
+                if (dogechat_config_boolean (xfer_config_file_convert_spaces))
                     pos[0] = '_';
             }
             pos++;
@@ -1335,9 +1335,9 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
 
     if (!ptr_xfer)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: error creating xfer"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME);
         close (sock);
         goto error;
     }
@@ -1350,16 +1350,16 @@ xfer_add_cb (void *data, const char *signal, const char *type_data,
         free (filename2);
     if (short_filename)
         free (short_filename);
-    weechat_infolist_reset_item_cursor (infolist);
-    return WEECHAT_RC_OK;
+    dogechat_infolist_reset_item_cursor (infolist);
+    return DOGECHAT_RC_OK;
 
 error:
     if (filename2)
         free (filename2);
     if (short_filename)
         free (short_filename);
-    weechat_infolist_reset_item_cursor (infolist);
-    return WEECHAT_RC_ERROR;
+    dogechat_infolist_reset_item_cursor (infolist);
+    return DOGECHAT_RC_ERROR;
 }
 
 /*
@@ -1383,35 +1383,35 @@ xfer_start_resume_cb (void *data, const char *signal, const char *type_data,
 
     if (!signal_data)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: missing arguments (%s)"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                         "xfer_start_resume");
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
     }
 
     infolist = (struct t_infolist *)signal_data;
 
-    if (!weechat_infolist_next (infolist))
+    if (!dogechat_infolist_next (infolist))
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: missing arguments (%s)"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                         "xfer_start_resume");
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
     }
 
-    plugin_name = weechat_infolist_string (infolist, "plugin_name");
-    plugin_id = weechat_infolist_string (infolist, "plugin_id");
-    filename = weechat_infolist_string (infolist, "filename");
-    port = weechat_infolist_integer (infolist, "port");
-    str_start_resume = weechat_infolist_string (infolist, "start_resume");
+    plugin_name = dogechat_infolist_string (infolist, "plugin_name");
+    plugin_id = dogechat_infolist_string (infolist, "plugin_id");
+    filename = dogechat_infolist_string (infolist, "filename");
+    port = dogechat_infolist_integer (infolist, "port");
+    str_start_resume = dogechat_infolist_string (infolist, "start_resume");
 
     if (!plugin_name || !plugin_id || !filename || !str_start_resume)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: missing arguments (%s)"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                         "xfer_start_resume");
         goto error;
     }
@@ -1430,20 +1430,20 @@ xfer_start_resume_cb (void *data, const char *signal, const char *type_data,
     }
     else
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: unable to resume file \"%s\" (port: %d, "
                           "start position: %llu): xfer not found or not ready "
                           "for transfer"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME, filename,
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME, filename,
                         port, start_resume);
     }
 
-    weechat_infolist_reset_item_cursor (infolist);
-    return WEECHAT_RC_OK;
+    dogechat_infolist_reset_item_cursor (infolist);
+    return DOGECHAT_RC_OK;
 
 error:
-    weechat_infolist_reset_item_cursor (infolist);
-    return WEECHAT_RC_ERROR;
+    dogechat_infolist_reset_item_cursor (infolist);
+    return DOGECHAT_RC_ERROR;
 }
 
 /*
@@ -1467,35 +1467,35 @@ xfer_accept_resume_cb (void *data, const char *signal, const char *type_data,
 
     if (!signal_data)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: missing arguments (%s)"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                         "xfer_accept_resume");
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
     }
 
     infolist = (struct t_infolist *)signal_data;
 
-    if (!weechat_infolist_next (infolist))
+    if (!dogechat_infolist_next (infolist))
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: missing arguments (%s)"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                         "xfer_accept_resume");
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
     }
 
-    plugin_name = weechat_infolist_string (infolist, "plugin_name");
-    plugin_id = weechat_infolist_string (infolist, "plugin_id");
-    filename = weechat_infolist_string (infolist, "filename");
-    port = weechat_infolist_integer (infolist, "port");
-    str_start_resume = weechat_infolist_string (infolist, "start_resume");
+    plugin_name = dogechat_infolist_string (infolist, "plugin_name");
+    plugin_id = dogechat_infolist_string (infolist, "plugin_id");
+    filename = dogechat_infolist_string (infolist, "filename");
+    port = dogechat_infolist_integer (infolist, "port");
+    str_start_resume = dogechat_infolist_string (infolist, "start_resume");
 
     if (!plugin_name || !plugin_id || !filename || !str_start_resume)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: missing arguments (%s)"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                         "xfer_accept_resume");
         goto error;
     }
@@ -1512,29 +1512,29 @@ xfer_accept_resume_cb (void *data, const char *signal, const char *type_data,
         ptr_xfer->last_check_pos = start_resume;
         xfer_send_signal (ptr_xfer, "xfer_send_accept_resume");
 
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s: file %s resumed at position %llu"),
                         XFER_PLUGIN_NAME,
                         ptr_xfer->filename,
                         ptr_xfer->start_resume);
-        xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+        xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
     }
     else
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: unable to accept resume file \"%s\" (port: %d, "
                           "start position: %llu): xfer not found or not ready "
                           "for transfer"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME, filename,
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME, filename,
                         port, start_resume);
     }
 
-    weechat_infolist_reset_item_cursor (infolist);
-    return WEECHAT_RC_OK;
+    dogechat_infolist_reset_item_cursor (infolist);
+    return DOGECHAT_RC_OK;
 
 error:
-    weechat_infolist_reset_item_cursor (infolist);
-    return WEECHAT_RC_ERROR;
+    dogechat_infolist_reset_item_cursor (infolist);
+    return DOGECHAT_RC_ERROR;
 }
 
 /*
@@ -1554,114 +1554,114 @@ xfer_add_to_infolist (struct t_infolist *infolist, struct t_xfer *xfer)
     if (!infolist || !xfer)
         return 0;
 
-    ptr_item = weechat_infolist_new_item (infolist);
+    ptr_item = dogechat_infolist_new_item (infolist);
     if (!ptr_item)
         return 0;
 
-    if (!weechat_infolist_new_var_string (ptr_item, "plugin_name", xfer->plugin_name))
+    if (!dogechat_infolist_new_var_string (ptr_item, "plugin_name", xfer->plugin_name))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "plugin_id", xfer->plugin_id))
+    if (!dogechat_infolist_new_var_string (ptr_item, "plugin_id", xfer->plugin_id))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "type", xfer->type))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "type", xfer->type))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "type_string", xfer_type_string[xfer->type]))
+    if (!dogechat_infolist_new_var_string (ptr_item, "type_string", xfer_type_string[xfer->type]))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "protocol", xfer->protocol))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "protocol", xfer->protocol))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "protocol_string", xfer_protocol_string[xfer->protocol]))
+    if (!dogechat_infolist_new_var_string (ptr_item, "protocol_string", xfer_protocol_string[xfer->protocol]))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "remote_nick", xfer->remote_nick))
+    if (!dogechat_infolist_new_var_string (ptr_item, "remote_nick", xfer->remote_nick))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "local_nick", xfer->local_nick))
+    if (!dogechat_infolist_new_var_string (ptr_item, "local_nick", xfer->local_nick))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "charset_modifier", xfer->charset_modifier))
+    if (!dogechat_infolist_new_var_string (ptr_item, "charset_modifier", xfer->charset_modifier))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "filename", xfer->filename))
+    if (!dogechat_infolist_new_var_string (ptr_item, "filename", xfer->filename))
         return 0;
     snprintf (value, sizeof (value), "%llu", xfer->size);
-    if (!weechat_infolist_new_var_string (ptr_item, "size", value))
+    if (!dogechat_infolist_new_var_string (ptr_item, "size", value))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "proxy", xfer->proxy))
+    if (!dogechat_infolist_new_var_string (ptr_item, "proxy", xfer->proxy))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "local_address", xfer->local_address_str))
+    if (!dogechat_infolist_new_var_string (ptr_item, "local_address", xfer->local_address_str))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "remote_address", xfer->remote_address_str))
+    if (!dogechat_infolist_new_var_string (ptr_item, "remote_address", xfer->remote_address_str))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "port", xfer->port))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "port", xfer->port))
         return 0;
 
-    if (!weechat_infolist_new_var_integer (ptr_item, "status", xfer->status))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "status", xfer->status))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "status_string", xfer_status_string[xfer->status]))
+    if (!dogechat_infolist_new_var_string (ptr_item, "status_string", xfer_status_string[xfer->status]))
         return 0;
-    if (!weechat_infolist_new_var_pointer (ptr_item, "buffer", xfer->buffer))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "buffer", xfer->buffer))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "remote_nick_color", xfer->remote_nick_color))
+    if (!dogechat_infolist_new_var_string (ptr_item, "remote_nick_color", xfer->remote_nick_color))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "fast_send", xfer->fast_send))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "fast_send", xfer->fast_send))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "blocksize", xfer->blocksize))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "blocksize", xfer->blocksize))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "start_time", xfer->start_time))
+    if (!dogechat_infolist_new_var_time (ptr_item, "start_time", xfer->start_time))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "start_transfer", xfer->start_transfer))
+    if (!dogechat_infolist_new_var_time (ptr_item, "start_transfer", xfer->start_transfer))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "sock", xfer->sock))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "sock", xfer->sock))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "child_pid", xfer->child_pid))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "child_pid", xfer->child_pid))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "child_read", xfer->child_read))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "child_read", xfer->child_read))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "child_write", xfer->child_write))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "child_write", xfer->child_write))
         return 0;
-    if (!weechat_infolist_new_var_pointer (ptr_item, "hook_fd", xfer->hook_fd))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "hook_fd", xfer->hook_fd))
         return 0;
-    if (!weechat_infolist_new_var_pointer (ptr_item, "hook_timer", xfer->hook_timer))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "hook_timer", xfer->hook_timer))
         return 0;
-    if (!weechat_infolist_new_var_pointer (ptr_item, "hook_connect", xfer->hook_connect))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "hook_connect", xfer->hook_connect))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "unterminated_message", xfer->unterminated_message))
+    if (!dogechat_infolist_new_var_string (ptr_item, "unterminated_message", xfer->unterminated_message))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "file", xfer->file))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "file", xfer->file))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "local_filename", xfer->local_filename))
+    if (!dogechat_infolist_new_var_string (ptr_item, "local_filename", xfer->local_filename))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "filename_suffix", xfer->filename_suffix))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "filename_suffix", xfer->filename_suffix))
         return 0;
     snprintf (value, sizeof (value), "%llu", xfer->pos);
-    if (!weechat_infolist_new_var_string (ptr_item, "pos", value))
+    if (!dogechat_infolist_new_var_string (ptr_item, "pos", value))
         return 0;
     snprintf (value, sizeof (value), "%llu", xfer->ack);
-    if (!weechat_infolist_new_var_string (ptr_item, "ack", value))
+    if (!dogechat_infolist_new_var_string (ptr_item, "ack", value))
         return 0;
     snprintf (value, sizeof (value), "%llu", xfer->start_resume);
-    if (!weechat_infolist_new_var_string (ptr_item, "start_resume", value))
+    if (!dogechat_infolist_new_var_string (ptr_item, "start_resume", value))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "last_check_time", xfer->last_check_time))
+    if (!dogechat_infolist_new_var_time (ptr_item, "last_check_time", xfer->last_check_time))
         return 0;
     snprintf (value, sizeof (value), "%llu", xfer->last_check_pos);
-    if (!weechat_infolist_new_var_string (ptr_item, "last_check_pos", value))
+    if (!dogechat_infolist_new_var_string (ptr_item, "last_check_pos", value))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "last_activity", xfer->last_activity))
+    if (!dogechat_infolist_new_var_time (ptr_item, "last_activity", xfer->last_activity))
         return 0;
     snprintf (value, sizeof (value), "%llu", xfer->bytes_per_sec);
-    if (!weechat_infolist_new_var_string (ptr_item, "bytes_per_sec", value))
+    if (!dogechat_infolist_new_var_string (ptr_item, "bytes_per_sec", value))
         return 0;
     snprintf (value, sizeof (value), "%llu", xfer->eta);
-    if (!weechat_infolist_new_var_string (ptr_item, "eta", value))
+    if (!dogechat_infolist_new_var_string (ptr_item, "eta", value))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "hash_target", xfer->hash_target))
+    if (!dogechat_infolist_new_var_string (ptr_item, "hash_target", xfer->hash_target))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "hash_status", xfer->hash_status))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "hash_status", xfer->hash_status))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "hash_status_string", xfer_hash_status_string[xfer->hash_status]))
+    if (!dogechat_infolist_new_var_string (ptr_item, "hash_status_string", xfer_hash_status_string[xfer->hash_status]))
         return 0;
 
     return 1;
 }
 
 /*
- * Prints xfer infos in WeeChat log file (usually for crash dump).
+ * Prints xfer infos in DogeChat log file (usually for crash dump).
  */
 
 void
@@ -1671,64 +1671,64 @@ xfer_print_log ()
 
     for (ptr_xfer = xfer_list; ptr_xfer; ptr_xfer = ptr_xfer->next_xfer)
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("[xfer (addr:0x%lx)]", ptr_xfer);
-        weechat_log_printf ("  plugin_name . . . . . . : '%s'",  ptr_xfer->plugin_name);
-        weechat_log_printf ("  plugin_id . . . . . . . : '%s'",  ptr_xfer->plugin_id);
-        weechat_log_printf ("  type. . . . . . . . . . : %d (%s)",
+        dogechat_log_printf ("");
+        dogechat_log_printf ("[xfer (addr:0x%lx)]", ptr_xfer);
+        dogechat_log_printf ("  plugin_name . . . . . . : '%s'",  ptr_xfer->plugin_name);
+        dogechat_log_printf ("  plugin_id . . . . . . . : '%s'",  ptr_xfer->plugin_id);
+        dogechat_log_printf ("  type. . . . . . . . . . : %d (%s)",
                             ptr_xfer->type,
                             xfer_type_string[ptr_xfer->type]);
-        weechat_log_printf ("  protocol. . . . . . . . : %d (%s)",
+        dogechat_log_printf ("  protocol. . . . . . . . : %d (%s)",
                             ptr_xfer->protocol,
                             xfer_protocol_string[ptr_xfer->protocol]);
-        weechat_log_printf ("  remote_nick . . . . . . : '%s'",  ptr_xfer->remote_nick);
-        weechat_log_printf ("  local_nick. . . . . . . : '%s'",  ptr_xfer->local_nick);
-        weechat_log_printf ("  charset_modifier. . . . : '%s'",  ptr_xfer->charset_modifier);
-        weechat_log_printf ("  filename. . . . . . . . : '%s'",  ptr_xfer->filename);
-        weechat_log_printf ("  size. . . . . . . . . . : %llu",  ptr_xfer->size);
-        weechat_log_printf ("  proxy . . . . . . . . . : '%s'",  ptr_xfer->proxy);
-        weechat_log_printf ("  local_address . . . . . : 0x%lx", ptr_xfer->local_address);
-        weechat_log_printf ("  local_address_length. . : %d",    ptr_xfer->local_address_length);
-        weechat_log_printf ("  local_address_str . . . : '%s'" , ptr_xfer->local_address_str);
-        weechat_log_printf ("  remote_address. . . . . : 0x%lx", ptr_xfer->remote_address);
-        weechat_log_printf ("  remote_address_length . : %d",   ptr_xfer->remote_address_length);
-        weechat_log_printf ("  remote_address_str. . . : '%s'",  ptr_xfer->remote_address_str);
-        weechat_log_printf ("  port. . . . . . . . . . : %d",    ptr_xfer->port);
+        dogechat_log_printf ("  remote_nick . . . . . . : '%s'",  ptr_xfer->remote_nick);
+        dogechat_log_printf ("  local_nick. . . . . . . : '%s'",  ptr_xfer->local_nick);
+        dogechat_log_printf ("  charset_modifier. . . . : '%s'",  ptr_xfer->charset_modifier);
+        dogechat_log_printf ("  filename. . . . . . . . : '%s'",  ptr_xfer->filename);
+        dogechat_log_printf ("  size. . . . . . . . . . : %llu",  ptr_xfer->size);
+        dogechat_log_printf ("  proxy . . . . . . . . . : '%s'",  ptr_xfer->proxy);
+        dogechat_log_printf ("  local_address . . . . . : 0x%lx", ptr_xfer->local_address);
+        dogechat_log_printf ("  local_address_length. . : %d",    ptr_xfer->local_address_length);
+        dogechat_log_printf ("  local_address_str . . . : '%s'" , ptr_xfer->local_address_str);
+        dogechat_log_printf ("  remote_address. . . . . : 0x%lx", ptr_xfer->remote_address);
+        dogechat_log_printf ("  remote_address_length . : %d",   ptr_xfer->remote_address_length);
+        dogechat_log_printf ("  remote_address_str. . . : '%s'",  ptr_xfer->remote_address_str);
+        dogechat_log_printf ("  port. . . . . . . . . . : %d",    ptr_xfer->port);
 
-        weechat_log_printf ("  status. . . . . . . . . : %d (%s)",
+        dogechat_log_printf ("  status. . . . . . . . . : %d (%s)",
                             ptr_xfer->status,
                             xfer_status_string[ptr_xfer->status]);
-        weechat_log_printf ("  buffer. . . . . . . . . : 0x%lx", ptr_xfer->buffer);
-        weechat_log_printf ("  remote_nick_color . . . : '%s'",  ptr_xfer->remote_nick_color);
-        weechat_log_printf ("  fast_send . . . . . . . : %d",    ptr_xfer->fast_send);
-        weechat_log_printf ("  blocksize . . . . . . . : %d",    ptr_xfer->blocksize);
-        weechat_log_printf ("  start_time. . . . . . . : %ld",   ptr_xfer->start_time);
-        weechat_log_printf ("  start_transfer. . . . . : %ld",   ptr_xfer->start_transfer);
-        weechat_log_printf ("  sock. . . . . . . . . . : %d",    ptr_xfer->sock);
-        weechat_log_printf ("  child_pid . . . . . . . : %d",    ptr_xfer->child_pid);
-        weechat_log_printf ("  child_read. . . . . . . : %d",    ptr_xfer->child_read);
-        weechat_log_printf ("  child_write . . . . . . : %d",    ptr_xfer->child_write);
-        weechat_log_printf ("  hook_fd . . . . . . . . : 0x%lx", ptr_xfer->hook_fd);
-        weechat_log_printf ("  hook_timer. . . . . . . : 0x%lx", ptr_xfer->hook_timer);
-        weechat_log_printf ("  hook_connect. . . . . . : 0x%lx", ptr_xfer->hook_connect);
-        weechat_log_printf ("  unterminated_message. . : '%s'",  ptr_xfer->unterminated_message);
-        weechat_log_printf ("  file. . . . . . . . . . : %d",    ptr_xfer->file);
-        weechat_log_printf ("  local_filename. . . . . : '%s'",  ptr_xfer->local_filename);
-        weechat_log_printf ("  filename_suffix . . . . : %d",    ptr_xfer->filename_suffix);
-        weechat_log_printf ("  pos . . . . . . . . . . : %llu",  ptr_xfer->pos);
-        weechat_log_printf ("  ack . . . . . . . . . . : %llu",  ptr_xfer->ack);
-        weechat_log_printf ("  start_resume. . . . . . : %llu",  ptr_xfer->start_resume);
-        weechat_log_printf ("  last_check_time . . . . : %ld",   ptr_xfer->last_check_time);
-        weechat_log_printf ("  last_check_pos. . . . . : %llu",  ptr_xfer->last_check_pos);
-        weechat_log_printf ("  last_activity . . . . . : %ld",   ptr_xfer->last_activity);
-        weechat_log_printf ("  bytes_per_sec . . . . . : %llu",  ptr_xfer->bytes_per_sec);
-        weechat_log_printf ("  eta . . . . . . . . . . : %llu",  ptr_xfer->eta);
-        weechat_log_printf ("  hash_target . . . . . . : '%s'",  ptr_xfer->hash_target);
-        weechat_log_printf ("  hash_status . . . . . . : %d (%s)",
+        dogechat_log_printf ("  buffer. . . . . . . . . : 0x%lx", ptr_xfer->buffer);
+        dogechat_log_printf ("  remote_nick_color . . . : '%s'",  ptr_xfer->remote_nick_color);
+        dogechat_log_printf ("  fast_send . . . . . . . : %d",    ptr_xfer->fast_send);
+        dogechat_log_printf ("  blocksize . . . . . . . : %d",    ptr_xfer->blocksize);
+        dogechat_log_printf ("  start_time. . . . . . . : %ld",   ptr_xfer->start_time);
+        dogechat_log_printf ("  start_transfer. . . . . : %ld",   ptr_xfer->start_transfer);
+        dogechat_log_printf ("  sock. . . . . . . . . . : %d",    ptr_xfer->sock);
+        dogechat_log_printf ("  child_pid . . . . . . . : %d",    ptr_xfer->child_pid);
+        dogechat_log_printf ("  child_read. . . . . . . : %d",    ptr_xfer->child_read);
+        dogechat_log_printf ("  child_write . . . . . . : %d",    ptr_xfer->child_write);
+        dogechat_log_printf ("  hook_fd . . . . . . . . : 0x%lx", ptr_xfer->hook_fd);
+        dogechat_log_printf ("  hook_timer. . . . . . . : 0x%lx", ptr_xfer->hook_timer);
+        dogechat_log_printf ("  hook_connect. . . . . . : 0x%lx", ptr_xfer->hook_connect);
+        dogechat_log_printf ("  unterminated_message. . : '%s'",  ptr_xfer->unterminated_message);
+        dogechat_log_printf ("  file. . . . . . . . . . : %d",    ptr_xfer->file);
+        dogechat_log_printf ("  local_filename. . . . . : '%s'",  ptr_xfer->local_filename);
+        dogechat_log_printf ("  filename_suffix . . . . : %d",    ptr_xfer->filename_suffix);
+        dogechat_log_printf ("  pos . . . . . . . . . . : %llu",  ptr_xfer->pos);
+        dogechat_log_printf ("  ack . . . . . . . . . . : %llu",  ptr_xfer->ack);
+        dogechat_log_printf ("  start_resume. . . . . . : %llu",  ptr_xfer->start_resume);
+        dogechat_log_printf ("  last_check_time . . . . : %ld",   ptr_xfer->last_check_time);
+        dogechat_log_printf ("  last_check_pos. . . . . : %llu",  ptr_xfer->last_check_pos);
+        dogechat_log_printf ("  last_activity . . . . . : %ld",   ptr_xfer->last_activity);
+        dogechat_log_printf ("  bytes_per_sec . . . . . : %llu",  ptr_xfer->bytes_per_sec);
+        dogechat_log_printf ("  eta . . . . . . . . . . : %llu",  ptr_xfer->eta);
+        dogechat_log_printf ("  hash_target . . . . . . : '%s'",  ptr_xfer->hash_target);
+        dogechat_log_printf ("  hash_status . . . . . . : %d (%s)",
                             ptr_xfer->hash_status,
                             xfer_hash_status_string[ptr_xfer->hash_status]);
-        weechat_log_printf ("  prev_xfer . . . . . . . : 0x%lx", ptr_xfer->prev_xfer);
-        weechat_log_printf ("  next_xfer . . . . . . . : 0x%lx", ptr_xfer->next_xfer);
+        dogechat_log_printf ("  prev_xfer . . . . . . . : 0x%lx", ptr_xfer->prev_xfer);
+        dogechat_log_printf ("  next_xfer . . . . . . . : 0x%lx", ptr_xfer->next_xfer);
     }
 }
 
@@ -1746,20 +1746,20 @@ xfer_debug_dump_cb (void *data, const char *signal, const char *type_data,
     (void) type_data;
 
     if (!signal_data
-        || (weechat_strcasecmp ((char *)signal_data, XFER_PLUGIN_NAME) == 0))
+        || (dogechat_strcasecmp ((char *)signal_data, XFER_PLUGIN_NAME) == 0))
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("***** \"%s\" plugin dump *****",
-                            weechat_plugin->name);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("***** \"%s\" plugin dump *****",
+                            dogechat_plugin->name);
 
         xfer_print_log ();
 
-        weechat_log_printf ("");
-        weechat_log_printf ("***** End of \"%s\" plugin dump *****",
-                            weechat_plugin->name);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("***** End of \"%s\" plugin dump *****",
+                            dogechat_plugin->name);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1767,14 +1767,14 @@ xfer_debug_dump_cb (void *data, const char *signal, const char *type_data,
  */
 
 int
-weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
+dogechat_plugin_init (struct t_dogechat_plugin *plugin, int argc, char *argv[])
 {
     int i, upgrading;
 
-    weechat_plugin = plugin;
+    dogechat_plugin = plugin;
 
     if (!xfer_config_init ())
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
     xfer_config_read ();
 
@@ -1783,11 +1783,11 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
     xfer_command_init ();
 
     /* hook some signals */
-    weechat_hook_signal ("upgrade", &xfer_signal_upgrade_cb, NULL);
-    weechat_hook_signal ("xfer_add", &xfer_add_cb, NULL);
-    weechat_hook_signal ("xfer_start_resume", &xfer_start_resume_cb, NULL);
-    weechat_hook_signal ("xfer_accept_resume", &xfer_accept_resume_cb, NULL);
-    weechat_hook_signal ("debug_dump", &xfer_debug_dump_cb, NULL);
+    dogechat_hook_signal ("upgrade", &xfer_signal_upgrade_cb, NULL);
+    dogechat_hook_signal ("xfer_add", &xfer_add_cb, NULL);
+    dogechat_hook_signal ("xfer_start_resume", &xfer_start_resume_cb, NULL);
+    dogechat_hook_signal ("xfer_accept_resume", &xfer_accept_resume_cb, NULL);
+    dogechat_hook_signal ("debug_dump", &xfer_debug_dump_cb, NULL);
 
     /* hook completions */
     xfer_completion_init ();
@@ -1798,14 +1798,14 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
     upgrading = 0;
     for (i = 0; i < argc; i++)
     {
-        if (weechat_strcasecmp (argv[i], "--upgrade") == 0)
+        if (dogechat_strcasecmp (argv[i], "--upgrade") == 0)
             upgrading = 1;
     }
 
     if (upgrading)
         xfer_upgrade_load ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1813,7 +1813,7 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
  */
 
 int
-weechat_plugin_end (struct t_weechat_plugin *plugin)
+dogechat_plugin_end (struct t_dogechat_plugin *plugin)
 {
     /* make C compiler happy */
     (void) plugin;
@@ -1825,5 +1825,5 @@ weechat_plugin_end (struct t_weechat_plugin *plugin)
     else
         xfer_disconnect_all ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }

@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -26,7 +26,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-channel.h"
 #include "irc-buffer.h"
@@ -80,24 +80,24 @@ irc_channel_move_near_server (struct t_irc_server *server, int channel_type,
     struct t_hdata *hdata_buffer;
     struct t_gui_buffer *ptr_buffer;
 
-    number = weechat_buffer_get_integer (buffer, "number");
+    number = dogechat_buffer_get_integer (buffer, "number");
     number_last_channel = 0;
     number_last_private = 0;
     number_found = 0;
 
-    hdata_buffer = weechat_hdata_get ("buffer");
-    ptr_buffer = weechat_hdata_get_list (hdata_buffer, "gui_buffers");
+    hdata_buffer = dogechat_hdata_get ("buffer");
+    ptr_buffer = dogechat_hdata_get_list (hdata_buffer, "gui_buffers");
     while (ptr_buffer)
     {
         if ((ptr_buffer != buffer)
-            && (weechat_buffer_get_pointer (ptr_buffer,
-                                            "plugin") == weechat_irc_plugin))
+            && (dogechat_buffer_get_pointer (ptr_buffer,
+                                            "plugin") == dogechat_irc_plugin))
         {
-            ptr_type = weechat_buffer_get_string (ptr_buffer,
+            ptr_type = dogechat_buffer_get_string (ptr_buffer,
                                                   "localvar_type");
-            ptr_server_name = weechat_buffer_get_string (ptr_buffer,
+            ptr_server_name = dogechat_buffer_get_string (ptr_buffer,
                                                          "localvar_server");
-            number_channel = weechat_buffer_get_integer (ptr_buffer,
+            number_channel = dogechat_buffer_get_integer (ptr_buffer,
                                                          "number");
             if (ptr_type && ptr_type[0]
                 && ptr_server_name && ptr_server_name[0]
@@ -116,7 +116,7 @@ irc_channel_move_near_server (struct t_irc_server *server, int channel_type,
             }
         }
         /* move to next buffer */
-        ptr_buffer = weechat_hdata_move (hdata_buffer, ptr_buffer, 1);
+        ptr_buffer = dogechat_hdata_move (hdata_buffer, ptr_buffer, 1);
     }
 
     /* use last channel/pv number + 1 */
@@ -135,17 +135,17 @@ irc_channel_move_near_server (struct t_irc_server *server, int channel_type,
     }
 
     if ((number_found == 0)
-        && (weechat_config_integer (irc_config_look_server_buffer) ==
+        && (dogechat_config_integer (irc_config_look_server_buffer) ==
             IRC_CONFIG_LOOK_SERVER_BUFFER_INDEPENDENT))
     {
-        number_found = weechat_buffer_get_integer (server->buffer, "number") + 1;
+        number_found = dogechat_buffer_get_integer (server->buffer, "number") + 1;
     }
 
     /* switch to number found */
     if ((number_found >= 1) && (number_found != number))
     {
         snprintf (str_number, sizeof (str_number), "%d", number_found);
-        weechat_buffer_set (buffer, "number", str_number);
+        dogechat_buffer_set (buffer, "number", str_number);
     }
 }
 
@@ -186,18 +186,18 @@ irc_channel_search_buffer (struct t_irc_server *server, int channel_type,
     struct t_gui_buffer *ptr_buffer;
     const char *ptr_type, *ptr_server_name, *ptr_channel_name;
 
-    hdata_buffer = weechat_hdata_get ("buffer");
-    ptr_buffer = weechat_hdata_get_list (hdata_buffer, "gui_buffers");
+    hdata_buffer = dogechat_hdata_get ("buffer");
+    ptr_buffer = dogechat_hdata_get_list (hdata_buffer, "gui_buffers");
 
     while (ptr_buffer)
     {
-        if (weechat_buffer_get_pointer (ptr_buffer,
-                                        "plugin") == weechat_irc_plugin)
+        if (dogechat_buffer_get_pointer (ptr_buffer,
+                                        "plugin") == dogechat_irc_plugin)
         {
-            ptr_type = weechat_buffer_get_string (ptr_buffer, "localvar_type");
-            ptr_server_name = weechat_buffer_get_string (ptr_buffer,
+            ptr_type = dogechat_buffer_get_string (ptr_buffer, "localvar_type");
+            ptr_server_name = dogechat_buffer_get_string (ptr_buffer,
                                                          "localvar_server");
-            ptr_channel_name = weechat_buffer_get_string (ptr_buffer,
+            ptr_channel_name = dogechat_buffer_get_string (ptr_buffer,
                                                           "localvar_channel");
             if (ptr_type && ptr_type[0]
                 && ptr_server_name && ptr_server_name[0]
@@ -215,7 +215,7 @@ irc_channel_search_buffer (struct t_irc_server *server, int channel_type,
         }
 
         /* move to next buffer */
-        ptr_buffer = weechat_hdata_move (hdata_buffer, ptr_buffer, 1);
+        ptr_buffer = dogechat_hdata_move (hdata_buffer, ptr_buffer, 1);
     }
 
     /* buffer not found */
@@ -247,14 +247,14 @@ irc_channel_create_buffer (struct t_irc_server *server,
                                             channel_name);
     if (ptr_buffer)
     {
-        weechat_nicklist_remove_all (ptr_buffer);
+        dogechat_nicklist_remove_all (ptr_buffer);
     }
     else
     {
         ptr_buffer_for_merge = NULL;
         if (channel_type == IRC_CHANNEL_TYPE_PRIVATE)
         {
-            switch (weechat_config_integer (irc_config_look_pv_buffer))
+            switch (dogechat_config_integer (irc_config_look_pv_buffer))
             {
                 case IRC_CONFIG_LOOK_PV_BUFFER_MERGE_BY_SERVER:
                     /* merge private buffers by server */
@@ -266,20 +266,20 @@ irc_channel_create_buffer (struct t_irc_server *server,
                     break;
             }
         }
-        current_buffer_number = weechat_buffer_get_integer (
-            weechat_current_buffer (), "number");
+        current_buffer_number = dogechat_buffer_get_integer (
+            dogechat_current_buffer (), "number");
 
-        ptr_buffer = weechat_buffer_new (buffer_name,
+        ptr_buffer = dogechat_buffer_new (buffer_name,
                                          &irc_input_data_cb, NULL,
                                          &irc_buffer_close_cb, NULL);
         if (!ptr_buffer)
             return NULL;
 
-        if (weechat_buffer_get_integer (ptr_buffer, "layout_number") < 1)
+        if (dogechat_buffer_get_integer (ptr_buffer, "layout_number") < 1)
         {
             buffer_position = (channel_type == IRC_CHANNEL_TYPE_CHANNEL) ?
-                weechat_config_integer (irc_config_look_new_channel_position) :
-                weechat_config_integer (irc_config_look_new_pv_position);
+                dogechat_config_integer (irc_config_look_new_channel_position) :
+                dogechat_config_integer (irc_config_look_new_pv_position);
             switch (buffer_position)
             {
                 case IRC_CONFIG_LOOK_BUFFER_POSITION_NONE:
@@ -289,7 +289,7 @@ irc_channel_create_buffer (struct t_irc_server *server,
                     /* move buffer to current number + 1 */
                     snprintf (str_number, sizeof (str_number),
                               "%d", current_buffer_number + 1);
-                    weechat_buffer_set (ptr_buffer, "number", str_number);
+                    dogechat_buffer_set (ptr_buffer, "number", str_number);
                     break;
                 case IRC_CONFIG_LOOK_BUFFER_POSITION_NEAR_SERVER:
                     /* move buffer after last channel/pv of server */
@@ -298,77 +298,77 @@ irc_channel_create_buffer (struct t_irc_server *server,
                     break;
             }
             if (ptr_buffer_for_merge)
-                weechat_buffer_merge (ptr_buffer, ptr_buffer_for_merge);
+                dogechat_buffer_merge (ptr_buffer, ptr_buffer_for_merge);
         }
         buffer_created = 1;
     }
 
     if (buffer_created)
     {
-        if (!weechat_buffer_get_integer (ptr_buffer, "short_name_is_set"))
-            weechat_buffer_set (ptr_buffer, "short_name", channel_name);
+        if (!dogechat_buffer_get_integer (ptr_buffer, "short_name_is_set"))
+            dogechat_buffer_set (ptr_buffer, "short_name", channel_name);
     }
     else
     {
-        short_name = weechat_buffer_get_string (ptr_buffer, "short_name");
-        localvar_channel = weechat_buffer_get_string (ptr_buffer,
+        short_name = dogechat_buffer_get_string (ptr_buffer, "short_name");
+        localvar_channel = dogechat_buffer_get_string (ptr_buffer,
                                                       "localvar_channel");
         if (!short_name
             || (localvar_channel
                 && (strcmp (localvar_channel, short_name) == 0)))
         {
             /* update the short_name only if it was not changed by the user */
-            weechat_buffer_set (ptr_buffer, "short_name", channel_name);
+            dogechat_buffer_set (ptr_buffer, "short_name", channel_name);
         }
     }
 
-    weechat_buffer_set (ptr_buffer, "name", buffer_name);
-    weechat_buffer_set (ptr_buffer, "localvar_set_type",
+    dogechat_buffer_set (ptr_buffer, "name", buffer_name);
+    dogechat_buffer_set (ptr_buffer, "localvar_set_type",
                         (channel_type == IRC_CHANNEL_TYPE_CHANNEL) ? "channel" : "private");
-    weechat_buffer_set (ptr_buffer, "localvar_set_nick", server->nick);
-    weechat_buffer_set (ptr_buffer, "localvar_set_server", server->name);
-    weechat_buffer_set (ptr_buffer, "localvar_set_channel", channel_name);
+    dogechat_buffer_set (ptr_buffer, "localvar_set_nick", server->nick);
+    dogechat_buffer_set (ptr_buffer, "localvar_set_server", server->name);
+    dogechat_buffer_set (ptr_buffer, "localvar_set_channel", channel_name);
     if (server->is_away && server->away_message)
     {
-        weechat_buffer_set (ptr_buffer, "localvar_set_away",
+        dogechat_buffer_set (ptr_buffer, "localvar_set_away",
                             server->away_message);
     }
     else
     {
-        weechat_buffer_set (ptr_buffer, "localvar_del_away", "");
+        dogechat_buffer_set (ptr_buffer, "localvar_del_away", "");
     }
 
     if (buffer_created)
     {
-        (void) weechat_hook_signal_send ("logger_backlog",
-                                         WEECHAT_HOOK_SIGNAL_POINTER,
+        (void) dogechat_hook_signal_send ("logger_backlog",
+                                         DOGECHAT_HOOK_SIGNAL_POINTER,
                                          ptr_buffer);
-        if (weechat_config_boolean (irc_config_network_send_unknown_commands))
-            weechat_buffer_set (ptr_buffer, "input_get_unknown_commands", "1");
+        if (dogechat_config_boolean (irc_config_network_send_unknown_commands))
+            dogechat_buffer_set (ptr_buffer, "input_get_unknown_commands", "1");
         if (channel_type == IRC_CHANNEL_TYPE_CHANNEL)
         {
-            weechat_buffer_set (ptr_buffer, "nicklist", "1");
-            weechat_buffer_set (ptr_buffer, "nicklist_display_groups", "0");
-            weechat_buffer_set_pointer (ptr_buffer, "nickcmp_callback",
+            dogechat_buffer_set (ptr_buffer, "nicklist", "1");
+            dogechat_buffer_set (ptr_buffer, "nicklist_display_groups", "0");
+            dogechat_buffer_set_pointer (ptr_buffer, "nickcmp_callback",
                                         &irc_buffer_nickcmp_cb);
-            weechat_buffer_set_pointer (ptr_buffer, "nickcmp_callback_data",
+            dogechat_buffer_set_pointer (ptr_buffer, "nickcmp_callback_data",
                                         server);
         }
 
         /* set highlights settings on channel buffer */
-        weechat_buffer_set(
+        dogechat_buffer_set(
             ptr_buffer,
             "highlight_words_add",
             (channel_type == IRC_CHANNEL_TYPE_CHANNEL) ?
-            weechat_config_string (irc_config_look_highlight_channel) :
-            weechat_config_string (irc_config_look_highlight_pv));
-        if (weechat_config_string (irc_config_look_highlight_tags_restrict)
-            && weechat_config_string (irc_config_look_highlight_tags_restrict)[0])
+            dogechat_config_string (irc_config_look_highlight_channel) :
+            dogechat_config_string (irc_config_look_highlight_pv));
+        if (dogechat_config_string (irc_config_look_highlight_tags_restrict)
+            && dogechat_config_string (irc_config_look_highlight_tags_restrict)[0])
         {
-            weechat_buffer_set (
+            dogechat_buffer_set (
                 ptr_buffer,
                 "highlight_tags_restrict",
-                weechat_config_string (irc_config_look_highlight_tags_restrict));
+                dogechat_config_string (irc_config_look_highlight_tags_restrict));
         }
 
         /* switch to new buffer (if needed) */
@@ -380,10 +380,10 @@ irc_channel_create_buffer (struct t_irc_server *server,
             channel_name_lower = strdup (channel_name);
             if (channel_name_lower)
             {
-                weechat_string_tolower (channel_name_lower);
-                manual_join = weechat_hashtable_has_key (server->join_manual,
+                dogechat_string_tolower (channel_name_lower);
+                manual_join = dogechat_hashtable_has_key (server->join_manual,
                                                          channel_name_lower);
-                noswitch = weechat_hashtable_has_key (server->join_noswitch,
+                noswitch = dogechat_hashtable_has_key (server->join_noswitch,
                                                       channel_name_lower);
             }
         }
@@ -392,20 +392,20 @@ irc_channel_create_buffer (struct t_irc_server *server,
             if (channel_type == IRC_CHANNEL_TYPE_CHANNEL)
             {
                 if (noswitch
-                    || (manual_join && !weechat_config_boolean (irc_config_look_buffer_switch_join))
-                    || (!manual_join && !weechat_config_boolean (irc_config_look_buffer_switch_autojoin)))
+                    || (manual_join && !dogechat_config_boolean (irc_config_look_buffer_switch_join))
+                    || (!manual_join && !dogechat_config_boolean (irc_config_look_buffer_switch_autojoin)))
                     switch_to_channel = 0;
             }
             if (switch_to_channel)
             {
-                weechat_buffer_set (ptr_buffer, "display",
+                dogechat_buffer_set (ptr_buffer, "display",
                                     (auto_switch && !manual_join) ? "auto" : "1");
             }
         }
         if (channel_name_lower)
         {
-            weechat_hashtable_remove (server->join_manual, channel_name_lower);
-            weechat_hashtable_remove (server->join_noswitch, channel_name_lower);
+            dogechat_hashtable_remove (server->join_manual, channel_name_lower);
+            dogechat_hashtable_remove (server->join_noswitch, channel_name_lower);
             free (channel_name_lower);
         }
     }
@@ -437,9 +437,9 @@ irc_channel_new (struct t_irc_server *server, int channel_type,
     /* alloc memory for new channel */
     if ((new_channel = malloc (sizeof (*new_channel))) == NULL)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: cannot allocate new channel"),
-                        weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                        dogechat_prefix ("error"), IRC_PLUGIN_NAME);
         return NULL;
     }
 
@@ -449,20 +449,20 @@ irc_channel_new (struct t_irc_server *server, int channel_type,
     new_channel->topic = NULL;
     new_channel->modes = NULL;
     new_channel->limit = 0;
-    if (weechat_hashtable_has_key (server->join_channel_key, channel_name))
+    if (dogechat_hashtable_has_key (server->join_channel_key, channel_name))
     {
         new_channel->key = strdup (
-            weechat_hashtable_get (server->join_channel_key, channel_name));
-        weechat_hashtable_remove (server->join_channel_key, channel_name);
+            dogechat_hashtable_get (server->join_channel_key, channel_name));
+        dogechat_hashtable_remove (server->join_channel_key, channel_name);
     }
     else
     {
         new_channel->key = NULL;
     }
-    new_channel->join_msg_received = weechat_hashtable_new (
+    new_channel->join_msg_received = dogechat_hashtable_new (
         32,
-        WEECHAT_HASHTABLE_STRING,
-        WEECHAT_HASHTABLE_STRING,
+        DOGECHAT_HASHTABLE_STRING,
+        DOGECHAT_HASHTABLE_STRING,
         NULL,
         NULL);
     new_channel->checking_whox = 0;
@@ -493,10 +493,10 @@ irc_channel_new (struct t_irc_server *server, int channel_type,
         server->channels = new_channel;
     server->last_channel = new_channel;
 
-    (void) weechat_hook_signal_send (
+    (void) dogechat_hook_signal_send (
         (channel_type == IRC_CHANNEL_TYPE_CHANNEL) ?
         "irc_channel_opened" : "irc_pv_opened",
-        WEECHAT_HOOK_SIGNAL_POINTER, ptr_buffer);
+        DOGECHAT_HOOK_SIGNAL_POINTER, ptr_buffer);
 
     /* all is OK, return address of new channel */
     return new_channel;
@@ -522,13 +522,13 @@ irc_channel_add_nicklist_groups (struct t_irc_server *server,
     {
         snprintf (str_group, sizeof (str_group), "%03d|%c",
                   i, prefix_modes[i]);
-        weechat_nicklist_add_group (channel->buffer, NULL, str_group,
-                                    "weechat.color.nicklist_group", 1);
+        dogechat_nicklist_add_group (channel->buffer, NULL, str_group,
+                                    "dogechat.color.nicklist_group", 1);
     }
     snprintf (str_group, sizeof (str_group), "%03d|%s",
               IRC_NICK_GROUP_OTHER_NUMBER, IRC_NICK_GROUP_OTHER_NAME);
-    weechat_nicklist_add_group (channel->buffer, NULL, str_group,
-                                "weechat.color.nicklist_group", 1);
+    dogechat_nicklist_add_group (channel->buffer, NULL, str_group,
+                                "dogechat.color.nicklist_group", 1);
 }
 
 /*
@@ -544,11 +544,11 @@ irc_channel_set_buffer_title (struct t_irc_channel *channel)
     {
         title_color = irc_color_decode (
             channel->topic,
-            (weechat_config_boolean (irc_config_look_topic_strip_colors)) ? 0 : 1);
-        weechat_buffer_set (channel->buffer, "title", title_color);
+            (dogechat_config_boolean (irc_config_look_topic_strip_colors)) ? 0 : 1);
+        dogechat_buffer_set (channel->buffer, "title", title_color);
     }
     else
-        weechat_buffer_set (channel->buffer, "title", "");
+        dogechat_buffer_set (channel->buffer, "title", "");
 }
 
 /*
@@ -619,7 +619,7 @@ irc_channel_get_auto_chantype (struct t_irc_server *server,
     chantype[0] = '\0';
     chantype[1] = '\0';
 
-    if (weechat_config_boolean (irc_config_look_join_auto_add_chantype)
+    if (dogechat_config_boolean (irc_config_look_join_auto_add_chantype)
         && !irc_channel_is_channel (server, channel_name)
         && server->chantypes
         && server->chantypes[0])
@@ -747,32 +747,32 @@ irc_channel_nick_speaking_add_to_list (struct t_irc_channel *channel,
                                        int highlight)
 {
     int size, to_remove, i;
-    struct t_weelist_item *ptr_item;
+    struct t_dogelist_item *ptr_item;
 
     /* create list if it does not exist */
     if (!channel->nicks_speaking[highlight])
-        channel->nicks_speaking[highlight] = weechat_list_new ();
+        channel->nicks_speaking[highlight] = dogechat_list_new ();
 
     /* remove item if it was already in list */
-    ptr_item = weechat_list_casesearch (channel->nicks_speaking[highlight],
+    ptr_item = dogechat_list_casesearch (channel->nicks_speaking[highlight],
                                         nick_name);
     if (ptr_item)
-        weechat_list_remove (channel->nicks_speaking[highlight], ptr_item);
+        dogechat_list_remove (channel->nicks_speaking[highlight], ptr_item);
 
     /* add nick in list */
-    weechat_list_add (channel->nicks_speaking[highlight], nick_name,
-                      WEECHAT_LIST_POS_END, NULL);
+    dogechat_list_add (channel->nicks_speaking[highlight], nick_name,
+                      DOGECHAT_LIST_POS_END, NULL);
 
     /* reduce list size if it's too big */
-    size = weechat_list_size (channel->nicks_speaking[highlight]);
+    size = dogechat_list_size (channel->nicks_speaking[highlight]);
     if (size > IRC_CHANNEL_NICKS_SPEAKING_LIMIT)
     {
         to_remove = size - IRC_CHANNEL_NICKS_SPEAKING_LIMIT;
         for (i = 0; i < to_remove; i++)
         {
-            weechat_list_remove (
+            dogechat_list_remove (
                 channel->nicks_speaking[highlight],
-                weechat_list_get (channel->nicks_speaking[highlight], 0));
+                dogechat_list_get (channel->nicks_speaking[highlight], 0));
         }
     }
 }
@@ -804,17 +804,17 @@ irc_channel_nick_speaking_rename (struct t_irc_channel *channel,
                                   const char *old_nick,
                                   const char *new_nick)
 {
-    struct t_weelist_item *ptr_item;
+    struct t_dogelist_item *ptr_item;
     int i;
 
     for (i = 0; i < 2; i++)
     {
         if (channel->nicks_speaking[i])
         {
-            ptr_item = weechat_list_search (channel->nicks_speaking[i],
+            ptr_item = dogechat_list_search (channel->nicks_speaking[i],
                                             old_nick);
             if (ptr_item)
-                weechat_list_set (ptr_item, new_nick);
+                dogechat_list_set (ptr_item, new_nick);
         }
     }
 }
@@ -828,23 +828,23 @@ irc_channel_nick_speaking_rename_if_present (struct t_irc_server *server,
                                              struct t_irc_channel *channel,
                                              const char *nick_name)
 {
-    struct t_weelist_item *ptr_item;
+    struct t_dogelist_item *ptr_item;
     int i, j, list_size;
 
     for (i = 0; i < 2; i++)
     {
         if (channel->nicks_speaking[i])
         {
-            list_size = weechat_list_size (channel->nicks_speaking[i]);
+            list_size = dogechat_list_size (channel->nicks_speaking[i]);
             for (j = 0; j < list_size; j++)
             {
-                ptr_item = weechat_list_get (channel->nicks_speaking[i], j);
+                ptr_item = dogechat_list_get (channel->nicks_speaking[i], j);
                 if (ptr_item
                     && (irc_server_strcasecmp (server,
-                                               weechat_list_string (ptr_item),
+                                               dogechat_list_string (ptr_item),
                                                nick_name) == 0))
                 {
-                    weechat_list_set (ptr_item, nick_name);
+                    dogechat_list_set (ptr_item, nick_name);
                 }
             }
         }
@@ -867,7 +867,7 @@ irc_channel_nick_speaking_time_search (struct t_irc_server *server,
     time_t time_limit;
 
     time_limit = time (NULL) -
-        (weechat_config_integer (irc_config_look_smart_filter_delay) * 60);
+        (dogechat_config_integer (irc_config_look_smart_filter_delay) * 60);
 
     for (ptr_nick = channel->nicks_speaking_time; ptr_nick;
          ptr_nick = ptr_nick->next_nick)
@@ -933,7 +933,7 @@ irc_channel_nick_speaking_time_remove_old (struct t_irc_channel *channel)
     time_t time_limit;
 
     time_limit = time (NULL) -
-        (weechat_config_integer (irc_config_look_smart_filter_delay) * 60);
+        (dogechat_config_integer (irc_config_look_smart_filter_delay) * 60);
 
     while (channel->last_nick_speaking_time)
     {
@@ -1014,23 +1014,23 @@ irc_channel_join_smart_filtered_add (struct t_irc_channel *channel,
                                      time_t join_time)
 {
     /* return if unmasking of smart filtered joins is disabled */
-    if (weechat_config_integer (irc_config_look_smart_filter_join_unmask) == 0)
+    if (dogechat_config_integer (irc_config_look_smart_filter_join_unmask) == 0)
         return;
 
     /* create hashtable if needed */
     if (!channel->join_smart_filtered)
     {
-        channel->join_smart_filtered = weechat_hashtable_new (
+        channel->join_smart_filtered = dogechat_hashtable_new (
             64,
-            WEECHAT_HASHTABLE_STRING,
-            WEECHAT_HASHTABLE_TIME,
+            DOGECHAT_HASHTABLE_STRING,
+            DOGECHAT_HASHTABLE_TIME,
             NULL,
             NULL);
     }
     if (!channel->join_smart_filtered)
         return;
 
-    weechat_hashtable_set (channel->join_smart_filtered, nick, &join_time);
+    dogechat_hashtable_set (channel->join_smart_filtered, nick, &join_time);
 }
 
 /*
@@ -1049,14 +1049,14 @@ irc_channel_join_smart_filtered_rename (struct t_irc_channel *channel,
         return;
 
     /* search old_nick in hashtable */
-    ptr_time = weechat_hashtable_get (channel->join_smart_filtered, old_nick);
+    ptr_time = dogechat_hashtable_get (channel->join_smart_filtered, old_nick);
     if (!ptr_time)
         return;
 
     /* remove old_nick, add new_nick with time of old_nick */
     join_time = *ptr_time;
-    weechat_hashtable_remove (channel->join_smart_filtered, old_nick);
-    weechat_hashtable_set (channel->join_smart_filtered, new_nick, &join_time);
+    dogechat_hashtable_remove (channel->join_smart_filtered, old_nick);
+    dogechat_hashtable_set (channel->join_smart_filtered, new_nick, &join_time);
 }
 
 /*
@@ -1071,7 +1071,7 @@ irc_channel_join_smart_filtered_remove (struct t_irc_channel *channel,
     if (!channel->join_smart_filtered)
         return;
 
-    weechat_hashtable_remove (channel->join_smart_filtered, nick);
+    dogechat_hashtable_remove (channel->join_smart_filtered, nick);
 }
 
 /*
@@ -1099,13 +1099,13 @@ irc_channel_join_smart_filtered_unmask (struct t_irc_channel *channel,
         return;
 
     /* return if unmasking of smart filtered joins is disabled */
-    unmask_delay = weechat_config_integer (
+    unmask_delay = dogechat_config_integer (
         irc_config_look_smart_filter_join_unmask);
     if (unmask_delay == 0)
         return;
 
     /* check if nick is in hashtable "join_smart_filtered" */
-    ptr_time = weechat_hashtable_get (channel->join_smart_filtered, nick);
+    ptr_time = dogechat_hashtable_get (channel->join_smart_filtered, nick);
     if (!ptr_time)
         return;
 
@@ -1121,21 +1121,21 @@ irc_channel_join_smart_filtered_unmask (struct t_irc_channel *channel,
      */
     if (*ptr_time < date_min)
     {
-        weechat_hashtable_remove (channel->join_smart_filtered, nick);
+        dogechat_hashtable_remove (channel->join_smart_filtered, nick);
         return;
     }
 
     /* get hdata and pointers on last line in buffer */
-    own_lines = weechat_hdata_pointer (weechat_hdata_get ("buffer"),
+    own_lines = dogechat_hdata_pointer (dogechat_hdata_get ("buffer"),
                                        channel->buffer, "own_lines");
     if (!own_lines)
         return;
-    line = weechat_hdata_pointer (weechat_hdata_get ("lines"),
+    line = dogechat_hdata_pointer (dogechat_hdata_get ("lines"),
                                   own_lines, "last_line");
     if (!line)
         return;
-    hdata_line = weechat_hdata_get ("line");
-    hdata_line_data = weechat_hdata_get ("line_data");
+    hdata_line = dogechat_hdata_get ("line");
+    hdata_line_data = dogechat_hdata_get ("line_data");
 
     /* the nick to search in messages (track nick changes) */
     nick_to_search = strdup (nick);
@@ -1145,16 +1145,16 @@ irc_channel_join_smart_filtered_unmask (struct t_irc_channel *channel,
     /* loop on lines until we find the join */
     while (line)
     {
-        line_data = weechat_hdata_pointer (hdata_line, line, "data");
+        line_data = dogechat_hdata_pointer (hdata_line, line, "data");
         if (!line_data)
             break;
 
         /* exit loop if we reach the unmask delay */
-        if (weechat_hdata_time (hdata_line_data, line_data, "date_printed") < date_min)
+        if (dogechat_hdata_time (hdata_line_data, line_data, "date_printed") < date_min)
             break;
 
         /* check tags in line */
-        tags = weechat_hdata_pointer (hdata_line_data, line_data, "tags_array");
+        tags = dogechat_hdata_pointer (hdata_line_data, line_data, "tags_array");
         if (tags)
         {
             length_tags = 0;
@@ -1221,19 +1221,19 @@ irc_channel_join_smart_filtered_unmask (struct t_irc_channel *channel,
                             strcat (new_tags, tags[i]);
                         }
                     }
-                    hashtable = weechat_hashtable_new (4,
-                                                       WEECHAT_HASHTABLE_STRING,
-                                                       WEECHAT_HASHTABLE_STRING,
+                    hashtable = dogechat_hashtable_new (4,
+                                                       DOGECHAT_HASHTABLE_STRING,
+                                                       DOGECHAT_HASHTABLE_STRING,
                                                        NULL,
                                                        NULL);
                     if (hashtable)
                     {
                         /* update tags in line (remove tag "irc_smart_filter") */
-                        weechat_hashtable_set (hashtable,
+                        dogechat_hashtable_set (hashtable,
                                                "tags_array", new_tags);
-                        weechat_hdata_update (hdata_line_data, line_data,
+                        dogechat_hdata_update (hdata_line_data, line_data,
                                               hashtable);
-                        weechat_hashtable_free (hashtable);
+                        dogechat_hashtable_free (hashtable);
                     }
                     free (new_tags);
                 }
@@ -1248,13 +1248,13 @@ irc_channel_join_smart_filtered_unmask (struct t_irc_channel *channel,
         }
 
         /* continue with previous line in buffer */
-        line = weechat_hdata_move (hdata_line, line, -1);
+        line = dogechat_hdata_move (hdata_line, line, -1);
     }
 
     if (nick_to_search)
         free (nick_to_search);
 
-    weechat_hashtable_remove (channel->join_smart_filtered, nick);
+    dogechat_hashtable_remove (channel->join_smart_filtered, nick);
 }
 
 
@@ -1311,7 +1311,7 @@ irc_channel_autorejoin_cb (void *data, int remaining_calls)
         ptr_channel_arg->hook_autorejoin = NULL;
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1336,13 +1336,13 @@ irc_channel_display_nick_back_in_pv (struct t_irc_server *server,
             && ptr_channel->has_quit_server
             && (irc_server_strcasecmp (server, ptr_channel->name, (nick) ? nick->name : nickname) == 0))
         {
-            if (weechat_config_boolean (irc_config_look_display_pv_back))
+            if (dogechat_config_boolean (irc_config_look_display_pv_back))
             {
-                weechat_printf_tags (
+                dogechat_printf_tags (
                     ptr_channel->buffer,
                     "irc_nick_back",
                     _("%s%s%s %s(%s%s%s)%s is back on server"),
-                    weechat_prefix ("join"),
+                    dogechat_prefix ("join"),
                     irc_nick_color_for_msg (server, 1, nick, nickname),
                     (nick) ? nick->name : nickname,
                     IRC_COLOR_CHAT_DELIMITERS,
@@ -1395,20 +1395,20 @@ irc_channel_free (struct t_irc_server *server, struct t_irc_channel *channel)
     if (channel->key)
         free (channel->key);
     if (channel->join_msg_received)
-        weechat_hashtable_free (channel->join_msg_received);
+        dogechat_hashtable_free (channel->join_msg_received);
     if (channel->away_message)
         free (channel->away_message);
     if (channel->pv_remote_nick_color)
         free (channel->pv_remote_nick_color);
     if (channel->hook_autorejoin)
-        weechat_unhook (channel->hook_autorejoin);
+        dogechat_unhook (channel->hook_autorejoin);
     if (channel->nicks_speaking[0])
-        weechat_list_free (channel->nicks_speaking[0]);
+        dogechat_list_free (channel->nicks_speaking[0]);
     if (channel->nicks_speaking[1])
-        weechat_list_free (channel->nicks_speaking[1]);
+        dogechat_list_free (channel->nicks_speaking[1]);
     irc_channel_nick_speaking_time_free_all (channel);
     if (channel->join_smart_filtered)
-        weechat_hashtable_free (channel->join_smart_filtered);
+        dogechat_hashtable_free (channel->join_smart_filtered);
     if (channel->buffer_as_string)
         free (channel->buffer_as_string);
 
@@ -1442,36 +1442,36 @@ irc_channel_hdata_channel_cb (void *data, const char *hdata_name)
     /* make C compiler happy */
     (void) data;
 
-    hdata = weechat_hdata_new (hdata_name, "prev_channel", "next_channel",
+    hdata = dogechat_hdata_new (hdata_name, "prev_channel", "next_channel",
                                0, 0, NULL, NULL);
     if (hdata)
     {
-        WEECHAT_HDATA_VAR(struct t_irc_channel, type, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, name, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, topic, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, modes, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, limit, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, key, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, join_msg_received, HASHTABLE, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, checking_whox, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, away_message, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, has_quit_server, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, cycle, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, part, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, nick_completion_reset, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, pv_remote_nick_color, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, hook_autorejoin, POINTER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, nicks_count, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, nicks, POINTER, 0, NULL, "irc_nick");
-        WEECHAT_HDATA_VAR(struct t_irc_channel, last_nick, POINTER, 0, NULL, "irc_nick");
-        WEECHAT_HDATA_VAR(struct t_irc_channel, nicks_speaking, POINTER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, nicks_speaking_time, POINTER, 0, NULL, "irc_channel_speaking");
-        WEECHAT_HDATA_VAR(struct t_irc_channel, last_nick_speaking_time, POINTER, 0, NULL, "irc_channel_speaking");
-        WEECHAT_HDATA_VAR(struct t_irc_channel, join_smart_filtered, HASHTABLE, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, buffer, POINTER, 0, NULL, "buffer");
-        WEECHAT_HDATA_VAR(struct t_irc_channel, buffer_as_string, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, prev_channel, POINTER, 0, NULL, hdata_name);
-        WEECHAT_HDATA_VAR(struct t_irc_channel, next_channel, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, type, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, name, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, topic, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, modes, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, limit, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, key, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, join_msg_received, HASHTABLE, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, checking_whox, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, away_message, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, has_quit_server, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, cycle, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, part, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, nick_completion_reset, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, pv_remote_nick_color, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, hook_autorejoin, POINTER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, nicks_count, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, nicks, POINTER, 0, NULL, "irc_nick");
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, last_nick, POINTER, 0, NULL, "irc_nick");
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, nicks_speaking, POINTER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, nicks_speaking_time, POINTER, 0, NULL, "irc_channel_speaking");
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, last_nick_speaking_time, POINTER, 0, NULL, "irc_channel_speaking");
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, join_smart_filtered, HASHTABLE, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, buffer, POINTER, 0, NULL, "buffer");
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, buffer_as_string, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, prev_channel, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel, next_channel, POINTER, 0, NULL, hdata_name);
     }
     return hdata;
 }
@@ -1488,14 +1488,14 @@ irc_channel_hdata_channel_speaking_cb (void *data, const char *hdata_name)
     /* make C compiler happy */
     (void) data;
 
-    hdata = weechat_hdata_new (hdata_name, "prev_nick", "next_nick",
+    hdata = dogechat_hdata_new (hdata_name, "prev_nick", "next_nick",
                                0, 0, NULL, NULL);
     if (hdata)
     {
-        WEECHAT_HDATA_VAR(struct t_irc_channel_speaking, nick, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel_speaking, time_last_message, TIME, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_channel_speaking, prev_nick, POINTER, 0, NULL, hdata_name);
-        WEECHAT_HDATA_VAR(struct t_irc_channel_speaking, next_nick, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel_speaking, nick, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel_speaking, time_last_message, TIME, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel_speaking, prev_nick, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_VAR(struct t_irc_channel_speaking, next_nick, POINTER, 0, NULL, hdata_name);
     }
     return hdata;
 }
@@ -1513,7 +1513,7 @@ irc_channel_add_to_infolist (struct t_infolist *infolist,
                              struct t_irc_channel *channel)
 {
     struct t_infolist_item *ptr_item;
-    struct t_weelist_item *ptr_list_item;
+    struct t_dogelist_item *ptr_list_item;
     struct t_irc_channel_speaking *ptr_nick;
     char option_name[64];
     int i, index;
@@ -1521,64 +1521,64 @@ irc_channel_add_to_infolist (struct t_infolist *infolist,
     if (!infolist || !channel)
         return 0;
 
-    ptr_item = weechat_infolist_new_item (infolist);
+    ptr_item = dogechat_infolist_new_item (infolist);
     if (!ptr_item)
         return 0;
 
-    if (!weechat_infolist_new_var_pointer (ptr_item, "buffer", channel->buffer))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "buffer", channel->buffer))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "buffer_name",
+    if (!dogechat_infolist_new_var_string (ptr_item, "buffer_name",
                                           (channel->buffer) ?
-                                          weechat_buffer_get_string (channel->buffer, "name") : ""))
+                                          dogechat_buffer_get_string (channel->buffer, "name") : ""))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "buffer_short_name",
+    if (!dogechat_infolist_new_var_string (ptr_item, "buffer_short_name",
                                           (channel->buffer) ?
-                                          weechat_buffer_get_string (channel->buffer, "short_name") : ""))
+                                          dogechat_buffer_get_string (channel->buffer, "short_name") : ""))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "type", channel->type))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "type", channel->type))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "name", channel->name))
+    if (!dogechat_infolist_new_var_string (ptr_item, "name", channel->name))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "topic", channel->topic))
+    if (!dogechat_infolist_new_var_string (ptr_item, "topic", channel->topic))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "modes", channel->modes))
+    if (!dogechat_infolist_new_var_string (ptr_item, "modes", channel->modes))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "limit", channel->limit))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "limit", channel->limit))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "key", channel->key))
+    if (!dogechat_infolist_new_var_string (ptr_item, "key", channel->key))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "join_msg_received",
-                                          weechat_hashtable_get_string (channel->join_msg_received, "keys")))
+    if (!dogechat_infolist_new_var_string (ptr_item, "join_msg_received",
+                                          dogechat_hashtable_get_string (channel->join_msg_received, "keys")))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "checking_whox", channel->checking_whox))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "checking_whox", channel->checking_whox))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "away_message", channel->away_message))
+    if (!dogechat_infolist_new_var_string (ptr_item, "away_message", channel->away_message))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "has_quit_server", channel->has_quit_server))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "has_quit_server", channel->has_quit_server))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "cycle", channel->cycle))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "cycle", channel->cycle))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "part", channel->part))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "part", channel->part))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "nick_completion_reset", channel->nick_completion_reset))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "nick_completion_reset", channel->nick_completion_reset))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "pv_remote_nick_color", channel->pv_remote_nick_color))
+    if (!dogechat_infolist_new_var_string (ptr_item, "pv_remote_nick_color", channel->pv_remote_nick_color))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "nicks_count", channel->nicks_count))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "nicks_count", channel->nicks_count))
         return 0;
     for (i = 0; i < 2; i++)
     {
         if (channel->nicks_speaking[i])
         {
             index = 0;
-            for (ptr_list_item = weechat_list_get (channel->nicks_speaking[i], 0);
+            for (ptr_list_item = dogechat_list_get (channel->nicks_speaking[i], 0);
                  ptr_list_item;
-                 ptr_list_item = weechat_list_next (ptr_list_item))
+                 ptr_list_item = dogechat_list_next (ptr_list_item))
             {
                 snprintf (option_name, sizeof (option_name),
                           "nick_speaking%d_%05d", i, index);
-                if (!weechat_infolist_new_var_string (ptr_item, option_name,
-                                                      weechat_list_string (ptr_list_item)))
+                if (!dogechat_infolist_new_var_string (ptr_item, option_name,
+                                                      dogechat_list_string (ptr_list_item)))
                     return 0;
                 index++;
             }
@@ -1592,19 +1592,19 @@ irc_channel_add_to_infolist (struct t_infolist *infolist,
         {
             snprintf (option_name, sizeof (option_name),
                       "nick_speaking_time_nick_%05d", i);
-            if (!weechat_infolist_new_var_string (ptr_item, option_name,
+            if (!dogechat_infolist_new_var_string (ptr_item, option_name,
                                                   ptr_nick->nick))
                 return 0;
             snprintf (option_name, sizeof (option_name),
                       "nick_speaking_time_time_%05d", i);
-            if (!weechat_infolist_new_var_time (ptr_item, option_name,
+            if (!dogechat_infolist_new_var_time (ptr_item, option_name,
                                                 ptr_nick->time_last_message))
                 return 0;
             i++;
         }
     }
-    if (!weechat_infolist_new_var_string (ptr_item, "join_smart_filtered",
-                                          weechat_hashtable_get_string (channel->join_smart_filtered,
+    if (!dogechat_infolist_new_var_string (ptr_item, "join_smart_filtered",
+                                          dogechat_hashtable_get_string (channel->join_smart_filtered,
                                                                         "keys_values")))
         return 0;
 
@@ -1612,74 +1612,74 @@ irc_channel_add_to_infolist (struct t_infolist *infolist,
 }
 
 /*
- * Prints channel infos in WeeChat log file (usually for crash dump).
+ * Prints channel infos in DogeChat log file (usually for crash dump).
  */
 
 void
 irc_channel_print_log (struct t_irc_channel *channel)
 {
-    struct t_weelist_item *ptr_item;
+    struct t_dogelist_item *ptr_item;
     struct t_irc_channel_speaking *ptr_nick_speaking;
     int i, index;
     struct t_irc_nick *ptr_nick;
 
-    weechat_log_printf ("");
-    weechat_log_printf ("  => channel %s (addr:0x%lx):", channel->name, channel);
-    weechat_log_printf ("       type . . . . . . . . . . : %d",    channel->type);
-    weechat_log_printf ("       topic. . . . . . . . . . : '%s'",  channel->topic);
-    weechat_log_printf ("       modes. . . . . . . . . . : '%s'",  channel->modes);
-    weechat_log_printf ("       limit. . . . . . . . . . : %d",    channel->limit);
-    weechat_log_printf ("       key. . . . . . . . . . . : '%s'",  channel->key);
-    weechat_log_printf ("       join_msg_received. . . . : 0x%lx (hashtable: '%s')",
+    dogechat_log_printf ("");
+    dogechat_log_printf ("  => channel %s (addr:0x%lx):", channel->name, channel);
+    dogechat_log_printf ("       type . . . . . . . . . . : %d",    channel->type);
+    dogechat_log_printf ("       topic. . . . . . . . . . : '%s'",  channel->topic);
+    dogechat_log_printf ("       modes. . . . . . . . . . : '%s'",  channel->modes);
+    dogechat_log_printf ("       limit. . . . . . . . . . : %d",    channel->limit);
+    dogechat_log_printf ("       key. . . . . . . . . . . : '%s'",  channel->key);
+    dogechat_log_printf ("       join_msg_received. . . . : 0x%lx (hashtable: '%s')",
                         channel->join_msg_received,
-                        weechat_hashtable_get_string (channel->join_msg_received,
+                        dogechat_hashtable_get_string (channel->join_msg_received,
                                                       "keys_values"));
-    weechat_log_printf ("       checking_whox. . . . . . : %d",    channel->checking_whox);
-    weechat_log_printf ("       away_message . . . . . . : '%s'",  channel->away_message);
-    weechat_log_printf ("       has_quit_server. . . . . : %d",    channel->has_quit_server);
-    weechat_log_printf ("       cycle. . . . . . . . . . : %d",    channel->cycle);
-    weechat_log_printf ("       part . . . . . . . . . . : %d",    channel->part);
-    weechat_log_printf ("       nick_completion_reset. . : %d",    channel->nick_completion_reset);
-    weechat_log_printf ("       pv_remote_nick_color . . : '%s'",  channel->pv_remote_nick_color);
-    weechat_log_printf ("       hook_autorejoin. . . . . : 0x%lx", channel->hook_autorejoin);
-    weechat_log_printf ("       nicks_count. . . . . . . : %d",    channel->nicks_count);
-    weechat_log_printf ("       nicks. . . . . . . . . . : 0x%lx", channel->nicks);
-    weechat_log_printf ("       last_nick. . . . . . . . : 0x%lx", channel->last_nick);
-    weechat_log_printf ("       nicks_speaking[0]. . . . : 0x%lx", channel->nicks_speaking[0]);
-    weechat_log_printf ("       nicks_speaking[1]. . . . : 0x%lx", channel->nicks_speaking[1]);
-    weechat_log_printf ("       nicks_speaking_time. . . : 0x%lx", channel->nicks_speaking_time);
-    weechat_log_printf ("       last_nick_speaking_time. : 0x%lx", channel->last_nick_speaking_time);
-    weechat_log_printf ("       join_smart_filtered. . . : 0x%lx (hashtable: '%s')",
+    dogechat_log_printf ("       checking_whox. . . . . . : %d",    channel->checking_whox);
+    dogechat_log_printf ("       away_message . . . . . . : '%s'",  channel->away_message);
+    dogechat_log_printf ("       has_quit_server. . . . . : %d",    channel->has_quit_server);
+    dogechat_log_printf ("       cycle. . . . . . . . . . : %d",    channel->cycle);
+    dogechat_log_printf ("       part . . . . . . . . . . : %d",    channel->part);
+    dogechat_log_printf ("       nick_completion_reset. . : %d",    channel->nick_completion_reset);
+    dogechat_log_printf ("       pv_remote_nick_color . . : '%s'",  channel->pv_remote_nick_color);
+    dogechat_log_printf ("       hook_autorejoin. . . . . : 0x%lx", channel->hook_autorejoin);
+    dogechat_log_printf ("       nicks_count. . . . . . . : %d",    channel->nicks_count);
+    dogechat_log_printf ("       nicks. . . . . . . . . . : 0x%lx", channel->nicks);
+    dogechat_log_printf ("       last_nick. . . . . . . . : 0x%lx", channel->last_nick);
+    dogechat_log_printf ("       nicks_speaking[0]. . . . : 0x%lx", channel->nicks_speaking[0]);
+    dogechat_log_printf ("       nicks_speaking[1]. . . . : 0x%lx", channel->nicks_speaking[1]);
+    dogechat_log_printf ("       nicks_speaking_time. . . : 0x%lx", channel->nicks_speaking_time);
+    dogechat_log_printf ("       last_nick_speaking_time. : 0x%lx", channel->last_nick_speaking_time);
+    dogechat_log_printf ("       join_smart_filtered. . . : 0x%lx (hashtable: '%s')",
                         channel->join_smart_filtered,
-                        weechat_hashtable_get_string (channel->join_smart_filtered,
+                        dogechat_hashtable_get_string (channel->join_smart_filtered,
                                                       "keys_values"));
-    weechat_log_printf ("       buffer . . . . . . . . . : 0x%lx", channel->buffer);
-    weechat_log_printf ("       buffer_as_string . . . . : '%s'",  channel->buffer_as_string);
-    weechat_log_printf ("       prev_channel . . . . . . : 0x%lx", channel->prev_channel);
-    weechat_log_printf ("       next_channel . . . . . . : 0x%lx", channel->next_channel);
+    dogechat_log_printf ("       buffer . . . . . . . . . : 0x%lx", channel->buffer);
+    dogechat_log_printf ("       buffer_as_string . . . . : '%s'",  channel->buffer_as_string);
+    dogechat_log_printf ("       prev_channel . . . . . . : 0x%lx", channel->prev_channel);
+    dogechat_log_printf ("       next_channel . . . . . . : 0x%lx", channel->next_channel);
     for (i = 0; i < 2; i++)
     {
         if (channel->nicks_speaking[i])
         {
-            weechat_log_printf ("");
+            dogechat_log_printf ("");
             index = 0;
-            for (ptr_item = weechat_list_get (channel->nicks_speaking[i], 0);
-                 ptr_item; ptr_item = weechat_list_next (ptr_item))
+            for (ptr_item = dogechat_list_get (channel->nicks_speaking[i], 0);
+                 ptr_item; ptr_item = dogechat_list_next (ptr_item))
             {
-                weechat_log_printf ("         nick speaking[%d][%d]: '%s'",
-                                    i, index, weechat_list_string (ptr_item));
+                dogechat_log_printf ("         nick speaking[%d][%d]: '%s'",
+                                    i, index, dogechat_list_string (ptr_item));
                 index++;
             }
         }
     }
     if (channel->nicks_speaking_time)
     {
-        weechat_log_printf ("");
+        dogechat_log_printf ("");
         for (ptr_nick_speaking = channel->nicks_speaking_time;
              ptr_nick_speaking;
              ptr_nick_speaking = ptr_nick_speaking->next_nick)
         {
-            weechat_log_printf ("         nick speaking time: '%s', time: %ld",
+            dogechat_log_printf ("         nick speaking time: '%s', time: %ld",
                                 ptr_nick_speaking->nick,
                                 ptr_nick_speaking->time_last_message);
         }

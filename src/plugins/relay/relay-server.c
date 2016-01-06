@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -31,7 +31,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "relay.h"
 #include "relay-server.h"
 #include "relay-buffer.h"
@@ -57,9 +57,9 @@ struct t_relay_server *last_relay_server = NULL;
  *   ipv6.irc.freenode         0    1    0   irc      freenode
  *   ipv4.ipv6.irc.freenode    1    1    0   irc      freenode
  *   ipv6.ssl.irc.freenode     0    1    1   irc      freenode
- *   weechat                   1    1    0   weechat
- *   ssl.weechat               1    1    1   weechat
- *   ipv6.ssl.weechat          0    1    1   weechat
+ *   dogechat                   1    1    0   dogechat
+ *   ssl.dogechat               1    1    1   dogechat
+ *   ipv6.ssl.dogechat          0    1    1   dogechat
  *
  * Note: *protocol and *protocol_args must be freed after use.
  */
@@ -103,7 +103,7 @@ relay_server_get_protocol_args (const char *protocol_and_args,
          * - IPv6 enabled if option relay.network.ipv6 is on
          */
         opt_ipv4 = 1;
-        opt_ipv6 = weechat_config_boolean (relay_config_network_ipv6);
+        opt_ipv6 = dogechat_config_boolean (relay_config_network_ipv6);
     }
     else
     {
@@ -129,7 +129,7 @@ relay_server_get_protocol_args (const char *protocol_and_args,
     {
         if (protocol)
         {
-            *protocol = weechat_strndup (protocol_and_args,
+            *protocol = dogechat_strndup (protocol_and_args,
                                          pos - protocol_and_args);
         }
         if (protocol_args)
@@ -196,7 +196,7 @@ relay_server_close_socket (struct t_relay_server *server)
 {
     if (server->hook_fd)
     {
-        weechat_unhook (server->hook_fd);
+        dogechat_unhook (server->hook_fd);
         server->hook_fd = NULL;
     }
     if (server->sock >= 0)
@@ -206,7 +206,7 @@ relay_server_close_socket (struct t_relay_server *server)
 
         if (!relay_signal_upgrade_received)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s: socket closed for %s (port %d)"),
                             RELAY_PLUGIN_NAME, server->protocol_string,
                             server->port);
@@ -252,12 +252,12 @@ relay_server_sock_cb (void *data, int fd)
                         &client_addr_size);
     if (client_fd < 0)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: cannot accept client on port %d (%s): error %d %s"),
-                        weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                        dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                         server->port, server->protocol_string,
                         errno, strerror (errno));
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
     ptr_ip_address = NULL;
@@ -292,16 +292,16 @@ relay_server_sock_cb (void *data, int fd)
     if (relay_config_regex_allowed_ips
         && (regexec (relay_config_regex_allowed_ips, ptr_ip_address, 0, NULL, 0) != 0))
     {
-        if (weechat_relay_plugin->debug >= 1)
+        if (dogechat_relay_plugin->debug >= 1)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: IP address \"%s\" not allowed for relay"),
-                            weechat_prefix ("error"),
+                            dogechat_prefix ("error"),
                             RELAY_PLUGIN_NAME,
                             ptr_ip_address);
         }
         close (client_fd);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
     /* set non-blocking mode for socket */
@@ -315,19 +315,19 @@ relay_server_sock_cb (void *data, int fd)
     if (setsockopt (client_fd, SOL_SOCKET, SO_REUSEADDR,
                     (void *) &set, sizeof (set)) < 0)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: cannot set socket option \"%s\" to %d: "
                           "error %d %s"),
-                        weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                        dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                         "SO_REUSEADDR", set, errno, strerror (errno));
         close (client_fd);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
     /* add the client */
     relay_client_new (client_fd, ptr_ip_address, server);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -347,7 +347,7 @@ relay_server_create_socket (struct t_relay_server *server)
     const char *bind_address;
     void *ptr_addr;
 
-    bind_address = weechat_config_string (relay_config_network_bind_address);
+    bind_address = dogechat_config_string (relay_config_network_bind_address);
 
     if (server->ipv6)
     {
@@ -360,10 +360,10 @@ relay_server_create_socket (struct t_relay_server *server)
         {
             if (!inet_pton (domain, bind_address, &server_addr6.sin6_addr))
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 /* TRANSLATORS: second "%s" is "IPv4" or "IPv6" */
                                 _("%s%s: invalid bind address \"%s\" for %s"),
-                                weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                                dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                                 bind_address, "IPv6");
                 return 0;
             }
@@ -382,10 +382,10 @@ relay_server_create_socket (struct t_relay_server *server)
         {
             if (!inet_pton (domain, bind_address, &server_addr.sin_addr))
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 /* TRANSLATORS: second "%s" is "IPv4" or "IPv6" */
                                 _("%s%s: invalid bind address \"%s\" for %s"),
-                                weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                                dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                                 bind_address, "IPv4");
                 return 0;
             }
@@ -398,15 +398,15 @@ relay_server_create_socket (struct t_relay_server *server)
     server->sock = socket (domain, SOCK_STREAM, 0);
     if (server->sock < 0)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: cannot create socket: error %d %s"),
-                        weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                        dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                         errno, strerror (errno));
         if (errno == EAFNOSUPPORT)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: try /set relay.network.ipv6 off"),
-                            weechat_prefix ("error"), RELAY_PLUGIN_NAME);
+                            dogechat_prefix ("error"), RELAY_PLUGIN_NAME);
         }
         return 0;
     }
@@ -419,10 +419,10 @@ relay_server_create_socket (struct t_relay_server *server)
         if (setsockopt (server->sock, IPPROTO_IPV6, IPV6_V6ONLY,
                         (void *) &set, sizeof (set)) < 0)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: cannot set socket option \"%s\" "
                               "to %d: error %d %s"),
-                            weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                            dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                             "IPV6_V6ONLY", set, errno, strerror (errno));
             close (server->sock);
             server->sock = -1;
@@ -436,10 +436,10 @@ relay_server_create_socket (struct t_relay_server *server)
     if (setsockopt (server->sock, SOL_SOCKET, SO_REUSEADDR,
                     (void *) &set, sizeof (set)) < 0)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: cannot set socket option \"%s\" to %d: "
                           "error %d %s"),
-                        weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                        dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                         "SO_REUSEADDR", set, errno, strerror (errno));
         close (server->sock);
         server->sock = -1;
@@ -451,10 +451,10 @@ relay_server_create_socket (struct t_relay_server *server)
     if (setsockopt (server->sock, SOL_SOCKET, SO_KEEPALIVE,
                     (void *) &set, sizeof (set)) < 0)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: cannot set socket option \"%s\" to %d: "
                           "error %d %s"),
-                        weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                        dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                         "SO_KEEPALIVE", set, errno, strerror (errno));
         close (server->sock);
         server->sock = -1;
@@ -464,9 +464,9 @@ relay_server_create_socket (struct t_relay_server *server)
     /* bind */
     if (bind (server->sock, (struct sockaddr *)ptr_addr, addr_size) < 0)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: cannot \"bind\" on port %d (%s): error %d %s"),
-                        weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                        dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                         server->port, server->protocol_string,
                         errno, strerror (errno));
         close (server->sock);
@@ -474,13 +474,13 @@ relay_server_create_socket (struct t_relay_server *server)
         return 0;
     }
 
-    max_clients = weechat_config_integer (relay_config_network_max_clients);
+    max_clients = dogechat_config_integer (relay_config_network_max_clients);
 
     if (listen (server->sock, max_clients) != 0)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: cannot \"listen\" on port %d (%s): error %d %s"),
-                        weechat_prefix ("error"), RELAY_PLUGIN_NAME,
+                        dogechat_prefix ("error"), RELAY_PLUGIN_NAME,
                         server->port, server->protocol_string,
                         errno, strerror (errno));
         close (server->sock);
@@ -488,7 +488,7 @@ relay_server_create_socket (struct t_relay_server *server)
         return 0;
     }
 
-    weechat_printf (NULL,
+    dogechat_printf (NULL,
                     _("%s: listening on port %d (relay: %s, %s, max %d clients)"),
                     RELAY_PLUGIN_NAME,
                     server->port,
@@ -496,7 +496,7 @@ relay_server_create_socket (struct t_relay_server *server)
                     ((server->ipv4 && server->ipv6) ? "IPv4+6" : ((server->ipv6) ? "IPv6" : "IPv4")),
                     max_clients);
 
-    server->hook_fd = weechat_hook_fd (server->sock,
+    server->hook_fd = dogechat_hook_fd (server->sock,
                                        1, 0, 0,
                                        &relay_server_sock_cb,
                                        server);
@@ -524,8 +524,8 @@ relay_server_new (const char *protocol_string, enum t_relay_protocol protocol,
 
     if (relay_server_search_port (port))
     {
-        weechat_printf (NULL, _("%s%s: error: port \"%d\" is already used"),
-                        weechat_prefix ("error"),
+        dogechat_printf (NULL, _("%s%s: error: port \"%d\" is already used"),
+                        dogechat_prefix ("error"),
                         RELAY_PLUGIN_NAME, port);
         return NULL;
     }
@@ -558,9 +558,9 @@ relay_server_new (const char *protocol_string, enum t_relay_protocol protocol,
     }
     else
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: not enough memory for listening on new port"),
-                        weechat_prefix ("error"), RELAY_PLUGIN_NAME);
+                        dogechat_prefix ("error"), RELAY_PLUGIN_NAME);
     }
 
     return new_server;
@@ -648,38 +648,38 @@ relay_server_add_to_infolist (struct t_infolist *infolist,
     if (!infolist || !server)
         return 0;
 
-    ptr_item = weechat_infolist_new_item (infolist);
+    ptr_item = dogechat_infolist_new_item (infolist);
     if (!ptr_item)
         return 0;
 
-    if (!weechat_infolist_new_var_string (ptr_item, "protocol_string", server->protocol_string))
+    if (!dogechat_infolist_new_var_string (ptr_item, "protocol_string", server->protocol_string))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "protocol", server->protocol))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "protocol", server->protocol))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "protocol_args", server->protocol_args))
+    if (!dogechat_infolist_new_var_string (ptr_item, "protocol_args", server->protocol_args))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "port", server->port))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "port", server->port))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "ipv4", server->ipv4))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "ipv4", server->ipv4))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "ipv6", server->ipv6))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "ipv6", server->ipv6))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "ssl", server->ssl))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "ssl", server->ssl))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "sock", server->sock))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "sock", server->sock))
         return 0;
-    if (!weechat_infolist_new_var_pointer (ptr_item, "hook_fd", server->hook_fd))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "hook_fd", server->hook_fd))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "start_time", server->start_time))
+    if (!dogechat_infolist_new_var_time (ptr_item, "start_time", server->start_time))
         return 0;
-    if (!weechat_infolist_new_var_time (ptr_item, "last_client_disconnect", server->last_client_disconnect))
+    if (!dogechat_infolist_new_var_time (ptr_item, "last_client_disconnect", server->last_client_disconnect))
         return 0;
 
     return 1;
 }
 
 /*
- * Prints servers in WeeChat log file (usually for crash dump).
+ * Prints servers in DogeChat log file (usually for crash dump).
  */
 
 void
@@ -690,22 +690,22 @@ relay_server_print_log ()
     for (ptr_server = relay_servers; ptr_server;
          ptr_server = ptr_server->next_server)
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("[relay server (addr:0x%lx)]", ptr_server);
-        weechat_log_printf ("  protocol_string . . . : '%s'",  ptr_server->protocol_string);
-        weechat_log_printf ("  protocol. . . . . . . : %d (%s)",
+        dogechat_log_printf ("");
+        dogechat_log_printf ("[relay server (addr:0x%lx)]", ptr_server);
+        dogechat_log_printf ("  protocol_string . . . : '%s'",  ptr_server->protocol_string);
+        dogechat_log_printf ("  protocol. . . . . . . : %d (%s)",
                             ptr_server->protocol,
                             relay_protocol_string[ptr_server->protocol]);
-        weechat_log_printf ("  protocol_args . . . . : '%s'",  ptr_server->protocol_args);
-        weechat_log_printf ("  port. . . . . . . . . : %d",    ptr_server->port);
-        weechat_log_printf ("  ipv4. . . . . . . . . : %d",    ptr_server->ipv4);
-        weechat_log_printf ("  ipv6. . . . . . . . . : %d",    ptr_server->ipv6);
-        weechat_log_printf ("  ssl . . . . . . . . . : %d",    ptr_server->ssl);
-        weechat_log_printf ("  sock. . . . . . . . . : %d",    ptr_server->sock);
-        weechat_log_printf ("  hook_fd . . . . . . . : 0x%lx", ptr_server->hook_fd);
-        weechat_log_printf ("  start_time. . . . . . : %ld",   ptr_server->start_time);
-        weechat_log_printf ("  last_client_disconnect: %ld", ptr_server->last_client_disconnect);
-        weechat_log_printf ("  prev_server . . . . . : 0x%lx", ptr_server->prev_server);
-        weechat_log_printf ("  next_server . . . . . : 0x%lx", ptr_server->next_server);
+        dogechat_log_printf ("  protocol_args . . . . : '%s'",  ptr_server->protocol_args);
+        dogechat_log_printf ("  port. . . . . . . . . : %d",    ptr_server->port);
+        dogechat_log_printf ("  ipv4. . . . . . . . . : %d",    ptr_server->ipv4);
+        dogechat_log_printf ("  ipv6. . . . . . . . . : %d",    ptr_server->ipv6);
+        dogechat_log_printf ("  ssl . . . . . . . . . : %d",    ptr_server->ssl);
+        dogechat_log_printf ("  sock. . . . . . . . . : %d",    ptr_server->sock);
+        dogechat_log_printf ("  hook_fd . . . . . . . : 0x%lx", ptr_server->hook_fd);
+        dogechat_log_printf ("  start_time. . . . . . : %ld",   ptr_server->start_time);
+        dogechat_log_printf ("  last_client_disconnect: %ld", ptr_server->last_client_disconnect);
+        dogechat_log_printf ("  prev_server . . . . . : 0x%lx", ptr_server->prev_server);
+        dogechat_log_printf ("  next_server . . . . . : 0x%lx", ptr_server->next_server);
     }
 }

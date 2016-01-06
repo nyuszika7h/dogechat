@@ -1,29 +1,29 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_XFER_H
-#define WEECHAT_XFER_H 1
+#ifndef DOGECHAT_XFER_H
+#define DOGECHAT_XFER_H 1
 
 #include <unistd.h>
 #include <gcrypt.h>
 
-#define weechat_plugin weechat_xfer_plugin
+#define dogechat_plugin dogechat_xfer_plugin
 #define XFER_PLUGIN_NAME "xfer"
 
 /* xfer types */
@@ -183,7 +183,7 @@ struct t_xfer
     struct t_xfer *next_xfer;          /* link to next xfer                 */
 };
 
-extern struct t_weechat_plugin *weechat_xfer_plugin;
+extern struct t_dogechat_plugin *dogechat_xfer_plugin;
 extern char *xfer_type_string[];
 extern char *xfer_protocol_string[];
 extern char *xfer_status_string[];
@@ -206,4 +206,4 @@ extern void xfer_free (struct t_xfer *xfer);
 extern int xfer_add_to_infolist (struct t_infolist *infolist,
                                  struct t_xfer *xfer);
 
-#endif /* WEECHAT_XFER_H */
+#endif /* DOGECHAT_XFER_H */

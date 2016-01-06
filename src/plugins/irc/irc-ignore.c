@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-ignore.h"
 #include "irc-channel.h"
@@ -82,8 +82,8 @@ irc_ignore_search (const char *mask, const char *server, const char *channel)
          ptr_ignore = ptr_ignore->next_ignore)
     {
         if ((strcmp (ptr_ignore->mask, mask) == 0)
-            && (weechat_strcasecmp (ptr_ignore->server, server) == 0)
-            && (weechat_strcasecmp (ptr_ignore->channel, channel) == 0))
+            && (dogechat_strcasecmp (ptr_ignore->server, server) == 0)
+            && (dogechat_strcasecmp (ptr_ignore->channel, channel) == 0))
         {
             return ptr_ignore;
         }
@@ -134,7 +134,7 @@ irc_ignore_new (const char *mask, const char *server, const char *channel)
     if (!regex)
         return NULL;
 
-    if (weechat_string_regcomp (regex, mask,
+    if (dogechat_string_regcomp (regex, mask,
                                 REG_EXTENDED | REG_ICASE | REG_NOSUB) != 0)
     {
         free (regex);
@@ -198,7 +198,7 @@ irc_ignore_check (struct t_irc_server *server, const char *channel,
         if (strcmp (ptr_ignore->server, "*") == 0)
             server_match = 1;
         else
-            server_match = (weechat_strcasecmp (ptr_ignore->server,
+            server_match = (dogechat_strcasecmp (ptr_ignore->server,
                                                 server->name) == 0);
 
         channel_match = 0;
@@ -208,12 +208,12 @@ irc_ignore_check (struct t_irc_server *server, const char *channel,
         {
             if (irc_channel_is_channel (server, channel))
             {
-                channel_match = (weechat_strcasecmp (ptr_ignore->channel,
+                channel_match = (dogechat_strcasecmp (ptr_ignore->channel,
                                                      channel) == 0);
             }
             else if (nick)
             {
-                channel_match = (weechat_strcasecmp (ptr_ignore->channel,
+                channel_match = (dogechat_strcasecmp (ptr_ignore->channel,
                                                      nick) == 0);
             }
         }
@@ -251,8 +251,8 @@ irc_ignore_free (struct t_irc_ignore *ignore)
 {
     struct t_irc_ignore *ptr_ignore;
 
-    (void) weechat_hook_signal_send ("irc_ignore_removing",
-                                     WEECHAT_HOOK_SIGNAL_POINTER, ignore);
+    (void) dogechat_hook_signal_send ("irc_ignore_removing",
+                                     DOGECHAT_HOOK_SIGNAL_POINTER, ignore);
 
     /* decrement number for all ignore after this one */
     for (ptr_ignore = ignore->next_ignore; ptr_ignore;
@@ -286,8 +286,8 @@ irc_ignore_free (struct t_irc_ignore *ignore)
 
     free (ignore);
 
-    (void) weechat_hook_signal_send ("irc_ignore_removed",
-                                     WEECHAT_HOOK_SIGNAL_STRING, NULL);
+    (void) dogechat_hook_signal_send ("irc_ignore_removed",
+                                     DOGECHAT_HOOK_SIGNAL_STRING, NULL);
 }
 
 /*
@@ -315,19 +315,19 @@ irc_ignore_hdata_ignore_cb (void *data, const char *hdata_name)
     /* make C compiler happy */
     (void) data;
 
-    hdata = weechat_hdata_new (hdata_name, "prev_ignore", "next_ignore",
+    hdata = dogechat_hdata_new (hdata_name, "prev_ignore", "next_ignore",
                                0, 0, NULL, NULL);
     if (hdata)
     {
-        WEECHAT_HDATA_VAR(struct t_irc_ignore, number, INTEGER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_ignore, mask, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_ignore, regex_mask, POINTER, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_ignore, server, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_ignore, channel, STRING, 0, NULL, NULL);
-        WEECHAT_HDATA_VAR(struct t_irc_ignore, prev_ignore, POINTER, 0, NULL, hdata_name);
-        WEECHAT_HDATA_VAR(struct t_irc_ignore, next_ignore, POINTER, 0, NULL, hdata_name);
-        WEECHAT_HDATA_LIST(irc_ignore_list, WEECHAT_HDATA_LIST_CHECK_POINTERS);
-        WEECHAT_HDATA_LIST(last_irc_ignore, 0);
+        DOGECHAT_HDATA_VAR(struct t_irc_ignore, number, INTEGER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_ignore, mask, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_ignore, regex_mask, POINTER, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_ignore, server, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_ignore, channel, STRING, 0, NULL, NULL);
+        DOGECHAT_HDATA_VAR(struct t_irc_ignore, prev_ignore, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_VAR(struct t_irc_ignore, next_ignore, POINTER, 0, NULL, hdata_name);
+        DOGECHAT_HDATA_LIST(irc_ignore_list, DOGECHAT_HDATA_LIST_CHECK_POINTERS);
+        DOGECHAT_HDATA_LIST(last_irc_ignore, 0);
     }
     return hdata;
 }
@@ -349,22 +349,22 @@ irc_ignore_add_to_infolist (struct t_infolist *infolist,
     if (!infolist || !ignore)
         return 0;
 
-    ptr_item = weechat_infolist_new_item (infolist);
+    ptr_item = dogechat_infolist_new_item (infolist);
     if (!ptr_item)
         return 0;
 
-    if (!weechat_infolist_new_var_string (ptr_item, "mask", ignore->mask))
+    if (!dogechat_infolist_new_var_string (ptr_item, "mask", ignore->mask))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "server", ignore->server))
+    if (!dogechat_infolist_new_var_string (ptr_item, "server", ignore->server))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "channel", ignore->channel))
+    if (!dogechat_infolist_new_var_string (ptr_item, "channel", ignore->channel))
         return 0;
 
     return 1;
 }
 
 /*
- * Prints ignore infos in WeeChat log file (usually for crash dump).
+ * Prints ignore infos in DogeChat log file (usually for crash dump).
  */
 
 void
@@ -375,14 +375,14 @@ irc_ignore_print_log ()
     for (ptr_ignore = irc_ignore_list; ptr_ignore;
          ptr_ignore = ptr_ignore->next_ignore)
     {
-        weechat_log_printf ("");
-        weechat_log_printf ("[ignore (addr:0x%lx)]", ptr_ignore);
-        weechat_log_printf ("  number . . . . . . . : %d",    ptr_ignore->number);
-        weechat_log_printf ("  mask . . . . . . . . : '%s'",  ptr_ignore->mask);
-        weechat_log_printf ("  regex_mask . . . . . : 0x%lx", ptr_ignore->regex_mask);
-        weechat_log_printf ("  server . . . . . . . : '%s'",  ptr_ignore->server);
-        weechat_log_printf ("  channel. . . . . . . : '%s'",  ptr_ignore->channel);
-        weechat_log_printf ("  prev_ignore. . . . . : 0x%lx", ptr_ignore->prev_ignore);
-        weechat_log_printf ("  next_ignore. . . . . : 0x%lx", ptr_ignore->next_ignore);
+        dogechat_log_printf ("");
+        dogechat_log_printf ("[ignore (addr:0x%lx)]", ptr_ignore);
+        dogechat_log_printf ("  number . . . . . . . : %d",    ptr_ignore->number);
+        dogechat_log_printf ("  mask . . . . . . . . : '%s'",  ptr_ignore->mask);
+        dogechat_log_printf ("  regex_mask . . . . . : 0x%lx", ptr_ignore->regex_mask);
+        dogechat_log_printf ("  server . . . . . . . : '%s'",  ptr_ignore->server);
+        dogechat_log_printf ("  channel. . . . . . . : '%s'",  ptr_ignore->channel);
+        dogechat_log_printf ("  prev_ignore. . . . . : 0x%lx", ptr_ignore->prev_ignore);
+        dogechat_log_printf ("  next_ignore. . . . . : 0x%lx", ptr_ignore->next_ignore);
     }
 }

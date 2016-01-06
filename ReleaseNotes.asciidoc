@@ -1,4 +1,4 @@
-= WeeChat Release Notes
+= DogeChat Release Notes
 :author: Sébastien Helleu
 :email: flashcode@flashtux.org
 :lang: en
@@ -8,12 +8,12 @@
 
 This document lists important changes for each version, that require manual
 actions (the latest formatted version of this document can be found
-https://weechat.org/files/releasenotes/ReleaseNotes-devel.html[here]). +
+https://dogechat.org/files/releasenotes/ReleaseNotes-devel.html[here]). +
 It is recommended to read it when upgrading to a new stable
 version.
 
 For a complete list of changes, please look at
-https://weechat.org/files/changelog/ChangeLog-devel.html[ChangeLog]
+https://dogechat.org/files/changelog/ChangeLog-devel.html[ChangeLog]
 (file 'ChangeLog.asciidoc' in sources).
 
 
@@ -54,13 +54,13 @@ UTF-8, like ISO charset), you should turn on a new option:
 /set irc.network.channel_encode on
 ----
 
-This will force WeeChat to decode/encode the channel name
-(like WeeChat 1.2 or older did).
+This will force DogeChat to decode/encode the channel name
+(like DogeChat 1.2 or older did).
 
 See these issues for more information: issue #482, issue #218.
 
 [NOTE]
-It is *highly recommended* to use only UTF-8 in WeeChat (wherever you can),
+It is *highly recommended* to use only UTF-8 in DogeChat (wherever you can),
 because everything is stored as UTF-8 internally.
 
 [[1.3_alias_command]]
@@ -93,8 +93,8 @@ The option 'script.scripts.dir' has been renamed to 'script.scripts.path'
 
 The word chars are now customizable with two options:
 
-* weechat.look.word_chars_highlight
-* weechat.look.word_chars_input
+* dogechat.look.word_chars_highlight
+* dogechat.look.word_chars_input
 
 The behavior has changed for command line: now any non-word char is used as
 delimiter for keys to move to previous/next word or delete previous/next word.
@@ -103,7 +103,7 @@ You can restore the old behavior (only use spaces as delimiters) with this
 command:
 
 ----
-/set weechat.look.word_chars_input "!\u00A0,!\x20,*"
+/set dogechat.look.word_chars_input "!\u00A0,!\x20,*"
 ----
 
 [[1.1.1]]
@@ -158,20 +158,20 @@ You can restore the default "beep" trigger with the following command:
 [[1.1_commands_return_code]]
 === Return code of commands
 
-The API function 'weechat_command' now sends the value returned return by
+The API function 'dogechat_command' now sends the value returned return by
 command callback.
 
-WeeChat does not display any more an error when a command returns
-'WEECHAT_RC_ERROR'. Consequently, all plugins/scripts should display an
-explicit error message before returning 'WEECHAT_RC_ERROR'.
+DogeChat does not display any more an error when a command returns
+'DOGECHAT_RC_ERROR'. Consequently, all plugins/scripts should display an
+explicit error message before returning 'DOGECHAT_RC_ERROR'.
 
-For C plugins, two macros have been added in weechat-plugin.h:
-'WEECHAT_COMMAND_MIN_ARGS' and 'WEECHAT_COMMAND_ERROR'.
+For C plugins, two macros have been added in dogechat-plugin.h:
+'DOGECHAT_COMMAND_MIN_ARGS' and 'DOGECHAT_COMMAND_ERROR'.
 
 [[1.1_inline_commands_completion]]
 === Completion of inline commands
 
-WeeChat now completes by default inline commands (not only at beginning of
+DogeChat now completes by default inline commands (not only at beginning of
 line).
 
 When this feature is enabled, there is no more automatic completion of
@@ -181,7 +181,7 @@ like `/dcc send <nick> <path>`).
 To restore the old behavior (no completion of inline commands):
 
 ----
-/set weechat.completion.command_inline off
+/set dogechat.completion.command_inline off
 ----
 
 [[1.1_relay_irc_backlog_tags]]
@@ -237,7 +237,7 @@ Bug fix and maintenance release.
 === Channel type not added by default on /join
 
 The channel type is not any more automatically added to a channel name on join
-(for example `/join weechat` will not send `/join #weechat`).
+(for example `/join dogechat` will not send `/join #dogechat`).
 
 If you are lazy and want to automatically add the channel type, you can turn on
 the new option:
@@ -284,20 +284,20 @@ You can add it with following command:
 [[1.0_hotlist_conditions]]
 === Hotlist conditions
 
-A new option 'weechat.look.hotlist_add_conditions' has been added. This option
-replaces the option 'weechat.look.hotlist_add_buffer_if_away', which has been
+A new option 'dogechat.look.hotlist_add_conditions' has been added. This option
+replaces the option 'dogechat.look.hotlist_add_buffer_if_away', which has been
 removed.
 
 Default conditions are `${away} || ${buffer.num_displayed} == 0`, which means
 that a buffer is added in hotlist if you are away ("away" local variable is
 set), or if the buffer is not visible on screen (not displayed in any window).
 
-If you have set 'weechat.look.hotlist_add_buffer_if_away' to `off` (to not add
+If you have set 'dogechat.look.hotlist_add_buffer_if_away' to `off` (to not add
 current buffer in hotlist when you are away), then you must manually change the
 default conditions with the following command:
 
 ----
-/set weechat.look.hotlist_add_conditions "${buffer.num_displayed} == 0"
+/set dogechat.look.hotlist_add_conditions "${buffer.num_displayed} == 0"
 ----
 
 [[1.0_trigger_plugin]]
@@ -310,7 +310,7 @@ Default triggers have same features as default rmodifiers (to hide passwords
 in commands and output).
 
 If you added some custom rmodifiers, you must create similar triggers, see
-`/help trigger` and the complete trigger doc in the 'WeeChat User's guide'.
+`/help trigger` and the complete trigger doc in the 'DogeChat User's guide'.
 
 [NOTE]
 If on startup you have an error about API mismatch in plugin 'rmodifier.so',
@@ -324,7 +324,7 @@ A bare display mode has been added (for easy text selection and click on URLs),
 the new default key is key[alt-l].
 
 Use command `/key missing` to add the key or `/key listdiff` to see differences
-between your current keys and WeeChat default keys.
+between your current keys and DogeChat default keys.
 
 [[0.4.3]]
 == Version 0.4.3 (2014-02-09)
@@ -332,12 +332,12 @@ between your current keys and WeeChat default keys.
 [[0.4.3_colors_messages]]
 === Colors in messages
 
-The color code for "reverse video" in IRC message has been fixed: now WeeChat
+The color code for "reverse video" in IRC message has been fixed: now DogeChat
 uses 0x16 like other clients (and not 0x12 any more). +
 The code 0x12 is not decoded any more, so if it is received (for example from
-an old WeeChat version), it is not displayed as reverse video.
+an old DogeChat version), it is not displayed as reverse video.
 
-The color code for "underlined text" in input line has been fixed: now WeeChat
+The color code for "underlined text" in input line has been fixed: now DogeChat
 uses 0x1F, the same code sent to IRC server.
 
 The default keys for "reverse video" and "underlined text" have changed:
@@ -356,10 +356,10 @@ You can remove the old keys and add the new ones with these commands:
 [[0.4.3_terminal_title]]
 === Terminal title
 
-The boolean option 'weechat.look.set_title' has been renamed to
-'weechat.look.window_title' and is now a string.
+The boolean option 'dogechat.look.set_title' has been renamed to
+'dogechat.look.window_title' and is now a string.
 
-The content is evaluated and the default value is `WeeChat ${info:version}`.
+The content is evaluated and the default value is `DogeChat ${info:version}`.
 
 [NOTE]
 Only static content should be used in this option, because the title is
@@ -375,7 +375,7 @@ The new bar item 'buffer_last_number' displays the highest buffer number
 currently used.
 
 If you want to display last number in the status bar, replace 'buffer_count'
-by 'buffer_last_number' in your option 'weechat.bar.status.items'.
+by 'buffer_last_number' in your option 'dogechat.bar.status.items'.
 
 [[0.4.3_bar_item_buffer_zoom]]
 === New bar item buffer_zoom
@@ -384,7 +384,7 @@ A new bar item has been added: 'buffer_zoom'.
 The default value for status bar items becomes:
 
 ----
-/set weechat.bar.status.items "[time],[buffer_count],[buffer_plugin],buffer_number+:+buffer_name+(buffer_modes)+{buffer_nicklist_count}+buffer_zoom+buffer_filter,[lag],[hotlist],completion,scroll"
+/set dogechat.bar.status.items "[time],[buffer_count],[buffer_plugin],buffer_number+:+buffer_name+(buffer_modes)+{buffer_nicklist_count}+buffer_zoom+buffer_filter,[lag],[hotlist],completion,scroll"
 ----
 
 [[0.4.3_irc_messages_channel_join]]
@@ -423,11 +423,11 @@ You should check the value of both options and fix them if needed.
 The day change message is now dynamically displayed, and therefore is not stored
 as a line in buffer any more.
 
-Option 'weechat.look.day_change_time_format' has been split into two options
-'weechat.look.day_change_message_{1date|2dates}' (color codes are allowed in
+Option 'dogechat.look.day_change_time_format' has been split into two options
+'dogechat.look.day_change_message_{1date|2dates}' (color codes are allowed in
 these options, see `/help eval`).
 
-New color option 'weechat.color.chat_day_change' has been added.
+New color option 'dogechat.color.chat_day_change' has been added.
 
 After `/upgrade` from an old version, you will see two messages for each day
 change. This is a normal behavior and will not happen again with the next day
@@ -462,7 +462,7 @@ To view keys in search context:
 /key list search
 ----
 
-For more information, see the chapter about keys in the 'WeeChat User's guide'.
+For more information, see the chapter about keys in the 'DogeChat User's guide'.
 
 [[0.4.2_rmodifier]]
 === New rmodifier
@@ -479,12 +479,12 @@ evaluated with the function "string_eval_expression", which uses the format
 
 Following options are affected:
 
-* 'weechat.look.buffer_time_format'
-* 'weechat.look.prefix_action'
-* 'weechat.look.prefix_error'
-* 'weechat.look.prefix_join'
-* 'weechat.look.prefix_network'
-* 'weechat.look.prefix_quit'
+* 'dogechat.look.buffer_time_format'
+* 'dogechat.look.prefix_action'
+* 'dogechat.look.prefix_error'
+* 'dogechat.look.prefix_join'
+* 'dogechat.look.prefix_network'
+* 'dogechat.look.prefix_quit'
 
 The options using old format `${xxx}` must be changed with new format
 `${color:xxx}` (where xxx is a color name or number, with optional color
@@ -493,24 +493,24 @@ attributes).
 Example:
 
 ----
-/set weechat.look.buffer_time_format "${color:251}%H${color:243}%M${color:238}%S"
+/set dogechat.look.buffer_time_format "${color:251}%H${color:243}%M${color:238}%S"
 ----
 
 [[0.4.2_binary_man_page]]
 === Binary and man page
 
-WeeChat binary and man page have been renamed from `weechat-curses` to
-`weechat`.
+DogeChat binary and man page have been renamed from `dogechat-curses` to
+`dogechat`.
 
-A symbolic link has been added for binary: `weechat-curses` -> `weechat`
+A symbolic link has been added for binary: `dogechat-curses` -> `dogechat`
 (so that the /upgrade from a old version will still work).
 
 If you upgrade from an old version, it is recommended to force the use of the
-new binary name with the command: `/upgrade /path/to/weechat` (replace the path
+new binary name with the command: `/upgrade /path/to/dogechat` (replace the path
 accordingly).
 
 [NOTE]
-For packagers: you should create the link `weechat-curses` -> `weechat` if it's
+For packagers: you should create the link `dogechat-curses` -> `dogechat` if it's
 not automatically created in the package (both cmake and configure are creating
 this link on make install).
 
@@ -535,13 +535,13 @@ Option 'aspell.look.color' has been renamed to 'aspell.color.misspelled'.
 [[0.4.1_relay_nicklist_diff]]
 === Nicklist diff in relay
 
-A new message with identifier "_nicklist_diff" has been added in relay (WeeChat
-protocol). WeeChat may decide to send full nicklist or this nicklist diff at any
+A new message with identifier "_nicklist_diff" has been added in relay (DogeChat
+protocol). DogeChat may decide to send full nicklist or this nicklist diff at any
 time (depending on size of message, the smaller is sent).
 
 Clients using nicklist must implement it.
 
-For more info about content of message, see document 'WeeChat Relay Protocol'.
+For more info about content of message, see document 'DogeChat Relay Protocol'.
 
 [[0.4.1_dynamic_nick_prefix_suffix]]
 === Dynamic nick prefix/suffix
@@ -549,27 +549,27 @@ For more info about content of message, see document 'WeeChat Relay Protocol'.
 The nick prefix/suffix (for example: "<" and ">") are now dynamic and used on
 display (not stored any more in the line).
 
-Options moved from irc plugin (irc.conf) to core (weechat.conf):
+Options moved from irc plugin (irc.conf) to core (dogechat.conf):
 
-* 'irc.look.nick_prefix' moved to 'weechat.look.nick_prefix'
-* 'irc.look.nick_suffix' moved to 'weechat.look.nick_suffix'
-* 'irc.color.nick_prefix' moved to 'weechat.color.chat_nick_prefix'
-* 'irc.color.nick_suffix' moved to 'weechat.color.chat_nick_suffix'
+* 'irc.look.nick_prefix' moved to 'dogechat.look.nick_prefix'
+* 'irc.look.nick_suffix' moved to 'dogechat.look.nick_suffix'
+* 'irc.color.nick_prefix' moved to 'dogechat.color.chat_nick_prefix'
+* 'irc.color.nick_suffix' moved to 'dogechat.color.chat_nick_suffix'
 
 Types and default values for these four options remain unchanged.
 
 Two new options to customize the truncature char (by default "`+`"):
 
-* 'weechat.look.prefix_align_more_after' (boolean, 'on' by default)
-* 'weechat.look.prefix_buffer_align_more_after' (boolean, 'on' by default)
+* 'dogechat.look.prefix_align_more_after' (boolean, 'on' by default)
+* 'dogechat.look.prefix_buffer_align_more_after' (boolean, 'on' by default)
 
 When these options are enabled (default), the "`+`" is displayed after the
 text, replacing the space that should be displayed there. +
 When turned off, the "`+`" will replace last char of text.
 
 Example for a nicks "FlashCode" and "fc" with different values for options
-'weechat.look.prefix_align_max', 'weechat.look.prefix_align_more_after',
-'weechat.look.nick_prefix' and 'weechat.look.nick_suffix':
+'dogechat.look.prefix_align_max', 'dogechat.look.prefix_align_more_after',
+'dogechat.look.nick_prefix' and 'dogechat.look.nick_suffix':
 
 ----
                       # align_max, more_after, prefix/suffix
@@ -653,14 +653,14 @@ The old syntax was:
 
 [source,lua]
 ----
-return weechat.WEECHAT_RC_OK()
+return dogechat.DOGECHAT_RC_OK()
 ----
 
 The new syntax is:
 
 [source,lua]
 ----
-return weechat.WEECHAT_RC_OK
+return dogechat.DOGECHAT_RC_OK
 ----
 
 [[0.4.1_guile_callbacks]]
@@ -670,7 +670,7 @@ The way to give arguments for guile callbacks has been fixed: now arguments are
 sent individually (instead of a list with all arguments inside).
 
 Therefore, existing guile scripts must be modified accordingly. Moreover,
-WeeChat now requires Guile ≥ 2.0 to compile.
+DogeChat now requires Guile ≥ 2.0 to compile.
 
 [[0.4.0]]
 == Version 0.4.0 (2013-01-20)
@@ -682,7 +682,7 @@ Conditions in bars have changed, and now an expression is evaluated.
 
 If you have a value with many conditions in a bar, like: `nicklist,active`, you
 must now use an expression like: `${nicklist} && ${active}` (see the chapter
-about bars in the 'WeeChat User's guide').
+about bars in the 'DogeChat User's guide').
 
 [[0.4.0_ipv6_default]]
 === IPv6 by default
@@ -723,11 +723,11 @@ This version fixes crash when decoding IRC colors in strings.
 [[0.3.9_options_moved]]
 === Options moved
 
-Options moved from core (weechat.conf) to irc plugin (irc.conf):
+Options moved from core (dogechat.conf) to irc plugin (irc.conf):
 
-* 'weechat.look.nickmode' moved to 'irc.look.nick_mode' (new type: integer
+* 'dogechat.look.nickmode' moved to 'irc.look.nick_mode' (new type: integer
    with values: none/prefix/action/both)
-* 'weechat.look.nickmode_empty' moved to 'irc.look.nick_mode_empty'
+* 'dogechat.look.nickmode_empty' moved to 'irc.look.nick_mode_empty'
 
 [[0.3.9_bar_item_buffer_modes]]
 === New bar item buffer_modes
@@ -739,7 +739,7 @@ status bar (after channel name), you have to manually add the new item
 for status bar items becomes:
 
 ----
-/set weechat.bar.status.items "[time],[buffer_count],[buffer_plugin],buffer_number+:+buffer_name+(buffer_modes)+{buffer_nicklist_count}+buffer_filter,[lag],[hotlist],completion,scroll"
+/set dogechat.bar.status.items "[time],[buffer_count],[buffer_plugin],buffer_number+:+buffer_name+(buffer_modes)+{buffer_nicklist_count}+buffer_filter,[lag],[hotlist],completion,scroll"
 ----
 
 [[0.3.9_command_aspell]]
@@ -763,14 +763,14 @@ Options renamed in command `/aspell`:
 An horizontal separator has been added between split windows, and two options
 have been added to toggle separators (both are enabled by default):
 
-* 'weechat.look.window_separator_horizontal'
-* 'weechat.look.window_separator_vertical'
+* 'dogechat.look.window_separator_horizontal'
+* 'dogechat.look.window_separator_vertical'
 
 [[0.3.9_new_keys]]
 === New keys
 
 New keys were added, use command `/key missing` to add them or `/key listdiff`
-to see differences between your current keys and WeeChat default keys.
+to see differences between your current keys and DogeChat default keys.
 
 [[0.3.8]]
 == Version 0.3.8 (2012-06-03)
@@ -778,8 +778,8 @@ to see differences between your current keys and WeeChat default keys.
 [[0.3.8_options]]
 === Options
 
-Options 'weechat.look.prefix_align_more' and
-'weechat.look.prefix_buffer_align_more' have been converted from type boolean to
+Options 'dogechat.look.prefix_align_more' and
+'dogechat.look.prefix_buffer_align_more' have been converted from type boolean to
 string:
 
 * if the value was on (default), new value is "+" and you can now customize this
@@ -789,13 +789,13 @@ string:
 [[0.3.8_paste_detection]]
 === Paste detection
 
-Option 'weechat.look.paste_max_lines' can now be used with value 0 to detect
+Option 'dogechat.look.paste_max_lines' can now be used with value 0 to detect
 paste with one line (only if terminal "bracketed paste mode" is enabled when
-option 'weechat.look.paste_bracketed' is on); so now the value -1 is used to
+option 'dogechat.look.paste_bracketed' is on); so now the value -1 is used to
 disable paste detection: if your value was 0, you should set it to -1
 
 ----
-/set weechat.look.paste_max_lines -1
+/set dogechat.look.paste_max_lines -1
 ----
 
 [[0.3.8_rmodifier]]
@@ -831,11 +831,11 @@ new default value:
 /key bind meta-u /window scroll_unread
 ----
 
-Option 'weechat.history.max_lines' has been renamed to
-'weechat.history.max_buffer_lines_number'.
+Option 'dogechat.history.max_lines' has been renamed to
+'dogechat.history.max_buffer_lines_number'.
 
-Option 'weechat.plugin.extension' now supports list of extensions, and new
-default value is ".so,.dll" (with this value, weechat.conf is compatible with
+Option 'dogechat.plugin.extension' now supports list of extensions, and new
+default value is ".so,.dll" (with this value, dogechat.conf is compatible with
 Cygwin).
 
 [[0.3.7_extended_regex]]
@@ -845,7 +845,7 @@ Extended regex is used in filters and irc ignore, so some chars that needed
 escape in past do not need any more (for example `[0-9]\+` becomes `[0-9]+`),
 filters and ignore have to be manually fixed.
 
-Option 'weechat.look.highlight_regex' becomes case insensitive by default, to
+Option 'dogechat.look.highlight_regex' becomes case insensitive by default, to
 make it case sensitive, use "(?-i)" at beginning of string, for example:
 "(?-i)FlashCode|flashy".
 
@@ -855,15 +855,15 @@ make it case sensitive, use "(?-i)" at beginning of string, for example:
 [[0.3.6_options]]
 === Options
 
-Option 'weechat.look.hline_char' has been renamed to
-'weechat.look.separator_horizontal'.
+Option 'dogechat.look.hline_char' has been renamed to
+'dogechat.look.separator_horizontal'.
 
 [[0.3.6_colors_bold]]
 === Bold in colors
 
 Bold is not used any more for basic colors (used only if terminal has less than
 16 colors), a new option has been added to force bold if needed:
-'weechat.look.color_basic_force_bold'.
+'dogechat.look.color_basic_force_bold'.
 
 [[0.3.5]]
 == Version 0.3.5 (2011-05-15)
@@ -890,8 +890,8 @@ Count of messages have been added to hotlist by default, if you want to come
 back to old behavior, do that:
 
 ----
-/set weechat.look.hotlist_count_max 0
-/set weechat.look.hotlist_buffer_separator ","
+/set dogechat.look.hotlist_count_max 0
+/set dogechat.look.hotlist_buffer_separator ","
 ----
 
 [[0.3.5_hotlist_away_current_buffer]]
@@ -901,14 +901,14 @@ When you are away, all buffers are now added to hotlist by default (even if they
 are displayed in a window), if you want to come back to old behavior, do that:
 
 ----
-/set weechat.look.hotlist_add_buffer_if_away off
+/set dogechat.look.hotlist_add_buffer_if_away off
 ----
 
 [[0.3.5_new_keys]]
 === New keys
 
 New keys were added, use command `/key missing` to add them or `/key listdiff`
-to see differences between your current keys and WeeChat default keys.
+to see differences between your current keys and DogeChat default keys.
 
 [[0.3.4]]
 == Version 0.3.4 (2011-01-16)
@@ -919,8 +919,8 @@ to see differences between your current keys and WeeChat default keys.
 If you are using `/upgrade` from a previous release:
 
 * some nick prefixes can be wrong, so it is recommended to do `/allchan names`
-* nick colors are defined with a new option 'weechat.color.chat_nick_colors',
-  therefore old options 'weechat.color.chat_nick_color1..10' will be lost when
+* nick colors are defined with a new option 'dogechat.color.chat_nick_colors',
+  therefore old options 'dogechat.color.chat_nick_color1..10' will be lost when
   upgrading
 * nick colors in messages displayed will be wrong if you changed some nick
   colors (old default colors will be used)
@@ -976,7 +976,7 @@ value: your current value multiplied by 1000 (new default value is 500).
 
 If you are using `/upgrade` from a previous release, then you must execute this
 command on all IRC servers/channels/private buffers and xfer DCC chats (not
-needed on WeeChat core buffer or buffers from other plugins/scripts):
+needed on DogeChat core buffer or buffers from other plugins/scripts):
 
 ----
 /buffer set highlight_words $nick
@@ -1014,19 +1014,19 @@ plugin API and is not compatible with previous versions.
 Major differences:
 
 * it is *NOT POSSIBLE* to use command `/upgrade` from a version 0.2.x to 0.3.x;
-  you have to quit your old WeeChat, then run new version.
+  you have to quit your old DogeChat, then run new version.
 * new configuration files (`*.conf`) are not compatible with old files (`*.rc`).
 * name of options is similar to old versions, but there is now one configuration
-  file by plugin, and one file for WeeChat core; there is
+  file by plugin, and one file for DogeChat core; there is
   *no automatic conversion* for your old options to new configuration files,
   so you'll have to setup again your IRC servers and all other options.
 * plugin API has been rewritten and is not compatible with previous versions;
   accordingly, scripts and plugins must have been designed for version 0.3.x to
-  be loaded into WeeChat.
+  be loaded into DogeChat.
 
 More information about new API is available on wiki:
-http://wiki.flashtux.org/wiki/WeeChat_0.3.0
-and http://wiki.flashtux.org/wiki/WeeChat_0.3.0_API
+http://wiki.flashtux.org/wiki/DogeChat_0.3.0
+and http://wiki.flashtux.org/wiki/DogeChat_0.3.0_API
 
 [[0.2.6.3]]
 == Version 0.2.6.3 (2009-06-13)
@@ -1071,8 +1071,8 @@ All users of version 0.2.2 should upgrade to this version.
 [[0.2.2_charset_plugin]]
 === Charset plugin
 
-For users of any previous version, all your charset settings in weechat.rc will
-be LOST! You should save your weechat.rc to keep your values and set them again
+For users of any previous version, all your charset settings in dogechat.rc will
+be LOST! You should save your dogechat.rc to keep your values and set them again
 with new 'charset' plugin.
 
 For ISO users: history of channels may be without accents (after `/upgrade`),
@@ -1099,8 +1099,8 @@ For server encode (on server buffer):
 
 New keys for topic scroll: key[F9]/key[F10].
 
-Key key[F10] was used for `infobar_clear` in previous WeeChat versions, you
-have to manually rebind this key (except for new WeeChat users):
+Key key[F10] was used for `infobar_clear` in previous DogeChat versions, you
+have to manually rebind this key (except for new DogeChat users):
 
 ----
 /key <press alt+"k" then F10> scroll_topic_right
@@ -1123,14 +1123,14 @@ No release note.
 [[0.2.0_after_upgrade]]
 === After /upgrade
 
-If you upgraded with `/upgrade` in WeeChat, you should `/disconnect` and then
+If you upgraded with `/upgrade` in DogeChat, you should `/disconnect` and then
 `/reconnect` on each server, to display properly channel/user modes.
 
 [[0.2.0_plugins]]
 === Plugins
 
-If you're using plugins, you should remove some old plugins libraries in WeeChat
-system library directory (commonly '/usr/local/lib/weechat/plugins'): remove
+If you're using plugins, you should remove some old plugins libraries in DogeChat
+system library directory (commonly '/usr/local/lib/dogechat/plugins'): remove
 `lib*` files (like `libperl.*`, `libpython.*`, ..) and keep only new libraries
 (`perl.*`, `python.*`, ..).
 
@@ -1164,18 +1164,18 @@ redefine these keys (key[alt-]key[Home]/key[End]):
 /key unbind meta-meta2-4~
 ----
 
-Then launch again WeeChat (or issue `/upgrade`).
+Then launch again DogeChat (or issue `/upgrade`).
 
 [[0.1.8_configuration_files]]
 === Configuration files
 
 It is recommended for users of version 0.1.7 (or any older), to replace values
-in setup file ('~/.weechat/weechat.rc'):
+in setup file ('~/.dogechat/dogechat.rc'):
 
-* option: log_path: replace '~/.weechat/logs' by '%h/logs'
-* option: plugins_path: replace '~/.weechat/plugins' by '%h/plugins'
+* option: log_path: replace '~/.dogechat/logs' by '%h/logs'
+* option: plugins_path: replace '~/.dogechat/plugins' by '%h/plugins'
 
-The string '%h' is replaced by WeeChat home (default: '~/.weechat', may be
+The string '%h' is replaced by DogeChat home (default: '~/.dogechat', may be
 overridden by new command line argument `--dir`).
 
 [[0.1.8_keys]]
@@ -1222,8 +1222,8 @@ the plugins names are ending by '.so.0.0' and not '.so'.
 
 With new and full UTF-8 support, the option 'look_charset_internal' should be
 set to blank for most cases. Forces it only if your locale is not properly
-detected by WeeChat (you can set 'UTF-8' or 'ISO-8859-15' for example, depending
-on your locale). WeeChat is looking for 'UTF-8' in your locale name at startup.
+detected by DogeChat (you can set 'UTF-8' or 'ISO-8859-15' for example, depending
+on your locale). DogeChat is looking for 'UTF-8' in your locale name at startup.
 
 [[0.1.5]]
 == Version 0.1.5 (2005-09-24)

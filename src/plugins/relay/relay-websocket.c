@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2013-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -25,7 +25,7 @@
 #include <string.h>
 #include <gcrypt.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "relay.h"
 #include "relay-client.h"
 #include "relay-config.h"
@@ -39,28 +39,28 @@
 
 
 /*
- * Checks if a message is a HTTP GET with resource "/weechat".
+ * Checks if a message is a HTTP GET with resource "/dogechat".
  *
  * Returns:
- *   1: message is a HTTP GET with resource "/weechat"
- *   0: message is NOT a HTTP GET with resource "/weechat"
+ *   1: message is a HTTP GET with resource "/dogechat"
+ *   0: message is NOT a HTTP GET with resource "/dogechat"
  */
 
 int
-relay_websocket_is_http_get_weechat (const char *message)
+relay_websocket_is_http_get_dogechat (const char *message)
 {
-    /* the message must start with "GET /weechat" */
-    if (strncmp (message, "GET /weechat", 12) != 0)
+    /* the message must start with "GET /dogechat" */
+    if (strncmp (message, "GET /dogechat", 12) != 0)
         return 0;
 
-    /* after "GET /weechat", only a new line or " HTTP" is allowed */
+    /* after "GET /dogechat", only a new line or " HTTP" is allowed */
     if ((message[12] != '\r') && (message[12] != '\n')
         && (strncmp (message + 12, " HTTP", 5) != 0))
     {
         return 0;
     }
 
-    /* valid HTTP GET for resource "/weechat" */
+    /* valid HTTP GET for resource "/dogechat" */
     return 1;
 }
 
@@ -86,7 +86,7 @@ relay_websocket_save_header (struct t_relay_client *client,
         return;
 
     /* get header name */
-    name = weechat_strndup (message, pos - message);
+    name = dogechat_strndup (message, pos - message);
     if (!name)
         return;
 
@@ -98,7 +98,7 @@ relay_websocket_save_header (struct t_relay_client *client,
     }
 
     /* add header in the hashtable */
-    weechat_hashtable_set (client->http_headers, name, ptr_value);
+    dogechat_hashtable_set (client->http_headers, name, ptr_value);
 
     free (name);
 }
@@ -107,7 +107,7 @@ relay_websocket_save_header (struct t_relay_client *client,
  * Checks if a client handshake is valid.
  *
  * A websocket query looks like:
- *   GET /weechat HTTP/1.1
+ *   GET /dogechat HTTP/1.1
  *   Upgrade: websocket
  *   Connection: Upgrade
  *   Host: myhost:5000
@@ -142,20 +142,20 @@ relay_websocket_client_handshake_valid (struct t_relay_client *client)
     const char *value;
 
     /* check if we have header "Upgrade" with value "websocket" */
-    value = weechat_hashtable_get (client->http_headers, "Upgrade");
+    value = dogechat_hashtable_get (client->http_headers, "Upgrade");
     if (!value)
         return -1;
-    if (weechat_strcasecmp (value, "websocket") != 0)
+    if (dogechat_strcasecmp (value, "websocket") != 0)
         return -1;
 
     /* check if we have header "Sec-WebSocket-Key" with non-empty value */
-    value = weechat_hashtable_get (client->http_headers, "Sec-WebSocket-Key");
+    value = dogechat_hashtable_get (client->http_headers, "Sec-WebSocket-Key");
     if (!value || !value[0])
         return -1;
 
     if (relay_config_regex_websocket_allowed_origins)
     {
-        value = weechat_hashtable_get (client->http_headers, "Origin");
+        value = dogechat_hashtable_get (client->http_headers, "Origin");
         if (!value || !value[0])
             return -2;
         if (regexec (relay_config_regex_websocket_allowed_origins, value, 0,
@@ -191,7 +191,7 @@ relay_websocket_build_handshake (struct t_relay_client *client)
     gcry_md_hd_t hd;
     int length;
 
-    sec_websocket_key = weechat_hashtable_get (client->http_headers,
+    sec_websocket_key = dogechat_hashtable_get (client->http_headers,
                                                "Sec-WebSocket-Key");
     if (!sec_websocket_key || !sec_websocket_key[0])
         return NULL;
@@ -212,7 +212,7 @@ relay_websocket_build_handshake (struct t_relay_client *client)
     length = gcry_md_get_algo_dlen (GCRY_MD_SHA1);
     gcry_md_write (hd, key, strlen (key));
     result = gcry_md_read (hd, GCRY_MD_SHA1);
-    weechat_string_encode_base64 ((char *)result, length, sec_websocket_accept);
+    dogechat_string_encode_base64 ((char *)result, length, sec_websocket_accept);
     gcry_md_close (hd);
 
     free (key);

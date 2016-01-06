@@ -1,0 +1,4 @@
+?package(dogechat-curses):needs="text" section="Applications/Network/Communication" \
+		title="dogechat" \
+		icon="/usr/share/pixmaps/dogechat.xpm" \
+		command="/usr/bin/dogechat"

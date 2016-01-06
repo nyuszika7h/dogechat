@@ -102,71 +102,71 @@
 
 | trigger | trigger_options | opcje dla triggerów
 
-| weechat | bars_names | nazwy pasków
+| dogechat | bars_names | nazwy pasków
 
-| weechat | bars_options | opcje pasków
+| dogechat | bars_options | opcje pasków
 
-| weechat | buffer_properties_get | właściwości, jakie mogą być przeczytane w buforze
+| dogechat | buffer_properties_get | właściwości, jakie mogą być przeczytane w buforze
 
-| weechat | buffer_properties_set | właściwości, jakie mogą być ustawione w buforze
+| dogechat | buffer_properties_set | właściwości, jakie mogą być ustawione w buforze
 
-| weechat | buffers_names | nazwy buforów
+| dogechat | buffers_names | nazwy buforów
 
-| weechat | buffers_numbers | numery buforów
+| dogechat | buffers_numbers | numery buforów
 
-| weechat | buffers_plugins_names | nazwy buforów (włącznie z nazwami wtyczek)
+| dogechat | buffers_plugins_names | nazwy buforów (włącznie z nazwami wtyczek)
 
-| weechat | colors | nazwy kolorów
+| dogechat | colors | nazwy kolorów
 
-| weechat | commands | komendy (weechata i wtyczek)
+| dogechat | commands | komendy (dogechata i wtyczek)
 
-| weechat | config_files | pliki konfiguracyjne
+| dogechat | config_files | pliki konfiguracyjne
 
-| weechat | config_option_values | wartości opcji konfiguracyjnych
+| dogechat | config_option_values | wartości opcji konfiguracyjnych
 
-| weechat | config_options | opcje konfiguracyjne
+| dogechat | config_options | opcje konfiguracyjne
 
-| weechat | cursor_areas | obszary ("chat" albo nazwa paska) dla wolnego przemieszczania się kursora
+| dogechat | cursor_areas | obszary ("chat" albo nazwa paska) dla wolnego przemieszczania się kursora
 
-| weechat | env_value | wartość zmiennej środowiskowej
+| dogechat | env_value | wartość zmiennej środowiskowej
 
-| weechat | env_vars | zmienne środowiskowe
+| dogechat | env_vars | zmienne środowiskowe
 
-| weechat | filename | nazwa pliku
+| dogechat | filename | nazwa pliku
 
-| weechat | filters_names | nazwy filtrów
+| dogechat | filters_names | nazwy filtrów
 
-| weechat | infolists | nazwy powiązanych infolist
+| dogechat | infolists | nazwy powiązanych infolist
 
-| weechat | infos | nazwy powiązanych informacji
+| dogechat | infos | nazwy powiązanych informacji
 
-| weechat | keys_codes | kody klawiszowe
+| dogechat | keys_codes | kody klawiszowe
 
-| weechat | keys_codes_for_reset | kody klawiszy, które mogą być zresetowane (klawisze dodane, przedefiniowane lub usunięte)
+| dogechat | keys_codes_for_reset | kody klawiszy, które mogą być zresetowane (klawisze dodane, przedefiniowane lub usunięte)
 
-| weechat | keys_contexts | konteksty klawiszy
+| dogechat | keys_contexts | konteksty klawiszy
 
-| weechat | layouts_names | nazwy układów
+| dogechat | layouts_names | nazwy układów
 
-| weechat | nicks | nicki na liście nicków obecnego bufora
+| dogechat | nicks | nicki na liście nicków obecnego bufora
 
-| weechat | palette_colors | paleta kolorów
+| dogechat | palette_colors | paleta kolorów
 
-| weechat | plugins_commands | komendy zdefiniowane przez wtyczki
+| dogechat | plugins_commands | komendy zdefiniowane przez wtyczki
 
-| weechat | plugins_installed | nazwy zainstalowanych wtyczek
+| dogechat | plugins_installed | nazwy zainstalowanych wtyczek
 
-| weechat | plugins_names | nazwy wtyczek
+| dogechat | plugins_names | nazwy wtyczek
 
-| weechat | proxies_names | nazwy proxy
+| dogechat | proxies_names | nazwy proxy
 
-| weechat | proxies_options | opcje proxy
+| dogechat | proxies_options | opcje proxy
 
-| weechat | secured_data | nazwy zabezpieczonych danych (plik sec.conf, sekcja data)
+| dogechat | secured_data | nazwy zabezpieczonych danych (plik sec.conf, sekcja data)
 
-| weechat | weechat_commands | komendy WeeChat
+| dogechat | dogechat_commands | komendy DogeChat
 
-| weechat | windows_numbers | liczba okien
+| dogechat | windows_numbers | liczba okien
 
 | xfer | nick | nicki obecne na rozmowie DCC
 

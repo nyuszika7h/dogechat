@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_GUI_CURSES_H
-#define WEECHAT_GUI_CURSES_H 1
+#ifndef DOGECHAT_GUI_CURSES_H
+#define DOGECHAT_GUI_CURSES_H 1
 
 #include <time.h>
 
@@ -35,7 +35,7 @@ struct t_gui_line;
 struct t_gui_window;
 struct t_gui_bar_window;
 
-#define GUI_CURSES_NUM_WEECHAT_COLORS 17
+#define GUI_CURSES_NUM_DOGECHAT_COLORS 17
 
 #ifndef A_ITALIC /* A_ITALIC is defined in ncurses >= 5.9 patch 20130831 */
 #define A_ITALIC 0
@@ -72,7 +72,7 @@ struct t_gui_bar_window_curses_objects
 };
 
 extern int gui_term_cols, gui_term_lines;
-extern struct t_gui_color *gui_weechat_colors;
+extern struct t_gui_color *gui_dogechat_colors;
 extern int gui_color_term_colors;
 extern int gui_color_num_pairs;
 extern int gui_color_pairs_auto_reset;
@@ -88,7 +88,7 @@ extern void gui_main_loop ();
 /* color functions */
 extern int gui_color_get_extended_attrs (int color);
 extern int gui_color_get_pair (int fg, int bg);
-extern int gui_color_weechat_get_pair (int weechat_color);
+extern int gui_color_dogechat_get_pair (int dogechat_color);
 extern void gui_color_alloc ();
 
 /* chat functions */
@@ -111,7 +111,7 @@ extern void gui_window_reset_color (WINDOW *window, int num_color);
 extern void gui_window_set_color_style (WINDOW *window, int style);
 extern void gui_window_remove_color_style (WINDOW *window, int style);
 extern void gui_window_set_color (WINDOW *window, int fg, int bg);
-extern void gui_window_set_weechat_color (WINDOW *window, int num_color);
+extern void gui_window_set_dogechat_color (WINDOW *window, int num_color);
 extern void gui_window_set_custom_color_fg_bg (WINDOW *window, int fg, int bg,
                                                int reset_attributes);
 extern void gui_window_set_custom_color_pair (WINDOW *window, int pair);
@@ -127,7 +127,7 @@ extern void gui_window_string_apply_color_fg_bg (unsigned char **str,
                                                  WINDOW *window);
 extern void gui_window_string_apply_color_pair (unsigned char **str,
                                                 WINDOW *window);
-extern void gui_window_string_apply_color_weechat (unsigned char **str,
+extern void gui_window_string_apply_color_dogechat (unsigned char **str,
                                                    WINDOW *window);
 extern void gui_window_string_apply_color_set_attr (unsigned char **str,
                                                     WINDOW *window);
@@ -139,4 +139,4 @@ extern void gui_window_vline (WINDOW *window, int x, int y, int height,
                               const char *string);
 extern void gui_window_set_title (const char *title);
 
-#endif /* WEECHAT_GUI_CURSES_H */
+#endif /* DOGECHAT_GUI_CURSES_H */

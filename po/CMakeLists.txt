@@ -1,20 +1,20 @@
 #
 # Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
 #
-# This file is part of WeeChat, the extensible chat client.
+# This file is part of DogeChat, the extensible chat client.
 #
-# WeeChat is free software; you can redistribute it and/or modify
+# DogeChat is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
-# WeeChat is distributed in the hope that it will be useful,
+# DogeChat is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+# along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 set(PO_FILES
@@ -44,19 +44,19 @@ find_program(MSGFMT_EXECUTABLE msgfmt)
 
 if(XGETTEXT_EXECUTABLE AND MSGMERGE_EXECUTABLE AND MSGFMT_EXECUTABLE)
 
-  # Create PO template file weechat.pot
+  # Create PO template file dogechat.pot
   set(SRC_FILES)
   set(POT_DEPENDS)
 
-  foreach(srcfile ${WEECHAT_SOURCES})
+  foreach(srcfile ${DOGECHAT_SOURCES})
     set(SRC_FILES ${SRC_FILES} ${srcfile})
     set(POT_DEPENDS ${POT_DEPENDS} ${CMAKE_SOURCE_DIR}/${srcfile})
-  endforeach(srcfile ${WEECHAT_SOURCES})
+  endforeach(srcfile ${DOGECHAT_SOURCES})
 
   add_custom_command(
     OUTPUT ${POT_FILE_PATH}
     COMMAND ${XGETTEXT_EXECUTABLE}
-    ARGS -o ${POT_FILE_PATH} --add-comments='TRANSLATORS:' --keyword='_' --keyword='weechat_gettext' --keyword='N_' --keyword='NG_:1,2' --keyword='weechat_ngettext:1,2' --no-location --from-code=UTF-8 --directory=${CMAKE_SOURCE_DIR} --package-name='WeeChat' --package-version=${VERSION} --msgid-bugs-address=${BUGS_ADDRESS} --copyright-holder='NAME' ${SRC_FILES}
+    ARGS -o ${POT_FILE_PATH} --add-comments='TRANSLATORS:' --keyword='_' --keyword='dogechat_gettext' --keyword='N_' --keyword='NG_:1,2' --keyword='dogechat_ngettext:1,2' --no-location --from-code=UTF-8 --directory=${CMAKE_SOURCE_DIR} --package-name='DogeChat' --package-version=${VERSION} --msgid-bugs-address=${BUGS_ADDRESS} --copyright-holder='NAME' ${SRC_FILES}
     DEPENDS ${POT_DEPENDS}
     COMMENT "Generating ${POT_FILE}"
     )
@@ -91,14 +91,14 @@ if(XGETTEXT_EXECUTABLE AND MSGMERGE_EXECUTABLE AND MSGFMT_EXECUTABLE)
 
   add_custom_target(translations ALL DEPENDS ${GMO_FILES})
 
-  # Update weechat.pot in source directory (if needed)
+  # Update dogechat.pot in source directory (if needed)
   add_custom_target(
     update-${POT_FILE}
     COMMAND ${MSGMERGE_EXECUTABLE} --quiet --update --backup=none ${CMAKE_CURRENT_SOURCE_DIR}/${POT_FILE} ${POT_FILE_PATH}
     COMMENT "Updating ${POT_FILE}"
     )
 
-  # Update all .po and weechat.pot in source directory (if needed)
+  # Update all .po and dogechat.pot in source directory (if needed)
   add_custom_target(update-po DEPENDS update-${POT_FILE} ${UPDATE_PO_TARGETS})
 
 endif()

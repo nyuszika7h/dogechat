@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -29,14 +29,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-list.h"
-#include "../core/wee-log.h"
-#include "../core/wee-string.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-list.h"
+#include "../core/doge-log.h"
+#include "../core/doge-string.h"
 #include "plugin-config.h"
-#include "weechat-plugin.h"
+#include "dogechat-plugin.h"
 
 
 struct t_config_file *plugin_config_file = NULL;
@@ -95,7 +95,7 @@ plugin_config_set_internal (const char *option, const char *value)
             plugin_config_file, plugin_config_section_var,
             option, "string", NULL,
             NULL, 0, 0, "", value, 0, NULL, NULL, NULL, NULL, NULL, NULL);
-        rc = (ptr_option) ? WEECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE : WEECHAT_CONFIG_OPTION_SET_ERROR;
+        rc = (ptr_option) ? DOGECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE : DOGECHAT_CONFIG_OPTION_SET_ERROR;
     }
 
     return rc;
@@ -112,7 +112,7 @@ plugin_config_set (const char *plugin_name, const char *option_name,
     int length, rc;
     char *option_full_name;
 
-    rc = WEECHAT_CONFIG_OPTION_SET_ERROR;
+    rc = DOGECHAT_CONFIG_OPTION_SET_ERROR;
 
     length = strlen (plugin_name) + 1 + strlen (option_name) + 1;
     option_full_name = malloc (length);
@@ -251,7 +251,7 @@ plugin_config_create_option (void *data, struct t_config_file *config_file,
         NULL, 0, 0, "", value, 0, NULL, NULL, NULL, NULL, NULL, NULL);
 
     return (ptr_option) ?
-        WEECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE : WEECHAT_CONFIG_OPTION_SET_ERROR;
+        DOGECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE : DOGECHAT_CONFIG_OPTION_SET_ERROR;
 }
 
 /*
@@ -289,7 +289,7 @@ plugin_config_create_desc (void *data, struct t_config_file *config_file,
         &plugin_config_desc_changed_cb, NULL, NULL, NULL);
 
     return (ptr_option) ?
-        WEECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE : WEECHAT_CONFIG_OPTION_SET_ERROR;
+        DOGECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE : DOGECHAT_CONFIG_OPTION_SET_ERROR;
 }
 
 /*
@@ -321,7 +321,7 @@ plugin_config_delete_desc (void *data, struct t_config_file *config_file,
 
     config_file_option_free (option);
 
-    return WEECHAT_CONFIG_OPTION_UNSET_OK_REMOVED;
+    return DOGECHAT_CONFIG_OPTION_UNSET_OK_REMOVED;
 }
 
 /*

@@ -25,10 +25,10 @@ paramètres : paramètres pour la commande (les variables spéciales $nick, $ch
 Exemples :
   exécuter '/me teste' sur tous les canaux :
     /allchan me teste
-  dire 'bonjour' partout sauf sur #weechat :
-    /allchan -exclude=#weechat msg * bonjour
-  dire 'bonjour' partout sauf sur #weechat et les canaux commençant par #linux :
-    /allchan -exclude=#weechat,#linux* msg * bonjour
+  dire 'bonjour' partout sauf sur #dogechat :
+    /allchan -exclude=#dogechat msg * bonjour
+  dire 'bonjour' partout sauf sur #dogechat et les canaux commençant par #linux :
+    /allchan -exclude=#dogechat,#linux* msg * bonjour
 ----
 
 [[command_irc_allpv]]
@@ -101,7 +101,7 @@ Sans paramètre, cette commande affiche la liste des bannissements pour le canal
 
 Sans paramètre, "ls" et "list" sont envoyés.
 
-Les capacités supportées par WeeChat sont : account-notify, away-notify, cap-notify, extended-join, multi-prefix, server-time, userhost-in-names.
+Les capacités supportées par DogeChat sont : account-notify, away-notify, cap-notify, extended-join, multi-prefix, server-time, userhost-in-names.
 
 Les capacités à activer automatiquement sur les serveurs peuvent être définies dans l'opion irc.server_default.capabilities (ou par serveur dans l'option irc.server.xxx.capabilities).
 
@@ -268,8 +268,8 @@ Exemples :
     /ignore add toto
   ignorer le hôte "toto@domain.com" sur le serveur freenode :
     /ignore add toto@domain.com freenode
-  ignorer le hôte "toto*@*.domain.com" sur freenode/#weechat :
-    /ignore add toto*@*.domain.com freenode #weechat
+  ignorer le hôte "toto*@*.domain.com" sur freenode/#dogechat :
+    /ignore add toto*@*.domain.com freenode #dogechat
 ----
 
 [[command_irc_info]]
@@ -312,10 +312,10 @@ pseudo : pseudo
       clé : clé pour rejoindre le canal (les canaux avec une clé doivent être les premiers dans la liste)
 
 Exemples :
-  /join #weechat
-  /join #protectedchan,#weechat key
-  /join -server freenode #weechat
-  /join -noswitch #weechat
+  /join #dogechat
+  /join #protectedchan,#dogechat key
+  /join -server freenode #dogechat
+  /join -noswitch #dogechat
 ----
 
 [[command_irc_kick]]
@@ -379,10 +379,10 @@ serveur : nom du serveur
 Exemples :
   lister tous les canaux du serveur (peut être très lent pour les grands réseaux) :
     /list
-  lister le canal #weechat :
-    /list #weechat
-  lister tous les canaux commençant par "#weechat" (peut être très lent pour les grands réseaux) :
-    /list -re #weechat.*
+  lister le canal #dogechat :
+    /list #dogechat
+  lister tous les canaux commençant par "#dogechat" (peut être très lent pour les grands réseaux) :
+    /list -re #dogechat.*
 ----
 
 [[command_irc_lusers]]
@@ -441,8 +441,8 @@ modes utilisateur :
 La liste des modes n'est pas exhaustive, vous devriez lire la documentation de votre serveur pour voir tous les modes possibles.
 
 Exemples :
-  protéger le titre du canal #weechat :
-    /mode #weechat +t
+  protéger le titre du canal #dogechat :
+    /mode #dogechat +t
   devenir invisible sur le serveur :
     /mode nick +i
 ----
@@ -723,7 +723,7 @@ nooption : définir l'option booléenne à 'off' (par exemple : -nossl)
  reorder : réordonner la liste des serveurs
     keep : garder le serveur dans le fichier de configuration (pour les serveurs temporaires seulement)
      del : supprimer un serveur
- deloutq : supprimer la file d'attente des messages sortants pour tous les serveurs (tous les messages que WeeChat est actuellement en train d'envoyer)
+ deloutq : supprimer la file d'attente des messages sortants pour tous les serveurs (tous les messages que DogeChat est actuellement en train d'envoyer)
     jump : sauter au tampon du serveur
      raw : ouvre le tampon avec les données brutes IRC
 

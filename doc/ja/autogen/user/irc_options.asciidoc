@@ -5,77 +5,77 @@
 * [[option_irc.color.input_nick]] *irc.color.input_nick*
 ** 説明: `インプットバーのニックネームに使う色`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `lightcyan`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `lightcyan`)
 
 * [[option_irc.color.item_away]] *irc.color.item_away*
 ** 説明: `離席アイテムに使う色`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `yellow`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `yellow`)
 
 * [[option_irc.color.item_channel_modes]] *irc.color.item_channel_modes*
 ** 説明: `チャンネル名付近のチャンネルモードに使う色`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `default`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `default`)
 
 * [[option_irc.color.item_lag_counting]] *irc.color.item_lag_counting*
 ** 説明: `カウント中の遅延インジケータの色 (pong がサーバから返らない場合、遅延は増加する)`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `default`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `default`)
 
 * [[option_irc.color.item_lag_finished]] *irc.color.item_lag_finished*
 ** 説明: `pong がサーバから返った場合の、遅延インジケータの色`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `yellow`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `yellow`)
 
 * [[option_irc.color.item_nick_modes]] *irc.color.item_nick_modes*
 ** 説明: `"input_prompt" バーアイテム内のニックネームモードに付ける色`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `default`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `default`)
 
 * [[option_irc.color.message_join]] *irc.color.message_join*
 ** 説明: `参加メッセージの色`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `green`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `green`)
 
 * [[option_irc.color.message_quit]] *irc.color.message_quit*
 ** 説明: `退出/終了 メッセージの色`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `red`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `red`)
 
 * [[option_irc.color.mirc_remap]] *irc.color.mirc_remap*
-** 説明: `メッセージに含まれる mirc カラーのマッピングをハッシュテーブルで変更: キーは "fg,bg" で -1 (指定無し) から 15 までの整数、 値は WeeChat 色名か色番号 (フォーマットは: "1,-1:color1;2,7:color2")、例: "1,-1:darkgray;1,2:white,blue" はテキスト色が黒のものを "darkgray" に、背景色が青でテキスト色が黒のものを "white,blue" に変更; IRC コードに対するデフォルトの WeeChat 色は、0=白、1=黒、2=青、3=緑、4=ライトレッド、5=赤、6=赤紫、7=茶色、8=黄色、9=ライトグリーン、10=シアン、11=ライトシアン、12=ライトブルー、13=ライトマゼンタ、14=灰色、15=白`
+** 説明: `メッセージに含まれる mirc カラーのマッピングをハッシュテーブルで変更: キーは "fg,bg" で -1 (指定無し) から 15 までの整数、 値は DogeChat 色名か色番号 (フォーマットは: "1,-1:color1;2,7:color2")、例: "1,-1:darkgray;1,2:white,blue" はテキスト色が黒のものを "darkgray" に、背景色が青でテキスト色が黒のものを "white,blue" に変更; IRC コードに対するデフォルトの DogeChat 色は、0=白、1=黒、2=青、3=緑、4=ライトレッド、5=赤、6=赤紫、7=茶色、8=黄色、9=ライトグリーン、10=シアン、11=ライトシアン、12=ライトブルー、13=ライトマゼンタ、14=灰色、15=白`
 ** タイプ: 文字列
 ** 値: 未制約文字列 (デフォルト値: `"1,-1:darkgray"`)
 
 * [[option_irc.color.nick_prefixes]] *irc.color.nick_prefixes*
-** 説明: `モード文字を用いたニックネームプレフィックスの色 (o=オペレータ、h=halfop、v=発言、..)、フォーマット: "o:color1;h:color2;v:color3" (モードが見つからない場合、WeeChat はサーバから受け取ったモードの次のものを試す ("PREFIX"); モードが見つからなかった場合は、特殊なモード "*" がデフォルト色として使えます)`
+** 説明: `モード文字を用いたニックネームプレフィックスの色 (o=オペレータ、h=halfop、v=発言、..)、フォーマット: "o:color1;h:color2;v:color3" (モードが見つからない場合、DogeChat はサーバから受け取ったモードの次のものを試す ("PREFIX"); モードが見つからなかった場合は、特殊なモード "*" がデフォルト色として使えます)`
 ** タイプ: 文字列
 ** 値: 未制約文字列 (デフォルト値: `"y:lightred;q:lightred;a:lightcyan;o:lightgreen;h:lightmagenta;v:yellow;*:lightblue"`)
 
 * [[option_irc.color.notice]] *irc.color.notice*
 ** 説明: `notices に含まれるテキスト "Notice" の色`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `green`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `green`)
 
 * [[option_irc.color.reason_quit]] *irc.color.reason_quit*
 ** 説明: `退出/終了メッセージに含まれる理由の色`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `default`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `default`)
 
 * [[option_irc.color.topic_current]] *irc.color.topic_current*
 ** 説明: `現在のチャンネルトピックの色 (チャンネルに参加または /topic を使ったときに使われます)`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `default`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `default`)
 
 * [[option_irc.color.topic_new]] *irc.color.topic_new*
 ** 説明: `新しいチャンネルトピックの色 (トピックが変更されたときに使われます)`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `white`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `white`)
 
 * [[option_irc.color.topic_old]] *irc.color.topic_old*
 ** 説明: `古いチャンネルトピックの色 (トピックが変更されたときに使われます)`
 ** タイプ: 色
-** 値: WeeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `default`)
+** 値: DogeChat の色名 (default、black、(dark)gray、white、(light)red、(light)green、brown、yellow、(light)blue、(light)magenta、(light)cyan) 、ターミナル色番号またはその別名; 色の前に属性を置くことができます (テキスト前景色のみ、背景色は出来ません): 太字は "*"、反転は "!"、イタリックは "/"、下線は "_" (デフォルト値: `default`)
 
 * [[option_irc.look.buffer_open_before_autojoin]] *irc.look.buffer_open_before_autojoin*
 ** 説明: `自動で参加した場合 ("autojoin" オプションで参加した場合) に、サーバから JOIN を受信する前にチャンネルバッファを開く; チャンネルとバッファ番号の対応を常に一致させたい場合に便利です`
@@ -133,7 +133,7 @@
 ** 値: on, off (デフォルト値: `on`)
 
 * [[option_irc.look.display_ctcp_reply]] *irc.look.display_ctcp_reply*
-** 説明: `WeeChat が返信した CTCP メッセージを表示`
+** 説明: `DogeChat が返信した CTCP メッセージを表示`
 ** タイプ: ブール
 ** 値: on, off (デフォルト値: `on`)
 
@@ -223,7 +223,7 @@
 ** 値: on, off (デフォルト値: `on`)
 
 * [[option_irc.look.join_auto_add_chantype]] *irc.look.join_auto_add_chantype*
-** 説明: `/join コマンドに与えたチャンネル名の最初にそのサーバで有効なチャンネルタイプが付けられていなかった場合、チャンネル名の前にチャンネルタイプを自動追加する; 例: "/join weechat" とした場合、実際に送信されるコマンドは "/join #weechat" になります`
+** 説明: `/join コマンドに与えたチャンネル名の最初にそのサーバで有効なチャンネルタイプが付けられていなかった場合、チャンネル名の前にチャンネルタイプを自動追加する; 例: "/join dogechat" とした場合、実際に送信されるコマンドは "/join #dogechat" になります`
 ** タイプ: ブール
 ** 値: on, off (デフォルト値: `off`)
 
@@ -408,7 +408,7 @@
 ** 値: 0 .. 604800 (デフォルト値: `60`)
 
 * [[option_irc.network.lag_max]] *irc.network.lag_max*
-** 説明: `遅延時間の最大値 (秒単位): 遅延時間がこの値よりも大きくなった場合、WeeChat はサーバからの応答 (pong) が到着しないと考え、遅延時間の計測を中止します (0 = 遅延時間の計測を中止しない)`
+** 説明: `遅延時間の最大値 (秒単位): 遅延時間がこの値よりも大きくなった場合、DogeChat はサーバからの応答 (pong) が到着しないと考え、遅延時間の計測を中止します (0 = 遅延時間の計測を中止しない)`
 ** タイプ: 整数
 ** 値: 0 .. 604800 (デフォルト値: `1800`)
 
@@ -463,7 +463,7 @@
 ** 値: 0 .. 60 (デフォルト値: `2`)
 
 * [[option_irc.server_default.autoconnect]] *irc.server_default.autoconnect*
-** 説明: `WeeChat の起動時に自動的にサーバに接続`
+** 説明: `DogeChat の起動時に自動的にサーバに接続`
 ** タイプ: ブール
 ** 値: on, off (デフォルト値: `off`)
 
@@ -503,7 +503,7 @@
 ** 値: 0 .. 1000000 (デフォルト値: `25`)
 
 * [[option_irc.server_default.capabilities]] *irc.server_default.capabilities*
-** 説明: `サーバで利用可能ならば有効化する "client capabilities" のコンマ区切りリスト (WeeChat がサポートする機能のリストは /help cap を御覧ください) (例: "away-notify,multi-prefix")`
+** 説明: `サーバで利用可能ならば有効化する "client capabilities" のコンマ区切りリスト (DogeChat がサポートする機能のリストは /help cap を御覧ください) (例: "away-notify,multi-prefix")`
 ** タイプ: 文字列
 ** 値: 未制約文字列 (デフォルト値: `""`)
 
@@ -518,7 +518,7 @@
 ** 値: 0 .. 3600 (デフォルト値: `0`)
 
 * [[option_irc.server_default.connection_timeout]] *irc.server_default.connection_timeout*
-** 説明: `サーバとの TCP 接続と 001 メッセージ受信間のタイムアウト (秒単位)、001 メッセージ受信前にタイムアウト時間を経過した場合は、WeeChat はサーバとの接続を切断`
+** 説明: `サーバとの TCP 接続と 001 メッセージ受信間のタイムアウト (秒単位)、001 メッセージ受信前にタイムアウト時間を経過した場合は、DogeChat はサーバとの接続を切断`
 ** タイプ: 整数
 ** 値: 1 .. 3600 (デフォルト値: `60`)
 
@@ -528,14 +528,14 @@
 ** 値: 未制約文字列 (デフォルト値: `""`)
 
 * [[option_irc.server_default.default_msg_part]] *irc.server_default.default_msg_part*
-** 説明: `デフォルトの退出メッセージ (チャンネルから出る際の) ("%v" は WeeChat バージョンで置換)`
+** 説明: `デフォルトの退出メッセージ (チャンネルから出る際の) ("%v" は DogeChat バージョンで置換)`
 ** タイプ: 文字列
-** 値: 未制約文字列 (デフォルト値: `"WeeChat %v"`)
+** 値: 未制約文字列 (デフォルト値: `"DogeChat %v"`)
 
 * [[option_irc.server_default.default_msg_quit]] *irc.server_default.default_msg_quit*
-** 説明: `デフォルトの終了メッセージ (サーバとの接続を切る際の) ("%v" は WeeChat バージョンで置換)`
+** 説明: `デフォルトの終了メッセージ (サーバとの接続を切る際の) ("%v" は DogeChat バージョンで置換)`
 ** タイプ: 文字列
-** 値: 未制約文字列 (デフォルト値: `"WeeChat %v"`)
+** 値: 未制約文字列 (デフォルト値: `"DogeChat %v"`)
 
 * [[option_irc.server_default.ipv6]] *irc.server_default.ipv6*
 ** 説明: `サーバ接続に IPv6 プロトコルを利用 (IPv6 の利用に失敗したら IPv4 を利用); 無効の場合には IPv4 を利用`
@@ -583,7 +583,7 @@
 ** 値: continue, reconnect, disconnect (デフォルト値: `continue`)
 
 * [[option_irc.server_default.sasl_key]] *irc.server_default.sasl_key*
-** 説明: `"ecdsa-nist256p-challenge" メカニズム用の ECC 秘密鍵を含むファイル ("%h" は WeeChat ホームに置換されます、デフォルトでは "~/.weechat" です)`
+** 説明: `"ecdsa-nist256p-challenge" メカニズム用の ECC 秘密鍵を含むファイル ("%h" は DogeChat ホームに置換されます、デフォルトでは "~/.dogechat" です)`
 ** タイプ: 文字列
 ** 値: 未制約文字列 (デフォルト値: `""`)
 
@@ -613,7 +613,7 @@
 ** 値: on, off (デフォルト値: `off`)
 
 * [[option_irc.server_default.ssl_cert]] *irc.server_default.ssl_cert*
-** 説明: `自動的にニックネームの身元確認を行うために使われる SSL 証明書ファイル ("%h" は WeeChat ホームで置換、デフォルトは "~/.weechat" です)`
+** 説明: `自動的にニックネームの身元確認を行うために使われる SSL 証明書ファイル ("%h" は DogeChat ホームで置換、デフォルトは "~/.dogechat" です)`
 ** タイプ: 文字列
 ** 値: 未制約文字列 (デフォルト値: `""`)
 

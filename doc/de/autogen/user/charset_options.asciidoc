@@ -8,6 +8,6 @@
 ** Werte: beliebige Zeichenkette (Standardwert: `"iso-8859-1"`)
 
 * [[option_charset.default.encode]] *charset.default.encode*
-** Beschreibung: `globale Zeichenkodierung: Zeichenkodierung die für ausgehende Nachrichten genutzt werden soll (sollte keine Zeichenkodierung angegeben werden, wird UTF-8 verwendet, da WeeChat UTF-8 zur internen Kodierung nutzt)`
+** Beschreibung: `globale Zeichenkodierung: Zeichenkodierung die für ausgehende Nachrichten genutzt werden soll (sollte keine Zeichenkodierung angegeben werden, wird UTF-8 verwendet, da DogeChat UTF-8 zur internen Kodierung nutzt)`
 ** Typ: Zeichenkette
 ** Werte: beliebige Zeichenkette (Standardwert: `""`)

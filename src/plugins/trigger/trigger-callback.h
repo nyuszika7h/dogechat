@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2014-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_TRIGGER_CALLBACK_H
-#define WEECHAT_TRIGGER_CALLBACK_H 1
+#ifndef DOGECHAT_TRIGGER_CALLBACK_H
+#define DOGECHAT_TRIGGER_CALLBACK_H 1
 
 #define TRIGGER_CALLBACK_CB_INIT(__rc)                          \
     struct t_trigger *trigger;                                  \
@@ -35,24 +35,24 @@
     trigger->hook_count_cb++;                                   \
     trigger->hook_running = 1;                                  \
     trigger_rc = trigger_return_code[                           \
-        weechat_config_integer (                                \
+        dogechat_config_integer (                                \
             trigger->options[TRIGGER_OPTION_RETURN_CODE])];
 
 #define TRIGGER_CALLBACK_CB_NEW_POINTERS                        \
-    pointers = weechat_hashtable_new (                          \
+    pointers = dogechat_hashtable_new (                          \
         32,                                                     \
-        WEECHAT_HASHTABLE_STRING,                               \
-        WEECHAT_HASHTABLE_POINTER,                              \
+        DOGECHAT_HASHTABLE_STRING,                               \
+        DOGECHAT_HASHTABLE_POINTER,                              \
         NULL,                                                   \
         NULL);                                                  \
     if (!pointers)                                              \
         goto end;
 
 #define TRIGGER_CALLBACK_CB_NEW_EXTRA_VARS                      \
-    extra_vars = weechat_hashtable_new (                        \
+    extra_vars = dogechat_hashtable_new (                        \
         32,                                                     \
-        WEECHAT_HASHTABLE_STRING,                               \
-        WEECHAT_HASHTABLE_STRING,                               \
+        DOGECHAT_HASHTABLE_STRING,                               \
+        DOGECHAT_HASHTABLE_STRING,                               \
         NULL,                                                   \
         NULL);                                                  \
     if (!extra_vars)                                            \
@@ -60,9 +60,9 @@
 
 #define TRIGGER_CALLBACK_CB_END(__rc)                           \
     if (pointers)                                               \
-        weechat_hashtable_free (pointers);                      \
+        dogechat_hashtable_free (pointers);                      \
     if (extra_vars)                                             \
-        weechat_hashtable_free (extra_vars);                    \
+        dogechat_hashtable_free (extra_vars);                    \
     trigger->hook_running = 0;                                  \
     return __rc;
 
@@ -91,4 +91,4 @@ extern struct t_hashtable *trigger_callback_focus_cb (void *data,
 extern void trigger_callback_init ();
 extern void trigger_callback_end ();
 
-#endif /* WEECHAT_TRIGGER_CALLBACK_H */
+#endif /* DOGECHAT_TRIGGER_CALLBACK_H */

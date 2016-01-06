@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -27,11 +27,11 @@
 #include <string.h>
 #include <limits.h>
 
-#include "../../core/weechat.h"
-#include "../../core/wee-config.h"
-#include "../../core/wee-log.h"
-#include "../../core/wee-string.h"
-#include "../../core/wee-utf8.h"
+#include "../../core/dogechat.h"
+#include "../../core/doge-config.h"
+#include "../../core/doge-log.h"
+#include "../../core/doge-string.h"
+#include "../../core/doge-utf8.h"
 #include "../gui-bar.h"
 #include "../gui-bar-item.h"
 #include "../gui-bar-window.h"
@@ -307,7 +307,7 @@ gui_bar_window_print_string (struct t_gui_bar_window *bar_window,
                                                            0);
                         break;
                     default:
-                        gui_window_string_apply_color_weechat ((unsigned char **)&string,
+                        gui_window_string_apply_color_dogechat ((unsigned char **)&string,
                                                                GUI_BAR_WINDOW_OBJECTS(bar_window)->win_bar);
                         break;
                 }
@@ -770,28 +770,28 @@ gui_bar_window_draw (struct t_gui_bar_window *bar_window,
         switch (CONFIG_INTEGER(bar_window->bar->options[GUI_BAR_OPTION_POSITION]))
         {
             case GUI_BAR_POSITION_BOTTOM:
-                gui_window_set_weechat_color (GUI_BAR_WINDOW_OBJECTS(bar_window)->win_separator,
+                gui_window_set_dogechat_color (GUI_BAR_WINDOW_OBJECTS(bar_window)->win_separator,
                                               GUI_COLOR_SEPARATOR);
                 gui_window_hline (GUI_BAR_WINDOW_OBJECTS(bar_window)->win_separator,
                                   0, 0, bar_window->width,
                                   CONFIG_STRING(config_look_separator_horizontal));
                 break;
             case GUI_BAR_POSITION_TOP:
-                gui_window_set_weechat_color (GUI_BAR_WINDOW_OBJECTS(bar_window)->win_separator,
+                gui_window_set_dogechat_color (GUI_BAR_WINDOW_OBJECTS(bar_window)->win_separator,
                                               GUI_COLOR_SEPARATOR);
                 gui_window_hline (GUI_BAR_WINDOW_OBJECTS(bar_window)->win_separator,
                                   0, 0, bar_window->width,
                                   CONFIG_STRING(config_look_separator_horizontal));
                 break;
             case GUI_BAR_POSITION_LEFT:
-                gui_window_set_weechat_color (GUI_BAR_WINDOW_OBJECTS(bar_window)->win_separator,
+                gui_window_set_dogechat_color (GUI_BAR_WINDOW_OBJECTS(bar_window)->win_separator,
                                               GUI_COLOR_SEPARATOR);
                 gui_window_vline (GUI_BAR_WINDOW_OBJECTS(bar_window)->win_separator,
                                   0, 0, bar_window->height,
                                   CONFIG_STRING(config_look_separator_vertical));
                 break;
             case GUI_BAR_POSITION_RIGHT:
-                gui_window_set_weechat_color (GUI_BAR_WINDOW_OBJECTS(bar_window)->win_separator,
+                gui_window_set_dogechat_color (GUI_BAR_WINDOW_OBJECTS(bar_window)->win_separator,
                                               GUI_COLOR_SEPARATOR);
                 gui_window_vline (GUI_BAR_WINDOW_OBJECTS(bar_window)->win_separator,
                                   0, 0, bar_window->height,
@@ -807,7 +807,7 @@ gui_bar_window_draw (struct t_gui_bar_window *bar_window,
 }
 
 /*
- * Prints bar window infos in WeeChat log file (usually for crash dump).
+ * Prints bar window infos in DogeChat log file (usually for crash dump).
  */
 
 void

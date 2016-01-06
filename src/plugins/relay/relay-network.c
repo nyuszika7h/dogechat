@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -25,7 +25,7 @@
 #include <gnutls/gnutls.h>
 #endif /* HAVE_GNUTLS */
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "relay.h"
 #include "relay-network.h"
 #include "relay-config.h"
@@ -60,11 +60,11 @@ relay_network_set_ssl_cert_key (int verbose)
 
     relay_network_init_ssl_cert_key_ok = 0;
 
-    certkey_path = weechat_string_expand_home (weechat_config_string (relay_config_network_ssl_cert_key));
+    certkey_path = dogechat_string_expand_home (dogechat_config_string (relay_config_network_ssl_cert_key));
     if (certkey_path)
     {
-        certkey_path2 = weechat_string_replace (certkey_path, "%h",
-                                                weechat_info_get ("weechat_dir",
+        certkey_path2 = dogechat_string_replace (certkey_path, "%h",
+                                                dogechat_info_get ("dogechat_dir",
                                                                   NULL));
         if (certkey_path2)
         {
@@ -77,7 +77,7 @@ relay_network_set_ssl_cert_key (int verbose)
                 relay_network_init_ssl_cert_key_ok = 1;
                 if (verbose)
                 {
-                    weechat_printf (NULL,
+                    dogechat_printf (NULL,
                                     _("%s: SSL certificate and key have been "
                                       "set"),
                                     RELAY_PLUGIN_NAME);
@@ -87,10 +87,10 @@ relay_network_set_ssl_cert_key (int verbose)
             {
                 if (verbose)
                 {
-                    weechat_printf (NULL,
+                    dogechat_printf (NULL,
                                     _("%s%s: warning: no SSL certificate/key "
                                       "found (option relay.network.ssl_cert_key)"),
-                                    weechat_prefix ("error"), RELAY_PLUGIN_NAME);
+                                    dogechat_prefix ("error"), RELAY_PLUGIN_NAME);
                 }
             }
             free (certkey_path2);
@@ -112,13 +112,13 @@ relay_network_set_priority ()
 {
 #ifdef HAVE_GNUTLS
     if (gnutls_priority_init (relay_gnutls_priority_cache,
-                              weechat_config_string (
+                              dogechat_config_string (
                                   relay_config_network_ssl_priorities),
                               NULL) != GNUTLS_E_SUCCESS)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: unable to initialize priority for SSL"),
-                        weechat_prefix ("error"), RELAY_PLUGIN_NAME);
+                        dogechat_prefix ("error"), RELAY_PLUGIN_NAME);
         free (relay_gnutls_priority_cache);
         relay_gnutls_priority_cache = NULL;
     }

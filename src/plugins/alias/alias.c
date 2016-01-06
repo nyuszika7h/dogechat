@@ -1,29 +1,29 @@
 /*
- * alias.c - alias plugin for WeeChat: command aliases
+ * alias.c - alias plugin for DogeChat: command aliases
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "alias.h"
 #include "alias-command.h"
 #include "alias-completion.h"
@@ -31,16 +31,16 @@
 #include "alias-info.h"
 
 
-WEECHAT_PLUGIN_NAME(ALIAS_PLUGIN_NAME);
-WEECHAT_PLUGIN_DESCRIPTION(N_("Alias commands"));
-WEECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
-WEECHAT_PLUGIN_VERSION(WEECHAT_VERSION);
-WEECHAT_PLUGIN_LICENSE(WEECHAT_LICENSE);
-WEECHAT_PLUGIN_PRIORITY(8000);
+DOGECHAT_PLUGIN_NAME(ALIAS_PLUGIN_NAME);
+DOGECHAT_PLUGIN_DESCRIPTION(N_("Alias commands"));
+DOGECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
+DOGECHAT_PLUGIN_VERSION(DOGECHAT_VERSION);
+DOGECHAT_PLUGIN_LICENSE(DOGECHAT_LICENSE);
+DOGECHAT_PLUGIN_PRIORITY(8000);
 
 #define ALIAS_IS_ARG_NUMBER(number) ((number >= '1') && (number <= '9'))
 
-struct t_weechat_plugin *weechat_alias_plugin = NULL;
+struct t_dogechat_plugin *dogechat_alias_plugin = NULL;
 
 struct t_alias *alias_list = NULL;
 struct t_alias *last_alias = NULL;
@@ -87,7 +87,7 @@ alias_search (const char *alias_name)
     for (ptr_alias = alias_list; ptr_alias;
          ptr_alias = ptr_alias->next_alias)
     {
-        if (weechat_strcasecmp (alias_name, ptr_alias->name) == 0)
+        if (dogechat_strcasecmp (alias_name, ptr_alias->name) == 0)
             return ptr_alias;
     }
     return NULL;
@@ -143,7 +143,7 @@ alias_string_add_word_range (char **alias, int *length, const char *start,
 {
     char *word;
 
-    word = weechat_strndup (start, end - start);
+    word = dogechat_strndup (start, end - start);
     if (word)
     {
         alias_string_add_word (alias, length, word);
@@ -190,7 +190,7 @@ alias_replace_args (const char *alias_args, const char *user_args)
     const char *start, *pos;
     int n, m, argc, length_res, args_count, offset;
 
-    argv = weechat_string_split (user_args, " ", 0, 0, &argc);
+    argv = dogechat_string_split (user_args, " ", 0, 0, &argc);
 
     res = NULL;
     length_res = 0;
@@ -296,7 +296,7 @@ alias_replace_args (const char *alias_args, const char *user_args)
         alias_string_add_word (&res, &length_res, start);
 
     if (argv)
-        weechat_string_free_split (argv);
+        dogechat_string_free_split (argv);
 
     return res;
 }
@@ -312,17 +312,17 @@ alias_run_command (struct t_gui_buffer **buffer, const char *command)
     struct t_gui_buffer *old_current_buffer, *new_current_buffer;
 
     /* save current buffer pointer */
-    old_current_buffer = weechat_current_buffer();
+    old_current_buffer = dogechat_current_buffer();
 
     /* execute command */
-    string = weechat_buffer_string_replace_local_var (*buffer, command);
-    weechat_command (*buffer,
+    string = dogechat_buffer_string_replace_local_var (*buffer, command);
+    dogechat_command (*buffer,
                      (string) ? string : command);
     if (string)
         free (string);
 
     /* get new current buffer */
-    new_current_buffer = weechat_current_buffer();
+    new_current_buffer = dogechat_current_buffer();
 
     /*
      * if current buffer was changed by command, then we'll use this one for
@@ -352,17 +352,17 @@ alias_cb (void *data, struct t_gui_buffer *buffer, int argc, char **argv,
 
     if (ptr_alias->running)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: error, circular reference when calling "
                           "alias \"%s\""),
-                        weechat_prefix ("error"), ALIAS_PLUGIN_NAME,
+                        dogechat_prefix ("error"), ALIAS_PLUGIN_NAME,
                         ptr_alias->name);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
     else
     {
         /* an alias can contain many commands separated by ';' */
-        commands = weechat_string_split_command (ptr_alias->command, ';');
+        commands = dogechat_string_split_command (ptr_alias->command, ';');
         if (commands)
         {
             some_args_replaced = 0;
@@ -390,7 +390,7 @@ alias_cb (void *data, struct t_gui_buffer *buffer, int argc, char **argv,
                     alias_command = malloc (1 + length1 + 1 + length2 + 1);
                     if (alias_command)
                     {
-                        if (!weechat_string_is_command_char (*ptr_cmd))
+                        if (!dogechat_string_is_command_char (*ptr_cmd))
                             strcpy (alias_command, "/");
                         else
                             alias_command[0] = '\0';
@@ -406,7 +406,7 @@ alias_cb (void *data, struct t_gui_buffer *buffer, int argc, char **argv,
                 }
                 else
                 {
-                    if (weechat_string_is_command_char (*ptr_cmd))
+                    if (dogechat_string_is_command_char (*ptr_cmd))
                     {
                         alias_run_command (&buffer,
                                            (args_replaced) ? args_replaced : *ptr_cmd);
@@ -429,10 +429,10 @@ alias_cb (void *data, struct t_gui_buffer *buffer, int argc, char **argv,
                     free (args_replaced);
             }
             ptr_alias->running = 0;
-            weechat_string_free_split_command (commands);
+            dogechat_string_free_split_command (commands);
         }
     }
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -459,7 +459,7 @@ alias_free (struct t_alias *alias)
 
     /* free data */
     if (alias->hook)
-        weechat_unhook (alias->hook);
+        dogechat_unhook (alias->hook);
     if (alias->name)
         free (alias->name);
     if (alias->command)
@@ -495,7 +495,7 @@ alias_find_pos (const char *name)
 
     for (ptr_alias = alias_list; ptr_alias; ptr_alias = ptr_alias->next_alias)
     {
-        if (weechat_strcasecmp (name, ptr_alias->name) < 0)
+        if (dogechat_strcasecmp (name, ptr_alias->name) < 0)
             return ptr_alias;
     }
 
@@ -536,12 +536,12 @@ alias_hook_command (struct t_alias *alias)
         if (str_completion)
         {
             snprintf (str_completion, length, "%%%%%s",
-                      (weechat_string_is_command_char (alias->command)) ?
-                      weechat_utf8_next_char (alias->command) : alias->command);
+                      (dogechat_string_is_command_char (alias->command)) ?
+                      dogechat_utf8_next_char (alias->command) : alias->command);
         }
     }
 
-    alias->hook = weechat_hook_command ((str_priority_name) ? str_priority_name : alias->name,
+    alias->hook = dogechat_hook_command ((str_priority_name) ? str_priority_name : alias->name,
                                         alias->command,
                                         NULL, NULL,
                                         (str_completion) ? str_completion : alias->completion,
@@ -566,7 +566,7 @@ alias_update_completion (struct t_alias *alias, const char *completion)
     alias->completion = (completion) ? strdup (completion) : NULL;
 
     /* unhook and hook again command, with new completion */
-    weechat_unhook (alias->hook);
+    dogechat_unhook (alias->hook);
     alias->hook = NULL;
     alias_hook_command (alias);
 }
@@ -611,9 +611,9 @@ alias_new (const char *name, const char *command, const char *completion)
 
     if (!alias_name_valid (name))
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: invalid alias name: \"%s\""),
-                        weechat_prefix ("error"), ALIAS_PLUGIN_NAME,
+                        dogechat_prefix ("error"), ALIAS_PLUGIN_NAME,
                         name);
         return NULL;
     }
@@ -621,9 +621,9 @@ alias_new (const char *name, const char *command, const char *completion)
     if (!command || !command[0])
         return NULL;
 
-    while (weechat_string_is_command_char (name))
+    while (dogechat_string_is_command_char (name))
     {
-        name = weechat_utf8_next_char (name);
+        name = dogechat_utf8_next_char (name);
     }
 
     ptr_alias = alias_search (name);
@@ -692,19 +692,19 @@ alias_add_to_infolist (struct t_infolist *infolist, struct t_alias *alias)
     if (!infolist || !alias)
         return 0;
 
-    ptr_item = weechat_infolist_new_item (infolist);
+    ptr_item = dogechat_infolist_new_item (infolist);
     if (!ptr_item)
         return 0;
 
-    if (!weechat_infolist_new_var_pointer (ptr_item, "hook", alias->hook))
+    if (!dogechat_infolist_new_var_pointer (ptr_item, "hook", alias->hook))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "name", alias->name))
+    if (!dogechat_infolist_new_var_string (ptr_item, "name", alias->name))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "command", alias->command))
+    if (!dogechat_infolist_new_var_string (ptr_item, "command", alias->command))
         return 0;
-    if (!weechat_infolist_new_var_string (ptr_item, "completion", alias->completion))
+    if (!dogechat_infolist_new_var_string (ptr_item, "completion", alias->completion))
         return 0;
-    if (!weechat_infolist_new_var_integer (ptr_item, "running", alias->running))
+    if (!dogechat_infolist_new_var_integer (ptr_item, "running", alias->running))
         return 0;
 
     return 1;
@@ -715,16 +715,16 @@ alias_add_to_infolist (struct t_infolist *infolist, struct t_alias *alias)
  */
 
 int
-weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
+dogechat_plugin_init (struct t_dogechat_plugin *plugin, int argc, char *argv[])
 {
     /* make C compiler happy */
     (void) argc;
     (void) argv;
 
-    weechat_plugin = plugin;
+    dogechat_plugin = plugin;
 
     if (!alias_config_init ())
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
     alias_config_read ();
 
@@ -734,7 +734,7 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
 
     alias_info_init ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -742,14 +742,14 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
  */
 
 int
-weechat_plugin_end (struct t_weechat_plugin *plugin)
+dogechat_plugin_end (struct t_dogechat_plugin *plugin)
 {
     /* make C compiler happy */
     (void) plugin;
 
     alias_config_write ();
     alias_free_all ();
-    weechat_config_free (alias_config_file);
+    dogechat_config_free (alias_config_file);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }

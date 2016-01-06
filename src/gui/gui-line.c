@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -28,14 +28,14 @@
 #include <string.h>
 #include <time.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-hashtable.h"
-#include "../core/wee-hdata.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-infolist.h"
-#include "../core/wee-log.h"
-#include "../core/wee-string.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-hashtable.h"
+#include "../core/doge-hdata.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-infolist.h"
+#include "../core/doge-log.h"
+#include "../core/doge-string.h"
 #include "../plugins/plugin.h"
 #include "gui-line.h"
 #include "gui-buffer.h"
@@ -206,7 +206,7 @@ gui_line_get_prefix_for_display (struct t_gui_line *line,
         }
         else
         {
-            /* return prefix from option "weechat.look.prefix_same_nick" */
+            /* return prefix from option "dogechat.look.prefix_same_nick" */
             if (prefix)
                 *prefix = CONFIG_STRING(config_look_prefix_same_nick);
             if (length)
@@ -733,7 +733,7 @@ gui_line_has_highlight (struct t_gui_line *line)
 
     /*
      * check if highlight is forced by a tag
-     * (with global option "weechat.look.highlight_tags")
+     * (with global option "dogechat.look.highlight_tags")
      */
     if (config_highlight_tags
         && gui_line_match_tags (line->data,
@@ -1277,13 +1277,13 @@ gui_line_add (struct t_gui_buffer *buffer, time_t date,
         if (new_line->data->highlight)
         {
             (void) gui_hotlist_add (buffer, GUI_HOTLIST_HIGHLIGHT, NULL);
-            if (!weechat_upgrading)
+            if (!dogechat_upgrading)
             {
                 message_for_signal = gui_chat_build_string_prefix_message (new_line);
                 if (message_for_signal)
                 {
-                    (void) hook_signal_send ("weechat_highlight",
-                                             WEECHAT_HOOK_SIGNAL_STRING,
+                    (void) hook_signal_send ("dogechat_highlight",
+                                             DOGECHAT_HOOK_SIGNAL_STRING,
                                              message_for_signal);
                     free (message_for_signal);
                 }
@@ -1291,13 +1291,13 @@ gui_line_add (struct t_gui_buffer *buffer, time_t date,
         }
         else
         {
-            if (!weechat_upgrading && (notify_level == GUI_HOTLIST_PRIVATE))
+            if (!dogechat_upgrading && (notify_level == GUI_HOTLIST_PRIVATE))
             {
                 message_for_signal = gui_chat_build_string_prefix_message (new_line);
                 if (message_for_signal)
                 {
-                    (void) hook_signal_send ("weechat_pv",
-                                             WEECHAT_HOOK_SIGNAL_STRING,
+                    (void) hook_signal_send ("dogechat_pv",
+                                             DOGECHAT_HOOK_SIGNAL_STRING,
                                              message_for_signal);
                     free (message_for_signal);
                 }
@@ -1309,7 +1309,7 @@ gui_line_add (struct t_gui_buffer *buffer, time_t date,
     else
     {
         (void) hook_signal_send ("buffer_lines_hidden",
-                                 WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                                 DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
     }
 
     /* add mixed line, if buffer is attached to at least one other buffer */
@@ -1337,7 +1337,7 @@ gui_line_add (struct t_gui_buffer *buffer, time_t date,
     }
 
     (void) hook_signal_send ("buffer_line_added",
-                             WEECHAT_HOOK_SIGNAL_POINTER, new_line);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, new_line);
 
     return new_line;
 }
@@ -1442,7 +1442,7 @@ gui_line_add_y (struct t_gui_buffer *buffer, int y, const char *message)
     {
         buffer->own_lines->lines_hidden++;
         (void) hook_signal_send ("buffer_lines_hidden",
-                                 WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                                 DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
     }
 
     ptr_line->data->refresh_needed = 1;
@@ -1810,7 +1810,7 @@ gui_line_add_to_infolist (struct t_infolist *infolist,
 }
 
 /*
- * Prints lines structure infos in WeeChat log file (usually for crash dump).
+ * Prints lines structure infos in DogeChat log file (usually for crash dump).
  */
 
 void

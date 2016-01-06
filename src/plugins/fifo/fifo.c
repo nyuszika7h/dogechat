@@ -1,22 +1,22 @@
 /*
- * fifo.c - fifo plugin for WeeChat: remote control with FIFO pipe
+ * fifo.c - fifo plugin for DogeChat: remote control with FIFO pipe
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -30,23 +30,23 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "fifo.h"
 #include "fifo-command.h"
 #include "fifo-info.h"
 
 
-WEECHAT_PLUGIN_NAME(FIFO_PLUGIN_NAME);
-WEECHAT_PLUGIN_DESCRIPTION(N_("FIFO pipe for remote control"));
-WEECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
-WEECHAT_PLUGIN_VERSION(WEECHAT_VERSION);
-WEECHAT_PLUGIN_LICENSE(WEECHAT_LICENSE);
-WEECHAT_PLUGIN_PRIORITY(7000);
+DOGECHAT_PLUGIN_NAME(FIFO_PLUGIN_NAME);
+DOGECHAT_PLUGIN_DESCRIPTION(N_("FIFO pipe for remote control"));
+DOGECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
+DOGECHAT_PLUGIN_VERSION(DOGECHAT_VERSION);
+DOGECHAT_PLUGIN_LICENSE(DOGECHAT_LICENSE);
+DOGECHAT_PLUGIN_PRIORITY(7000);
 
-#define FIFO_FILENAME_PREFIX "weechat_fifo_"
+#define FIFO_FILENAME_PREFIX "dogechat_fifo_"
 
-struct t_weechat_plugin *weechat_fifo_plugin = NULL;
-#define weechat_plugin weechat_fifo_plugin
+struct t_dogechat_plugin *dogechat_fifo_plugin = NULL;
+#define dogechat_plugin dogechat_fifo_plugin
 
 int fifo_quiet = 0;
 int fifo_fd = -1;
@@ -67,7 +67,7 @@ fifo_remove_old_pipes ()
 {
     char *buf;
     int buf_len, prefix_len;
-    const char *weechat_home, *dir_separator;
+    const char *dogechat_home, *dir_separator;
     DIR *dp;
     struct dirent *entry;
     struct stat statbuf;
@@ -77,12 +77,12 @@ fifo_remove_old_pipes ()
     if (!buf)
         return;
 
-    weechat_home = weechat_info_get ("weechat_dir", "");
-    dir_separator = weechat_info_get ("dir_separator", "");
+    dogechat_home = dogechat_info_get ("dogechat_dir", "");
+    dir_separator = dogechat_info_get ("dir_separator", "");
 
     prefix_len = strlen (FIFO_FILENAME_PREFIX);
 
-    dp = opendir (weechat_home);
+    dp = opendir (dogechat_home);
     if (dp != NULL)
     {
         while ((entry = readdir (dp)) != NULL)
@@ -93,10 +93,10 @@ fifo_remove_old_pipes ()
             if (strncmp (entry->d_name, FIFO_FILENAME_PREFIX, prefix_len) == 0)
             {
                 snprintf (buf, buf_len, "%s%s%s",
-                          weechat_home, dir_separator, entry->d_name);
+                          dogechat_home, dir_separator, entry->d_name);
                 if (stat (buf, &statbuf) != -1)
                 {
-                    weechat_printf (NULL,
+                    dogechat_printf (NULL,
                                     _("%s: removing old fifo pipe \"%s\""),
                                     FIFO_PLUGIN_NAME, buf);
                     unlink (buf);
@@ -117,34 +117,34 @@ void
 fifo_create ()
 {
     int filename_length;
-    const char *fifo_option, *weechat_home;
+    const char *fifo_option, *dogechat_home;
 
-    fifo_option = weechat_config_get_plugin ("fifo");
+    fifo_option = dogechat_config_get_plugin ("fifo");
     if (!fifo_option)
     {
-        weechat_config_set_plugin ("fifo", "on");
-        fifo_option = weechat_config_get_plugin ("fifo");
+        dogechat_config_set_plugin ("fifo", "on");
+        fifo_option = dogechat_config_get_plugin ("fifo");
     }
 
-    weechat_home = weechat_info_get ("weechat_dir", "");
+    dogechat_home = dogechat_info_get ("dogechat_dir", "");
 
-    if (fifo_option && weechat_home)
+    if (fifo_option && dogechat_home)
     {
         fifo_remove_old_pipes ();
 
-        if (weechat_strcasecmp (fifo_option, "on") == 0)
+        if (dogechat_strcasecmp (fifo_option, "on") == 0)
         {
             /*
              * build FIFO filename:
-             *   "<weechat_home>/weechat_fifo_" + process PID
+             *   "<dogechat_home>/dogechat_fifo_" + process PID
              */
             if (!fifo_filename)
             {
-                filename_length = strlen (weechat_home) + 64;
+                filename_length = strlen (dogechat_home) + 64;
                 fifo_filename = malloc (filename_length);
                 snprintf (fifo_filename, filename_length,
                           "%s/%s%d",
-                          weechat_home, FIFO_FILENAME_PREFIX, (int) getpid());
+                          dogechat_home, FIFO_FILENAME_PREFIX, (int) getpid());
             }
 
             fifo_fd = -1;
@@ -156,29 +156,29 @@ fifo_create ()
                 if ((fifo_fd = open (fifo_filename,
                                      O_RDONLY | O_NONBLOCK)) != -1)
                 {
-                    if ((weechat_fifo_plugin->debug >= 1) || !fifo_quiet)
+                    if ((dogechat_fifo_plugin->debug >= 1) || !fifo_quiet)
                     {
-                        weechat_printf (NULL,
+                        dogechat_printf (NULL,
                                         _("%s: pipe opened (file: %s)"),
                                         FIFO_PLUGIN_NAME,
                                         fifo_filename);
                     }
-                    fifo_fd_hook = weechat_hook_fd (fifo_fd, 1, 0, 0,
+                    fifo_fd_hook = dogechat_hook_fd (fifo_fd, 1, 0, 0,
                                                     &fifo_read, NULL);
                 }
                 else
-                    weechat_printf (NULL,
+                    dogechat_printf (NULL,
                                     _("%s%s: unable to open pipe (%s) for "
                                       "reading"),
-                                    weechat_prefix ("error"), FIFO_PLUGIN_NAME,
+                                    dogechat_prefix ("error"), FIFO_PLUGIN_NAME,
                                     fifo_filename);
             }
             else
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: unable to create pipe for remote "
                                   "control (%s): error %d %s"),
-                                weechat_prefix ("error"), FIFO_PLUGIN_NAME,
+                                dogechat_prefix ("error"), FIFO_PLUGIN_NAME,
                                 fifo_filename, errno, strerror (errno));
             }
         }
@@ -195,7 +195,7 @@ fifo_remove ()
     /* remove fd hook */
     if (fifo_fd_hook)
     {
-        weechat_unhook (fifo_fd_hook);
+        dogechat_unhook (fifo_fd_hook);
         fifo_fd_hook = NULL;
     }
 
@@ -224,7 +224,7 @@ fifo_remove ()
         fifo_filename = NULL;
     }
 
-    weechat_printf (NULL,
+    dogechat_printf (NULL,
                     _("%s: pipe closed"),
                     FIFO_PLUGIN_NAME);
 }
@@ -253,34 +253,34 @@ fifo_exec (const char *text)
     if (text2[0] == '*')
     {
         pos_msg = text2 + 1;
-        ptr_buffer = weechat_current_buffer ();
+        ptr_buffer = dogechat_current_buffer ();
     }
     else
     {
         pos_msg = strstr (text2, " *");
         if (!pos_msg)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: invalid text received in pipe"),
-                            weechat_prefix ("error"), FIFO_PLUGIN_NAME);
+                            dogechat_prefix ("error"), FIFO_PLUGIN_NAME);
             free (text2);
             return;
         }
         pos_msg[0] = '\0';
         pos_msg += 2;
-        ptr_buffer = weechat_buffer_search ("==", text2);
+        ptr_buffer = dogechat_buffer_search ("==", text2);
         if (!ptr_buffer)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: buffer \"%s\" not found"),
-                            weechat_prefix ("error"), FIFO_PLUGIN_NAME,
+                            dogechat_prefix ("error"), FIFO_PLUGIN_NAME,
                             text2);
             free (text2);
             return;
         }
     }
 
-    weechat_command (ptr_buffer, pos_msg);
+    dogechat_command (ptr_buffer, pos_msg);
 
     free (text2);
 }
@@ -364,34 +364,34 @@ fifo_read (void *data, int fd)
 #else
             if (errno == EAGAIN)
 #endif /* __CYGWIN__ */
-                return WEECHAT_RC_OK;
+                return DOGECHAT_RC_OK;
 
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: error reading pipe (%d %s), closing it"),
-                            weechat_prefix ("error"), FIFO_PLUGIN_NAME,
+                            dogechat_prefix ("error"), FIFO_PLUGIN_NAME,
                             errno, strerror (errno));
             fifo_remove ();
         }
         else
         {
-            weechat_unhook (fifo_fd_hook);
+            dogechat_unhook (fifo_fd_hook);
             fifo_fd_hook = NULL;
             close (fifo_fd);
             fifo_fd = open (fifo_filename, O_RDONLY | O_NONBLOCK);
             if (fifo_fd < 0)
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: error opening file, closing it"),
-                                weechat_prefix ("error"), FIFO_PLUGIN_NAME);
+                                dogechat_prefix ("error"), FIFO_PLUGIN_NAME);
                 fifo_remove ();
             }
             else
-                fifo_fd_hook = weechat_hook_fd (fifo_fd, 1, 0, 0,
+                fifo_fd_hook = dogechat_hook_fd (fifo_fd, 1, 0, 0,
                                                 &fifo_read, NULL);
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -405,7 +405,7 @@ fifo_config_cb (void *data, const char *option, const char *value)
     (void) data;
     (void) option;
 
-    if (weechat_strcasecmp (value, "on") == 0)
+    if (dogechat_strcasecmp (value, "on") == 0)
     {
         if (fifo_fd < 0)
             fifo_create ();
@@ -416,7 +416,7 @@ fifo_config_cb (void *data, const char *option, const char *value)
             fifo_remove ();
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -424,7 +424,7 @@ fifo_config_cb (void *data, const char *option, const char *value)
  */
 
 int
-weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
+dogechat_plugin_init (struct t_dogechat_plugin *plugin, int argc, char *argv[])
 {
     char str_option[256];
 
@@ -432,7 +432,7 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
     (void) argc;
     (void) argv;
 
-    weechat_plugin = plugin;
+    dogechat_plugin = plugin;
 
     fifo_quiet = 1;
 
@@ -440,14 +440,14 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
 
     snprintf (str_option, sizeof (str_option),
               "plugins.var.fifo.%s", FIFO_OPTION_NAME);
-    weechat_hook_config (str_option, &fifo_config_cb, NULL);
+    dogechat_hook_config (str_option, &fifo_config_cb, NULL);
 
     fifo_command_init ();
     fifo_info_init ();
 
     fifo_quiet = 0;
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -455,12 +455,12 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
  */
 
 int
-weechat_plugin_end (struct t_weechat_plugin *plugin)
+dogechat_plugin_end (struct t_dogechat_plugin *plugin)
 {
     /* make C compiler happy */
     (void) plugin;
 
     fifo_remove ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }

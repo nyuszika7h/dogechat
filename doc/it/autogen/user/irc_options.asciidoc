@@ -5,77 +5,77 @@
 * [[option_irc.color.input_nick]] *irc.color.input_nick*
 ** descrizione: `colore per il nick nella riga di input`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `lightcyan`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `lightcyan`)
 
 * [[option_irc.color.item_away]] *irc.color.item_away*
 ** descrizione: `colore per l'elemento assenza`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `yellow`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `yellow`)
 
 * [[option_irc.color.item_channel_modes]] *irc.color.item_channel_modes*
 ** descrizione: `colore per le modalità dei canali, vicino ai nomi dei canali`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `default`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `default`)
 
 * [[option_irc.color.item_lag_counting]] *irc.color.item_lag_counting*
 ** descrizione: `colore per l'indicatore del lag, durante il conteggio (pong non ricevuto dal server, lag in aumento)`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `default`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `default`)
 
 * [[option_irc.color.item_lag_finished]] *irc.color.item_lag_finished*
 ** descrizione: `colore per l'indicatore di ritardo, quando il pong viene ricevuto dal server`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `yellow`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `yellow`)
 
 * [[option_irc.color.item_nick_modes]] *irc.color.item_nick_modes*
 ** descrizione: `color for nick modes in bar item "input_prompt"`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `default`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `default`)
 
 * [[option_irc.color.message_join]] *irc.color.message_join*
 ** descrizione: `colore per il testo nei messaggi di entrata`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `green`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `green`)
 
 * [[option_irc.color.message_quit]] *irc.color.message_quit*
 ** descrizione: `colore per il testo nei messaggi di uscita/abbandono`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `red`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `red`)
 
 * [[option_irc.color.mirc_remap]] *irc.color.mirc_remap*
-** descrizione: `remap mirc colors in messages using a hashtable: keys are "fg,bg" as integers between -1 (not specified) and 15, values are WeeChat color names or numbers (format is: "1,-1:color1;2,7:color2"), example: "1,-1:darkgray;1,2:white,blue" to remap black to "darkgray" and black on blue to "white,blue"; default WeeChat colors for IRC codes: 0=white, 1=black, 2=blue, 3=green, 4=lightred, 5=red, 6=magenta, 7=brown, 8=yellow, 9=lightgreen, 10=cyan, 11=lightcyan, 12=lightblue, 13=lightmagenta, 14=gray, 15=white`
+** descrizione: `remap mirc colors in messages using a hashtable: keys are "fg,bg" as integers between -1 (not specified) and 15, values are DogeChat color names or numbers (format is: "1,-1:color1;2,7:color2"), example: "1,-1:darkgray;1,2:white,blue" to remap black to "darkgray" and black on blue to "white,blue"; default DogeChat colors for IRC codes: 0=white, 1=black, 2=blue, 3=green, 4=lightred, 5=red, 6=magenta, 7=brown, 8=yellow, 9=lightgreen, 10=cyan, 11=lightcyan, 12=lightblue, 13=lightmagenta, 14=gray, 15=white`
 ** tipo: stringa
 ** valori: qualsiasi stringa (valore predefinito: `"1,-1:darkgray"`)
 
 * [[option_irc.color.nick_prefixes]] *irc.color.nick_prefixes*
-** descrizione: `colore per i prefissi dei nick usando il carattere di modalità (o=operatore, h=halfop, v=voice, ..), il formato è: "o:colore1;h:colore2;v:colore3" (se una modalità non viene trovata, WeeChat proverà con le modalità successive ricevute dal server ("PREFIX"); può essere usata una modalità speciale "*" come colore prefefinito se non viene trovata nessuna modalità nella lista)`
+** descrizione: `colore per i prefissi dei nick usando il carattere di modalità (o=operatore, h=halfop, v=voice, ..), il formato è: "o:colore1;h:colore2;v:colore3" (se una modalità non viene trovata, DogeChat proverà con le modalità successive ricevute dal server ("PREFIX"); può essere usata una modalità speciale "*" come colore prefefinito se non viene trovata nessuna modalità nella lista)`
 ** tipo: stringa
 ** valori: qualsiasi stringa (valore predefinito: `"y:lightred;q:lightred;a:lightcyan;o:lightgreen;h:lightmagenta;v:yellow;*:lightblue"`)
 
 * [[option_irc.color.notice]] *irc.color.notice*
 ** descrizione: `colore per il testo "Notifica" nelle notifiche`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `green`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `green`)
 
 * [[option_irc.color.reason_quit]] *irc.color.reason_quit*
 ** descrizione: `colore per il motivo nei messaggi di uscita/abbandono`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `default`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `default`)
 
 * [[option_irc.color.topic_current]] *irc.color.topic_current*
 ** descrizione: `color for current channel topic (when joining a channel or using /topic)`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `default`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `default`)
 
 * [[option_irc.color.topic_new]] *irc.color.topic_new*
 ** descrizione: `colore del nuovo argomento del canale (quando viene cambiato)`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `white`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `white`)
 
 * [[option_irc.color.topic_old]] *irc.color.topic_old*
 ** descrizione: `colore del precedente argomento del canale (quando viene cambiato)`
 ** tipo: colore
-** valori: a WeeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `default`)
+** valori: a DogeChat color name (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), a terminal color number or an alias; attributes are allowed before color (for text color only, not background): "*" for bold, "!" for reverse, "/" for italic, "_" for underline (valore predefinito: `default`)
 
 * [[option_irc.look.buffer_open_before_autojoin]] *irc.look.buffer_open_before_autojoin*
 ** descrizione: `open channel buffer before the JOIN is received from server when it is auto joined (with server option "autojoin"); this is useful to open channels with always the same buffer numbers on startup`
@@ -133,7 +133,7 @@
 ** valori: on, off (valore predefinito: `on`)
 
 * [[option_irc.look.display_ctcp_reply]] *irc.look.display_ctcp_reply*
-** descrizione: `visualizza risposta CTCP inviata da WeeChat`
+** descrizione: `visualizza risposta CTCP inviata da DogeChat`
 ** tipo: bool
 ** valori: on, off (valore predefinito: `on`)
 
@@ -223,7 +223,7 @@
 ** valori: on, off (valore predefinito: `on`)
 
 * [[option_irc.look.join_auto_add_chantype]] *irc.look.join_auto_add_chantype*
-** descrizione: `automatically add channel type in front of channel name on command /join if the channel name does not start with a valid channel type for the server; for example: "/join weechat" will in fact send: "/join #weechat"`
+** descrizione: `automatically add channel type in front of channel name on command /join if the channel name does not start with a valid channel type for the server; for example: "/join dogechat" will in fact send: "/join #dogechat"`
 ** tipo: bool
 ** valori: on, off (valore predefinito: `off`)
 
@@ -383,7 +383,7 @@
 ** valori: 0 .. 604800 (valore predefinito: `600`)
 
 * [[option_irc.network.ban_mask_default]] *irc.network.ban_mask_default*
-** descrizione: `default ban mask for commands /ban, /unban and /kickban; variables $nick, $user, $ident and $host are replaced by their values (extracted from "nick!user@host"); $ident is the same as $user if $user does not start with "~", otherwise it is set to "*"; this default mask is used only if WeeChat knows the host for the nick`
+** descrizione: `default ban mask for commands /ban, /unban and /kickban; variables $nick, $user, $ident and $host are replaced by their values (extracted from "nick!user@host"); $ident is the same as $user if $user does not start with "~", otherwise it is set to "*"; this default mask is used only if DogeChat knows the host for the nick`
 ** tipo: stringa
 ** valori: qualsiasi stringa (valore predefinito: `"*!$ident@$host"`)
 
@@ -408,7 +408,7 @@
 ** valori: 0 .. 604800 (valore predefinito: `60`)
 
 * [[option_irc.network.lag_max]] *irc.network.lag_max*
-** descrizione: `maximum lag (in seconds): if this lag is reached, WeeChat will consider that the answer from server (pong) will never be received and will give up counting the lag (0 = never give up)`
+** descrizione: `maximum lag (in seconds): if this lag is reached, DogeChat will consider that the answer from server (pong) will never be received and will give up counting the lag (0 = never give up)`
 ** tipo: intero
 ** valori: 0 .. 604800 (valore predefinito: `1800`)
 
@@ -463,7 +463,7 @@
 ** valori: 0 .. 60 (valore predefinito: `2`)
 
 * [[option_irc.server_default.autoconnect]] *irc.server_default.autoconnect*
-** descrizione: `connette automaticamente ai server all'avvio di WeeChat`
+** descrizione: `connette automaticamente ai server all'avvio di DogeChat`
 ** tipo: bool
 ** valori: on, off (valore predefinito: `off`)
 
@@ -503,7 +503,7 @@
 ** valori: 0 .. 1000000 (valore predefinito: `25`)
 
 * [[option_irc.server_default.capabilities]] *irc.server_default.capabilities*
-** descrizione: `comma-separated list of client capabilities to enable for server if they are available (see /help cap for a list of capabilities supported by WeeChat) (example: "away-notify,multi-prefix")`
+** descrizione: `comma-separated list of client capabilities to enable for server if they are available (see /help cap for a list of capabilities supported by DogeChat) (example: "away-notify,multi-prefix")`
 ** tipo: stringa
 ** valori: qualsiasi stringa (valore predefinito: `""`)
 
@@ -518,7 +518,7 @@
 ** valori: 0 .. 3600 (valore predefinito: `0`)
 
 * [[option_irc.server_default.connection_timeout]] *irc.server_default.connection_timeout*
-** descrizione: `timeout (in secondi) tra la connessione TCP al server ed il messaggio 001 ricevuto, se questo timeout viene raggiunto prima della ricezione del messaggio 001, WeeChat effettuerà la disconnessione`
+** descrizione: `timeout (in secondi) tra la connessione TCP al server ed il messaggio 001 ricevuto, se questo timeout viene raggiunto prima della ricezione del messaggio 001, DogeChat effettuerà la disconnessione`
 ** tipo: intero
 ** valori: 1 .. 3600 (valore predefinito: `60`)
 
@@ -528,14 +528,14 @@
 ** valori: qualsiasi stringa (valore predefinito: `""`)
 
 * [[option_irc.server_default.default_msg_part]] *irc.server_default.default_msg_part*
-** descrizione: `messaggio di uscita predefinito (in uscita dal canale) ("%v" verrà sostituito dalla versione di WeeChat)`
+** descrizione: `messaggio di uscita predefinito (in uscita dal canale) ("%v" verrà sostituito dalla versione di DogeChat)`
 ** tipo: stringa
-** valori: qualsiasi stringa (valore predefinito: `"WeeChat %v"`)
+** valori: qualsiasi stringa (valore predefinito: `"DogeChat %v"`)
 
 * [[option_irc.server_default.default_msg_quit]] *irc.server_default.default_msg_quit*
-** descrizione: `messaggio di abbandono predefinito (disconnessione dal server) ("%v" verrà sostituito dalla versione di WeeChat)`
+** descrizione: `messaggio di abbandono predefinito (disconnessione dal server) ("%v" verrà sostituito dalla versione di DogeChat)`
 ** tipo: stringa
-** valori: qualsiasi stringa (valore predefinito: `"WeeChat %v"`)
+** valori: qualsiasi stringa (valore predefinito: `"DogeChat %v"`)
 
 * [[option_irc.server_default.ipv6]] *irc.server_default.ipv6*
 ** descrizione: `usa il protocollo IPv6 per le comunicazioni con il server (prova con IPv6, se non disponibile usa IPv4); se disabilitato, viene usato solo IPv4`
@@ -583,7 +583,7 @@
 ** valori: continue, reconnect, disconnect (valore predefinito: `continue`)
 
 * [[option_irc.server_default.sasl_key]] *irc.server_default.sasl_key*
-** descrizione: `file with ECC private key for mechanism "ecdsa-nist256p-challenge" ("%h" will be replaced by WeeChat home, "~/.weechat" by default)`
+** descrizione: `file with ECC private key for mechanism "ecdsa-nist256p-challenge" ("%h" will be replaced by DogeChat home, "~/.dogechat" by default)`
 ** tipo: stringa
 ** valori: qualsiasi stringa (valore predefinito: `""`)
 
@@ -613,7 +613,7 @@
 ** valori: on, off (valore predefinito: `off`)
 
 * [[option_irc.server_default.ssl_cert]] *irc.server_default.ssl_cert*
-** descrizione: `file del certificato SSL usato per identificare automaticamente il proprio nick ("%h" sarà sostituito dalla home di WeeChat, "~/.weechat come predefinita)`
+** descrizione: `file del certificato SSL usato per identificare automaticamente il proprio nick ("%h" sarà sostituito dalla home di DogeChat, "~/.dogechat come predefinita)`
 ** tipo: stringa
 ** valori: qualsiasi stringa (valore predefinito: `""`)
 

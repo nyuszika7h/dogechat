@@ -7,7 +7,7 @@
 
 ----
 /exec  -list
-       [-sh|-nosh] [-bg|-nobg] [-stdin|-nostdin] [-buffer <name>] [-l|-o|-n|-nf] [-cl|-nocl] [-sw|-nosw] [-ln|-noln] [-flush|-noflush] [-color ansi|auto|irc|weechat|strip] [-rc|-norc] [-timeout <timeout>] [-name <name>] [-pipe <command>] [-hsignal <name>] <command>
+       [-sh|-nosh] [-bg|-nobg] [-stdin|-nostdin] [-buffer <name>] [-l|-o|-n|-nf] [-cl|-nocl] [-sw|-nosw] [-ln|-noln] [-flush|-noflush] [-color ansi|auto|irc|dogechat|strip] [-rc|-norc] [-timeout <timeout>] [-name <name>] [-pipe <command>] [-hsignal <name>] <command>
        -in <id> <text>
        -inclose <id> [<text>]
        -signal <id> <signal>
@@ -38,15 +38,15 @@
 -noflush: コマンドの出力をコマンドの終了後に表示
   -color: 出力に含まれる ANSI 色に対する挙動:
              ansi: ANSI 色をそのままにする
-             auto: ANSI 色を WeeChat/IRC 色に変換 (デフォルト)
+             auto: ANSI 色を DogeChat/IRC 色に変換 (デフォルト)
               irc: ANSI 色を IRC 色に変換
-          weechat: ANSI 色を WeeChat 色に変換
+          dogechat: ANSI 色を DogeChat 色に変換
             strip: ANSI 色を削除
      -rc: リターンコードを表示 (デフォルト)
    -norc: リターンコードを表示しない
 -timeout: コマンドのタイムアウトを設定 (秒単位)
    -name: コマンドの名前を設定 (後から名前を付けるには /exec を使う)
-   -pipe: WeeChat およびプラグインコマンドに出力を送信 (1 行ごと); コマンドおよび引数に空白が含まれる場合、2 重引用符で囲ってください; 引数 $line はその行で置換されます (デフォルトではコマンドの後ろに空白を付けてから行を追加します) (オプション -bg/-o/-n と互換性はありません)
+   -pipe: DogeChat およびプラグインコマンドに出力を送信 (1 行ごと); コマンドおよび引数に空白が含まれる場合、2 重引用符で囲ってください; 引数 $line はその行で置換されます (デフォルトではコマンドの後ろに空白を付けてから行を追加します) (オプション -bg/-o/-n と互換性はありません)
 -hsignal: hsignal として出力を送信 (例えばトリガで使われます) (オプション -bg/-o/-n と互換性はありません)
  command: 実行するコマンド; "url:" で始まる場合、シェルは無効化され、URL の内容がダウンロードされ、出力として送信されます
       id: コマンド識別子: 番号か名前 ("-name xxx" で設定した場合) のどちらか一方
@@ -65,9 +65,9 @@ property: フックプロパティ
 
 例:
   /exec -n ls -l /tmp
-  /exec -n ps xu | grep weechat
+  /exec -n ps xu | grep dogechat
   /exec -n -norc url:http://pastebin.com/raw.php?i=xxxxxxxx
-  /exec -nf -noln links -dump https://weechat.org/files/doc/devel/weechat_user.en.html
+  /exec -nf -noln links -dump https://dogechat.org/files/doc/devel/dogechat_user.en.html
   /exec -o uptime
   /exec -pipe "/print Machine uptime:" uptime
   /exec -n tail -f /var/log/messages

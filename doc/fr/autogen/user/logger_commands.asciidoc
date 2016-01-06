@@ -33,8 +33,8 @@ Exemples :
     /logger disable
   définir le niveau à 3 pour les tampons IRC :
     /set logger.level.irc 3
-  désactiver l'enregistrement pour le tampon principal de WeeChat :
-    /set logger.level.core.weechat 0
+  désactiver l'enregistrement pour le tampon principal de DogeChat :
+    /set logger.level.core.dogechat 0
   utiliser un répertoire par serveur IRC et un fichier par canal dedans :
-    /set logger.mask.irc "$server/$channel.weechatlog"
+    /set logger.mask.irc "$server/$channel.dogechatlog"
 ----

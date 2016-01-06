@@ -1,0 +1,4 @@
+usr/bin/dogechat
+debian/dogechat.xpm usr/share/pixmaps
+usr/share/man/man1/dogechat.1
+usr/share/man/*/man1/dogechat.1

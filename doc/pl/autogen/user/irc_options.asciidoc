@@ -5,77 +5,77 @@
 * [[option_irc.color.input_nick]] *irc.color.input_nick*
 ** opis: `kolor nicka w pasku danych wejściowych`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `lightcyan`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `lightcyan`)
 
 * [[option_irc.color.item_away]] *irc.color.item_away*
 ** opis: `kolor elementu nieobecności`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `yellow`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `yellow`)
 
 * [[option_irc.color.item_channel_modes]] *irc.color.item_channel_modes*
 ** opis: `kolor trybów kanału, przy nazwie kanału`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
 
 * [[option_irc.color.item_lag_counting]] *irc.color.item_lag_counting*
 ** opis: `kolor wskaźnika opóźnienia, podczas naliczania (pong nie otrzymany od serwera, lag rośnie)`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
 
 * [[option_irc.color.item_lag_finished]] *irc.color.item_lag_finished*
 ** opis: `kolor wskaźnika opóźnienia, kiedy otrzymamy pong od serwera`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `yellow`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `yellow`)
 
 * [[option_irc.color.item_nick_modes]] *irc.color.item_nick_modes*
 ** opis: `kolor dla atrybutów nicka w elemencie paska "input_prompt"`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
 
 * [[option_irc.color.message_join]] *irc.color.message_join*
 ** opis: `kolor tekstu w wiadomościach o wejściu na kanał`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `green`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `green`)
 
 * [[option_irc.color.message_quit]] *irc.color.message_quit*
 ** opis: `kolor tekstu w wiadomościach o opuszczeniu kanału/wyjściu z IRC`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `red`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `red`)
 
 * [[option_irc.color.mirc_remap]] *irc.color.mirc_remap*
-** opis: `zamień kolory mirca w wiadomościach używając tablicy hashy: klucze to  "fg,bg" przyjmują one wartości pomiędzy -1 (nie określono) a 15, wartości to nazwy lub numery kolorów WeeChat (format: "1,-1:kolor1;2,7:kolor2"), przykład: "1,-1:darkgray;1,2:white,blue" w celu przemapowania czarnego na "darkgray" oraz czarnego na niebieskim tle na "white,blue"; domyślne kolory WeeChat dla kodów IRC: 0-=white, 1=black, 2=blue, 3=green, 4=lightred, 5=red, 6=magenta, 7=brown, 8=yellow, 9=lightgreen, 10=cyan, 11=lightcyan, 12=lightblue, 13=lightmagenta, 14=gray, 15=white`
+** opis: `zamień kolory mirca w wiadomościach używając tablicy hashy: klucze to  "fg,bg" przyjmują one wartości pomiędzy -1 (nie określono) a 15, wartości to nazwy lub numery kolorów DogeChat (format: "1,-1:kolor1;2,7:kolor2"), przykład: "1,-1:darkgray;1,2:white,blue" w celu przemapowania czarnego na "darkgray" oraz czarnego na niebieskim tle na "white,blue"; domyślne kolory DogeChat dla kodów IRC: 0-=white, 1=black, 2=blue, 3=green, 4=lightred, 5=red, 6=magenta, 7=brown, 8=yellow, 9=lightgreen, 10=cyan, 11=lightcyan, 12=lightblue, 13=lightmagenta, 14=gray, 15=white`
 ** typ: ciąg
 ** wartości: dowolny ciąg (domyślna wartość: `"1,-1:darkgray"`)
 
 * [[option_irc.color.nick_prefixes]] *irc.color.nick_prefixes*
-** opis: `kolor dla przedrostków nicków zawierających oznaczenie statusu (o=operator, h=halfop, v=voice, ..), format: "o:kolor1;h:kolor2;v:kolor3" (jeśli nie znaleziono statusu, WeeChat sprawdzi następne atrybuty uzyskane od serwera ("PREFIX"); specjalny tryb "*" może zostać użyty jako domyślny kolor jeśli nie znaleziono atrybutu na liście)`
+** opis: `kolor dla przedrostków nicków zawierających oznaczenie statusu (o=operator, h=halfop, v=voice, ..), format: "o:kolor1;h:kolor2;v:kolor3" (jeśli nie znaleziono statusu, DogeChat sprawdzi następne atrybuty uzyskane od serwera ("PREFIX"); specjalny tryb "*" może zostać użyty jako domyślny kolor jeśli nie znaleziono atrybutu na liście)`
 ** typ: ciąg
 ** wartości: dowolny ciąg (domyślna wartość: `"y:lightred;q:lightred;a:lightcyan;o:lightgreen;h:lightmagenta;v:yellow;*:lightblue"`)
 
 * [[option_irc.color.notice]] *irc.color.notice*
 ** opis: `kolor tekstu "Notice" w podświetleniach`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `green`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `green`)
 
 * [[option_irc.color.reason_quit]] *irc.color.reason_quit*
 ** opis: `kolor tekstu powodu opuszczenia kanału/wyjścia z IRC`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
 
 * [[option_irc.color.topic_current]] *irc.color.topic_current*
 ** opis: `kolor obecnego tematu kanału (podczas wejścia na kanał lub użycia /topic)`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
 
 * [[option_irc.color.topic_new]] *irc.color.topic_new*
 ** opis: `kolor nowego tematu kanału (kiedy temat został zmieniony)`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `white`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `white`)
 
 * [[option_irc.color.topic_old]] *irc.color.topic_old*
 ** opis: `kolor starego tematu kanału (kiedy temat został zmieniony)`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
 
 * [[option_irc.look.buffer_open_before_autojoin]] *irc.look.buffer_open_before_autojoin*
 ** opis: `otwórz bufor kanału przed odebraniem JOIN od serwera, kiedy automatyczne wchodzenie na kanały jest włączone (opcja serwera "autojoin"); przydatne żeby bufory kanałów miały zawsze ten sam numer po uruchomieniu`
@@ -133,7 +133,7 @@
 ** wartości: on, off (domyślna wartość: `on`)
 
 * [[option_irc.look.display_ctcp_reply]] *irc.look.display_ctcp_reply*
-** opis: `wyświetlaj odpowiedź CTCP wysłaną przez WeeChat`
+** opis: `wyświetlaj odpowiedź CTCP wysłaną przez DogeChat`
 ** typ: bool
 ** wartości: on, off (domyślna wartość: `on`)
 
@@ -223,7 +223,7 @@
 ** wartości: on, off (domyślna wartość: `on`)
 
 * [[option_irc.look.join_auto_add_chantype]] *irc.look.join_auto_add_chantype*
-** opis: `automatycznie dodawaj typ kanału z przodu nazwy kanału dla komendy /join jeśli nazwa kanału nie zaczyna się od poprawnego typu kanału na serwerze; na przykład: "/join weechat" zostanie wysłane jako: "/join #weechat"`
+** opis: `automatycznie dodawaj typ kanału z przodu nazwy kanału dla komendy /join jeśli nazwa kanału nie zaczyna się od poprawnego typu kanału na serwerze; na przykład: "/join dogechat" zostanie wysłane jako: "/join #dogechat"`
 ** typ: bool
 ** wartości: on, off (domyślna wartość: `off`)
 
@@ -383,7 +383,7 @@
 ** wartości: 0 .. 604800 (domyślna wartość: `600`)
 
 * [[option_irc.network.ban_mask_default]] *irc.network.ban_mask_default*
-** opis: `domyślna maska dla bana dla komend /ban, /unban i /kickban; zmienne $nick, $user, $ident i $host są zastępowane odpowiednimi wartościami (pobranymi z "nick!user@host"); $ident jest taki sam jak $user, jeśli $user nie zaczyna się od "~", w przeciwnym wypadku jest ustawiany na "*"; domyślna maska używana jest tylko, kiedy WeeChat zna nazwę hosta dla nicka`
+** opis: `domyślna maska dla bana dla komend /ban, /unban i /kickban; zmienne $nick, $user, $ident i $host są zastępowane odpowiednimi wartościami (pobranymi z "nick!user@host"); $ident jest taki sam jak $user, jeśli $user nie zaczyna się od "~", w przeciwnym wypadku jest ustawiany na "*"; domyślna maska używana jest tylko, kiedy DogeChat zna nazwę hosta dla nicka`
 ** typ: ciąg
 ** wartości: dowolny ciąg (domyślna wartość: `"*!$ident@$host"`)
 
@@ -408,7 +408,7 @@
 ** wartości: 0 .. 604800 (domyślna wartość: `60`)
 
 * [[option_irc.network.lag_max]] *irc.network.lag_max*
-** opis: `maksymalne opóźnienie (w sekundach): jeśli ta wartość zostanie osiągnięta WeeChat założy, że odpowiedź od serwera (pong) nie zostanie odebrana i przestanie liczyć opóźnienie (0 = nigdy nie przestawaj)`
+** opis: `maksymalne opóźnienie (w sekundach): jeśli ta wartość zostanie osiągnięta DogeChat założy, że odpowiedź od serwera (pong) nie zostanie odebrana i przestanie liczyć opóźnienie (0 = nigdy nie przestawaj)`
 ** typ: liczba
 ** wartości: 0 .. 604800 (domyślna wartość: `1800`)
 
@@ -463,7 +463,7 @@
 ** wartości: 0 .. 60 (domyślna wartość: `2`)
 
 * [[option_irc.server_default.autoconnect]] *irc.server_default.autoconnect*
-** opis: `automatycznie połącz się z serwerem przy uruchamianiu WeeChat`
+** opis: `automatycznie połącz się z serwerem przy uruchamianiu DogeChat`
 ** typ: bool
 ** wartości: on, off (domyślna wartość: `off`)
 
@@ -503,7 +503,7 @@
 ** wartości: 0 .. 1000000 (domyślna wartość: `25`)
 
 * [[option_irc.server_default.capabilities]] *irc.server_default.capabilities*
-** opis: `comma-separated list of client capabilities to enable for server if they are available (see /help cap for a list of capabilities supported by WeeChat) (example: "away-notify,multi-prefix")`
+** opis: `comma-separated list of client capabilities to enable for server if they are available (see /help cap for a list of capabilities supported by DogeChat) (example: "away-notify,multi-prefix")`
 ** typ: ciąg
 ** wartości: dowolny ciąg (domyślna wartość: `""`)
 
@@ -518,7 +518,7 @@
 ** wartości: 0 .. 3600 (domyślna wartość: `0`)
 
 * [[option_irc.server_default.connection_timeout]] *irc.server_default.connection_timeout*
-** opis: `czas oczekiwania (w sekundach) pomiędzy połączeniem TCP z serwerem a otrzymaniem wiadomości 001, jeśli czas zostanie przekroczony przed odebraniem wiadomości 001, WeeChat rozłączy się z serwerem`
+** opis: `czas oczekiwania (w sekundach) pomiędzy połączeniem TCP z serwerem a otrzymaniem wiadomości 001, jeśli czas zostanie przekroczony przed odebraniem wiadomości 001, DogeChat rozłączy się z serwerem`
 ** typ: liczba
 ** wartości: 1 .. 3600 (domyślna wartość: `60`)
 
@@ -528,14 +528,14 @@
 ** wartości: dowolny ciąg (domyślna wartość: `""`)
 
 * [[option_irc.server_default.default_msg_part]] *irc.server_default.default_msg_part*
-** opis: `domyślna wiadomość opuszczenia kanału ("%v" zostanie zastąpione wersja WeeChat)`
+** opis: `domyślna wiadomość opuszczenia kanału ("%v" zostanie zastąpione wersja DogeChat)`
 ** typ: ciąg
-** wartości: dowolny ciąg (domyślna wartość: `"WeeChat %v"`)
+** wartości: dowolny ciąg (domyślna wartość: `"DogeChat %v"`)
 
 * [[option_irc.server_default.default_msg_quit]] *irc.server_default.default_msg_quit*
-** opis: `domyślna wiadomość wyjścia z IRC (rozłączenia z serwerem) ("%v" zostanie zastąpione wersją WeeChat)`
+** opis: `domyślna wiadomość wyjścia z IRC (rozłączenia z serwerem) ("%v" zostanie zastąpione wersją DogeChat)`
 ** typ: ciąg
-** wartości: dowolny ciąg (domyślna wartość: `"WeeChat %v"`)
+** wartości: dowolny ciąg (domyślna wartość: `"DogeChat %v"`)
 
 * [[option_irc.server_default.ipv6]] *irc.server_default.ipv6*
 ** opis: `używaj protokołu IPv6 do komunikacji z serwerem (próbuj IPv6 później wróć do IPv4); jeśli wyłączone używane jest tylko IPv4`
@@ -583,7 +583,7 @@
 ** wartości: continue, reconnect, disconnect (domyślna wartość: `continue`)
 
 * [[option_irc.server_default.sasl_key]] *irc.server_default.sasl_key*
-** opis: `plik z kluczem prywatnym ECC dla mechanizmu "ecdsa-nist256p-challenge" ("%h" zostanie zastąpione katalogiem domowym WeeChat, domyślnie "~/.weechat")`
+** opis: `plik z kluczem prywatnym ECC dla mechanizmu "ecdsa-nist256p-challenge" ("%h" zostanie zastąpione katalogiem domowym DogeChat, domyślnie "~/.dogechat")`
 ** typ: ciąg
 ** wartości: dowolny ciąg (domyślna wartość: `""`)
 
@@ -613,7 +613,7 @@
 ** wartości: on, off (domyślna wartość: `off`)
 
 * [[option_irc.server_default.ssl_cert]] *irc.server_default.ssl_cert*
-** opis: `plik certyfikatu SSL używany do automatycznego uwierzytelnienia nicka ("%h" zostanie zastąpione katalogiem domowym WeeChat, domyślnie "~/.weechat")`
+** opis: `plik certyfikatu SSL używany do automatycznego uwierzytelnienia nicka ("%h" zostanie zastąpione katalogiem domowym DogeChat, domyślnie "~/.dogechat")`
 ** typ: ciąg
 ** wartości: dowolny ciąg (domyślna wartość: `""`)
 

@@ -1,22 +1,22 @@
 /*
- * tests.cpp - run WeeChat tests
+ * tests.cpp - run DogeChat tests
  *
  * Copyright (C) 2014-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <iostream>
@@ -32,10 +32,10 @@ extern "C"
 #ifndef HAVE_CONFIG_H
 #define HAVE_CONFIG_H
 #endif
-#include "src/core/weechat.h"
-#include "src/core/wee-hook.h"
-#include "src/core/wee-input.h"
-#include "src/core/wee-string.h"
+#include "src/core/dogechat.h"
+#include "src/core/doge-hook.h"
+#include "src/core/doge-input.h"
+#include "src/core/doge-string.h"
 #include "src/plugins/plugin.h"
 #include "src/gui/gui-main.h"
 #include "src/gui/gui-buffer.h"
@@ -61,7 +61,7 @@ IMPORT_TEST_GROUP(Util);
 
 
 /*
- * Callback for any message displayed by WeeChat or a plugin.
+ * Callback for any message displayed by DogeChat or a plugin.
  */
 
 int
@@ -85,7 +85,7 @@ test_print_cb (void *data, struct t_gui_buffer *buffer,
             (prefix && prefix[0]) ? " " : "",
             (message && message[0]) ? message : "");
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -115,24 +115,24 @@ test_gui_init ()
 }
 
 /*
- * Runs tests in WeeChat environment.
+ * Runs tests in DogeChat environment.
  */
 
 int
 main (int argc, char *argv[])
 {
-    int rc, length, weechat_argc;
-    char *weechat_tests_args, *args, **weechat_argv;
+    int rc, length, dogechat_argc;
+    char *dogechat_tests_args, *args, **dogechat_argv;
 
     /* setup environment: default language, no specific timezone */
     setenv ("LC_ALL", "C", 1);
     setenv ("TZ", "", 1);
 
-    /* build arguments for WeeChat */
-    weechat_tests_args = getenv ("WEECHAT_TESTS_ARGS");
+    /* build arguments for DogeChat */
+    dogechat_tests_args = getenv ("DOGECHAT_TESTS_ARGS");
     length = strlen (argv[0]) +
         64 +  /* --dir ... */
-        ((weechat_tests_args) ? 1 + strlen (weechat_tests_args) : 0) +
+        ((dogechat_tests_args) ? 1 + strlen (dogechat_tests_args) : 0) +
         1;
     args = (char *)malloc (length);
     if (!args)
@@ -141,21 +141,21 @@ main (int argc, char *argv[])
         return 1;
     }
     snprintf (args, length,
-              "%s --dir ./tmp_weechat_test%s%s",
+              "%s --dir ./tmp_dogechat_test%s%s",
               argv[0],
-              (weechat_tests_args) ? " " : "",
-              (weechat_tests_args) ? weechat_tests_args : "");
-    weechat_argv = string_split_shell (args, &weechat_argc);
-    printf ("WeeChat arguments: \"%s\"\n", args);
+              (dogechat_tests_args) ? " " : "",
+              (dogechat_tests_args) ? dogechat_tests_args : "");
+    dogechat_argv = string_split_shell (args, &dogechat_argc);
+    printf ("DogeChat arguments: \"%s\"\n", args);
 
-    /* init WeeChat */
+    /* init DogeChat */
     printf ("------------------------------------------------------------\n");
-    weechat_init (weechat_argc, weechat_argv, &test_gui_init);
-    if (weechat_argv)
-        string_free_split (weechat_argv);
+    dogechat_init (dogechat_argc, dogechat_argv, &test_gui_init);
+    if (dogechat_argv)
+        string_free_split (dogechat_argv);
     free (args);
 
-    /* display WeeChat version */
+    /* display DogeChat version */
     input_data (gui_buffer_search_main (), "/command core version");
 
     /* run all tests */
@@ -165,8 +165,8 @@ main (int argc, char *argv[])
     printf ("<<<<<<<<<< TESTS <<<<<<<<<<\n");
     printf ("\n");
 
-    /* end WeeChat */
-    weechat_end (&gui_main_end);
+    /* end DogeChat */
+    dogechat_end (&gui_main_end);
     printf ("------------------------------------------------------------\n");
 
     /* display status */

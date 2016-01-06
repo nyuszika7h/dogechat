@@ -33,8 +33,8 @@ Anmerkung: Im Befehl können Variablen genutzt werden, die dann durch den entspr
 Beispiele:
   Alternativbefehl "/split" wird anlegt um ein Fenster horizontal zu teilen:
     /alias add split /window splith
-  Alternativbefehl "/hallo" wird angelegt um in allen Channels, außer im #weechat Channel, den Text "Hallo" auszugeben:
-    /alias add hallo /allchan -exclude=#weechat msg * hallo
+  Alternativbefehl "/hallo" wird angelegt um in allen Channels, außer im #dogechat Channel, den Text "Hallo" auszugeben:
+    /alias add hallo /allchan -exclude=#dogechat msg * hallo
   Alternativbefehl "/forcejoin" wird angelegt um den IRC Befehl "forcejoin" mit einer Vervollständigung von /sajoin auszuführen:
     /alias addcompletion %%sajoin forcejoin /quote forcejoin
 ----

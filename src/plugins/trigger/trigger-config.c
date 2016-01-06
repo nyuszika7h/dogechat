@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2014-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "trigger.h"
 #include "trigger-config.h"
 
@@ -105,7 +105,7 @@ trigger_config_change_enabled (void *data, struct t_config_option *option)
     /* make C compiler happy */
     (void) data;
 
-    trigger_enabled = weechat_config_boolean (option);
+    trigger_enabled = dogechat_config_boolean (option);
 }
 
 /*
@@ -125,7 +125,7 @@ trigger_config_change_trigger_enabled (void *data,
     if (!ptr_trigger)
         return;
 
-    if (weechat_config_boolean (option))
+    if (dogechat_config_boolean (option))
         trigger_hook (ptr_trigger);
     else
         trigger_unhook (ptr_trigger);
@@ -188,30 +188,30 @@ trigger_config_change_trigger_regex (void *data, struct t_config_option *option)
     if (!ptr_trigger)
         return;
 
-    switch (trigger_regex_split (weechat_config_string (option),
+    switch (trigger_regex_split (dogechat_config_string (option),
                                  &ptr_trigger->regex_count,
                                  &ptr_trigger->regex))
     {
         case 0: /* OK */
             break;
         case -1: /* format error */
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: invalid format for option \"regex\", "
                               "see /help trigger.trigger.%s.regex"),
-                            weechat_prefix ("error"), TRIGGER_PLUGIN_NAME,
+                            dogechat_prefix ("error"), TRIGGER_PLUGIN_NAME,
                             ptr_trigger->name);
             break;
         case -2: /* regex compilation error */
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: invalid regular expression in option "
                               "\"regex\", see /help trigger.trigger.%s.regex"),
-                            weechat_prefix ("error"), TRIGGER_PLUGIN_NAME,
+                            dogechat_prefix ("error"), TRIGGER_PLUGIN_NAME,
                             ptr_trigger->name);
             break;
         case -3: /* memory error */
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: not enough memory"),
-                            weechat_prefix ("error"), TRIGGER_PLUGIN_NAME);
+                            dogechat_prefix ("error"), TRIGGER_PLUGIN_NAME);
             break;
     }
 }
@@ -233,7 +233,7 @@ trigger_config_change_trigger_command (void *data,
     if (!ptr_trigger)
         return;
 
-    trigger_split_command (weechat_config_string (option),
+    trigger_split_command (dogechat_config_string (option),
                            &ptr_trigger->commands_count,
                            &ptr_trigger->commands);
 }
@@ -266,7 +266,7 @@ trigger_config_create_trigger_option (const char *trigger_name, int index_option
     switch (index_option)
     {
         case TRIGGER_OPTION_ENABLED:
-            ptr_option = weechat_config_new_option (
+            ptr_option = dogechat_config_new_option (
                 trigger_config_file, trigger_config_section_trigger,
                 option_name, "boolean",
                 N_("if disabled, the hooks are removed from trigger, so it is "
@@ -275,7 +275,7 @@ trigger_config_create_trigger_option (const char *trigger_name, int index_option
                 &trigger_config_change_trigger_enabled, NULL, NULL, NULL);
             break;
         case TRIGGER_OPTION_HOOK:
-            ptr_option = weechat_config_new_option (
+            ptr_option = dogechat_config_new_option (
                 trigger_config_file, trigger_config_section_trigger,
                 option_name, "integer",
                 N_("type of hook used"),
@@ -284,7 +284,7 @@ trigger_config_create_trigger_option (const char *trigger_name, int index_option
                 &trigger_config_change_trigger_hook, NULL, NULL, NULL);
             break;
         case TRIGGER_OPTION_ARGUMENTS:
-            ptr_option = weechat_config_new_option (
+            ptr_option = dogechat_config_new_option (
                 trigger_config_file, trigger_config_section_trigger,
                 option_name, "string",
                 N_("arguments for the hook (depend on the hook type, see /help "
@@ -293,7 +293,7 @@ trigger_config_create_trigger_option (const char *trigger_name, int index_option
                 &trigger_config_change_trigger_arguments, NULL, NULL, NULL);
             break;
         case TRIGGER_OPTION_CONDITIONS:
-            ptr_option = weechat_config_new_option (
+            ptr_option = dogechat_config_new_option (
                 trigger_config_file, trigger_config_section_trigger,
                 option_name, "string",
                 N_("condition(s) for running the command (it is checked in "
@@ -303,7 +303,7 @@ trigger_config_create_trigger_option (const char *trigger_name, int index_option
                 NULL, NULL, NULL, NULL, NULL, NULL);
             break;
         case TRIGGER_OPTION_REGEX:
-            ptr_option = weechat_config_new_option (
+            ptr_option = dogechat_config_new_option (
                 trigger_config_file, trigger_config_section_trigger,
                 option_name, "string",
                 N_("replace text with a POSIX extended regular expression (it "
@@ -323,7 +323,7 @@ trigger_config_create_trigger_option (const char *trigger_name, int index_option
                 &trigger_config_change_trigger_regex, NULL, NULL, NULL);
             break;
         case TRIGGER_OPTION_COMMAND:
-            ptr_option = weechat_config_new_option (
+            ptr_option = dogechat_config_new_option (
                 trigger_config_file, trigger_config_section_trigger,
                 option_name, "string",
                 N_("command(s) to run if conditions are OK, after regex "
@@ -332,7 +332,7 @@ trigger_config_create_trigger_option (const char *trigger_name, int index_option
                 &trigger_config_change_trigger_command, NULL, NULL, NULL);
             break;
         case TRIGGER_OPTION_RETURN_CODE:
-            ptr_option = weechat_config_new_option (
+            ptr_option = dogechat_config_new_option (
                 trigger_config_file, trigger_config_section_trigger,
                 option_name, "integer",
                 N_("return code for hook callback (see plugin API reference to "
@@ -406,7 +406,7 @@ trigger_config_use_temp_triggers ()
             {
                 if (ptr_temp_trigger->options[i])
                 {
-                    weechat_config_option_free (ptr_temp_trigger->options[i]);
+                    dogechat_config_option_free (ptr_temp_trigger->options[i]);
                     ptr_temp_trigger->options[i] = NULL;
                 }
             }
@@ -446,15 +446,15 @@ trigger_config_trigger_read_cb (void *data, struct t_config_file *config_file,
     (void) section;
 
     if (!option_name)
-        return WEECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE;
+        return DOGECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE;
 
     pos_option = strchr (option_name, '.');
     if (!pos_option)
-        return WEECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE;
+        return DOGECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE;
 
-    trigger_name = weechat_strndup (option_name, pos_option - option_name);
+    trigger_name = dogechat_strndup (option_name, pos_option - option_name);
     if (!trigger_name)
-        return WEECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE;
+        return DOGECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE;
 
     pos_option++;
 
@@ -483,10 +483,10 @@ trigger_config_trigger_read_cb (void *data, struct t_config_file *config_file,
         }
         else
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%sWarning: unknown option for section \"%s\": "
                               "%s (value: \"%s\")"),
-                            weechat_prefix ("error"),
+                            dogechat_prefix ("error"),
                             TRIGGER_CONFIG_SECTION_TRIGGER,
                             option_name, value);
         }
@@ -494,7 +494,7 @@ trigger_config_trigger_read_cb (void *data, struct t_config_file *config_file,
 
     free (trigger_name);
 
-    return WEECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE;
+    return DOGECHAT_CONFIG_OPTION_SET_OK_SAME_VALUE;
 }
 
 /*
@@ -512,8 +512,8 @@ trigger_config_trigger_write_default_cb (void *data,
     /* make C compiler happy */
     (void) data;
 
-    if (!weechat_config_write_line (config_file, section_name, NULL))
-        return WEECHAT_CONFIG_WRITE_ERROR;
+    if (!dogechat_config_write_line (config_file, section_name, NULL))
+        return DOGECHAT_CONFIG_WRITE_ERROR;
 
     for (i = 0; trigger_config_default_list[i][0]; i++)
     {
@@ -525,17 +525,17 @@ trigger_config_trigger_write_default_cb (void *data,
                       trigger_option_string[j]);
             quotes = (j & (TRIGGER_OPTION_ARGUMENTS | TRIGGER_OPTION_CONDITIONS |
                            TRIGGER_OPTION_REGEX | TRIGGER_OPTION_COMMAND));
-            if (!weechat_config_write_line (config_file, option_name, "%s%s%s",
+            if (!dogechat_config_write_line (config_file, option_name, "%s%s%s",
                                             (quotes) ? "\"" : "",
                                             trigger_config_default_list[i][j + 1],
                                             (quotes) ? "\"" : ""))
             {
-                return WEECHAT_CONFIG_WRITE_ERROR;
+                return DOGECHAT_CONFIG_WRITE_ERROR;
             }
         }
     }
 
-    return WEECHAT_CONFIG_WRITE_OK;
+    return DOGECHAT_CONFIG_WRITE_OK;
 }
 
 /*
@@ -552,7 +552,7 @@ trigger_config_reload_cb (void *data, struct t_config_file *config_file)
 
     trigger_free_all ();
 
-    rc = weechat_config_reload (config_file);
+    rc = dogechat_config_reload (config_file);
 
     trigger_config_use_temp_triggers ();
 
@@ -572,30 +572,30 @@ trigger_config_init ()
 {
     struct t_config_section *ptr_section;
 
-    trigger_config_file = weechat_config_new (TRIGGER_CONFIG_NAME,
+    trigger_config_file = dogechat_config_new (TRIGGER_CONFIG_NAME,
                                               &trigger_config_reload_cb, NULL);
     if (!trigger_config_file)
         return 0;
 
     /* look */
-    ptr_section = weechat_config_new_section (trigger_config_file, "look",
+    ptr_section = dogechat_config_new_section (trigger_config_file, "look",
                                               0, 0,
                                               NULL, NULL, NULL, NULL,
                                               NULL, NULL, NULL, NULL,
                                               NULL, NULL);
     if (!ptr_section)
     {
-        weechat_config_free (trigger_config_file);
+        dogechat_config_free (trigger_config_file);
         return 0;
     }
 
-    trigger_config_look_enabled = weechat_config_new_option (
+    trigger_config_look_enabled = dogechat_config_new_option (
         trigger_config_file, ptr_section,
         "enabled", "boolean",
         N_("enable trigger support"),
         NULL, 0, 0, "on", NULL, 0, NULL, NULL,
         &trigger_config_change_enabled, NULL, NULL, NULL);
-    trigger_config_look_monitor_strip_colors = weechat_config_new_option (
+    trigger_config_look_monitor_strip_colors = dogechat_config_new_option (
         trigger_config_file, ptr_section,
         "monitor_strip_colors", "boolean",
         N_("strip colors in hashtable values displayed on monitor buffer"),
@@ -603,60 +603,60 @@ trigger_config_init ()
         NULL, NULL, NULL, NULL);
 
     /* color */
-    ptr_section = weechat_config_new_section (trigger_config_file, "color",
+    ptr_section = dogechat_config_new_section (trigger_config_file, "color",
                                               0, 0,
                                               NULL, NULL, NULL, NULL,
                                               NULL, NULL, NULL, NULL,
                                               NULL, NULL);
     if (!ptr_section)
     {
-        weechat_config_free (trigger_config_file);
+        dogechat_config_free (trigger_config_file);
         return 0;
     }
 
-    trigger_config_color_flag_command = weechat_config_new_option (
+    trigger_config_color_flag_command = dogechat_config_new_option (
         trigger_config_file, ptr_section,
         "flag_command", "color",
         N_("text color for command flag (in /trigger list)"),
         NULL, 0, 0, "lightgreen", NULL, 0,
         NULL, NULL, NULL, NULL, NULL, NULL);
-    trigger_config_color_flag_conditions = weechat_config_new_option (
+    trigger_config_color_flag_conditions = dogechat_config_new_option (
         trigger_config_file, ptr_section,
         "flag_conditions", "color",
         N_("text color for conditions flag (in /trigger list)"),
         NULL, 0, 0, "yellow", NULL, 0,
         NULL, NULL, NULL, NULL, NULL, NULL);
-    trigger_config_color_flag_regex = weechat_config_new_option (
+    trigger_config_color_flag_regex = dogechat_config_new_option (
         trigger_config_file, ptr_section,
         "flag_regex", "color",
         N_("text color for regex flag (in /trigger list)"),
         NULL, 0, 0, "lightcyan", NULL, 0,
         NULL, NULL, NULL, NULL, NULL, NULL);
-    trigger_config_color_flag_return_code = weechat_config_new_option (
+    trigger_config_color_flag_return_code = dogechat_config_new_option (
         trigger_config_file, ptr_section,
         "flag_return_code", "color",
         N_("text color for return code flag (in /trigger list)"),
         NULL, 0, 0, "lightmagenta", NULL, 0,
         NULL, NULL, NULL, NULL, NULL, NULL);
-    trigger_config_color_regex = weechat_config_new_option (
+    trigger_config_color_regex = dogechat_config_new_option (
         trigger_config_file, ptr_section,
         "regex", "color",
         N_("text color for regular expressions"),
         NULL, 0, 0, "white", NULL, 0,
         NULL, NULL, NULL, NULL, NULL, NULL);
-    trigger_config_color_replace = weechat_config_new_option (
+    trigger_config_color_replace = dogechat_config_new_option (
         trigger_config_file, ptr_section,
         "replace", "color",
         N_("text color for replacement text (for regular expressions)"),
         NULL, 0, 0, "cyan", NULL, 0,
         NULL, NULL, NULL, NULL, NULL, NULL);
-    trigger_config_color_trigger = weechat_config_new_option (
+    trigger_config_color_trigger = dogechat_config_new_option (
         trigger_config_file, ptr_section,
         "trigger", "color",
         N_("text color for trigger name"),
         NULL, 0, 0, "green", NULL, 0,
         NULL, NULL, NULL, NULL, NULL, NULL);
-    trigger_config_color_trigger_disabled = weechat_config_new_option (
+    trigger_config_color_trigger_disabled = dogechat_config_new_option (
         trigger_config_file, ptr_section,
         "trigger_disabled", "color",
         N_("text color for disabled trigger name"),
@@ -664,7 +664,7 @@ trigger_config_init ()
         NULL, NULL, NULL, NULL, NULL, NULL);
 
     /* trigger */
-    ptr_section = weechat_config_new_section (trigger_config_file,
+    ptr_section = dogechat_config_new_section (trigger_config_file,
                                               TRIGGER_CONFIG_SECTION_TRIGGER,
                                               0, 0,
                                               &trigger_config_trigger_read_cb, NULL,
@@ -674,7 +674,7 @@ trigger_config_init ()
                                               NULL, NULL);
     if (!ptr_section)
     {
-        weechat_config_free (trigger_config_file);
+        dogechat_config_free (trigger_config_file);
         return 0;
     }
 
@@ -692,7 +692,7 @@ trigger_config_read ()
 {
     int rc;
 
-    rc = weechat_config_read (trigger_config_file);
+    rc = dogechat_config_read (trigger_config_file);
 
     trigger_config_use_temp_triggers ();
 
@@ -706,7 +706,7 @@ trigger_config_read ()
 int
 trigger_config_write ()
 {
-    return weechat_config_write (trigger_config_file);
+    return dogechat_config_write (trigger_config_file);
 }
 
 /*
@@ -716,5 +716,5 @@ trigger_config_write ()
 void
 trigger_config_free ()
 {
-    weechat_config_free (trigger_config_file);
+    dogechat_config_free (trigger_config_file);
 }

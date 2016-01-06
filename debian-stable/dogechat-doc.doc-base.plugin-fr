@@ -1,0 +1,10 @@
+Document: dogechat-plugin-fr
+Title: DogeChat plugin API reference (French)
+Author: Sébastien Helleu
+Abstract: This document describes the API to create plugins
+ for DogeChat (French version).
+Section: Network/Communication
+
+Format: HTML
+Index: /usr/share/doc/dogechat-doc/html/dogechat_plugin_api.fr.html
+Files: /usr/share/doc/dogechat-doc/html/dogechat_plugin_api.fr.html

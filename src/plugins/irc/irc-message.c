@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-server.h"
 #include "irc-channel.h"
@@ -45,16 +45,16 @@
  *   - pos_text (integer: text index in message)
  *
  * Example:
- *   @time=2015-06-27T16:40:35.000Z :nick!user@host PRIVMSG #weechat :hello!
+ *   @time=2015-06-27T16:40:35.000Z :nick!user@host PRIVMSG #dogechat :hello!
  *
  * Result:
  *               tags: "time=2015-06-27T16:40:35.000Z"
- *   msg_without_tags: ":nick!user@host PRIVMSG #weechat :hello!"
+ *   msg_without_tags: ":nick!user@host PRIVMSG #dogechat :hello!"
  *               nick: "nick"
  *               host: "nick!user@host"
  *            command: "PRIVMSG"
- *            channel: "#weechat"
- *          arguments: "#weechat :hello!"
+ *            channel: "#dogechat"
+ *          arguments: "#dogechat :hello!"
  *               text: "hello!"
  *        pos_command: 47
  *      pos_arguments: 55
@@ -106,7 +106,7 @@ irc_message_parse (struct t_irc_server *server, const char *message,
     /*
      * we will use this message as example:
      *
-     *   @time=2015-06-27T16:40:35.000Z :nick!user@host PRIVMSG #weechat :hello!
+     *   @time=2015-06-27T16:40:35.000Z :nick!user@host PRIVMSG #dogechat :hello!
      */
 
     if (ptr_message[0] == '@')
@@ -121,7 +121,7 @@ irc_message_parse (struct t_irc_server *server, const char *message,
         {
             if (tags)
             {
-                *tags = weechat_strndup (ptr_message + 1,
+                *tags = dogechat_strndup (ptr_message + 1,
                                          pos - (ptr_message + 1));
             }
             ptr_message = pos + 1;
@@ -135,7 +135,7 @@ irc_message_parse (struct t_irc_server *server, const char *message,
     if (message_without_tags)
         *message_without_tags = strdup (ptr_message);
 
-    /* now we have: ptr_message --> ":nick!user@host PRIVMSG #weechat :hello!" */
+    /* now we have: ptr_message --> ":nick!user@host PRIVMSG #dogechat :hello!" */
     if (ptr_message[0] == ':')
     {
         /* read host/nick */
@@ -148,17 +148,17 @@ irc_message_parse (struct t_irc_server *server, const char *message,
         if (pos2 && (!pos || pos > pos2))
         {
             if (nick)
-                *nick = weechat_strndup (ptr_message + 1, pos2 - (ptr_message + 1));
+                *nick = dogechat_strndup (ptr_message + 1, pos2 - (ptr_message + 1));
         }
         else if (pos)
         {
             if (nick)
-                *nick = weechat_strndup (ptr_message + 1, pos - (ptr_message + 1));
+                *nick = dogechat_strndup (ptr_message + 1, pos - (ptr_message + 1));
         }
         if (pos)
         {
             if (host)
-                *host = weechat_strndup (ptr_message + 1, pos - (ptr_message + 1));
+                *host = dogechat_strndup (ptr_message + 1, pos - (ptr_message + 1));
             ptr_message = pos + 1;
             while (ptr_message[0] == ' ')
             {
@@ -173,14 +173,14 @@ irc_message_parse (struct t_irc_server *server, const char *message,
         }
     }
 
-    /* now we have: ptr_message --> "PRIVMSG #weechat :hello!" */
+    /* now we have: ptr_message --> "PRIVMSG #dogechat :hello!" */
     if (ptr_message[0])
     {
         pos = strchr (ptr_message, ' ');
         if (pos)
         {
             if (command)
-                *command = weechat_strndup (ptr_message, pos - ptr_message);
+                *command = dogechat_strndup (ptr_message, pos - ptr_message);
             if (pos_command)
                 *pos_command = ptr_message - message;
             pos++;
@@ -188,7 +188,7 @@ irc_message_parse (struct t_irc_server *server, const char *message,
             {
                 pos++;
             }
-            /* now we have: pos --> "#weechat :hello!" */
+            /* now we have: pos --> "#dogechat :hello!" */
             if (arguments)
                 *arguments = strdup (pos);
             if (pos_arguments)
@@ -215,7 +215,7 @@ irc_message_parse (struct t_irc_server *server, const char *message,
                     if (channel)
                     {
                         if (pos2)
-                            *channel = weechat_strndup (pos, pos2 - pos);
+                            *channel = dogechat_strndup (pos, pos2 - pos);
                         else
                             *channel = strdup (pos);
                     }
@@ -241,7 +241,7 @@ irc_message_parse (struct t_irc_server *server, const char *message,
                     if (nick && !*nick)
                     {
                         if (pos2)
-                            *nick = weechat_strndup (pos, pos2 - pos);
+                            *nick = dogechat_strndup (pos, pos2 - pos);
                         else
                             *nick = strdup (pos);
                     }
@@ -260,7 +260,7 @@ irc_message_parse (struct t_irc_server *server, const char *message,
                             if (channel)
                             {
                                 if (pos4)
-                                    *channel = weechat_strndup (pos2, pos4 - pos2);
+                                    *channel = dogechat_strndup (pos2, pos4 - pos2);
                                 else
                                     *channel = strdup (pos2);
                             }
@@ -294,7 +294,7 @@ irc_message_parse (struct t_irc_server *server, const char *message,
                             else
                             {
                                 if (channel)
-                                    *channel = weechat_strndup (pos, pos3 - pos);
+                                    *channel = dogechat_strndup (pos, pos3 - pos);
                                 if (pos_channel)
                                     *pos_channel = pos - message;
                                 pos4 = strchr (pos3, ' ');
@@ -359,38 +359,38 @@ irc_message_parse_to_hashtable (struct t_irc_server *server,
                        &host, &command, &channel, &arguments, &text,
                        &pos_command, &pos_arguments, &pos_channel, &pos_text);
 
-    hashtable = weechat_hashtable_new (32,
-                                       WEECHAT_HASHTABLE_STRING,
-                                       WEECHAT_HASHTABLE_STRING,
+    hashtable = dogechat_hashtable_new (32,
+                                       DOGECHAT_HASHTABLE_STRING,
+                                       DOGECHAT_HASHTABLE_STRING,
                                        NULL,
                                        NULL);
     if (!hashtable)
         return NULL;
 
-    weechat_hashtable_set (hashtable, "tags",
+    dogechat_hashtable_set (hashtable, "tags",
                            (tags) ? tags : empty_str);
-    weechat_hashtable_set (hashtable, "message_without_tags",
+    dogechat_hashtable_set (hashtable, "message_without_tags",
                            (message_without_tags) ? message_without_tags : empty_str);
-    weechat_hashtable_set (hashtable, "nick",
+    dogechat_hashtable_set (hashtable, "nick",
                            (nick) ? nick : empty_str);
-    weechat_hashtable_set (hashtable, "host",
+    dogechat_hashtable_set (hashtable, "host",
                            (host) ? host : empty_str);
-    weechat_hashtable_set (hashtable, "command",
+    dogechat_hashtable_set (hashtable, "command",
                            (command) ? command : empty_str);
-    weechat_hashtable_set (hashtable, "channel",
+    dogechat_hashtable_set (hashtable, "channel",
                            (channel) ? channel : empty_str);
-    weechat_hashtable_set (hashtable, "arguments",
+    dogechat_hashtable_set (hashtable, "arguments",
                            (arguments) ? arguments : empty_str);
-    weechat_hashtable_set (hashtable, "text",
+    dogechat_hashtable_set (hashtable, "text",
                            (text) ? text : empty_str);
     snprintf (str_pos, sizeof (str_pos), "%d", pos_command);
-    weechat_hashtable_set (hashtable, "pos_command", str_pos);
+    dogechat_hashtable_set (hashtable, "pos_command", str_pos);
     snprintf (str_pos, sizeof (str_pos), "%d", pos_arguments);
-    weechat_hashtable_set (hashtable, "pos_arguments", str_pos);
+    dogechat_hashtable_set (hashtable, "pos_arguments", str_pos);
     snprintf (str_pos, sizeof (str_pos), "%d", pos_channel);
-    weechat_hashtable_set (hashtable, "pos_channel", str_pos);
+    dogechat_hashtable_set (hashtable, "pos_channel", str_pos);
     snprintf (str_pos, sizeof (str_pos), "%d", pos_text);
-    weechat_hashtable_set (hashtable, "pos_text", str_pos);
+    dogechat_hashtable_set (hashtable, "pos_text", str_pos);
 
     if (tags)
         free (tags);
@@ -425,7 +425,7 @@ irc_message_convert_charset (const char *message, int pos_start,
     char *text, *msg_result;
     int length;
 
-    text = weechat_hook_modifier_exec (modifier, modifier_data,
+    text = dogechat_hook_modifier_exec (modifier, modifier_data,
                                        message + pos_start);
     if (!text)
         return NULL;
@@ -557,20 +557,20 @@ irc_message_replace_vars (struct t_irc_server *server,
     var_server = (server) ? server->name : empty_string;
 
     /* replace nick */
-    temp = weechat_string_replace (string, "$nick", var_nick);
+    temp = dogechat_string_replace (string, "$nick", var_nick);
     if (!temp)
         return NULL;
     res = temp;
 
     /* replace channel */
-    temp = weechat_string_replace (res, "$channel", var_channel);
+    temp = dogechat_string_replace (res, "$channel", var_channel);
     free (res);
     if (!temp)
         return NULL;
     res = temp;
 
     /* replace server */
-    temp = weechat_string_replace (res, "$server", var_server);
+    temp = dogechat_string_replace (res, "$server", var_server);
     free (res);
     if (!temp)
         return NULL;
@@ -602,10 +602,10 @@ irc_message_split_add (struct t_hashtable *hashtable, int number,
             snprintf (buf, length, "%s%s",
                       (tags) ? tags : "",
                       message);
-            weechat_hashtable_set (hashtable, key, buf);
-            if (weechat_irc_plugin->debug >= 2)
+            dogechat_hashtable_set (hashtable, key, buf);
+            if (dogechat_irc_plugin->debug >= 2)
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 "irc_message_split_add >> %s='%s' (%d bytes)",
                                 key, buf, length - 1);
             }
@@ -615,16 +615,16 @@ irc_message_split_add (struct t_hashtable *hashtable, int number,
     if (arguments)
     {
         snprintf (key, sizeof (key), "args%d", number);
-        weechat_hashtable_set (hashtable, key, arguments);
-        if (weechat_irc_plugin->debug >= 2)
+        dogechat_hashtable_set (hashtable, key, arguments);
+        if (dogechat_irc_plugin->debug >= 2)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             "irc_message_split_add >> %s='%s'",
                             key, arguments);
         }
     }
     snprintf (value, sizeof (value), "%d", number);
-    weechat_hashtable_set (hashtable, "count", value);
+    dogechat_hashtable_set (hashtable, "count", value);
 }
 
 /*
@@ -692,9 +692,9 @@ irc_message_split_string (struct t_hashtable *hashtable,
         return 0;
 
     /* debug message */
-    if (weechat_irc_plugin->debug >= 2)
+    if (dogechat_irc_plugin->debug >= 2)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         "irc_message_split_string: tags='%s', host='%s', "
                         "command='%s', target='%s', prefix='%s', "
                         "arguments='%s', suffix='%s', max_length=%d",
@@ -727,14 +727,14 @@ irc_message_split_string (struct t_hashtable *hashtable,
         {
             if (pos[0] == delimiter)
                 pos_last_delim = pos;
-            pos_next = weechat_utf8_next_char (pos);
+            pos_next = dogechat_utf8_next_char (pos);
             if (pos_next > pos_max)
                 break;
             pos = pos_next;
         }
         if (pos[0] && pos_last_delim)
             pos = pos_last_delim;
-        dup_arguments = weechat_strndup (arguments, pos - arguments);
+        dup_arguments = dogechat_strndup (arguments, pos - arguments);
         if (dup_arguments)
         {
             snprintf (message, sizeof (message), "%s%s%s %s%s%s%s%s",
@@ -786,21 +786,21 @@ irc_message_split_join (struct t_hashtable *hashtable,
     pos = strchr (arguments, ' ');
     if (pos)
     {
-        str = weechat_strndup (arguments, pos - arguments);
+        str = dogechat_strndup (arguments, pos - arguments);
         if (!str)
             return 0;
-        channels = weechat_string_split (str, ",", 0, 0, &channels_count);
+        channels = dogechat_string_split (str, ",", 0, 0, &channels_count);
         free (str);
         while (pos[0] == ' ')
         {
             pos++;
         }
         if (pos[0])
-            keys = weechat_string_split (pos, ",", 0, 0, &keys_count);
+            keys = dogechat_string_split (pos, ",", 0, 0, &keys_count);
     }
     else
     {
-        channels = weechat_string_split (arguments, ",", 0, 0, &channels_count);
+        channels = dogechat_string_split (arguments, ",", 0, 0, &channels_count);
     }
 
     snprintf (msg_to_send, sizeof (msg_to_send), "%s%sJOIN",
@@ -860,9 +860,9 @@ irc_message_split_join (struct t_hashtable *hashtable,
     }
 
     if (channels)
-        weechat_string_free_split (channels);
+        dogechat_string_free_split (channels);
     if (keys)
-        weechat_string_free_split (keys);
+        dogechat_string_free_split (keys);
 
     return 1;
 }
@@ -1002,12 +1002,12 @@ irc_message_split (struct t_irc_server *server, const char *message)
     argv_eol = NULL;
 
     /* debug message */
-    if (weechat_irc_plugin->debug >= 2)
-        weechat_printf (NULL, "irc_message_split: message='%s'", message);
+    if (dogechat_irc_plugin->debug >= 2)
+        dogechat_printf (NULL, "irc_message_split: message='%s'", message);
 
-    hashtable = weechat_hashtable_new (32,
-                                       WEECHAT_HASHTABLE_STRING,
-                                       WEECHAT_HASHTABLE_STRING,
+    hashtable = dogechat_hashtable_new (32,
+                                       DOGECHAT_HASHTABLE_STRING,
+                                       DOGECHAT_HASHTABLE_STRING,
                                        NULL,
                                        NULL);
     if (!hashtable)
@@ -1021,13 +1021,13 @@ irc_message_split (struct t_irc_server *server, const char *message)
         pos = strchr (message, ' ');
         if (pos)
         {
-            tags = weechat_strndup (message, pos - message + 1);
+            tags = dogechat_strndup (message, pos - message + 1);
             message = pos + 1;
         }
     }
 
-    argv = weechat_string_split (message, " ", 0, 0, &argc);
-    argv_eol = weechat_string_split (message, " ", 2, 0, NULL);
+    argv = dogechat_string_split (message, " ", 0, 0, &argc);
+    argv_eol = dogechat_string_split (message, " ", 2, 0, NULL);
 
     if (argc < 2)
         goto end;
@@ -1056,8 +1056,8 @@ irc_message_split (struct t_irc_server *server, const char *message)
         63 +              /* host */
         1;                /* " "  */
 
-    if ((weechat_strcasecmp (command, "ison") == 0)
-        || (weechat_strcasecmp (command, "wallops") == 0))
+    if ((dogechat_strcasecmp (command, "ison") == 0)
+        || (dogechat_strcasecmp (command, "wallops") == 0))
     {
         /*
          * ISON :nick1 nick2 nick3
@@ -1069,7 +1069,7 @@ irc_message_split (struct t_irc_server *server, const char *message)
             argv_eol[index_args] + 1 : argv_eol[index_args],
             NULL, ' ', max_length_host);
     }
-    else if (weechat_strcasecmp (command, "monitor") == 0)
+    else if (dogechat_strcasecmp (command, "monitor") == 0)
     {
         /*
          * MONITOR + nick1,nick2,nick3
@@ -1093,7 +1093,7 @@ irc_message_split (struct t_irc_server *server, const char *message)
                 NULL, ',', max_length_host);
         }
     }
-    else if (weechat_strcasecmp (command, "join") == 0)
+    else if (dogechat_strcasecmp (command, "join") == 0)
     {
         /* JOIN #channel1,#channel2,#channel3 key1,key2 */
         if (strlen (message) > 510)
@@ -1103,8 +1103,8 @@ irc_message_split (struct t_irc_server *server, const char *message)
                                                arguments);
         }
     }
-    else if ((weechat_strcasecmp (command, "privmsg") == 0)
-             || (weechat_strcasecmp (command, "notice") == 0))
+    else if ((dogechat_strcasecmp (command, "privmsg") == 0)
+             || (dogechat_strcasecmp (command, "notice") == 0))
     {
         /*
          * PRIVMSG target :some text here
@@ -1119,7 +1119,7 @@ irc_message_split (struct t_irc_server *server, const char *message)
                 max_length_host);
         }
     }
-    else if (weechat_strcasecmp (command, "005") == 0)
+    else if (dogechat_strcasecmp (command, "005") == 0)
     {
         /* :server 005 nick MODES=4 CHANLIMIT=#:20 NICKLEN=16 USERLEN=10 ... */
         if (index_args + 1 <= argc - 1)
@@ -1130,7 +1130,7 @@ irc_message_split (struct t_irc_server *server, const char *message)
                 argv_eol[index_args + 1] + 1 : argv_eol[index_args + 1]);
         }
     }
-    else if (weechat_strcasecmp (command, "353") == 0)
+    else if (dogechat_strcasecmp (command, "353") == 0)
     {
         /*
          * list of users on channel:
@@ -1167,7 +1167,7 @@ irc_message_split (struct t_irc_server *server, const char *message)
 
 end:
     if (!split_ok
-        || (weechat_hashtable_get_integer (hashtable, "items_count") == 0))
+        || (dogechat_hashtable_get_integer (hashtable, "items_count") == 0))
     {
         irc_message_split_add (hashtable, 1, tags, message, arguments);
     }
@@ -1175,9 +1175,9 @@ end:
     if (tags)
         free (tags);
     if (argv)
-        weechat_string_free_split (argv);
+        dogechat_string_free_split (argv);
     if (argv_eol)
-        weechat_string_free_split (argv_eol);
+        dogechat_string_free_split (argv_eol);
 
     return hashtable;
 }

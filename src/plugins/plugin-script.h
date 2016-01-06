@@ -1,51 +1,51 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_PLUGIN_SCRIPT_H
-#define WEECHAT_PLUGIN_SCRIPT_H 1
+#ifndef DOGECHAT_PLUGIN_SCRIPT_H
+#define DOGECHAT_PLUGIN_SCRIPT_H 1
 
-/* constants which defines return types for weechat_<lang>_exec functions */
+/* constants which defines return types for dogechat_<lang>_exec functions */
 
-enum t_weechat_script_exec_type
+enum t_dogechat_script_exec_type
 {
-    WEECHAT_SCRIPT_EXEC_INT = 0,
-    WEECHAT_SCRIPT_EXEC_STRING,
-    WEECHAT_SCRIPT_EXEC_HASHTABLE,
+    DOGECHAT_SCRIPT_EXEC_INT = 0,
+    DOGECHAT_SCRIPT_EXEC_STRING,
+    DOGECHAT_SCRIPT_EXEC_HASHTABLE,
 };
 
-#define WEECHAT_SCRIPT_HASHTABLE_DEFAULT_SIZE 16
+#define DOGECHAT_SCRIPT_HASHTABLE_DEFAULT_SIZE 16
 
-#define WEECHAT_SCRIPT_MSG_NOT_INIT(__current_script,                   \
+#define DOGECHAT_SCRIPT_MSG_NOT_INIT(__current_script,                   \
                                     __function)                         \
-    weechat_printf (NULL,                                               \
-                    weechat_gettext("%s%s: unable to call function "    \
+    dogechat_printf (NULL,                                               \
+                    dogechat_gettext("%s%s: unable to call function "    \
                                     "\"%s\", script is not "            \
                                     "initialized (script: %s)"),        \
-                    weechat_prefix ("error"), weechat_plugin->name,     \
+                    dogechat_prefix ("error"), dogechat_plugin->name,     \
                     __function,                                         \
                     (__current_script) ? __current_script : "-");
-#define WEECHAT_SCRIPT_MSG_WRONG_ARGS(__current_script,                 \
+#define DOGECHAT_SCRIPT_MSG_WRONG_ARGS(__current_script,                 \
                                       __function)                       \
-    weechat_printf (NULL,                                               \
-                    weechat_gettext("%s%s: wrong arguments for "        \
+    dogechat_printf (NULL,                                               \
+                    dogechat_gettext("%s%s: wrong arguments for "        \
                                     "function \"%s\" (script: %s)"),    \
-                    weechat_prefix ("error"), weechat_plugin->name,     \
+                    dogechat_prefix ("error"), dogechat_plugin->name,     \
                     __function,                                         \
                     (__current_script) ? __current_script : "-");
 
@@ -95,31 +95,31 @@ struct t_plugin_script_init
     void (*callback_load_file)(void *data, const char *filename);
 };
 
-extern void plugin_script_init (struct t_weechat_plugin *weechat_plugin,
+extern void plugin_script_init (struct t_dogechat_plugin *dogechat_plugin,
                                 int argc, char *argv[],
                                 struct t_plugin_script_init *init);
 extern int plugin_script_valid (struct t_plugin_script *scripts,
                                 struct t_plugin_script *script);
 extern char *plugin_script_ptr2str (void *pointer);
-extern void *plugin_script_str2ptr (struct t_weechat_plugin *weechat_plugin,
+extern void *plugin_script_str2ptr (struct t_dogechat_plugin *dogechat_plugin,
                                     const char *script_name,
                                     const char *function_name,
                                     const char *pointer_str);
-extern void plugin_script_auto_load (struct t_weechat_plugin *weechat_plugin,
+extern void plugin_script_auto_load (struct t_dogechat_plugin *dogechat_plugin,
                                      void (*callback)(void *data, const char *filename));
-extern struct t_plugin_script *plugin_script_search (struct t_weechat_plugin *weechat_plugin,
+extern struct t_plugin_script *plugin_script_search (struct t_dogechat_plugin *dogechat_plugin,
                                                      struct t_plugin_script *scripts,
                                                      const char *name);
-extern char *plugin_script_search_path (struct t_weechat_plugin *weechat_plugin,
+extern char *plugin_script_search_path (struct t_dogechat_plugin *dogechat_plugin,
                                         const char *filename);
-extern struct t_plugin_script *plugin_script_add (struct t_weechat_plugin *weechat_plugin,
+extern struct t_plugin_script *plugin_script_add (struct t_dogechat_plugin *dogechat_plugin,
                                                   struct t_plugin_script **scripts,
                                                   struct t_plugin_script **last_script,
                                                   const char *filename, const char *name,
                                                   const char *author, const char *version,
                                                   const char *license, const char *description,
                                                   const char *shutdown_func, const char *charset);
-extern void plugin_script_set_buffer_callbacks (struct t_weechat_plugin *weechat_plugin,
+extern void plugin_script_set_buffer_callbacks (struct t_dogechat_plugin *dogechat_plugin,
                                                 struct t_plugin_script *scripts,
                                                 struct t_plugin_script *script,
                                                 int (*callback_buffer_input) (void *data,
@@ -129,48 +129,48 @@ extern void plugin_script_set_buffer_callbacks (struct t_weechat_plugin *weechat
                                                                               struct t_gui_buffer *buffer));
 extern void plugin_script_remove_buffer_callbacks (struct t_plugin_script *scripts,
                                                    struct t_gui_buffer *buffer);
-extern void plugin_script_remove (struct t_weechat_plugin *weechat_plugin,
+extern void plugin_script_remove (struct t_dogechat_plugin *dogechat_plugin,
                                   struct t_plugin_script **scripts,
                                   struct t_plugin_script **last_script,
                                   struct t_plugin_script *script);
-extern void plugin_script_completion (struct t_weechat_plugin *weechat_plugin,
+extern void plugin_script_completion (struct t_dogechat_plugin *dogechat_plugin,
                                       struct t_gui_completion *completion,
                                       struct t_plugin_script *scripts);
 extern void plugin_script_action_add (char **action_list, const char *name);
-extern void plugin_script_action_install (struct t_weechat_plugin *weechat_plugin,
+extern void plugin_script_action_install (struct t_dogechat_plugin *dogechat_plugin,
                                           struct t_plugin_script *scripts,
                                           void (*script_unload)(struct t_plugin_script *script),
                                           int (*script_load)(const char *filename),
                                           int *quiet,
                                           char **list);
-extern void plugin_script_action_remove (struct t_weechat_plugin *weechat_plugin,
+extern void plugin_script_action_remove (struct t_dogechat_plugin *dogechat_plugin,
                                          struct t_plugin_script *scripts,
                                          void (*script_unload)(struct t_plugin_script *script),
                                          int *quiet,
                                          char **list);
-extern void plugin_script_action_autoload (struct t_weechat_plugin *weechat_plugin,
+extern void plugin_script_action_autoload (struct t_dogechat_plugin *dogechat_plugin,
                                            int *quiet,
                                            char **list);
-extern void plugin_script_display_list (struct t_weechat_plugin *weechat_plugin,
+extern void plugin_script_display_list (struct t_dogechat_plugin *dogechat_plugin,
                                         struct t_plugin_script *scripts,
                                         const char *name, int full);
-extern void plugin_script_display_short_list (struct t_weechat_plugin *weechat_plugin,
+extern void plugin_script_display_short_list (struct t_dogechat_plugin *dogechat_plugin,
                                               struct t_plugin_script *scripts);
-extern struct t_hdata *plugin_script_hdata_script (struct t_weechat_plugin *weechat_plugin,
+extern struct t_hdata *plugin_script_hdata_script (struct t_dogechat_plugin *dogechat_plugin,
                                                    struct t_plugin_script **scripts,
                                                    struct t_plugin_script **last_script,
                                                    const char *hdata_name);
-extern int plugin_script_add_to_infolist (struct t_weechat_plugin *weechat_plugin,
+extern int plugin_script_add_to_infolist (struct t_dogechat_plugin *dogechat_plugin,
                                           struct t_infolist *infolist,
                                           struct t_plugin_script *script);
-extern struct t_infolist *plugin_script_infolist_list_scripts (struct t_weechat_plugin *weechat_plugin,
+extern struct t_infolist *plugin_script_infolist_list_scripts (struct t_dogechat_plugin *dogechat_plugin,
                                                                struct t_plugin_script *scripts,
                                                                void *pointer,
                                                                const char *arguments);
-extern void plugin_script_end (struct t_weechat_plugin *weechat_plugin,
+extern void plugin_script_end (struct t_dogechat_plugin *dogechat_plugin,
                                struct t_plugin_script **scripts,
                                void (*callback_unload_all)());
-extern void plugin_script_print_log (struct t_weechat_plugin *weechat_plugin,
+extern void plugin_script_print_log (struct t_dogechat_plugin *dogechat_plugin,
                                      struct t_plugin_script *scripts);
 
-#endif /* WEECHAT_PLUGIN_SCRIPT_H */
+#endif /* DOGECHAT_PLUGIN_SCRIPT_H */

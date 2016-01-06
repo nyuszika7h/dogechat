@@ -102,71 +102,71 @@
 
 | trigger | trigger_options | options for triggers
 
-| weechat | bars_names | names of bars
+| dogechat | bars_names | names of bars
 
-| weechat | bars_options | options for bars
+| dogechat | bars_options | options for bars
 
-| weechat | buffer_properties_get | properties that can be read on a buffer
+| dogechat | buffer_properties_get | properties that can be read on a buffer
 
-| weechat | buffer_properties_set | properties that can be set on a buffer
+| dogechat | buffer_properties_set | properties that can be set on a buffer
 
-| weechat | buffers_names | names of buffers
+| dogechat | buffers_names | names of buffers
 
-| weechat | buffers_numbers | numbers of buffers
+| dogechat | buffers_numbers | numbers of buffers
 
-| weechat | buffers_plugins_names | names of buffers (including plugins names)
+| dogechat | buffers_plugins_names | names of buffers (including plugins names)
 
-| weechat | colors | color names
+| dogechat | colors | color names
 
-| weechat | commands | commands (weechat and plugins)
+| dogechat | commands | commands (dogechat and plugins)
 
-| weechat | config_files | configuration files
+| dogechat | config_files | configuration files
 
-| weechat | config_option_values | values for a configuration option
+| dogechat | config_option_values | values for a configuration option
 
-| weechat | config_options | configuration options
+| dogechat | config_options | configuration options
 
-| weechat | cursor_areas | areas ("chat" or bar name) for free cursor movement
+| dogechat | cursor_areas | areas ("chat" or bar name) for free cursor movement
 
-| weechat | env_value | value of an environment variable
+| dogechat | env_value | value of an environment variable
 
-| weechat | env_vars | environment variables
+| dogechat | env_vars | environment variables
 
-| weechat | filename | filename
+| dogechat | filename | filename
 
-| weechat | filters_names | names of filters
+| dogechat | filters_names | names of filters
 
-| weechat | infolists | names of infolists hooked
+| dogechat | infolists | names of infolists hooked
 
-| weechat | infos | names of infos hooked
+| dogechat | infos | names of infos hooked
 
-| weechat | keys_codes | key codes
+| dogechat | keys_codes | key codes
 
-| weechat | keys_codes_for_reset | key codes that can be reset (keys added, redefined or removed)
+| dogechat | keys_codes_for_reset | key codes that can be reset (keys added, redefined or removed)
 
-| weechat | keys_contexts | key contexts
+| dogechat | keys_contexts | key contexts
 
-| weechat | layouts_names | names of layouts
+| dogechat | layouts_names | names of layouts
 
-| weechat | nicks | nicks in nicklist of current buffer
+| dogechat | nicks | nicks in nicklist of current buffer
 
-| weechat | palette_colors | palette colors
+| dogechat | palette_colors | palette colors
 
-| weechat | plugins_commands | commands defined by plugins
+| dogechat | plugins_commands | commands defined by plugins
 
-| weechat | plugins_installed | names of plugins installed
+| dogechat | plugins_installed | names of plugins installed
 
-| weechat | plugins_names | names of plugins
+| dogechat | plugins_names | names of plugins
 
-| weechat | proxies_names | names of proxies
+| dogechat | proxies_names | names of proxies
 
-| weechat | proxies_options | options for proxies
+| dogechat | proxies_options | options for proxies
 
-| weechat | secured_data | names of secured data (file sec.conf, section data)
+| dogechat | secured_data | names of secured data (file sec.conf, section data)
 
-| weechat | weechat_commands | weechat commands
+| dogechat | dogechat_commands | dogechat commands
 
-| weechat | windows_numbers | numbers of windows
+| dogechat | windows_numbers | numbers of windows
 
 | xfer | nick | nicks of DCC chat
 

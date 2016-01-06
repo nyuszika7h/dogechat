@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -32,16 +32,16 @@
 #include <limits.h>
 #include <unistd.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-arraylist.h"
-#include "../core/wee-completion.h"
-#include "../core/wee-config.h"
-#include "../core/wee-hdata.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-list.h"
-#include "../core/wee-log.h"
-#include "../core/wee-string.h"
-#include "../core/wee-utf8.h"
+#include "../core/dogechat.h"
+#include "../core/doge-arraylist.h"
+#include "../core/doge-completion.h"
+#include "../core/doge-config.h"
+#include "../core/doge-hdata.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-list.h"
+#include "../core/doge-log.h"
+#include "../core/doge-string.h"
+#include "../core/doge-utf8.h"
 #include "../plugins/plugin.h"
 #include "gui-completion.h"
 #include "gui-buffer.h"
@@ -218,7 +218,7 @@ gui_completion_stop (struct t_gui_completion *completion)
     {
         arraylist_clear (completion->partial_list);
         (void) hook_signal_send ("partial_completion",
-                                 WEECHAT_HOOK_SIGNAL_STRING, NULL);
+                                 DOGECHAT_HOOK_SIGNAL_STRING, NULL);
     }
 }
 
@@ -229,7 +229,7 @@ gui_completion_stop (struct t_gui_completion *completion)
  */
 
 struct t_hook *
-gui_completion_search_command (struct t_weechat_plugin *plugin,
+gui_completion_search_command (struct t_dogechat_plugin *plugin,
                                const char *command)
 {
     struct t_hook *ptr_hook, *hook_for_other_plugin, *hook_incomplete_command;
@@ -241,7 +241,7 @@ gui_completion_search_command (struct t_weechat_plugin *plugin,
     count_incomplete_commands = 0;
     allow_incomplete_commands = CONFIG_BOOLEAN(config_look_command_incomplete);
 
-    for (ptr_hook = weechat_hooks[HOOK_TYPE_COMMAND]; ptr_hook;
+    for (ptr_hook = dogechat_hooks[HOOK_TYPE_COMMAND]; ptr_hook;
          ptr_hook = ptr_hook->next_hook)
     {
         if (!ptr_hook->deleted
@@ -397,12 +397,12 @@ gui_completion_list_add (struct t_gui_completion *completion, const char *word,
             completion_word->count = 0;
 
             index = -1;
-            if (strcmp (where, WEECHAT_LIST_POS_BEGINNING) == 0)
+            if (strcmp (where, DOGECHAT_LIST_POS_BEGINNING) == 0)
             {
                 completion->list->sorted = 0;
                 index = 0;
             }
-            else if (strcmp (where, WEECHAT_LIST_POS_END) == 0)
+            else if (strcmp (where, DOGECHAT_LIST_POS_END) == 0)
             {
                 completion->list->sorted = 0;
                 index = -1;
@@ -432,7 +432,7 @@ gui_completion_list_add (struct t_gui_completion *completion, const char *word,
 void
 gui_completion_custom (struct t_gui_completion *completion,
                        const char *custom_completion,
-                       struct t_weechat_plugin *plugin)
+                       struct t_dogechat_plugin *plugin)
 {
     hook_completion_exec (plugin,
                           custom_completion,
@@ -447,7 +447,7 @@ gui_completion_custom (struct t_gui_completion *completion,
 void
 gui_completion_build_list_template (struct t_gui_completion *completion,
                                     const char *template,
-                                    struct t_weechat_plugin *plugin)
+                                    struct t_dogechat_plugin *plugin)
 {
     char *word, *custom_completion;
     const char *pos, *pos_end;
@@ -467,7 +467,7 @@ gui_completion_build_list_template (struct t_gui_completion *completion,
                 {
                     word[word_offset] = '\0';
                     gui_completion_list_add (completion, word,
-                                             0, WEECHAT_LIST_POS_SORT);
+                                             0, DOGECHAT_LIST_POS_SORT);
                 }
                 word_offset = 0;
                 break;
@@ -1169,7 +1169,7 @@ gui_completion_complete (struct t_gui_completion *completion)
                     gui_completion_partial_build_list (completion,
                                                        common_prefix_size);
                     (void) hook_signal_send ("partial_completion",
-                                             WEECHAT_HOOK_SIGNAL_STRING, NULL);
+                                             DOGECHAT_HOOK_SIGNAL_STRING, NULL);
                     return;
                 }
 
@@ -1210,7 +1210,7 @@ gui_completion_command (struct t_gui_completion *completion)
 
     if (completion->list->size == 0)
     {
-        for (ptr_hook = weechat_hooks[HOOK_TYPE_COMMAND]; ptr_hook;
+        for (ptr_hook = dogechat_hooks[HOOK_TYPE_COMMAND]; ptr_hook;
              ptr_hook = ptr_hook->next_hook)
         {
             if (!ptr_hook->deleted
@@ -1219,7 +1219,7 @@ gui_completion_command (struct t_gui_completion *completion)
             {
                 gui_completion_list_add (completion,
                                          HOOK_COMMAND(ptr_hook, command),
-                                         0, WEECHAT_LIST_POS_SORT);
+                                         0, DOGECHAT_LIST_POS_SORT);
             }
         }
     }
@@ -1406,7 +1406,7 @@ gui_completion_hdata_completion_word_cb (void *data, const char *hdata_name)
 }
 
 /*
- * Prints list of completion words in WeeChat log file (usually for crash dump).
+ * Prints list of completion words in DogeChat log file (usually for crash dump).
  */
 
 void
@@ -1427,7 +1427,7 @@ gui_completion_list_words_print_log (struct t_arraylist *list,
 }
 
 /*
- * Prints completion list in WeeChat log file (usually for crash dump).
+ * Prints completion list in DogeChat log file (usually for crash dump).
  */
 
 void

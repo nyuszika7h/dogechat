@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -28,13 +28,13 @@
 #include <ctype.h>
 #include <time.h>
 
-#include "../../core/weechat.h"
-#include "../../core/wee-config.h"
-#include "../../core/wee-hashtable.h"
-#include "../../core/wee-hook.h"
-#include "../../core/wee-list.h"
-#include "../../core/wee-string.h"
-#include "../../core/wee-utf8.h"
+#include "../../core/dogechat.h"
+#include "../../core/doge-config.h"
+#include "../../core/doge-hashtable.h"
+#include "../../core/doge-hook.h"
+#include "../../core/doge-list.h"
+#include "../../core/doge-string.h"
+#include "../../core/doge-utf8.h"
 #include "../../plugins/plugin.h"
 #include "../gui-buffer.h"
 #include "../gui-color.h"
@@ -45,7 +45,7 @@
 
 #define GUI_COLOR_TIMER_TERM_COLORS 10
 
-struct t_gui_color gui_weechat_colors_bold[GUI_CURSES_NUM_WEECHAT_COLORS + 1] =
+struct t_gui_color gui_dogechat_colors_bold[GUI_CURSES_NUM_DOGECHAT_COLORS + 1] =
 { { -1,                -1,                0,      "default"      },
   { COLOR_BLACK,       COLOR_BLACK,       0,      "black"        },
   { COLOR_BLACK,       COLOR_BLACK + 8,   A_BOLD, "darkgray"     },
@@ -65,7 +65,7 @@ struct t_gui_color gui_weechat_colors_bold[GUI_CURSES_NUM_WEECHAT_COLORS + 1] =
   { COLOR_WHITE,       COLOR_WHITE + 8,   A_BOLD, "white"        },
   { 0,                 0,                 0,      NULL           }
 };
-struct t_gui_color gui_weechat_colors_no_bold[GUI_CURSES_NUM_WEECHAT_COLORS + 1] =
+struct t_gui_color gui_dogechat_colors_no_bold[GUI_CURSES_NUM_DOGECHAT_COLORS + 1] =
 { { -1,                -1,                0,      "default"      },
   { COLOR_BLACK,       COLOR_BLACK,       0,      "black"        },
   { COLOR_BLACK + 8,   COLOR_BLACK + 8,   0,      "darkgray"     },
@@ -85,7 +85,7 @@ struct t_gui_color gui_weechat_colors_no_bold[GUI_CURSES_NUM_WEECHAT_COLORS + 1]
   { COLOR_WHITE + 8,   COLOR_WHITE + 8,   0,      "white"        },
   { 0,                 0,                 0,      NULL           }
 };
-struct t_gui_color *gui_weechat_colors = gui_weechat_colors_bold;
+struct t_gui_color *gui_dogechat_colors = gui_dogechat_colors_bold;
 
 /* terminal colors */
 int gui_color_term_has_colors = 0;       /* terminal supports colors?       */
@@ -96,7 +96,7 @@ int gui_color_use_term_colors = 0;       /* temp. use of terminal colors?   */
 short *gui_color_term_color_content = NULL; /* content of colors (r/b/g)    */
 
 /* pairs */
-int gui_color_num_pairs = 63;            /* number of pairs used by WeeChat */
+int gui_color_num_pairs = 63;            /* number of pairs used by DogeChat */
 short *gui_color_pairs = NULL;           /* table with pair for each fg+bg  */
 int gui_color_pairs_used = 0;            /* number of pairs currently used  */
 int gui_color_warning_pairs_full = 0;    /* warning displayed?              */
@@ -115,7 +115,7 @@ int gui_color_timer = 0;                      /* timer in seconds           */
 /*
  * Searches for a color by name.
  *
- * Return index of color in WeeChat colors table, -1 if not found.
+ * Return index of color in DogeChat colors table, -1 if not found.
  */
 
 int
@@ -123,9 +123,9 @@ gui_color_search (const char *color_name)
 {
     int i;
 
-    for (i = 0; gui_weechat_colors[i].string; i++)
+    for (i = 0; gui_dogechat_colors[i].string; i++)
     {
-        if (string_strcasecmp (gui_weechat_colors[i].string, color_name) == 0)
+        if (string_strcasecmp (gui_dogechat_colors[i].string, color_name) == 0)
             return i;
     }
 
@@ -157,7 +157,7 @@ gui_color_get_extended_attrs (int color)
 }
 
 /*
- * Assigns a WeeChat color (read from configuration).
+ * Assigns a DogeChat color (read from configuration).
  *
  * Returns:
  *   1: OK
@@ -199,7 +199,7 @@ gui_color_assign (int *color, const char *color_name)
     }
     else
     {
-        /* search for basic WeeChat color */
+        /* search for basic DogeChat color */
         color_index = gui_color_search (color_name);
         if (color_index >= 0)
         {
@@ -227,14 +227,14 @@ int
 gui_color_assign_by_diff (int *color, const char *color_name, int diff)
 {
     int index, list_size;
-    struct t_weelist_item *ptr_item;
+    struct t_dogelist_item *ptr_item;
     const char *name;
 
-    index = weelist_search_pos (gui_color_list_with_alias, color_name);
+    index = dogelist_search_pos (gui_color_list_with_alias, color_name);
     if (index < 0)
         index = 0;
 
-    list_size = weelist_size (gui_color_list_with_alias);
+    list_size = dogelist_size (gui_color_list_with_alias);
 
     diff = diff % (list_size + 1);
 
@@ -255,10 +255,10 @@ gui_color_assign_by_diff (int *color, const char *color_name, int diff)
         }
     }
 
-    ptr_item = weelist_get (gui_color_list_with_alias, index);
+    ptr_item = dogelist_get (gui_color_list_with_alias, index);
     if (!ptr_item)
         return 0;
-    name = weelist_string (ptr_item);
+    name = dogelist_string (ptr_item);
     if (name)
         return gui_color_assign (color, name);
 
@@ -266,13 +266,13 @@ gui_color_assign_by_diff (int *color, const char *color_name, int diff)
 }
 
 /*
- * Gets number of WeeChat colors.
+ * Gets number of DogeChat colors.
  */
 
 int
-gui_color_get_weechat_colors_number ()
+gui_color_get_dogechat_colors_number ()
 {
-    return GUI_CURSES_NUM_WEECHAT_COLORS;
+    return GUI_CURSES_NUM_DOGECHAT_COLORS;
 }
 
 /*
@@ -362,7 +362,7 @@ gui_color_timer_warning_pairs_full (void *data, int remaining_calls)
                        "\"/color reset\" to remove unused pairs"),
                      gui_color_num_pairs);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -425,23 +425,23 @@ gui_color_get_pair (int fg, int bg)
 }
 
 /*
- * Gets color pair with a WeeChat color number.
+ * Gets color pair with a DogeChat color number.
  */
 
 int
-gui_color_weechat_get_pair (int weechat_color)
+gui_color_dogechat_get_pair (int dogechat_color)
 {
     int fg, bg;
 
-    if ((weechat_color < 0) || (weechat_color > GUI_COLOR_NUM_COLORS - 1))
+    if ((dogechat_color < 0) || (dogechat_color > GUI_COLOR_NUM_COLORS - 1))
     {
         fg = -1;
         bg = -1;
     }
     else
     {
-        fg = gui_color[weechat_color]->foreground;
-        bg = gui_color[weechat_color]->background;
+        fg = gui_color[dogechat_color]->foreground;
+        bg = gui_color[dogechat_color]->background;
 
         if ((fg > 0) && (fg & GUI_COLOR_EXTENDED_FLAG))
             fg &= GUI_COLOR_EXTENDED_MASK;
@@ -493,16 +493,16 @@ gui_color_get_name (int num_color)
         snprintf (color[index_color], sizeof (color[index_color]),
                   "%s%s",
                   str_attr,
-                  gui_weechat_colors[num_color & GUI_COLOR_EXTENDED_MASK].string);
+                  gui_dogechat_colors[num_color & GUI_COLOR_EXTENDED_MASK].string);
     }
 
     return color[index_color];
 }
 
 /*
- * Builds a WeeChat color with foreground and background.
+ * Builds a DogeChat color with foreground and background.
  *
- * Foreground and background must be >= 0 and can be a WeeChat or extended
+ * Foreground and background must be >= 0 and can be a DogeChat or extended
  * color, with optional attributes for foreground.
  */
 
@@ -531,8 +531,8 @@ gui_color_build (int number, int foreground, int background)
     }
     else
     {
-        gui_color[number]->foreground = gui_weechat_colors[foreground & GUI_COLOR_EXTENDED_MASK].foreground;
-        gui_color[number]->attributes = gui_weechat_colors[foreground & GUI_COLOR_EXTENDED_MASK].attributes;
+        gui_color[number]->foreground = gui_dogechat_colors[foreground & GUI_COLOR_EXTENDED_MASK].foreground;
+        gui_color[number]->attributes = gui_dogechat_colors[foreground & GUI_COLOR_EXTENDED_MASK].attributes;
     }
     gui_color[number]->attributes |= gui_color_get_extended_attrs (foreground);
 
@@ -540,7 +540,7 @@ gui_color_build (int number, int foreground, int background)
     if (background & GUI_COLOR_EXTENDED_FLAG)
         gui_color[number]->background = background & GUI_COLOR_EXTENDED_MASK;
     else
-        gui_color[number]->background = gui_weechat_colors[background & GUI_COLOR_EXTENDED_MASK].background;
+        gui_color[number]->background = gui_dogechat_colors[background & GUI_COLOR_EXTENDED_MASK].background;
 
     /* set string */
     if (gui_color[number]->string)
@@ -656,14 +656,14 @@ gui_color_init_pairs_terminal ()
 }
 
 /*
- * Initializes color pairs with WeeChat colors.
+ * Initializes color pairs with DogeChat colors.
  *
- * Pairs defined by WeeChat are set with their values (from pair 1 to pair N),
+ * Pairs defined by DogeChat are set with their values (from pair 1 to pair N),
  * and other pairs are set with terminal color and default background (-1).
  */
 
 void
-gui_color_init_pairs_weechat ()
+gui_color_init_pairs_dogechat ()
 {
     int i;
     short *foregrounds, *backgrounds;
@@ -801,7 +801,7 @@ gui_color_buffer_display ()
 
     /* set title buffer */
     gui_buffer_set_title (gui_color_buffer,
-                          _("WeeChat colors | Actions: "
+                          _("DogeChat colors | Actions: "
                             "[e] Display extra infos [r] Refresh "
                             "[z] Reset colors [q] Close buffer | "
                             "Keys: [alt-c] Temporarily switch to terminal "
@@ -822,7 +822,7 @@ gui_color_buffer_display ()
     else
     {
         gui_chat_printf_y (gui_color_buffer, y++,
-                           _("WeeChat color pairs auto-allocated "
+                           _("DogeChat color pairs auto-allocated "
                              "(in use: %d, left: %d):"),
                            gui_color_pairs_used,
                            gui_color_num_pairs - gui_color_pairs_used);
@@ -891,18 +891,18 @@ gui_color_buffer_display ()
                            (gui_color_pairs_auto_reset_last == 0) ?
                            "-" : ctime (&gui_color_pairs_auto_reset_last));
 
-        /* display WeeChat basic colors */
+        /* display DogeChat basic colors */
         y++;
         gui_chat_printf_y (gui_color_buffer, y++,
-                           _("WeeChat basic colors:"));
+                           _("DogeChat basic colors:"));
         str_line[0] = '\0';
-        for (i = 0; i < GUI_CURSES_NUM_WEECHAT_COLORS; i++)
+        for (i = 0; i < GUI_CURSES_NUM_DOGECHAT_COLORS; i++)
         {
             if (gui_color_use_term_colors)
             {
                 snprintf (str_color, sizeof (str_color),
                           " %s",
-                          gui_weechat_colors[i].string);
+                          gui_dogechat_colors[i].string);
             }
             else
             {
@@ -912,7 +912,7 @@ gui_color_buffer_display ()
                           GUI_COLOR_COLOR_CHAR,
                           GUI_COLOR_FG_CHAR,
                           i,
-                          gui_weechat_colors[i].string);
+                          gui_dogechat_colors[i].string);
             }
             if (gui_chat_strlen_screen (str_line) + gui_chat_strlen_screen (str_color) > 80)
             {
@@ -1055,11 +1055,11 @@ gui_color_timer_cb (void *data, int remaining_calls)
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
- * Switches between WeeChat and terminal colors.
+ * Switches between DogeChat and terminal colors.
  */
 
 void
@@ -1089,7 +1089,7 @@ gui_color_switch_colors ()
         if (gui_color_use_term_colors)
             gui_color_init_pairs_terminal ();
         else
-            gui_color_init_pairs_weechat ();
+            gui_color_init_pairs_dogechat ();
 
         gui_color_buffer_refresh_needed = 1;
         gui_window_ask_refresh (1);
@@ -1156,7 +1156,7 @@ gui_color_buffer_input_cb (void *data, struct t_gui_buffer *buffer,
         gui_color_reset_pairs ();
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1172,7 +1172,7 @@ gui_color_buffer_close_cb (void *data, struct t_gui_buffer *buffer)
 
     gui_color_buffer = NULL;
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1274,12 +1274,12 @@ gui_color_palette_build_aliases ()
     }
 
     hashtable_remove_all (gui_color_hash_palette_alias);
-    weelist_remove_all (gui_color_list_with_alias);
-    for (i = 0; i < GUI_CURSES_NUM_WEECHAT_COLORS; i++)
+    dogelist_remove_all (gui_color_list_with_alias);
+    for (i = 0; i < GUI_CURSES_NUM_DOGECHAT_COLORS; i++)
     {
-        weelist_add (gui_color_list_with_alias,
-                     gui_weechat_colors[i].string,
-                     WEECHAT_LIST_POS_END,
+        dogelist_add (gui_color_list_with_alias,
+                     gui_dogechat_colors[i].string,
+                     DOGECHAT_LIST_POS_END,
                      NULL);
     }
     for (i = 0; i <= gui_color_term_colors; i++)
@@ -1287,18 +1287,18 @@ gui_color_palette_build_aliases ()
         color_palette = gui_color_palette_get (i);
         if (color_palette)
         {
-            weelist_add (gui_color_list_with_alias,
+            dogelist_add (gui_color_list_with_alias,
                          color_palette->alias,
-                         WEECHAT_LIST_POS_END,
+                         DOGECHAT_LIST_POS_END,
                          NULL);
         }
         else
         {
             snprintf (str_number, sizeof (str_number),
                       "%d", i);
-            weelist_add (gui_color_list_with_alias,
+            dogelist_add (gui_color_list_with_alias,
                          str_number,
-                         WEECHAT_LIST_POS_END,
+                         DOGECHAT_LIST_POS_END,
                          NULL);
         }
     }
@@ -1411,20 +1411,20 @@ gui_color_palette_free (struct t_gui_color_palette *color_palette)
 }
 
 /*
- * Initializes WeeChat colors.
+ * Initializes DogeChat colors.
  */
 
 void
-gui_color_init_weechat ()
+gui_color_init_dogechat ()
 {
     if (CONFIG_BOOLEAN(config_look_color_basic_force_bold)
         || (gui_color_term_colors < 16))
     {
-        gui_weechat_colors = gui_weechat_colors_bold;
+        gui_dogechat_colors = gui_dogechat_colors_bold;
     }
     else
     {
-        gui_weechat_colors = gui_weechat_colors_no_bold;
+        gui_dogechat_colors = gui_dogechat_colors_no_bold;
     }
 
     gui_color_build (GUI_COLOR_SEPARATOR, CONFIG_COLOR(config_color_separator), CONFIG_COLOR(config_color_chat_bg));
@@ -1467,7 +1467,7 @@ gui_color_init_weechat ()
     /*
      * define old nick colors for compatibility on /upgrade with previous
      * versions: these colors have been removed in version 0.3.4 and replaced
-     * by new option "weechat.color.chat_nick_colors", which is a list of
+     * by new option "dogechat.color.chat_nick_colors", which is a list of
      * colors (without limit on number of colors)
      */
     gui_color_build (GUI_COLOR_CHAT_NICK1_OBSOLETE,  gui_color_search ("cyan"), CONFIG_COLOR(config_color_chat_bg));
@@ -1496,7 +1496,7 @@ gui_color_alloc ()
     }
     gui_color_init_vars ();
     gui_color_init_pairs_terminal ();
-    gui_color_init_weechat ();
+    gui_color_init_dogechat ();
     gui_color_palette_build_aliases ();
 }
 
@@ -1511,7 +1511,7 @@ gui_color_dump ()
 
     gui_chat_printf (NULL, "");
     gui_chat_printf (NULL,
-                     _("WeeChat colors (in use: %d, left: %d):"),
+                     _("DogeChat colors (in use: %d, left: %d):"),
                      gui_color_pairs_used,
                      gui_color_num_pairs - gui_color_pairs_used);
     if (gui_color_pairs)

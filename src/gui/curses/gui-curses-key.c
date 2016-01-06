@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -28,12 +28,12 @@
 #include <string.h>
 #include <time.h>
 
-#include "../../core/weechat.h"
-#include "../../core/wee-config.h"
-#include "../../core/wee-hook.h"
-#include "../../core/wee-log.h"
-#include "../../core/wee-utf8.h"
-#include "../../core/wee-string.h"
+#include "../../core/dogechat.h"
+#include "../../core/doge-config.h"
+#include "../../core/doge-hook.h"
+#include "../../core/doge-log.h"
+#include "../../core/doge-utf8.h"
+#include "../../core/doge-string.h"
 #include "../../plugins/plugin.h"
 #include "../gui-key.h"
 #include "../gui-buffer.h"
@@ -413,7 +413,7 @@ gui_key_flush (int paste)
         if (key_str[0])
         {
             (void) hook_signal_send ("key_pressed",
-                                     WEECHAT_HOOK_SIGNAL_STRING, key_str);
+                                     DOGECHAT_HOOK_SIGNAL_STRING, key_str);
 
             if (gui_current_window->buffer->text_search != GUI_TEXT_SEARCH_DISABLED)
                 input_old = (gui_current_window->buffer->input_buffer) ?
@@ -524,13 +524,13 @@ gui_key_read_cb (void *data, int fd)
     if (ret == 0)
     {
         /* no data on stdin, terminal lost */
-        log_printf (_("Terminal lost, exiting WeeChat..."));
-        (void) hook_signal_send ("quit", WEECHAT_HOOK_SIGNAL_STRING, NULL);
-        weechat_quit = 1;
-        return WEECHAT_RC_OK;
+        log_printf (_("Terminal lost, exiting DogeChat..."));
+        (void) hook_signal_send ("quit", DOGECHAT_HOOK_SIGNAL_STRING, NULL);
+        dogechat_quit = 1;
+        return DOGECHAT_RC_OK;
     }
     if (ret < 0)
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
 
     for (i = 0; i < ret; i++)
     {
@@ -620,5 +620,5 @@ gui_key_read_cb (void *data, int fd)
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }

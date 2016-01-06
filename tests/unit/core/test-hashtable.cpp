@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2014-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "CppUTest/TestHarness.h"
@@ -24,7 +24,7 @@
 extern "C"
 {
 #include <string.h>
-#include "src/core/wee-hashtable.h"
+#include "src/core/doge-hashtable.h"
 #include "src/plugins/plugin.h"
 }
 
@@ -95,8 +95,8 @@ TEST(Hashtable, New)
     /* test invalid size */
     POINTERS_EQUAL(NULL,
                    hashtable_new (-1,
-                                  WEECHAT_HASHTABLE_STRING,
-                                  WEECHAT_HASHTABLE_STRING,
+                                  DOGECHAT_HASHTABLE_STRING,
+                                  DOGECHAT_HASHTABLE_STRING,
                                   NULL, NULL));
 
     /* test invalid type for keys/values */
@@ -108,8 +108,8 @@ TEST(Hashtable, New)
 
     /* valid hashtable */
     hashtable = hashtable_new (32,
-                               WEECHAT_HASHTABLE_STRING,
-                               WEECHAT_HASHTABLE_INTEGER,
+                               DOGECHAT_HASHTABLE_STRING,
+                               DOGECHAT_HASHTABLE_INTEGER,
                                &test_hashtable_hash_key_cb,
                                &test_hashtable_keycmp_cb);
     CHECK(hashtable);
@@ -149,8 +149,8 @@ TEST(Hashtable, SetGetRemove)
     int i;
 
     hashtable = hashtable_new (32,
-                               WEECHAT_HASHTABLE_STRING,
-                               WEECHAT_HASHTABLE_STRING,
+                               DOGECHAT_HASHTABLE_STRING,
+                               DOGECHAT_HASHTABLE_STRING,
                                &test_hashtable_hash_key_cb,
                                &test_hashtable_keycmp_cb);
     LONGS_EQUAL(32, hashtable->size);
@@ -293,18 +293,18 @@ TEST(Hashtable, SetGetRemove)
      *   +-----+
      *   |   6 | --> "client"
      *   +-----+
-     *   |   7 | --> "weechat"
+     *   |   7 | --> "dogechat"
      *   +-----+
      */
     hashtable = hashtable_new (8,
-                               WEECHAT_HASHTABLE_STRING,
-                               WEECHAT_HASHTABLE_STRING,
+                               DOGECHAT_HASHTABLE_STRING,
+                               DOGECHAT_HASHTABLE_STRING,
                                NULL,
                                NULL);
     LONGS_EQUAL(8, hashtable->size);
     LONGS_EQUAL(0, hashtable->items_count);
 
-    item = hashtable_set (hashtable, "weechat", NULL);
+    item = hashtable_set (hashtable, "dogechat", NULL);
     CHECK(item);
     POINTERS_EQUAL(item, hashtable->htable[7]);
 

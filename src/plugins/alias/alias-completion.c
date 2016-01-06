@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "alias.h"
 
 
@@ -46,11 +46,11 @@ alias_completion_alias_cb (void *data, const char *completion_item,
     for (ptr_alias = alias_list; ptr_alias;
          ptr_alias = ptr_alias->next_alias)
     {
-        weechat_hook_completion_list_add (completion, ptr_alias->name,
-                                          0, WEECHAT_LIST_POS_SORT);
+        dogechat_hook_completion_list_add (completion, ptr_alias->name,
+                                          0, DOGECHAT_LIST_POS_SORT);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -72,10 +72,10 @@ alias_completion_alias_value_cb (void *data, const char *completion_item,
     (void) completion_item;
     (void) buffer;
 
-    args = weechat_hook_completion_get_string (completion, "args");
+    args = dogechat_hook_completion_get_string (completion, "args");
     if (args)
     {
-        argv = weechat_string_split (args, " ", 0, 0, &argc);
+        argv = dogechat_string_split (args, " ", 0, 0, &argc);
         if (argv)
         {
             if (argc > 0)
@@ -88,18 +88,18 @@ alias_completion_alias_value_cb (void *data, const char *completion_item,
                 ptr_alias = alias_search (alias_name);
                 if (ptr_alias)
                 {
-                    weechat_hook_completion_list_add (completion,
+                    dogechat_hook_completion_list_add (completion,
                                                       ptr_alias->command,
                                                       0,
-                                                      WEECHAT_LIST_POS_BEGINNING);
+                                                      DOGECHAT_LIST_POS_BEGINNING);
                 }
                 free (alias_name);
             }
-            weechat_string_free_split (argv);
+            dogechat_string_free_split (argv);
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -109,8 +109,8 @@ alias_completion_alias_value_cb (void *data, const char *completion_item,
 void
 alias_completion_init ()
 {
-    weechat_hook_completion ("alias", N_("list of aliases"),
+    dogechat_hook_completion ("alias", N_("list of aliases"),
                              &alias_completion_alias_cb, NULL);
-    weechat_hook_completion ("alias_value", N_("value of alias"),
+    dogechat_hook_completion ("alias_value", N_("value of alias"),
                              &alias_completion_alias_value_cb, NULL);
 }

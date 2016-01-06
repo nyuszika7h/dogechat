@@ -1,0 +1,10 @@
+Document: dogechat-dev-en
+Title: DogeChat developer's guide (English)
+Author: Sébastien Helleu
+Abstract: This manual describes DogeChat internals and
+ how to contribute to DogeChat (English version).
+Section: Network/Communication
+
+Format: HTML
+Index: /usr/share/doc/dogechat-doc/html/dogechat_dev.en.html
+Files: /usr/share/doc/dogechat-doc/html/dogechat_dev.en.html

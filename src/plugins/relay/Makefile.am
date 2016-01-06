@@ -1,25 +1,25 @@
 #
 # Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
 #
-# This file is part of WeeChat, the extensible chat client.
+# This file is part of DogeChat, the extensible chat client.
 #
-# WeeChat is free software; you can redistribute it and/or modify
+# DogeChat is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
-# WeeChat is distributed in the hope that it will be useful,
+# DogeChat is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+# along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 AM_CPPFLAGS = -DLOCALEDIR=\"$(datadir)/locale\" $(ZLIB_CFLAGS) $(GCRYPT_CFLAGS) $(GNUTLS_CFLAGS)
 
-libdir = ${weechat_libdir}/plugins
+libdir = ${dogechat_libdir}/plugins
 
 lib_LTLIBRARIES = relay.la
 
@@ -31,14 +31,14 @@ relay_la_SOURCES = relay.c \
                    relay-client.h \
                    irc/relay-irc.c \
                    irc/relay-irc.h \
-                   weechat/relay-weechat.c \
-                   weechat/relay-weechat.h \
-                   weechat/relay-weechat-msg.c \
-                   weechat/relay-weechat-msg.h \
-                   weechat/relay-weechat-nicklist.c \
-                   weechat/relay-weechat-nicklist.h \
-                   weechat/relay-weechat-protocol.c \
-                   weechat/relay-weechat-protocol.h \
+                   dogechat/relay-dogechat.c \
+                   dogechat/relay-dogechat.h \
+                   dogechat/relay-dogechat-msg.c \
+                   dogechat/relay-dogechat-msg.h \
+                   dogechat/relay-dogechat-nicklist.c \
+                   dogechat/relay-dogechat-nicklist.h \
+                   dogechat/relay-dogechat-protocol.c \
+                   dogechat/relay-dogechat-protocol.h \
                    relay-command.c \
                    relay-command.h \
                    relay-completion.c \

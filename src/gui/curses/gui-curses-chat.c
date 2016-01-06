@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -28,13 +28,13 @@
 #include <string.h>
 #include <time.h>
 
-#include "../../core/weechat.h"
-#include "../../core/wee-config.h"
-#include "../../core/wee-eval.h"
-#include "../../core/wee-hashtable.h"
-#include "../../core/wee-hook.h"
-#include "../../core/wee-string.h"
-#include "../../core/wee-utf8.h"
+#include "../../core/dogechat.h"
+#include "../../core/doge-config.h"
+#include "../../core/doge-eval.h"
+#include "../../core/doge-hashtable.h"
+#include "../../core/doge-hook.h"
+#include "../../core/doge-string.h"
+#include "../../core/doge-utf8.h"
 #include "../../plugins/plugin.h"
 #include "../gui-buffer.h"
 #include "../gui-chat.h"
@@ -203,7 +203,7 @@ gui_chat_display_horizontal_line (struct t_gui_window *window, int simulate)
         if (!read_marker_string || !read_marker_string[0])
             read_marker_string = default_string;
         size_on_screen = utf8_strlen_screen (read_marker_string);
-        gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
+        gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
                                       GUI_COLOR_CHAT_READ_MARKER);
         gui_chat_clrtoeol (window);
         x = 0;
@@ -315,7 +315,7 @@ gui_chat_string_next_char (struct t_gui_window *window, struct t_gui_line *line,
                         }
                         break;
                     default:
-                        gui_window_string_apply_color_weechat ((unsigned char **)&string,
+                        gui_window_string_apply_color_dogechat ((unsigned char **)&string,
                                                                (apply_style) ? GUI_WINDOW_OBJECTS(window)->win_chat : NULL);
                         break;
                 }
@@ -505,7 +505,7 @@ gui_chat_display_word (struct t_gui_window *window,
                 if (!simulate)
                 {
                     gui_window_save_style (GUI_WINDOW_OBJECTS(window)->win_chat);
-                    gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
+                    gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
                                                   GUI_COLOR_CHAT_PREFIX_SUFFIX);
                     gui_window_current_emphasis = 0;
                 }
@@ -617,7 +617,7 @@ gui_chat_display_day_changed (struct t_gui_window *window,
 
     /*
      * if date1 is given, compare date1 and date2; if date2 is date1 + 1 day,
-     * do not display date1 (so wee keep date1 if date2 is > date1 + 1 day)
+     * do not display date1 (so doge keep date1 if date2 is > date1 + 1 day)
      */
     if (date1)
     {
@@ -656,7 +656,7 @@ gui_chat_display_day_changed (struct t_gui_window *window,
 
     /* display the message */
     gui_window_coords_init_line (window, window->win_chat_cursor_y);
-    gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
+    gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
                                   GUI_COLOR_CHAT_DAY_CHANGE);
     gui_chat_clrtoeol (window);
     gui_chat_display_word_raw (window, NULL,
@@ -824,7 +824,7 @@ gui_chat_display_time_to_prefix (struct t_gui_window *window,
         {
             if (!simulate)
             {
-                gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
+                gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
                                               GUI_COLOR_CHAT_PREFIX_MORE);
             }
             gui_chat_display_word (window, line,
@@ -977,7 +977,7 @@ gui_chat_display_time_to_prefix (struct t_gui_window *window,
         {
             if (!simulate)
             {
-                gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
+                gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
                                               GUI_COLOR_CHAT_NICK_PREFIX);
             }
             gui_chat_display_word (window, line,
@@ -1104,7 +1104,7 @@ gui_chat_display_time_to_prefix (struct t_gui_window *window,
         {
             if (!simulate)
             {
-                gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
+                gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
                                               GUI_COLOR_CHAT_PREFIX_MORE);
             }
             gui_chat_display_word (window, line,
@@ -1121,7 +1121,7 @@ gui_chat_display_time_to_prefix (struct t_gui_window *window,
         {
             if (!simulate)
             {
-                gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
+                gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
                                               GUI_COLOR_CHAT_NICK_SUFFIX);
             }
             gui_chat_display_word (window, line,
@@ -1157,7 +1157,7 @@ gui_chat_display_time_to_prefix (struct t_gui_window *window,
         {
             if (!simulate)
             {
-                gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
+                gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
                                               GUI_COLOR_CHAT_PREFIX_MORE);
             }
             gui_chat_display_word (window, line,
@@ -1194,7 +1194,7 @@ gui_chat_display_time_to_prefix (struct t_gui_window *window,
         {
             if (!simulate)
             {
-                gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
+                gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
                                               GUI_COLOR_CHAT_PREFIX_SUFFIX);
             }
             gui_chat_display_word (window, line,
@@ -1517,7 +1517,7 @@ gui_chat_display_line (struct t_gui_window *window, struct t_gui_line *line,
         {
             if (gui_line_search_text (window->buffer, line))
             {
-                gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
+                gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
                                               GUI_COLOR_CHAT_TEXT_FOUND);
                 mvwaddstr (GUI_WINDOW_OBJECTS(window)->win_chat,
                            read_marker_y, read_marker_x,
@@ -1531,7 +1531,7 @@ gui_chat_display_line (struct t_gui_window *window, struct t_gui_line *line,
                 && window->buffer->lines->last_read_line
                 && (window->buffer->lines->last_read_line == gui_line_get_prev_displayed (line)))
             {
-                gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
+                gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_chat,
                                               GUI_COLOR_CHAT_READ_MARKER);
                 mvwaddstr (GUI_WINDOW_OBJECTS(window)->win_chat,
                            read_marker_y, read_marker_x,
@@ -1819,7 +1819,7 @@ gui_chat_draw_formatted_buffer (struct t_gui_window *window)
         || (window->scroll->lines_after != old_lines_after))
     {
         (void) hook_signal_send ("window_scrolled",
-                                 WEECHAT_HOOK_SIGNAL_POINTER, window);
+                                 DOGECHAT_HOOK_SIGNAL_POINTER, window);
     }
 
     /* cursor is below end line of chat window? */

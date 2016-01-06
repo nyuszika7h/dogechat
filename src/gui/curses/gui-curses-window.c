@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -33,12 +33,12 @@
 #include <sys/ioctl.h>
 #include <termios.h>
 
-#include "../../core/weechat.h"
-#include "../../core/wee-config.h"
-#include "../../core/wee-eval.h"
-#include "../../core/wee-hook.h"
-#include "../../core/wee-log.h"
-#include "../../core/wee-string.h"
+#include "../../core/dogechat.h"
+#include "../../core/doge-config.h"
+#include "../../core/doge-eval.h"
+#include "../../core/doge-hook.h"
+#include "../../core/doge-log.h"
+#include "../../core/doge-string.h"
 #include "../../plugins/plugin.h"
 #include "../gui-window.h"
 #include "../gui-bar.h"
@@ -167,17 +167,17 @@ gui_window_objects_free (struct t_gui_window *window, int free_separators)
 }
 
 /*
- * Clears a Curses window with a WeeChat color.
+ * Clears a Curses window with a DogeChat color.
  */
 
 void
-gui_window_clear_weechat (WINDOW *window, int weechat_color)
+gui_window_clear_dogechat (WINDOW *window, int dogechat_color)
 {
     if (!gui_init_ok)
         return;
 
-    wbkgdset (window, ' ' | COLOR_PAIR (gui_color_weechat_get_pair (weechat_color)) |
-              gui_color[weechat_color]->attributes);
+    wbkgdset (window, ' ' | COLOR_PAIR (gui_color_dogechat_get_pair (dogechat_color)) |
+              gui_color[dogechat_color]->attributes);
     werase (window);
     wmove (window, 0, 0);
 }
@@ -199,12 +199,12 @@ gui_window_clear (WINDOW *window, int fg, int bg)
     if ((fg > 0) && (fg & GUI_COLOR_EXTENDED_FLAG))
         fg &= GUI_COLOR_EXTENDED_MASK;
     else
-        fg = gui_weechat_colors[fg & GUI_COLOR_EXTENDED_MASK].foreground;
+        fg = gui_dogechat_colors[fg & GUI_COLOR_EXTENDED_MASK].foreground;
 
     if ((bg > 0) && (bg & GUI_COLOR_EXTENDED_FLAG))
         bg &= GUI_COLOR_EXTENDED_MASK;
     else
-        bg = gui_weechat_colors[bg & GUI_COLOR_EXTENDED_MASK].background;
+        bg = gui_dogechat_colors[bg & GUI_COLOR_EXTENDED_MASK].background;
 
     wbkgdset (window, ' ' | COLOR_PAIR (gui_color_get_pair (fg, bg)) | attrs);
     werase (window);
@@ -285,33 +285,33 @@ gui_window_restore_style (WINDOW *window)
 }
 
 /*
- * Resets style (color and attr) with a WeeChat color for a window.
+ * Resets style (color and attr) with a DogeChat color for a window.
  */
 
 void
-gui_window_reset_style (WINDOW *window, int weechat_color)
+gui_window_reset_style (WINDOW *window, int dogechat_color)
 {
     gui_window_current_style_fg = -1;
     gui_window_current_style_bg = -1;
     gui_window_current_color_attr = 0;
 
     wattroff (window, A_ALL_ATTR);
-    wattron (window, COLOR_PAIR(gui_color_weechat_get_pair (weechat_color)) |
-             gui_color[weechat_color]->attributes);
+    wattron (window, COLOR_PAIR(gui_color_dogechat_get_pair (dogechat_color)) |
+             gui_color[dogechat_color]->attributes);
 }
 
 /*
- * Resets color with a WeeChat color for a window.
+ * Resets color with a DogeChat color for a window.
  */
 
 void
-gui_window_reset_color (WINDOW *window, int weechat_color)
+gui_window_reset_color (WINDOW *window, int dogechat_color)
 {
-    gui_window_current_style_fg = gui_color[weechat_color]->foreground;
-    gui_window_current_style_bg = gui_color[weechat_color]->background;
+    gui_window_current_style_fg = gui_color[dogechat_color]->foreground;
+    gui_window_current_style_bg = gui_color[dogechat_color]->background;
 
-    wattron (window, COLOR_PAIR(gui_color_weechat_get_pair (weechat_color)) |
-             gui_color[weechat_color]->attributes);
+    wattron (window, COLOR_PAIR(gui_color_dogechat_get_pair (dogechat_color)) |
+             gui_color[dogechat_color]->attributes);
 }
 
 /*
@@ -350,11 +350,11 @@ gui_window_set_color (WINDOW *window, int fg, int bg)
 }
 
 /*
- * Sets WeeChat color for window.
+ * Sets DogeChat color for window.
  */
 
 void
-gui_window_set_weechat_color (WINDOW *window, int num_color)
+gui_window_set_dogechat_color (WINDOW *window, int num_color)
 {
     int fg, bg;
 
@@ -417,14 +417,14 @@ gui_window_set_custom_color_fg (WINDOW *window, int fg)
                                   fg & GUI_COLOR_EXTENDED_MASK,
                                   current_bg);
         }
-        else if ((fg & GUI_COLOR_EXTENDED_MASK) < GUI_CURSES_NUM_WEECHAT_COLORS)
+        else if ((fg & GUI_COLOR_EXTENDED_MASK) < GUI_CURSES_NUM_DOGECHAT_COLORS)
         {
             if (!(fg & GUI_COLOR_EXTENDED_KEEPATTR_FLAG))
                 gui_window_remove_color_style (window, A_ALL_ATTR);
             attributes = gui_color_get_extended_attrs (fg) |
-                gui_weechat_colors[fg & GUI_COLOR_EXTENDED_MASK].attributes;
+                gui_dogechat_colors[fg & GUI_COLOR_EXTENDED_MASK].attributes;
             gui_window_set_color_style (window, attributes);
-            fg = gui_weechat_colors[fg & GUI_COLOR_EXTENDED_MASK].foreground;
+            fg = gui_dogechat_colors[fg & GUI_COLOR_EXTENDED_MASK].foreground;
 
             /*
              * if not real white, we use default terminal foreground instead of
@@ -460,12 +460,12 @@ gui_window_set_custom_color_bg (WINDOW *window, int bg)
                                   current_fg,
                                   bg & GUI_COLOR_EXTENDED_MASK);
         }
-        else if ((bg & GUI_COLOR_EXTENDED_MASK) < GUI_CURSES_NUM_WEECHAT_COLORS)
+        else if ((bg & GUI_COLOR_EXTENDED_MASK) < GUI_CURSES_NUM_DOGECHAT_COLORS)
         {
             bg &= GUI_COLOR_EXTENDED_MASK;
             gui_window_set_color (window, current_fg,
                                   (gui_color_term_colors >= 16) ?
-                                  gui_weechat_colors[bg].background : gui_weechat_colors[bg].foreground);
+                                  gui_dogechat_colors[bg].background : gui_dogechat_colors[bg].foreground);
         }
     }
 }
@@ -502,14 +502,14 @@ gui_window_set_custom_color_fg_bg (WINDOW *window, int fg, int bg,
                 gui_window_remove_color_style (window, A_UNDERLINE);
             fg &= GUI_COLOR_EXTENDED_MASK;
         }
-        else if ((fg & GUI_COLOR_EXTENDED_MASK) < GUI_CURSES_NUM_WEECHAT_COLORS)
+        else if ((fg & GUI_COLOR_EXTENDED_MASK) < GUI_CURSES_NUM_DOGECHAT_COLORS)
         {
             if (reset_attributes && !(fg & GUI_COLOR_EXTENDED_KEEPATTR_FLAG))
                 gui_window_remove_color_style (window, A_ALL_ATTR);
             attributes = gui_color_get_extended_attrs (fg) |
-                gui_weechat_colors[fg & GUI_COLOR_EXTENDED_MASK].attributes;
+                gui_dogechat_colors[fg & GUI_COLOR_EXTENDED_MASK].attributes;
             gui_window_set_color_style (window, attributes);
-            fg = gui_weechat_colors[fg & GUI_COLOR_EXTENDED_MASK].foreground;
+            fg = gui_dogechat_colors[fg & GUI_COLOR_EXTENDED_MASK].foreground;
 
             /*
              * if not real white, we use default terminal foreground instead of
@@ -528,7 +528,7 @@ gui_window_set_custom_color_fg_bg (WINDOW *window, int fg, int bg,
         {
             bg &= GUI_COLOR_EXTENDED_MASK;
             bg = (gui_color_term_colors >= 16) ?
-                gui_weechat_colors[bg].background : gui_weechat_colors[bg].foreground;
+                gui_dogechat_colors[bg].background : gui_dogechat_colors[bg].foreground;
         }
 
         gui_window_set_color (window, fg, bg);
@@ -578,7 +578,7 @@ gui_window_emphasize (WINDOW *window, int x, int y, int count)
         /* use color for emphasis (from config) */
         mvwchgat (window, y, x, count,
                   gui_color[GUI_COLOR_EMPHASIS]->attributes,
-                  gui_color_weechat_get_pair (GUI_COLOR_EMPHASIS), NULL);
+                  gui_color_dogechat_get_pair (GUI_COLOR_EMPHASIS), NULL);
     }
     else
     {
@@ -889,18 +889,18 @@ gui_window_string_apply_color_pair (unsigned char **string, WINDOW *window)
 }
 
 /*
- * Applies weechat color code in string and moves string pointer after color in
+ * Applies dogechat color code in string and moves string pointer after color in
  * string.
  *
  * If window is NULL, no color is applied but string pointer is moved anyway.
  */
 
 void
-gui_window_string_apply_color_weechat (unsigned char **string, WINDOW *window)
+gui_window_string_apply_color_dogechat (unsigned char **string, WINDOW *window)
 {
     unsigned char *ptr_string;
     char str_number[3], *error;
-    int weechat_color;
+    int dogechat_color;
 
     ptr_string = *string;
 
@@ -912,11 +912,11 @@ gui_window_string_apply_color_weechat (unsigned char **string, WINDOW *window)
             str_number[1] = ptr_string[1];
             str_number[2] = '\0';
             error = NULL;
-            weechat_color = (int)strtol (str_number, &error, 10);
+            dogechat_color = (int)strtol (str_number, &error, 10);
             if (error && !error[0])
             {
-                gui_window_set_weechat_color (window,
-                                              weechat_color);
+                gui_window_set_dogechat_color (window,
+                                              dogechat_color);
             }
         }
         ptr_string += 2;
@@ -1139,7 +1139,7 @@ gui_window_draw_separators (struct t_gui_window *window)
                                                                   width,
                                                                   window->win_y + window->win_height,
                                                                   x);
-        gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_separator_horiz,
+        gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_separator_horiz,
                                       GUI_COLOR_SEPARATOR);
         gui_window_hline (GUI_WINDOW_OBJECTS(window)->win_separator_horiz,
                           0, 0, width,
@@ -1154,7 +1154,7 @@ gui_window_draw_separators (struct t_gui_window *window)
                                                                    1,
                                                                    window->win_y,
                                                                    window->win_x - 1);
-        gui_window_set_weechat_color (GUI_WINDOW_OBJECTS(window)->win_separator_vertic,
+        gui_window_set_dogechat_color (GUI_WINDOW_OBJECTS(window)->win_separator_vertic,
                                       GUI_COLOR_SEPARATOR);
         gui_window_vline (GUI_WINDOW_OBJECTS(window)->win_separator_vertic,
                           0, 0, window->win_height,
@@ -1223,7 +1223,7 @@ gui_window_switch_to_buffer (struct t_gui_window *window,
     gui_buffer_set_active_buffer (buffer);
     gui_buffer_compute_num_displayed ();
 
-    if (!weechat_upgrading && (old_buffer != buffer))
+    if (!dogechat_upgrading && (old_buffer != buffer))
         gui_hotlist_remove_buffer (buffer, 0);
 
     /* remove unused bars and add missing bars in window */
@@ -1285,7 +1285,7 @@ gui_window_switch_to_buffer (struct t_gui_window *window,
     if (old_buffer != buffer)
     {
         (void) hook_signal_send ("buffer_switch",
-                                 WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                                 DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
     }
 }
 
@@ -1325,7 +1325,7 @@ gui_window_switch (struct t_gui_window *window)
     gui_input_move_to_buffer (old_window->buffer, window->buffer);
 
     (void) hook_signal_send ("window_switch",
-                             WEECHAT_HOOK_SIGNAL_POINTER, gui_current_window);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, gui_current_window);
 }
 
 /*
@@ -1368,7 +1368,7 @@ gui_window_page_up (struct t_gui_window *window)
                           num_lines + 1);
                 gui_window_scroll (window, scroll);
                 (void) hook_signal_send ("window_scrolled",
-                                         WEECHAT_HOOK_SIGNAL_POINTER, window);
+                                         DOGECHAT_HOOK_SIGNAL_POINTER, window);
             }
             break;
         case GUI_BUFFER_NUM_TYPES:
@@ -1425,7 +1425,7 @@ gui_window_page_down (struct t_gui_window *window)
                       num_lines + 1);
             gui_window_scroll (window, scroll);
             (void) hook_signal_send ("window_scrolled",
-                                     WEECHAT_HOOK_SIGNAL_POINTER, window);
+                                     DOGECHAT_HOOK_SIGNAL_POINTER, window);
             break;
         case GUI_BUFFER_NUM_TYPES:
             break;
@@ -1465,7 +1465,7 @@ gui_window_scroll_up (struct t_gui_window *window)
                           CONFIG_INTEGER(config_look_scroll_amount));
                 gui_window_scroll (window, scroll);
                 (void) hook_signal_send ("window_scrolled",
-                                         WEECHAT_HOOK_SIGNAL_POINTER, window);
+                                         DOGECHAT_HOOK_SIGNAL_POINTER, window);
             }
             break;
         case GUI_BUFFER_NUM_TYPES:
@@ -1516,7 +1516,7 @@ gui_window_scroll_down (struct t_gui_window *window)
                       CONFIG_INTEGER(config_look_scroll_amount));
             gui_window_scroll (window, scroll);
             (void) hook_signal_send ("window_scrolled",
-                                     WEECHAT_HOOK_SIGNAL_POINTER, window);
+                                     DOGECHAT_HOOK_SIGNAL_POINTER, window);
             break;
         case GUI_BUFFER_NUM_TYPES:
             break;
@@ -1549,7 +1549,7 @@ gui_window_scroll_top (struct t_gui_window *window)
                 window->scroll->start_line = NULL;
                 gui_buffer_ask_chat_refresh (window->buffer, 2);
                 (void) hook_signal_send ("window_scrolled",
-                                         WEECHAT_HOOK_SIGNAL_POINTER, window);
+                                         DOGECHAT_HOOK_SIGNAL_POINTER, window);
             }
             break;
         case GUI_BUFFER_NUM_TYPES:
@@ -1589,7 +1589,7 @@ gui_window_scroll_bottom (struct t_gui_window *window)
                 gui_buffer_ask_chat_refresh (window->buffer, 2);
             }
             (void) hook_signal_send ("window_scrolled",
-                                     WEECHAT_HOOK_SIGNAL_POINTER, window);
+                                     DOGECHAT_HOOK_SIGNAL_POINTER, window);
             break;
         case GUI_BUFFER_NUM_TYPES:
             break;
@@ -2373,7 +2373,7 @@ gui_window_bare_display_timer_cb (void *data, int remaining_calls)
     if (remaining_calls == 0)
         gui_window_bare_display_timer = NULL;
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -2577,7 +2577,7 @@ gui_window_term_display_infos ()
 }
 
 /*
- * Prints window Curses objects infos in WeeChat log file (usually for crash
+ * Prints window Curses objects infos in DogeChat log file (usually for crash
  * dump).
  */
 

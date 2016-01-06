@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -30,15 +30,15 @@
 #include <signal.h>
 #include <time.h>
 
-#include "../../core/weechat.h"
-#include "../../core/wee-command.h"
-#include "../../core/wee-config.h"
-#include "../../core/wee-hook.h"
-#include "../../core/wee-log.h"
-#include "../../core/wee-string.h"
-#include "../../core/wee-utf8.h"
-#include "../../core/wee-util.h"
-#include "../../core/wee-version.h"
+#include "../../core/dogechat.h"
+#include "../../core/doge-command.h"
+#include "../../core/doge-config.h"
+#include "../../core/doge-hook.h"
+#include "../../core/doge-log.h"
+#include "../../core/doge-string.h"
+#include "../../core/doge-utf8.h"
+#include "../../core/doge-util.h"
+#include "../../core/doge-version.h"
 #include "../../plugins/plugin.h"
 #include "../gui-main.h"
 #include "../gui-bar.h"
@@ -193,10 +193,10 @@ gui_main_init ()
             ptr_buffer->short_name = strdup (GUI_BUFFER_MAIN);
 
         /* set title for core buffer */
-        snprintf (title, sizeof (title), "WeeChat %s %s - %s",
+        snprintf (title, sizeof (title), "DogeChat %s %s - %s",
                   version_get_version (),
-                  WEECHAT_COPYRIGHT_DATE,
-                  WEECHAT_WEBSITE);
+                  DOGECHAT_COPYRIGHT_DATE,
+                  DOGECHAT_WEBSITE);
         gui_buffer_set_title (ptr_buffer, title);
 
         /* create main window (using full space) */
@@ -375,7 +375,7 @@ gui_main_refreshs ()
 }
 
 /*
- * Main loop for WeeChat with ncurses GUI.
+ * Main loop for DogeChat with ncurses GUI.
  */
 
 void
@@ -392,7 +392,7 @@ gui_main_loop ()
 
     gui_window_ask_refresh (1);
 
-    while (!weechat_quit)
+    while (!dogechat_quit)
     {
         /* execute timer hooks */
         hook_timer_exec ();
@@ -413,7 +413,7 @@ gui_main_loop ()
         if (gui_signal_sigwinch_received)
         {
             (void) hook_signal_send ("signal_sigwinch",
-                                     WEECHAT_HOOK_SIGNAL_STRING, NULL);
+                                     DOGECHAT_HOOK_SIGNAL_STRING, NULL);
             gui_signal_sigwinch_received = 0;
         }
 
@@ -430,8 +430,8 @@ gui_main_loop ()
 /*
  * Ends GUI.
  *
- * Argument "clean_exit" is 0 when WeeChat is crashing (we don't clean objects
- * because WeeChat can crash again during this cleanup...).
+ * Argument "clean_exit" is 0 when DogeChat is crashing (we don't clean objects
+ * because DogeChat can crash again during this cleanup...).
  */
 
 void
@@ -443,7 +443,7 @@ gui_main_end (int clean_exit)
          * final refreshs, to see messages just before exiting
          * (if we are upgrading, don't refresh anything!)
          */
-        if (!weechat_upgrading)
+        if (!dogechat_upgrading)
         {
             gui_main_refreshs ();
             if (gui_window_refresh_needed)

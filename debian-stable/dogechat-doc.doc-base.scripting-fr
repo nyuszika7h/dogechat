@@ -1,0 +1,10 @@
+Document: dogechat-scripting-fr
+Title: DogeChat scripting guide (French)
+Author: Sébastien Helleu
+Abstract: This document describes the API to create scripts
+ for DogeChat (French version).
+Section: Network/Communication
+
+Format: HTML
+Index: /usr/share/doc/dogechat-doc/html/dogechat_scripting.fr.html
+Files: /usr/share/doc/dogechat-doc/html/dogechat_scripting.fr.html

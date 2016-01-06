@@ -1,29 +1,29 @@
 /*
- * irc-upgrade.c - save/restore IRC plugin data when upgrading WeeChat
+ * irc-upgrade.c - save/restore IRC plugin data when upgrading DogeChat
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-upgrade.h"
 #include "irc-buffer.h"
@@ -66,18 +66,18 @@ irc_upgrade_save_all_data (struct t_upgrade_file *upgrade_file)
          ptr_server = ptr_server->next_server)
     {
         /* save server */
-        infolist = weechat_infolist_new ();
+        infolist = dogechat_infolist_new ();
         if (!infolist)
             return 0;
         if (!irc_server_add_to_infolist (infolist, ptr_server))
         {
-            weechat_infolist_free (infolist);
+            dogechat_infolist_free (infolist);
             return 0;
         }
-        rc = weechat_upgrade_write_object (upgrade_file,
+        rc = dogechat_upgrade_write_object (upgrade_file,
                                            IRC_UPGRADE_TYPE_SERVER,
                                            infolist);
-        weechat_infolist_free (infolist);
+        dogechat_infolist_free (infolist);
         if (!rc)
             return 0;
 
@@ -86,18 +86,18 @@ irc_upgrade_save_all_data (struct t_upgrade_file *upgrade_file)
              ptr_channel = ptr_channel->next_channel)
         {
             /* save channel */
-            infolist = weechat_infolist_new ();
+            infolist = dogechat_infolist_new ();
             if (!infolist)
                 return 0;
             if (!irc_channel_add_to_infolist (infolist, ptr_channel))
             {
-                weechat_infolist_free (infolist);
+                dogechat_infolist_free (infolist);
                 return 0;
             }
-            rc = weechat_upgrade_write_object (upgrade_file,
+            rc = dogechat_upgrade_write_object (upgrade_file,
                                                IRC_UPGRADE_TYPE_CHANNEL,
                                                infolist);
-            weechat_infolist_free (infolist);
+            dogechat_infolist_free (infolist);
             if (!rc)
                 return 0;
 
@@ -105,18 +105,18 @@ irc_upgrade_save_all_data (struct t_upgrade_file *upgrade_file)
                  ptr_nick = ptr_nick->next_nick)
             {
                 /* save nick */
-                infolist = weechat_infolist_new ();
+                infolist = dogechat_infolist_new ();
                 if (!infolist)
                     return 0;
                 if (!irc_nick_add_to_infolist (infolist, ptr_nick))
                 {
-                    weechat_infolist_free (infolist);
+                    dogechat_infolist_free (infolist);
                     return 0;
                 }
-                rc = weechat_upgrade_write_object (upgrade_file,
+                rc = dogechat_upgrade_write_object (upgrade_file,
                                                    IRC_UPGRADE_TYPE_NICK,
                                                    infolist);
-                weechat_infolist_free (infolist);
+                dogechat_infolist_free (infolist);
                 if (!rc)
                     return 0;
             }
@@ -126,18 +126,18 @@ irc_upgrade_save_all_data (struct t_upgrade_file *upgrade_file)
         for (ptr_redirect = ptr_server->redirects; ptr_redirect;
              ptr_redirect = ptr_redirect->next_redirect)
         {
-            infolist = weechat_infolist_new ();
+            infolist = dogechat_infolist_new ();
             if (!infolist)
                 return 0;
             if (!irc_redirect_add_to_infolist (infolist, ptr_redirect))
             {
-                weechat_infolist_free (infolist);
+                dogechat_infolist_free (infolist);
                 return 0;
             }
-            rc = weechat_upgrade_write_object (upgrade_file,
+            rc = dogechat_upgrade_write_object (upgrade_file,
                                                IRC_UPGRADE_TYPE_REDIRECT,
                                                infolist);
-            weechat_infolist_free (infolist);
+            dogechat_infolist_free (infolist);
             if (!rc)
                 return 0;
         }
@@ -146,18 +146,18 @@ irc_upgrade_save_all_data (struct t_upgrade_file *upgrade_file)
         for (ptr_notify = ptr_server->notify_list; ptr_notify;
              ptr_notify = ptr_notify->next_notify)
         {
-            infolist = weechat_infolist_new ();
+            infolist = dogechat_infolist_new ();
             if (!infolist)
                 return 0;
             if (!irc_notify_add_to_infolist (infolist, ptr_notify))
             {
-                weechat_infolist_free (infolist);
+                dogechat_infolist_free (infolist);
                 return 0;
             }
-            rc = weechat_upgrade_write_object (upgrade_file,
+            rc = dogechat_upgrade_write_object (upgrade_file,
                                                IRC_UPGRADE_TYPE_NOTIFY,
                                                infolist);
-            weechat_infolist_free (infolist);
+            dogechat_infolist_free (infolist);
             if (!rc)
                 return 0;
         }
@@ -167,18 +167,18 @@ irc_upgrade_save_all_data (struct t_upgrade_file *upgrade_file)
     for (ptr_raw_message = irc_raw_messages; ptr_raw_message;
          ptr_raw_message = ptr_raw_message->next_message)
     {
-        infolist = weechat_infolist_new ();
+        infolist = dogechat_infolist_new ();
         if (!infolist)
             return 0;
         if (!irc_raw_add_to_infolist (infolist, ptr_raw_message))
         {
-            weechat_infolist_free (infolist);
+            dogechat_infolist_free (infolist);
             return 0;
         }
-        rc = weechat_upgrade_write_object (upgrade_file,
+        rc = dogechat_upgrade_write_object (upgrade_file,
                                            IRC_UPGRADE_TYPE_RAW_MESSAGE,
                                            infolist);
-        weechat_infolist_free (infolist);
+        dogechat_infolist_free (infolist);
         if (!rc)
             return 0;
     }
@@ -190,18 +190,18 @@ irc_upgrade_save_all_data (struct t_upgrade_file *upgrade_file)
         /* save only temporary patterns (created by other plugins/scripts) */
         if (ptr_redirect_pattern->temp_pattern)
         {
-            infolist = weechat_infolist_new ();
+            infolist = dogechat_infolist_new ();
             if (!infolist)
                 return 0;
             if (!irc_redirect_pattern_add_to_infolist (infolist, ptr_redirect_pattern))
             {
-                weechat_infolist_free (infolist);
+                dogechat_infolist_free (infolist);
                 return 0;
             }
-            rc = weechat_upgrade_write_object (upgrade_file,
+            rc = dogechat_upgrade_write_object (upgrade_file,
                                                IRC_UPGRADE_TYPE_REDIRECT_PATTERN,
                                                infolist);
-            weechat_infolist_free (infolist);
+            dogechat_infolist_free (infolist);
             if (!rc)
                 return 0;
         }
@@ -224,13 +224,13 @@ irc_upgrade_save ()
     int rc;
     struct t_upgrade_file *upgrade_file;
 
-    upgrade_file = weechat_upgrade_new (IRC_UPGRADE_FILENAME, 1);
+    upgrade_file = dogechat_upgrade_new (IRC_UPGRADE_FILENAME, 1);
     if (!upgrade_file)
         return 0;
 
     rc = irc_upgrade_save_all_data (upgrade_file);
 
-    weechat_upgrade_close (upgrade_file);
+    dogechat_upgrade_close (upgrade_file);
 
     return rc;
 }
@@ -248,39 +248,39 @@ irc_upgrade_set_buffer_callbacks ()
     struct t_irc_server *ptr_server;
     const char *type;
 
-    infolist = weechat_infolist_get ("buffer", NULL, NULL);
+    infolist = dogechat_infolist_get ("buffer", NULL, NULL);
     if (infolist)
     {
-        while (weechat_infolist_next (infolist))
+        while (dogechat_infolist_next (infolist))
         {
-            if (weechat_infolist_pointer (infolist, "plugin") == weechat_irc_plugin)
+            if (dogechat_infolist_pointer (infolist, "plugin") == dogechat_irc_plugin)
             {
-                ptr_buffer = weechat_infolist_pointer (infolist, "pointer");
-                weechat_buffer_set_pointer (ptr_buffer, "close_callback", &irc_buffer_close_cb);
-                weechat_buffer_set_pointer (ptr_buffer, "input_callback", &irc_input_data_cb);
-                type = weechat_buffer_get_string (ptr_buffer, "localvar_type");
+                ptr_buffer = dogechat_infolist_pointer (infolist, "pointer");
+                dogechat_buffer_set_pointer (ptr_buffer, "close_callback", &irc_buffer_close_cb);
+                dogechat_buffer_set_pointer (ptr_buffer, "input_callback", &irc_input_data_cb);
+                type = dogechat_buffer_get_string (ptr_buffer, "localvar_type");
                 if (type && (strcmp (type, "channel") == 0))
                 {
                     ptr_server = irc_server_search (
-                        weechat_buffer_get_string (ptr_buffer,
+                        dogechat_buffer_get_string (ptr_buffer,
                                                    "localvar_server"));
-                    weechat_buffer_set_pointer (ptr_buffer, "nickcmp_callback",
+                    dogechat_buffer_set_pointer (ptr_buffer, "nickcmp_callback",
                                                 &irc_buffer_nickcmp_cb);
                     if (ptr_server)
                     {
-                        weechat_buffer_set_pointer (ptr_buffer,
+                        dogechat_buffer_set_pointer (ptr_buffer,
                                                     "nickcmp_callback_data",
                                                     ptr_server);
                     }
                 }
-                if (strcmp (weechat_infolist_string (infolist, "name"),
+                if (strcmp (dogechat_infolist_string (infolist, "name"),
                             IRC_RAW_BUFFER_NAME) == 0)
                 {
                     irc_raw_buffer = ptr_buffer;
                 }
             }
         }
-        weechat_infolist_free (infolist);
+        dogechat_infolist_free (infolist);
     }
 }
 
@@ -309,33 +309,33 @@ irc_upgrade_read_cb (void *data,
     (void) data;
     (void) upgrade_file;
 
-    weechat_infolist_reset_item_cursor (infolist);
-    while (weechat_infolist_next (infolist))
+    dogechat_infolist_reset_item_cursor (infolist);
+    while (dogechat_infolist_next (infolist))
     {
         switch (object_id)
         {
             case IRC_UPGRADE_TYPE_SERVER:
-                irc_upgrade_current_server = irc_server_search (weechat_infolist_string (infolist, "name"));
+                irc_upgrade_current_server = irc_server_search (dogechat_infolist_string (infolist, "name"));
                 if (irc_upgrade_current_server)
                 {
                     irc_upgrade_current_server->temp_server =
-                        weechat_infolist_integer (infolist, "temp_server");
+                        dogechat_infolist_integer (infolist, "temp_server");
                     irc_upgrade_current_server->buffer = NULL;
-                    buffer_name = weechat_infolist_string (infolist, "buffer_name");
+                    buffer_name = dogechat_infolist_string (infolist, "buffer_name");
                     if (buffer_name && buffer_name[0])
                     {
-                        ptr_buffer = weechat_buffer_search (IRC_PLUGIN_NAME,
+                        ptr_buffer = dogechat_buffer_search (IRC_PLUGIN_NAME,
                                                             buffer_name);
                         if (ptr_buffer)
                             irc_upgrade_current_server->buffer = ptr_buffer;
                     }
                     irc_upgrade_current_server->index_current_address =
-                        weechat_infolist_integer (infolist, "index_current_address");
-                    str = weechat_infolist_string (infolist, "current_address");
+                        dogechat_infolist_integer (infolist, "index_current_address");
+                    str = dogechat_infolist_string (infolist, "current_address");
                     if (str)
                     {
                         irc_upgrade_current_server->current_address = strdup (str);
-                        irc_upgrade_current_server->current_port = weechat_infolist_integer (infolist, "current_port");
+                        irc_upgrade_current_server->current_port = dogechat_infolist_integer (infolist, "current_port");
                     }
                     else
                     {
@@ -347,66 +347,66 @@ irc_upgrade_read_cb (void *data,
                                 irc_upgrade_current_server->ports_array[irc_upgrade_current_server->index_current_address];
                         }
                     }
-                    str = weechat_infolist_string (infolist, "current_ip");
+                    str = dogechat_infolist_string (infolist, "current_ip");
                     if (str)
                         irc_upgrade_current_server->current_ip = strdup (str);
-                    sock = weechat_infolist_integer (infolist, "sock");
+                    sock = dogechat_infolist_integer (infolist, "sock");
                     if (sock >= 0)
                     {
                         irc_upgrade_current_server->sock = sock;
-                        irc_upgrade_current_server->hook_fd = weechat_hook_fd (irc_upgrade_current_server->sock,
+                        irc_upgrade_current_server->hook_fd = dogechat_hook_fd (irc_upgrade_current_server->sock,
                                                                                1, 0, 0,
                                                                                &irc_server_recv_cb,
                                                                                irc_upgrade_current_server);
                     }
-                    irc_upgrade_current_server->is_connected = weechat_infolist_integer (infolist, "is_connected");
-                    irc_upgrade_current_server->ssl_connected = weechat_infolist_integer (infolist, "ssl_connected");
-                    irc_upgrade_current_server->disconnected = weechat_infolist_integer (infolist, "disconnected");
-                    str = weechat_infolist_string (infolist, "unterminated_message");
+                    irc_upgrade_current_server->is_connected = dogechat_infolist_integer (infolist, "is_connected");
+                    irc_upgrade_current_server->ssl_connected = dogechat_infolist_integer (infolist, "ssl_connected");
+                    irc_upgrade_current_server->disconnected = dogechat_infolist_integer (infolist, "disconnected");
+                    str = dogechat_infolist_string (infolist, "unterminated_message");
                     if (str)
                         irc_upgrade_current_server->unterminated_message = strdup (str);
-                    str = weechat_infolist_string (infolist, "nick");
+                    str = dogechat_infolist_string (infolist, "nick");
                     if (str)
                         irc_server_set_nick (irc_upgrade_current_server, str);
-                    str = weechat_infolist_string (infolist, "nick_modes");
+                    str = dogechat_infolist_string (infolist, "nick_modes");
                     if (str)
                         irc_upgrade_current_server->nick_modes = strdup (str);
-                    irc_upgrade_current_server->cap_away_notify = weechat_infolist_integer (infolist, "cap_away_notify");
-                    irc_upgrade_current_server->cap_account_notify = weechat_infolist_integer (infolist, "cap_account_notify");
-                    irc_upgrade_current_server->cap_extended_join = weechat_infolist_integer (infolist, "cap_extended_join");
-                    str = weechat_infolist_string (infolist, "isupport");
+                    irc_upgrade_current_server->cap_away_notify = dogechat_infolist_integer (infolist, "cap_away_notify");
+                    irc_upgrade_current_server->cap_account_notify = dogechat_infolist_integer (infolist, "cap_account_notify");
+                    irc_upgrade_current_server->cap_extended_join = dogechat_infolist_integer (infolist, "cap_extended_join");
+                    str = dogechat_infolist_string (infolist, "isupport");
                     if (str)
                         irc_upgrade_current_server->isupport = strdup (str);
                     /*
                      * "prefix" is not any more in this infolist (since
-                     * WeeChat 0.3.4), but we read it to keep compatibility
-                     * with old WeeChat versions, on /upgrade)
+                     * DogeChat 0.3.4), but we read it to keep compatibility
+                     * with old DogeChat versions, on /upgrade)
                      */
-                    str = weechat_infolist_string (infolist, "prefix");
+                    str = dogechat_infolist_string (infolist, "prefix");
                     if (str)
                         irc_server_set_prefix_modes_chars (irc_upgrade_current_server, str);
-                    /* "prefix_modes" is new in WeeChat 0.3.4 */
-                    str = weechat_infolist_string (infolist, "prefix_modes");
+                    /* "prefix_modes" is new in DogeChat 0.3.4 */
+                    str = dogechat_infolist_string (infolist, "prefix_modes");
                     if (str)
                     {
                         if (irc_upgrade_current_server->prefix_modes)
                             free (irc_upgrade_current_server->prefix_modes);
                         irc_upgrade_current_server->prefix_modes = strdup (str);
                     }
-                    /* "prefix_chars" is new in WeeChat 0.3.4 */
-                    str = weechat_infolist_string (infolist, "prefix_chars");
+                    /* "prefix_chars" is new in DogeChat 0.3.4 */
+                    str = dogechat_infolist_string (infolist, "prefix_chars");
                     if (str)
                     {
                         if (irc_upgrade_current_server->prefix_chars)
                             free (irc_upgrade_current_server->prefix_chars);
                         irc_upgrade_current_server->prefix_chars = strdup (str);
                     }
-                    irc_upgrade_current_server->nick_max_length = weechat_infolist_integer (infolist, "nick_max_length");
-                    irc_upgrade_current_server->casemapping = weechat_infolist_integer (infolist, "casemapping");
-                    str = weechat_infolist_string (infolist, "chantypes");
+                    irc_upgrade_current_server->nick_max_length = dogechat_infolist_integer (infolist, "nick_max_length");
+                    irc_upgrade_current_server->casemapping = dogechat_infolist_integer (infolist, "casemapping");
+                    str = dogechat_infolist_string (infolist, "chantypes");
                     if (str)
                         irc_upgrade_current_server->chantypes = strdup (str);
-                    str = weechat_infolist_string (infolist, "chanmodes");
+                    str = dogechat_infolist_string (infolist, "chanmodes");
                     if (str)
                         irc_upgrade_current_server->chanmodes = strdup (str);
                     else
@@ -416,14 +416,14 @@ irc_upgrade_read_cb (void *data,
                         if (str)
                             irc_upgrade_current_server->chanmodes = strdup (str);
                     }
-                    /* "monitor" is new in WeeChat 0.4.3 */
-                    if (weechat_infolist_search_var (infolist, "monitor"))
+                    /* "monitor" is new in DogeChat 0.4.3 */
+                    if (dogechat_infolist_search_var (infolist, "monitor"))
                     {
-                        irc_upgrade_current_server->monitor = weechat_infolist_integer (infolist, "monitor");
+                        irc_upgrade_current_server->monitor = dogechat_infolist_integer (infolist, "monitor");
                     }
                     else
                     {
-                        /* WeeChat <= 0.4.2 */
+                        /* DogeChat <= 0.4.2 */
                         str = irc_server_get_isupport_value (irc_upgrade_current_server,
                                                              "MONITOR");
                         if (str)
@@ -434,70 +434,70 @@ irc_upgrade_read_cb (void *data,
                                 irc_upgrade_current_server->monitor = (int)number;
                         }
                     }
-                    irc_upgrade_current_server->reconnect_delay = weechat_infolist_integer (infolist, "reconnect_delay");
-                    irc_upgrade_current_server->reconnect_start = weechat_infolist_time (infolist, "reconnect_start");
-                    irc_upgrade_current_server->command_time = weechat_infolist_time (infolist, "command_time");
-                    irc_upgrade_current_server->reconnect_join = weechat_infolist_integer (infolist, "reconnect_join");
-                    irc_upgrade_current_server->disable_autojoin = weechat_infolist_integer (infolist, "disable_autojoin");
-                    irc_upgrade_current_server->is_away = weechat_infolist_integer (infolist, "is_away");
-                    str = weechat_infolist_string (infolist, "away_message");
+                    irc_upgrade_current_server->reconnect_delay = dogechat_infolist_integer (infolist, "reconnect_delay");
+                    irc_upgrade_current_server->reconnect_start = dogechat_infolist_time (infolist, "reconnect_start");
+                    irc_upgrade_current_server->command_time = dogechat_infolist_time (infolist, "command_time");
+                    irc_upgrade_current_server->reconnect_join = dogechat_infolist_integer (infolist, "reconnect_join");
+                    irc_upgrade_current_server->disable_autojoin = dogechat_infolist_integer (infolist, "disable_autojoin");
+                    irc_upgrade_current_server->is_away = dogechat_infolist_integer (infolist, "is_away");
+                    str = dogechat_infolist_string (infolist, "away_message");
                     if (str)
                         irc_upgrade_current_server->away_message = strdup (str);
-                    irc_upgrade_current_server->away_time = weechat_infolist_time (infolist, "away_time");
-                    irc_upgrade_current_server->lag = weechat_infolist_integer (infolist, "lag");
-                    irc_upgrade_current_server->lag_displayed = weechat_infolist_integer (infolist, "lag_displayed");
-                    buf = weechat_infolist_buffer (infolist, "lag_check_time", &size);
+                    irc_upgrade_current_server->away_time = dogechat_infolist_time (infolist, "away_time");
+                    irc_upgrade_current_server->lag = dogechat_infolist_integer (infolist, "lag");
+                    irc_upgrade_current_server->lag_displayed = dogechat_infolist_integer (infolist, "lag_displayed");
+                    buf = dogechat_infolist_buffer (infolist, "lag_check_time", &size);
                     if (buf)
                         memcpy (&(irc_upgrade_current_server->lag_check_time), buf, size);
-                    irc_upgrade_current_server->lag_next_check = weechat_infolist_time (infolist, "lag_next_check");
-                    irc_upgrade_current_server->lag_last_refresh = weechat_infolist_time (infolist, "lag_last_refresh");
-                    irc_upgrade_current_server->last_user_message = weechat_infolist_time (infolist, "last_user_message");
-                    irc_upgrade_current_server->last_away_check = weechat_infolist_time (infolist, "last_away_check");
-                    irc_upgrade_current_server->last_data_purge = weechat_infolist_time (infolist, "last_data_purge");
+                    irc_upgrade_current_server->lag_next_check = dogechat_infolist_time (infolist, "lag_next_check");
+                    irc_upgrade_current_server->lag_last_refresh = dogechat_infolist_time (infolist, "lag_last_refresh");
+                    irc_upgrade_current_server->last_user_message = dogechat_infolist_time (infolist, "last_user_message");
+                    irc_upgrade_current_server->last_away_check = dogechat_infolist_time (infolist, "last_away_check");
+                    irc_upgrade_current_server->last_data_purge = dogechat_infolist_time (infolist, "last_data_purge");
                 }
                 break;
             case IRC_UPGRADE_TYPE_CHANNEL:
                 if (irc_upgrade_current_server)
                 {
                     irc_upgrade_current_channel = irc_channel_new (irc_upgrade_current_server,
-                                                                   weechat_infolist_integer (infolist, "type"),
-                                                                   weechat_infolist_string (infolist, "name"),
+                                                                   dogechat_infolist_integer (infolist, "type"),
+                                                                   dogechat_infolist_string (infolist, "name"),
                                                                    0, 0);
                     if (irc_upgrade_current_channel)
                     {
-                        str = weechat_infolist_string (infolist, "topic");
+                        str = dogechat_infolist_string (infolist, "topic");
                         if (str)
                             irc_channel_set_topic (irc_upgrade_current_channel, str);
-                        str = weechat_infolist_string (infolist, "modes");
+                        str = dogechat_infolist_string (infolist, "modes");
                         if (str)
                             irc_upgrade_current_channel->modes = strdup (str);
-                        irc_upgrade_current_channel->limit = weechat_infolist_integer (infolist, "limit");
-                        str = weechat_infolist_string (infolist, "key");
+                        irc_upgrade_current_channel->limit = dogechat_infolist_integer (infolist, "limit");
+                        str = dogechat_infolist_string (infolist, "key");
                         if (str)
                             irc_upgrade_current_channel->key = strdup (str);
-                        str = weechat_infolist_string (infolist, "join_msg_received");
+                        str = dogechat_infolist_string (infolist, "join_msg_received");
                         if (str)
                         {
-                            items = weechat_string_split (str, ",", 0, 0,
+                            items = dogechat_string_split (str, ",", 0, 0,
                                                           &num_items);
                             if (items)
                             {
                                 for (i = 0; i < num_items; i++)
                                 {
-                                    weechat_hashtable_set (irc_upgrade_current_channel->join_msg_received,
+                                    dogechat_hashtable_set (irc_upgrade_current_channel->join_msg_received,
                                                            items[i], "1");
                                 }
-                                weechat_string_free_split (items);
+                                dogechat_string_free_split (items);
                             }
                         }
-                        irc_upgrade_current_channel->checking_whox = weechat_infolist_integer (infolist, "checking_whox");
-                        str = weechat_infolist_string (infolist, "away_message");
+                        irc_upgrade_current_channel->checking_whox = dogechat_infolist_integer (infolist, "checking_whox");
+                        str = dogechat_infolist_string (infolist, "away_message");
                         if (str)
                             irc_upgrade_current_channel->away_message = strdup (str);
-                        irc_upgrade_current_channel->has_quit_server = weechat_infolist_integer (infolist, "has_quit_server");
-                        irc_upgrade_current_channel->cycle = weechat_infolist_integer (infolist, "cycle");
-                        irc_upgrade_current_channel->part = weechat_infolist_integer (infolist, "part");
-                        irc_upgrade_current_channel->nick_completion_reset = weechat_infolist_integer (infolist, "nick_completion_reset");
+                        irc_upgrade_current_channel->has_quit_server = dogechat_infolist_integer (infolist, "has_quit_server");
+                        irc_upgrade_current_channel->cycle = dogechat_infolist_integer (infolist, "cycle");
+                        irc_upgrade_current_channel->part = dogechat_infolist_integer (infolist, "part");
+                        irc_upgrade_current_channel->nick_completion_reset = dogechat_infolist_integer (infolist, "nick_completion_reset");
                         for (i = 0; i < 2; i++)
                         {
                             index = 0;
@@ -505,7 +505,7 @@ irc_upgrade_read_cb (void *data,
                             {
                                 snprintf (option_name, sizeof (option_name),
                                           "nick_speaking%d_%05d", i, index);
-                                nick = weechat_infolist_string (infolist, option_name);
+                                nick = dogechat_infolist_string (infolist, option_name);
                                 if (!nick)
                                     break;
                                 irc_channel_nick_speaking_add (irc_upgrade_current_channel,
@@ -519,7 +519,7 @@ irc_upgrade_read_cb (void *data,
                         {
                             snprintf (option_name, sizeof (option_name),
                                       "nick_speaking_time_nick_%05d", index);
-                            nick = weechat_infolist_string (infolist, option_name);
+                            nick = dogechat_infolist_string (infolist, option_name);
                             if (!nick)
                                 break;
                             snprintf (option_name, sizeof (option_name),
@@ -527,14 +527,14 @@ irc_upgrade_read_cb (void *data,
                             irc_channel_nick_speaking_time_add (irc_upgrade_current_server,
                                                                 irc_upgrade_current_channel,
                                                                 nick,
-                                                                weechat_infolist_time (infolist,
+                                                                dogechat_infolist_time (infolist,
                                                                                        option_name));
                             index++;
                         }
-                        str = weechat_infolist_string (infolist, "join_smart_filtered");
+                        str = dogechat_infolist_string (infolist, "join_smart_filtered");
                         if (str)
                         {
-                            nicks = weechat_string_split (str, ",", 0, 0,
+                            nicks = dogechat_string_split (str, ",", 0, 0,
                                                           &nicks_count);
                             if (nicks)
                             {
@@ -543,7 +543,7 @@ irc_upgrade_read_cb (void *data,
                                     pos = strchr (nicks[i], ':');
                                     if (pos)
                                     {
-                                        nick_join = weechat_strndup (nicks[i],
+                                        nick_join = dogechat_strndup (nicks[i],
                                                                      pos - nicks[i]);
                                         if (nick_join)
                                         {
@@ -560,7 +560,7 @@ irc_upgrade_read_cb (void *data,
                                         }
                                     }
                                 }
-                                weechat_string_free_split (nicks);
+                                dogechat_string_free_split (nicks);
                             }
                         }
                     }
@@ -571,18 +571,18 @@ irc_upgrade_read_cb (void *data,
                 {
                     ptr_nick = irc_nick_new (irc_upgrade_current_server,
                                              irc_upgrade_current_channel,
-                                             weechat_infolist_string (infolist, "name"),
-                                             weechat_infolist_string (infolist, "host"),
-                                             weechat_infolist_string (infolist, "prefixes"),
-                                             weechat_infolist_integer (infolist, "away"),
-                                             weechat_infolist_string (infolist, "account"),
-                                             weechat_infolist_string (infolist, "realname"));
+                                             dogechat_infolist_string (infolist, "name"),
+                                             dogechat_infolist_string (infolist, "host"),
+                                             dogechat_infolist_string (infolist, "prefixes"),
+                                             dogechat_infolist_integer (infolist, "away"),
+                                             dogechat_infolist_string (infolist, "account"),
+                                             dogechat_infolist_string (infolist, "realname"));
                     if (ptr_nick)
                     {
                         /*
                          * "flags" is not any more in this infolist (since
-                         * WeeChat 0.3.4), but we read it to keep compatibility
-                         * with old WeeChat versions, on /upgrade)
+                         * DogeChat 0.3.4), but we read it to keep compatibility
+                         * with old DogeChat versions, on /upgrade)
                          * We try to restore prefixes with old flags, but
                          * this is approximation, it's not sure we will
                          * restore good prefixes here (a /names on channel
@@ -597,7 +597,7 @@ irc_upgrade_read_cb (void *data,
                          *   #define IRC_NICK_AWAY       64
                          *   #define IRC_NICK_CHANUSER   128
                          */
-                        flags = weechat_infolist_integer (infolist, "flags");
+                        flags = dogechat_infolist_integer (infolist, "flags");
                         if (flags > 0)
                         {
                             /* channel owner */
@@ -658,64 +658,64 @@ irc_upgrade_read_cb (void *data,
                 {
                     ptr_redirect = irc_redirect_new_with_commands (
                         irc_upgrade_current_server,
-                        weechat_infolist_string (infolist, "pattern"),
-                        weechat_infolist_string (infolist, "signal"),
-                        weechat_infolist_integer (infolist, "count"),
-                        weechat_infolist_string (infolist, "string"),
-                        weechat_infolist_integer (infolist, "timeout"),
-                        weechat_infolist_string (infolist, "cmd_start"),
-                        weechat_infolist_string (infolist, "cmd_stop"),
-                        weechat_infolist_string (infolist, "cmd_extra"),
-                        weechat_infolist_string (infolist, "cmd_filter"));
+                        dogechat_infolist_string (infolist, "pattern"),
+                        dogechat_infolist_string (infolist, "signal"),
+                        dogechat_infolist_integer (infolist, "count"),
+                        dogechat_infolist_string (infolist, "string"),
+                        dogechat_infolist_integer (infolist, "timeout"),
+                        dogechat_infolist_string (infolist, "cmd_start"),
+                        dogechat_infolist_string (infolist, "cmd_stop"),
+                        dogechat_infolist_string (infolist, "cmd_extra"),
+                        dogechat_infolist_string (infolist, "cmd_filter"));
                     if (ptr_redirect)
                     {
-                        ptr_redirect->current_count = weechat_infolist_integer (infolist, "current_count");
-                        str = weechat_infolist_string (infolist, "command");
+                        ptr_redirect->current_count = dogechat_infolist_integer (infolist, "current_count");
+                        str = dogechat_infolist_string (infolist, "command");
                         if (str)
                             ptr_redirect->command = strdup (str);
-                        ptr_redirect->assigned_to_command = weechat_infolist_integer (infolist, "assigned_to_command");
-                        ptr_redirect->start_time = weechat_infolist_time (infolist, "start_time");
-                        ptr_redirect->cmd_start_received = weechat_infolist_integer (infolist, "cmd_start_received");
-                        ptr_redirect->cmd_stop_received = weechat_infolist_integer (infolist, "cmd_stop_received");
-                        str = weechat_infolist_string (infolist, "output");
+                        ptr_redirect->assigned_to_command = dogechat_infolist_integer (infolist, "assigned_to_command");
+                        ptr_redirect->start_time = dogechat_infolist_time (infolist, "start_time");
+                        ptr_redirect->cmd_start_received = dogechat_infolist_integer (infolist, "cmd_start_received");
+                        ptr_redirect->cmd_stop_received = dogechat_infolist_integer (infolist, "cmd_stop_received");
+                        str = dogechat_infolist_string (infolist, "output");
                         if (str)
                             ptr_redirect->output = strdup (str);
-                        ptr_redirect->output_size = weechat_infolist_integer (infolist, "output_size");
+                        ptr_redirect->output_size = dogechat_infolist_integer (infolist, "output_size");
                     }
                 }
                 break;
             case IRC_UPGRADE_TYPE_REDIRECT_PATTERN:
                 irc_redirect_pattern_new (
-                    weechat_infolist_string (infolist, "name"),
-                    weechat_infolist_integer (infolist, "temp_pattern"),
-                    weechat_infolist_integer (infolist, "timeout"),
-                    weechat_infolist_string (infolist, "cmd_start"),
-                    weechat_infolist_string (infolist, "cmd_stop"),
-                    weechat_infolist_string (infolist, "cmd_extra"));
+                    dogechat_infolist_string (infolist, "name"),
+                    dogechat_infolist_integer (infolist, "temp_pattern"),
+                    dogechat_infolist_integer (infolist, "timeout"),
+                    dogechat_infolist_string (infolist, "cmd_start"),
+                    dogechat_infolist_string (infolist, "cmd_stop"),
+                    dogechat_infolist_string (infolist, "cmd_extra"));
                 break;
             case IRC_UPGRADE_TYPE_NOTIFY:
                 if (irc_upgrade_current_server)
                 {
                     ptr_notify = irc_notify_search (irc_upgrade_current_server,
-                                                    weechat_infolist_string (infolist, "nick"));
+                                                    dogechat_infolist_string (infolist, "nick"));
                     if (ptr_notify)
                     {
-                        ptr_notify->is_on_server = weechat_infolist_integer (infolist, "is_on_server");
-                        str = weechat_infolist_string (infolist, "away_message");
+                        ptr_notify->is_on_server = dogechat_infolist_integer (infolist, "is_on_server");
+                        str = dogechat_infolist_string (infolist, "away_message");
                         if (str)
                             ptr_notify->away_message = strdup (str);
                     }
                 }
                 break;
             case IRC_UPGRADE_TYPE_RAW_MESSAGE:
-                irc_raw_message_add_to_list (weechat_infolist_time (infolist, "date"),
-                                             weechat_infolist_string (infolist, "prefix"),
-                                             weechat_infolist_string (infolist, "message"));
+                irc_raw_message_add_to_list (dogechat_infolist_time (infolist, "date"),
+                                             dogechat_infolist_string (infolist, "prefix"),
+                                             dogechat_infolist_string (infolist, "message"));
                 break;
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -734,11 +734,11 @@ irc_upgrade_load ()
 
     irc_upgrade_set_buffer_callbacks ();
 
-    upgrade_file = weechat_upgrade_new (IRC_UPGRADE_FILENAME, 0);
+    upgrade_file = dogechat_upgrade_new (IRC_UPGRADE_FILENAME, 0);
     if (!upgrade_file)
         return 0;
-    rc = weechat_upgrade_read (upgrade_file, &irc_upgrade_read_cb, NULL);
-    weechat_upgrade_close (upgrade_file);
+    rc = dogechat_upgrade_read (upgrade_file, &irc_upgrade_read_cb, NULL);
+    dogechat_upgrade_close (upgrade_file);
 
     return rc;
 }

@@ -3,7 +3,7 @@
 // DO NOT EDIT BY HAND!
 //
 [[command_script_script]]
-[command]*`script`* WeeChat Skripten-Manager::
+[command]*`script`* DogeChat Skripten-Manager::
 
 ----
 /script  list [-o|-i]
@@ -42,7 +42,7 @@ Im Skript-Buffer, werden folgende Statusangaben für ein Skript angezeigt:
   | | | | | obsolete (neue Version verfügbar)
   | | | | Skript wird ausgeführt (geladen)
   | | | gehalten
-  | | Skript wird beim Start, von Weechat, automatisch gestartet
+  | | Skript wird beim Start, von Dogechat, automatisch gestartet
   | Skript ist installiert (wird aber nicht ausgeführt)
   es wird empfohlen dieses Skript zu installieren
 

@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -32,7 +32,7 @@
 #endif /* LIBGNUTLS_VERSION_NUMBER >= 0x020a01 */
 #endif /* HAVE_GNUTLS */
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-sasl.h"
 #include "irc-server.h"
@@ -71,7 +71,7 @@ irc_sasl_mechanism_plain (const char *sasl_username, const char *sasl_password)
 
         answer_base64 = malloc (length * 4);
         if (answer_base64)
-            weechat_string_encode_base64 (string, length - 1, answer_base64);
+            dogechat_string_encode_base64 (string, length - 1, answer_base64);
 
         free (string);
     }
@@ -88,7 +88,7 @@ irc_sasl_mechanism_plain (const char *sasl_username, const char *sasl_password)
 char *
 irc_sasl_get_key_content (struct t_irc_server *server, const char *sasl_key)
 {
-    const char *weechat_dir;
+    const char *dogechat_dir;
     char *key_path1, *key_path2, *content;
 
     if (!sasl_key)
@@ -96,20 +96,20 @@ irc_sasl_get_key_content (struct t_irc_server *server, const char *sasl_key)
 
     content = NULL;
 
-    weechat_dir = weechat_info_get ("weechat_dir", "");
-    key_path1 = weechat_string_replace (sasl_key, "%h", weechat_dir);
+    dogechat_dir = dogechat_info_get ("dogechat_dir", "");
+    key_path1 = dogechat_string_replace (sasl_key, "%h", dogechat_dir);
     key_path2 = (key_path1) ?
-        weechat_string_expand_home (key_path1) : NULL;
+        dogechat_string_expand_home (key_path1) : NULL;
 
     if (key_path2)
-        content = weechat_file_get_content (key_path2);
+        content = dogechat_file_get_content (key_path2);
 
     if (!content)
     {
-        weechat_printf (
+        dogechat_printf (
             server->buffer,
             _("%s%s: unable to read private key in file \"%s\""),
-            weechat_prefix ("error"),
+            dogechat_prefix ("error"),
             IRC_PLUGIN_NAME,
             (key_path2) ? key_path2 : ((key_path1) ? key_path1 : sasl_key));
     }
@@ -173,7 +173,7 @@ irc_sasl_mechanism_ecdsa_nist256p_challenge (struct t_irc_server *server,
         data = malloc (strlen (data_base64) + 1);
         if (!data)
             return NULL;
-        length_data = weechat_string_decode_base64 (data_base64, data);
+        length_data = dogechat_string_decode_base64 (data_base64, data);
 
         /* read file with private key */
         str_privkey = irc_sasl_get_key_content (server, sasl_key);
@@ -193,10 +193,10 @@ irc_sasl_mechanism_ecdsa_nist256p_challenge (struct t_irc_server *server,
         free (str_privkey);
         if (ret != GNUTLS_E_SUCCESS)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%sgnutls: invalid private key file: error %d %s"),
-                weechat_prefix ("error"),
+                dogechat_prefix ("error"),
                 ret,
                 gnutls_strerror (ret));
             gnutls_x509_privkey_deinit (x509_privkey);
@@ -219,13 +219,13 @@ irc_sasl_mechanism_ecdsa_nist256p_challenge (struct t_irc_server *server,
                 pubkey_base64 = malloc ((x.size + 1 + 1) * 4);
                 if (pubkey_base64)
                 {
-                    weechat_string_encode_base64 (pubkey, x.size + 1,
+                    dogechat_string_encode_base64 (pubkey, x.size + 1,
                                                   pubkey_base64);
-                    weechat_printf (
+                    dogechat_printf (
                         server->buffer,
                         _("%s%s: signing the challenge with ECC public key: "
                           "%s"),
-                        weechat_prefix ("network"),
+                        dogechat_prefix ("network"),
                         IRC_PLUGIN_NAME,
                         pubkey_base64);
                     free (pubkey_base64);
@@ -242,10 +242,10 @@ irc_sasl_mechanism_ecdsa_nist256p_challenge (struct t_irc_server *server,
         ret = gnutls_privkey_import_x509 (privkey, x509_privkey, 0); /* gnutls >= 2.11.0 */
         if (ret != GNUTLS_E_SUCCESS)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%sgnutls: unable to import the private key: error %d %s"),
-                weechat_prefix ("error"),
+                dogechat_prefix ("error"),
                 ret,
                 gnutls_strerror (ret));
             gnutls_x509_privkey_deinit (x509_privkey);
@@ -260,10 +260,10 @@ irc_sasl_mechanism_ecdsa_nist256p_challenge (struct t_irc_server *server,
                                         &decoded_data, &signature);
         if (ret != GNUTLS_E_SUCCESS)
         {
-            weechat_printf (
+            dogechat_printf (
                 server->buffer,
                 _("%sgnutls: unable to sign the hashed data: error %d %s"),
-                weechat_prefix ("error"),
+                dogechat_prefix ("error"),
                 ret,
                 gnutls_strerror (ret));
             gnutls_x509_privkey_deinit (x509_privkey);
@@ -289,7 +289,7 @@ irc_sasl_mechanism_ecdsa_nist256p_challenge (struct t_irc_server *server,
     {
         answer_base64 = malloc ((length + 1) * 4);
         if (answer_base64)
-            weechat_string_encode_base64 (string, length, answer_base64);
+            dogechat_string_encode_base64 (string, length, answer_base64);
         free (string);
     }
 
@@ -302,10 +302,10 @@ irc_sasl_mechanism_ecdsa_nist256p_challenge (struct t_irc_server *server,
     (void) sasl_username;
     (void) sasl_key;
 
-    weechat_printf (server->buffer,
+    dogechat_printf (server->buffer,
                     _("%sgnutls: version >= 3.0.21 is required for SASL "
                       "\"ecdsa-nist256p-challenge\""),
-                    weechat_prefix ("error"));
+                    dogechat_prefix ("error"));
 
     return NULL;
 #endif /* defined(HAVE_GNUTLS) && (LIBGNUTLS_VERSION_NUMBER >= 0x030015) */
@@ -343,7 +343,7 @@ irc_sasl_dh (const char *data_base64,
 
     /* decode data */
     data = malloc (strlen (data_base64) + 1);
-    length_data = weechat_string_decode_base64 (data_base64, data);
+    length_data = dogechat_string_decode_base64 (data_base64, data);
     ptr_data = (unsigned char *)data;
 
     /* extract prime number */
@@ -496,7 +496,7 @@ irc_sasl_mechanism_dh_blowfish (const char *data_base64,
     /* encode answer to base64 */
     answer_base64 = malloc ((length_answer + 1) * 4);
     if (answer_base64)
-        weechat_string_encode_base64 (answer, length_answer, answer_base64);
+        dogechat_string_encode_base64 (answer, length_answer, answer_base64);
 
 bfend:
     if (secret_bin)
@@ -618,7 +618,7 @@ irc_sasl_mechanism_dh_aes (const char *data_base64,
     /* encode answer to base64 */
     answer_base64 = malloc ((length_answer + 1) * 4);
     if (answer_base64)
-        weechat_string_encode_base64 (answer, length_answer, answer_base64);
+        dogechat_string_encode_base64 (answer, length_answer, answer_base64);
 
 aesend:
     if (secret_bin)

@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_GUI_BUFFER_H
-#define WEECHAT_GUI_BUFFER_H 1
+#ifndef DOGECHAT_GUI_BUFFER_H
+#define DOGECHAT_GUI_BUFFER_H 1
 
 #include <limits.h>
 #include <regex.h>
@@ -45,7 +45,7 @@ enum t_gui_buffer_notify
     GUI_BUFFER_NUM_NOTIFY,
 };
 
-#define GUI_BUFFER_MAIN "weechat"
+#define GUI_BUFFER_MAIN "dogechat"
 
 #define GUI_BUFFERS_MAX 10000
 
@@ -72,8 +72,8 @@ struct t_gui_input_undo
 
 struct t_gui_buffer
 {
-    struct t_weechat_plugin *plugin;   /* plugin which created this buffer  */
-                                       /* (NULL for a WeeChat buffer)       */
+    struct t_dogechat_plugin *plugin;   /* plugin which created this buffer  */
+                                       /* (NULL for a DogeChat buffer)       */
     /*
      * when upgrading, plugins are not loaded, so we use next variable
      * to store plugin name, then restore plugin pointer when plugin is
@@ -239,7 +239,7 @@ extern const char *gui_buffer_get_short_name (struct t_gui_buffer *buffer);
 extern void gui_buffer_build_full_name (struct t_gui_buffer *buffer);
 extern void gui_buffer_notify_set_all ();
 extern void gui_buffer_input_buffer_init (struct t_gui_buffer *buffer);
-extern struct t_gui_buffer *gui_buffer_new (struct t_weechat_plugin *plugin,
+extern struct t_gui_buffer *gui_buffer_new (struct t_dogechat_plugin *plugin,
                                             const char *name,
                                             int (*input_callback)(void *data,
                                                                   struct t_gui_buffer *buffer,
@@ -256,7 +256,7 @@ extern int gui_buffer_match_list_split (struct t_gui_buffer *buffer,
 extern int gui_buffer_match_list (struct t_gui_buffer *buffer,
                                   const char *string);
 extern void gui_buffer_set_plugin_for_upgrade (char *name,
-                                               struct t_weechat_plugin *plugin);
+                                               struct t_dogechat_plugin *plugin);
 extern int gui_buffer_property_in_list (char *properties[], char *property);
 extern int gui_buffer_get_integer (struct t_gui_buffer *buffer,
                                    const char *property);
@@ -344,4 +344,4 @@ extern int gui_buffer_add_to_infolist (struct t_infolist *infolist,
 extern void gui_buffer_dump_hexa (struct t_gui_buffer *buffer);
 extern void gui_buffer_print_log ();
 
-#endif /* WEECHAT_GUI_BUFFER_H */
+#endif /* DOGECHAT_GUI_BUFFER_H */

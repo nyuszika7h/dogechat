@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -33,7 +33,7 @@
 #include <time.h>
 #include <netdb.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "xfer.h"
 #include "xfer-buffer.h"
 #include "xfer-chat.h"
@@ -57,12 +57,12 @@ xfer_network_create_pipe (struct t_xfer *xfer)
 
     if (pipe (child_pipe) < 0)
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: unable to create pipe: error %d %s"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                         errno, strerror (errno));
         xfer_close (xfer, XFER_STATUS_FAILED);
-        xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+        xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
         return 0;
     }
 
@@ -116,52 +116,52 @@ xfer_network_child_read_cb (void *arg_xfer, int fd)
         {
             /* errors for sender */
             case XFER_ERROR_READ_LOCAL:
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: unable to read local file"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME);
                 break;
             case XFER_ERROR_SEND_BLOCK:
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: unable to send block to receiver"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME);
                 break;
             case XFER_ERROR_READ_ACK:
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: unable to read ACK from receiver"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME);
                 break;
             /* errors for receiver */
             case XFER_ERROR_CONNECT_SENDER:
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: unable to connect to sender"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME);
                 break;
             case XFER_ERROR_RECV_BLOCK:
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: unable to receive block from sender"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME);
                 break;
             case XFER_ERROR_WRITE_LOCAL:
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: unable to write local file"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME);
                 break;
             case XFER_ERROR_SEND_ACK:
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: unable to send ACK to sender"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME);
                 break;
             case XFER_ERROR_HASH_MISMATCH:
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: wrong CRC32 for file %s"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                                 xfer->filename);
                 xfer->hash_status = XFER_HASH_STATUS_MISMATCH;
                 break;
             case XFER_ERROR_HASH_RESUME_ERROR:
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: CRC32 error while resuming"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME);
                 xfer->hash_status = XFER_HASH_STATUS_RESUME_ERROR;
                 break;
         }
@@ -171,7 +171,7 @@ xfer_network_child_read_cb (void *arg_xfer, int fd)
         {
             case XFER_STATUS_CONNECTING:
                 xfer->status = XFER_STATUS_CONNECTING;
-                xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+                xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
                 break;
             case XFER_STATUS_ACTIVE:
                 if (xfer->status == XFER_STATUS_CONNECTING)
@@ -180,32 +180,32 @@ xfer_network_child_read_cb (void *arg_xfer, int fd)
                     xfer->status = XFER_STATUS_ACTIVE;
                     xfer->start_transfer = time (NULL);
                     xfer->last_check_time = time (NULL);
-                    xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+                    xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
                 }
                 else
-                    xfer_buffer_refresh (WEECHAT_HOTLIST_LOW);
+                    xfer_buffer_refresh (DOGECHAT_HOTLIST_LOW);
                 break;
             case XFER_STATUS_DONE:
                 xfer_close (xfer, XFER_STATUS_DONE);
-                xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+                xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
                 break;
             case XFER_STATUS_FAILED:
                 xfer_close (xfer, XFER_STATUS_FAILED);
-                xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+                xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
                 break;
             case XFER_STATUS_HASHING:
                 xfer->status = XFER_STATUS_HASHING;
-                xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+                xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
                 break;
             case XFER_STATUS_HASHED:
                 if (bufpipe[1] - '0' == XFER_NO_ERROR)
                     xfer->hash_status = XFER_HASH_STATUS_MATCH;
-                xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+                xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
                 break;
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -226,11 +226,11 @@ xfer_network_send_file_fork (struct t_xfer *xfer)
     switch (pid = fork ())
     {
         case -1:  /* fork failed */
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: unable to fork"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME);
             xfer_close (xfer, XFER_STATUS_FAILED);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             return;
         case 0:  /* child process */
             rc = setuid (getuid ());
@@ -250,7 +250,7 @@ xfer_network_send_file_fork (struct t_xfer *xfer)
             _exit (EXIT_SUCCESS);
     }
 
-    weechat_printf (NULL,
+    dogechat_printf (NULL,
                     _("%s: sending file to %s (%s, %s.%s), "
                       "name: %s (local filename: %s), %llu bytes (protocol: %s)"),
                     XFER_PLUGIN_NAME,
@@ -267,7 +267,7 @@ xfer_network_send_file_fork (struct t_xfer *xfer)
     xfer->child_pid = pid;
     close (xfer->child_write);
     xfer->child_write = -1;
-    xfer->hook_fd = weechat_hook_fd (xfer->child_read,
+    xfer->hook_fd = dogechat_hook_fd (xfer->child_read,
                                      1, 0, 0,
                                      &xfer_network_child_read_cb,
                                      xfer);
@@ -297,11 +297,11 @@ xfer_network_recv_file_fork (struct t_xfer *xfer)
     switch (pid = fork ())
     {
         case -1:  /* fork failed */
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: unable to fork"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME);
             xfer_close (xfer, XFER_STATUS_FAILED);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             return;
         case 0:  /* child process */
             rc = setuid (getuid ());
@@ -325,7 +325,7 @@ xfer_network_recv_file_fork (struct t_xfer *xfer)
     xfer->child_pid = pid;
     close (xfer->child_write);
     xfer->child_write = -1;
-    xfer->hook_fd = weechat_hook_fd (xfer->child_read,
+    xfer->hook_fd = dogechat_hook_fd (xfer->child_read,
                                      1, 0, 0,
                                      &xfer_network_child_read_cb,
                                      xfer);
@@ -387,20 +387,20 @@ xfer_network_fd_cb (void *arg_xfer, int fd)
             sock = accept (xfer->sock,
                            (struct sockaddr *) &addr, &length);
             error = errno;
-            weechat_unhook (xfer->hook_fd);
+            dogechat_unhook (xfer->hook_fd);
             xfer->hook_fd = NULL;
             close (xfer->sock);
             xfer->sock = -1;
             if (sock < 0)
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: unable to create socket for sending "
                                   "file: error %d %s"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                                 error, strerror (error));
                 xfer_close (xfer, XFER_STATUS_FAILED);
-                xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
-                return WEECHAT_RC_OK;
+                xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
+                return DOGECHAT_RC_OK;
             }
             xfer->sock = sock;
             flags = fcntl (xfer->sock, F_GETFL);
@@ -408,14 +408,14 @@ xfer_network_fd_cb (void *arg_xfer, int fd)
                 flags = 0;
             if (fcntl (xfer->sock, F_SETFL, flags | O_NONBLOCK) == -1)
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: unable to set option \"nonblock\" "
                                   "for socket: error %d %s"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                                 errno, strerror (errno));
                 xfer_close (xfer, XFER_STATUS_FAILED);
-                xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
-                return WEECHAT_RC_OK;
+                xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
+                return DOGECHAT_RC_OK;
             }
             error = getnameinfo ((struct sockaddr *)&addr, length, str_address,
                                  sizeof (str_address), NULL, 0, NI_NUMERICHOST);
@@ -428,7 +428,7 @@ xfer_network_fd_cb (void *arg_xfer, int fd)
                                      str_address);
             xfer->status = XFER_STATUS_ACTIVE;
             xfer->start_transfer = time (NULL);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             xfer_network_send_file_fork (xfer);
         }
     }
@@ -440,20 +440,20 @@ xfer_network_fd_cb (void *arg_xfer, int fd)
             length = sizeof (addr);
             sock = accept (xfer->sock, (struct sockaddr *) &addr, &length);
             error = errno;
-            weechat_unhook (xfer->hook_fd);
+            dogechat_unhook (xfer->hook_fd);
             xfer->hook_fd = NULL;
             close (xfer->sock);
             xfer->sock = -1;
             if (sock < 0)
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: unable to create socket for sending "
                                   "file: error %d %s"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                                 error, strerror (error));
                 xfer_close (xfer, XFER_STATUS_FAILED);
-                xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
-                return WEECHAT_RC_OK;
+                xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
+                return DOGECHAT_RC_OK;
             }
             xfer->sock = sock;
             flags = fcntl (xfer->sock, F_GETFL);
@@ -461,14 +461,14 @@ xfer_network_fd_cb (void *arg_xfer, int fd)
                 flags = 0;
             if (fcntl (xfer->sock, F_SETFL, flags | O_NONBLOCK) == -1)
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%s%s: unable to set option \"nonblock\" "
                                   "for socket: error %d %s"),
-                                weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                                dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                                 errno, strerror (errno));
                 xfer_close (xfer, XFER_STATUS_FAILED);
-                xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
-                return WEECHAT_RC_OK;
+                xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
+                return DOGECHAT_RC_OK;
             }
             error = getnameinfo ((struct sockaddr *)&addr, length, str_address,
                                  sizeof (str_address), NULL, 0, NI_NUMERICHOST);
@@ -480,8 +480,8 @@ xfer_network_fd_cb (void *arg_xfer, int fd)
             xfer_set_remote_address (xfer, (struct sockaddr *)&addr, length,
                                      str_address);
             xfer->status = XFER_STATUS_ACTIVE;
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
-            xfer->hook_fd = weechat_hook_fd (xfer->sock,
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
+            xfer->hook_fd = dogechat_hook_fd (xfer->sock,
                                              1, 0, 0,
                                              &xfer_chat_recv_cb,
                                              xfer);
@@ -489,7 +489,7 @@ xfer_network_fd_cb (void *arg_xfer, int fd)
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -510,15 +510,15 @@ xfer_network_timer_cb (void *arg_xfer, int remaining_calls)
     if ((xfer->status == XFER_STATUS_WAITING)
         || (xfer->status == XFER_STATUS_CONNECTING))
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: timeout for \"%s\" with %s"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                         xfer->filename, xfer->remote_nick);
         xfer_close (xfer, XFER_STATUS_FAILED);
-        xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+        xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -539,11 +539,11 @@ xfer_network_connect_chat_recv_cb (void *data, int status, int gnutls_rc,
 
     xfer = (struct t_xfer*)data;
 
-    weechat_unhook (xfer->hook_connect);
+    dogechat_unhook (xfer->hook_connect);
     xfer->hook_connect = NULL;
 
     /* connection OK? */
-    if (status == WEECHAT_HOOK_CONNECT_OK)
+    if (status == DOGECHAT_HOOK_CONNECT_OK)
     {
         xfer->sock = sock;
 
@@ -552,100 +552,100 @@ xfer_network_connect_chat_recv_cb (void *data, int status, int gnutls_rc,
             flags = 0;
         if (fcntl (xfer->sock, F_SETFL, flags | O_NONBLOCK) == -1)
         {
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: unable to set option \"nonblock\" "
                               "for socket: error %d %s"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                             errno, strerror (errno));
             close (xfer->sock);
             xfer->sock = -1;
             xfer_close (xfer, XFER_STATUS_FAILED);
-            xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
-            return WEECHAT_RC_OK;
+            xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
+            return DOGECHAT_RC_OK;
         }
 
-        xfer->hook_fd = weechat_hook_fd (xfer->sock,
+        xfer->hook_fd = dogechat_hook_fd (xfer->sock,
                                          1, 0, 0,
                                          &xfer_chat_recv_cb,
                                          xfer);
 
         xfer_chat_open_buffer (xfer);
         xfer->status = XFER_STATUS_ACTIVE;
-        xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+        xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
 
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
     /* connection error */
     switch (status)
     {
-        case WEECHAT_HOOK_CONNECT_ADDRESS_NOT_FOUND:
-            weechat_printf (NULL,
+        case DOGECHAT_HOOK_CONNECT_ADDRESS_NOT_FOUND:
+            dogechat_printf (NULL,
                             (xfer->proxy && xfer->proxy[0]) ?
                             _("%s%s: proxy address \"%s\" not found") :
                             _("%s%s: address \"%s\" not found"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                             xfer->remote_address_str);
             break;
-        case WEECHAT_HOOK_CONNECT_IP_ADDRESS_NOT_FOUND:
-            weechat_printf (NULL,
+        case DOGECHAT_HOOK_CONNECT_IP_ADDRESS_NOT_FOUND:
+            dogechat_printf (NULL,
                             (xfer->proxy && xfer->proxy[0]) ?
                             _("%s%s: proxy IP address not found") :
                             _("%s%s: IP address not found"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME);
             break;
-        case WEECHAT_HOOK_CONNECT_CONNECTION_REFUSED:
-            weechat_printf (NULL,
+        case DOGECHAT_HOOK_CONNECT_CONNECTION_REFUSED:
+            dogechat_printf (NULL,
                             (xfer->proxy && xfer->proxy[0]) ?
                             _("%s%s: proxy connection refused") :
                             _("%s%s: connection refused"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME);
             break;
-        case WEECHAT_HOOK_CONNECT_PROXY_ERROR:
-            weechat_printf (NULL,
+        case DOGECHAT_HOOK_CONNECT_PROXY_ERROR:
+            dogechat_printf (NULL,
                             _("%s%s: proxy fails to establish connection to "
                               "server (check username/password if used and if "
                               "server address/port is allowed by proxy)"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME);
             break;
-        case WEECHAT_HOOK_CONNECT_LOCAL_HOSTNAME_ERROR:
-            weechat_printf (NULL,
+        case DOGECHAT_HOOK_CONNECT_LOCAL_HOSTNAME_ERROR:
+            dogechat_printf (NULL,
                             _("%s%s: unable to set local hostname/IP"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME);
             break;
-        case WEECHAT_HOOK_CONNECT_MEMORY_ERROR:
-            weechat_printf (NULL,
+        case DOGECHAT_HOOK_CONNECT_MEMORY_ERROR:
+            dogechat_printf (NULL,
                             _("%s%s: not enough memory"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME);
             break;
-        case WEECHAT_HOOK_CONNECT_TIMEOUT:
-            weechat_printf (NULL,
+        case DOGECHAT_HOOK_CONNECT_TIMEOUT:
+            dogechat_printf (NULL,
                             _("%s%s: timeout"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME);
             break;
-        case WEECHAT_HOOK_CONNECT_SOCKET_ERROR:
-            weechat_printf (NULL,
+        case DOGECHAT_HOOK_CONNECT_SOCKET_ERROR:
+            dogechat_printf (NULL,
                             _("%s%s: unable to create socket"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME);
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME);
             break;
         default:
-            weechat_printf (NULL,
+            dogechat_printf (NULL,
                             _("%s%s: unable to connect: unexpected error (%d)"),
-                            weechat_prefix ("error"), XFER_PLUGIN_NAME,
+                            dogechat_prefix ("error"), XFER_PLUGIN_NAME,
                             status);
             break;
     }
     if (error && error[0])
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: error: %s"),
-                        weechat_prefix ("error"), XFER_PLUGIN_NAME, error);
+                        dogechat_prefix ("error"), XFER_PLUGIN_NAME, error);
     }
 
     xfer_close (xfer, XFER_STATUS_FAILED);
-    xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+    xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -688,15 +688,15 @@ xfer_network_connect (struct t_xfer *xfer)
         if (fcntl (xfer->sock, F_SETFL, flags) == -1)
             return 0;
 
-        xfer->hook_fd = weechat_hook_fd (xfer->sock,
+        xfer->hook_fd = dogechat_hook_fd (xfer->sock,
                                          1, 0, 0,
                                          &xfer_network_fd_cb,
                                          xfer);
 
         /* add timeout */
-        if (weechat_config_integer (xfer_config_network_timeout) > 0)
+        if (dogechat_config_integer (xfer_config_network_timeout) > 0)
         {
-            xfer->hook_timer = weechat_hook_timer (weechat_config_integer (xfer_config_network_timeout) * 1000,
+            xfer->hook_timer = dogechat_hook_timer (dogechat_config_integer (xfer_config_network_timeout) * 1000,
                                                    0, 1,
                                                    &xfer_network_timer_cb,
                                                    xfer);
@@ -706,7 +706,7 @@ xfer_network_connect (struct t_xfer *xfer)
     /* for chat receiving, connect to listening host */
     if (xfer->type == XFER_TYPE_CHAT_RECV)
     {
-        xfer->hook_connect = weechat_hook_connect (xfer->proxy,
+        xfer->hook_connect = dogechat_hook_connect (xfer->proxy,
                                                    xfer->remote_address_str,
                                                    xfer->port, 1, 0, NULL, NULL,
                                                    0, "NONE", NULL,
@@ -738,7 +738,7 @@ xfer_network_connect_init (struct t_xfer *xfer)
 
         xfer->status = XFER_STATUS_CONNECTING;
     }
-    xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+    xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
 }
 
 /*
@@ -752,7 +752,7 @@ xfer_network_accept (struct t_xfer *xfer)
     {
         xfer->status = XFER_STATUS_CONNECTING;
         xfer_send_signal (xfer, "xfer_resume_ready");
-        xfer_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+        xfer_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
     }
     else
         xfer_network_connect_init (xfer);

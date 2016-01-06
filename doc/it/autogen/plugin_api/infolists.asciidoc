@@ -12,7 +12,7 @@
 
 | irc | irc_channel | elenco dei canali per un server IRC | puntatore al canale (opzionale) | server,canale (canale è opzionale)
 
-| irc | irc_color_weechat | mapping between IRC color codes and WeeChat color names | - | -
+| irc | irc_color_dogechat | mapping between IRC color codes and DogeChat color names | - | -
 
 | irc | irc_ignore | elenco di ignore IRC | puntatore all'ignore (opzionale) | -
 
@@ -40,39 +40,39 @@
 
 | tcl | tcl_script | elenco degli script | puntatore allo script (opzionale) | script name (wildcard "*" is allowed) (optional)
 
-| weechat | bar | elenco delle barre | puntatore alla barra (opzionale) | bar name (wildcard "*" is allowed) (optional)
+| dogechat | bar | elenco delle barre | puntatore alla barra (opzionale) | bar name (wildcard "*" is allowed) (optional)
 
-| weechat | bar_item | elenco degli elementi barra | puntatore all'elemento della barra (opzionale) | bar item name (wildcard "*" is allowed) (optional)
+| dogechat | bar_item | elenco degli elementi barra | puntatore all'elemento della barra (opzionale) | bar item name (wildcard "*" is allowed) (optional)
 
-| weechat | bar_window | elenco delle finestre barra | puntatore alla finestra della barra (opzionale) | -
+| dogechat | bar_window | elenco delle finestre barra | puntatore alla finestra della barra (opzionale) | -
 
-| weechat | buffer | elenco dei buffer | puntatore al buffer (opzionale) | buffer name (wildcard "*" is allowed) (optional)
+| dogechat | buffer | elenco dei buffer | puntatore al buffer (opzionale) | buffer name (wildcard "*" is allowed) (optional)
 
-| weechat | buffer_lines | righe di un buffer | puntatore al buffer | -
+| dogechat | buffer_lines | righe di un buffer | puntatore al buffer | -
 
-| weechat | filter | elenco dei filtri | - | filter name (wildcard "*" is allowed) (optional)
+| dogechat | filter | elenco dei filtri | - | filter name (wildcard "*" is allowed) (optional)
 
-| weechat | history | cronologia dei comandi | puntatore al buffer (se non impostato, restituisce la cronologia globale) (opzionale) | -
+| dogechat | history | cronologia dei comandi | puntatore al buffer (se non impostato, restituisce la cronologia globale) (opzionale) | -
 
-| weechat | hook | elenco di hook | puntatore all'hook (opzionale) | type,arguments (type is command/timer/.., arguments to get only some hooks (wildcard "*" is allowed), both are optional)
+| dogechat | hook | elenco di hook | puntatore all'hook (opzionale) | type,arguments (type is command/timer/.., arguments to get only some hooks (wildcard "*" is allowed), both are optional)
 
-| weechat | hotlist | elenco dei buffer nella hotlist | - | -
+| dogechat | hotlist | elenco dei buffer nella hotlist | - | -
 
-| weechat | key | elenco di tasti associati | - | contesto ("default", "search", "cursor" o "mouse") (opzionale)
+| dogechat | key | elenco di tasti associati | - | contesto ("default", "search", "cursor" o "mouse") (opzionale)
 
-| weechat | layout | elenco dei layout | - | -
+| dogechat | layout | elenco dei layout | - | -
 
-| weechat | nicklist | nick nella lista nick per un buffer | puntatore al buffer | nick_xxx o group_xxx per ottenere solo xxx di nick/group (opzionale)
+| dogechat | nicklist | nick nella lista nick per un buffer | puntatore al buffer | nick_xxx o group_xxx per ottenere solo xxx di nick/group (opzionale)
 
-| weechat | option | elenco delle opzioni | - | option name (wildcard "*" is allowed) (optional)
+| dogechat | option | elenco delle opzioni | - | option name (wildcard "*" is allowed) (optional)
 
-| weechat | plugin | elenco dei plugin | puntatore al plugin (opzionale) | plugin name (wildcard "*" is allowed) (optional)
+| dogechat | plugin | elenco dei plugin | puntatore al plugin (opzionale) | plugin name (wildcard "*" is allowed) (optional)
 
-| weechat | proxy | elenco dei proxy | puntatore al proxy (opzionale) | proxy name (wildcard "*" is allowed) (optional)
+| dogechat | proxy | elenco dei proxy | puntatore al proxy (opzionale) | proxy name (wildcard "*" is allowed) (optional)
 
-| weechat | url_options | opzioni per la URL | - | -
+| dogechat | url_options | opzioni per la URL | - | -
 
-| weechat | window | elenco delle finestre | puntatore alla finestra (opzionale) | "current" per la finestra corrente o un numero della finestra (opzionale)
+| dogechat | window | elenco delle finestre | puntatore alla finestra (opzionale) | "current" per la finestra corrente o un numero della finestra (opzionale)
 
 | xfer | xfer | elenco di xfer | puntatore a xfer (opzionale) | -
 

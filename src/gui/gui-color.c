@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -33,12 +33,12 @@
 #include <ctype.h>
 #include <limits.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-hashtable.h"
-#include "../core/wee-list.h"
-#include "../core/wee-string.h"
-#include "../core/wee-utf8.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-hashtable.h"
+#include "../core/doge-list.h"
+#include "../core/doge-string.h"
+#include "../core/doge-utf8.h"
 #include "../plugins/plugin.h"
 #include "gui-color.h"
 #include "gui-chat.h"
@@ -50,7 +50,7 @@ struct t_gui_color *gui_color[GUI_COLOR_NUM_COLORS]; /* GUI colors          */
 /* palette colors and aliases */
 struct t_hashtable *gui_color_hash_palette_color = NULL;
 struct t_hashtable *gui_color_hash_palette_alias = NULL;
-struct t_weelist *gui_color_list_with_alias = NULL;
+struct t_dogelist *gui_color_list_with_alias = NULL;
 
 /* terminal colors */
 int gui_color_term256[256] =
@@ -157,8 +157,8 @@ gui_color_search_config (const char *color_name)
     if (!color_name)
         return NULL;
 
-    /* search in weechat.conf colors (example: "chat_delimiters") */
-    for (ptr_option = weechat_config_section_color->options;
+    /* search in dogechat.conf colors (example: "chat_delimiters") */
+    for (ptr_option = dogechat_config_section_color->options;
          ptr_option; ptr_option = ptr_option->next_option)
     {
         if (string_strcasecmp (ptr_option->name, color_name) == 0)
@@ -558,7 +558,7 @@ gui_color_convert_rgb_to_term (int rgb, int limit)
 }
 
 /*
- * Removes WeeChat color codes from a message.
+ * Removes DogeChat color codes from a message.
  *
  * If replacement is not NULL and not empty, it is used to replace color codes
  * by first char of replacement (and next chars in string are NOT removed).
@@ -751,7 +751,7 @@ gui_color_decode (const char *string, const char *replacement)
 }
 
 /*
- * Converts ANSI color codes to WeeChat colors (or removes them).
+ * Converts ANSI color codes to DogeChat colors (or removes them).
  *
  * This callback is called by gui_color_decode_ansi, it must not be called
  * directly.
@@ -954,7 +954,7 @@ end:
 }
 
 /*
- * Converts ANSI color codes to WeeChat colors (or removes them).
+ * Converts ANSI color codes to DogeChat colors (or removes them).
  *
  * Note: result must be freed after use.
  */
@@ -1187,8 +1187,8 @@ gui_color_palette_alloc_structs ()
     if (!gui_color_hash_palette_color)
     {
         gui_color_hash_palette_color = hashtable_new (32,
-                                                      WEECHAT_HASHTABLE_STRING,
-                                                      WEECHAT_HASHTABLE_POINTER,
+                                                      DOGECHAT_HASHTABLE_STRING,
+                                                      DOGECHAT_HASHTABLE_POINTER,
                                                       NULL,
                                                       NULL);
         gui_color_hash_palette_color->callback_free_value = &gui_color_palette_free_value_cb;
@@ -1196,14 +1196,14 @@ gui_color_palette_alloc_structs ()
     if (!gui_color_hash_palette_alias)
     {
         gui_color_hash_palette_alias = hashtable_new (32,
-                                                      WEECHAT_HASHTABLE_STRING,
-                                                      WEECHAT_HASHTABLE_INTEGER,
+                                                      DOGECHAT_HASHTABLE_STRING,
+                                                      DOGECHAT_HASHTABLE_INTEGER,
                                                       NULL,
                                                       NULL);
     }
     if (!gui_color_list_with_alias)
     {
-        gui_color_list_with_alias = weelist_new ();
+        gui_color_list_with_alias = dogelist_new ();
     }
 }
 
@@ -1305,7 +1305,7 @@ gui_color_palette_free_structs ()
     if (gui_color_hash_palette_alias)
         hashtable_free (gui_color_hash_palette_alias);
     if (gui_color_list_with_alias)
-        weelist_free (gui_color_list_with_alias);
+        dogelist_free (gui_color_list_with_alias);
 }
 
 /*

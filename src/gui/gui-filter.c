@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -28,13 +28,13 @@
 #include <string.h>
 #include <regex.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-hdata.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-infolist.h"
-#include "../core/wee-log.h"
-#include "../core/wee-string.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-hdata.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-infolist.h"
+#include "../core/doge-log.h"
+#include "../core/doge-string.h"
 #include "../plugins/plugin.h"
 #include "gui-filter.h"
 #include "gui-buffer.h"
@@ -156,7 +156,7 @@ gui_filter_buffer (struct t_gui_buffer *buffer,
     {
         buffer->lines->lines_hidden = lines_hidden;
         (void) hook_signal_send ("buffer_lines_hidden",
-                                 WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                                 DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
     }
 
     if (lines_changed)
@@ -212,7 +212,7 @@ gui_filter_global_enable ()
         gui_filters_enabled = 1;
         gui_filter_all_buffers ();
         (void) hook_signal_send ("filters_enabled",
-                                 WEECHAT_HOOK_SIGNAL_STRING, NULL);
+                                 DOGECHAT_HOOK_SIGNAL_STRING, NULL);
     }
 }
 
@@ -228,7 +228,7 @@ gui_filter_global_disable ()
         gui_filters_enabled = 0;
         gui_filter_all_buffers ();
         (void) hook_signal_send ("filters_disabled",
-                                 WEECHAT_HOOK_SIGNAL_STRING, NULL);
+                                 DOGECHAT_HOOK_SIGNAL_STRING, NULL);
     }
 }
 
@@ -425,7 +425,7 @@ gui_filter_new (int enabled, const char *name, const char *buffer_name,
         new_filter->next_filter = NULL;
 
         (void) hook_signal_send ("filter_added",
-                                 WEECHAT_HOOK_SIGNAL_POINTER, new_filter);
+                                 DOGECHAT_HOOK_SIGNAL_POINTER, new_filter);
     }
     else
     {
@@ -468,7 +468,7 @@ gui_filter_free (struct t_gui_filter *filter)
     int i;
 
     (void) hook_signal_send ("filter_removing",
-                             WEECHAT_HOOK_SIGNAL_POINTER, filter);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, filter);
 
     /* free data */
     if (filter->name)
@@ -512,7 +512,7 @@ gui_filter_free (struct t_gui_filter *filter)
 
     free (filter);
 
-    (void) hook_signal_send ("filter_removed", WEECHAT_HOOK_SIGNAL_STRING, NULL);
+    (void) hook_signal_send ("filter_removed", DOGECHAT_HOOK_SIGNAL_STRING, NULL);
 }
 
 /*
@@ -557,7 +557,7 @@ gui_filter_hdata_filter_cb (void *data, const char *hdata_name)
         HDATA_VAR(struct t_gui_filter, regex_message, POINTER, 0, NULL, NULL);
         HDATA_VAR(struct t_gui_filter, prev_filter, POINTER, 0, NULL, hdata_name);
         HDATA_VAR(struct t_gui_filter, next_filter, POINTER, 0, NULL, hdata_name);
-        HDATA_LIST(gui_filters, WEECHAT_HDATA_LIST_CHECK_POINTERS);
+        HDATA_LIST(gui_filters, DOGECHAT_HDATA_LIST_CHECK_POINTERS);
         HDATA_LIST(last_gui_filter, 0);
     }
     return hdata;
@@ -618,7 +618,7 @@ gui_filter_add_to_infolist (struct t_infolist *infolist,
 }
 
 /*
- * Prints filter infos in WeeChat log file (usually for crash dump).
+ * Prints filter infos in DogeChat log file (usually for crash dump).
  */
 
 void

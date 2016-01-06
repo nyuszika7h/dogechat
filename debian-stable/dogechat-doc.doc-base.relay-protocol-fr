@@ -1,0 +1,10 @@
+Document: dogechat-relay-protocol-fr
+Title: DogeChat Relay protocol (French)
+Author: Sébastien Helleu
+Abstract: This manual describes DogeChat Relay Protocol, used by
+ remote GUI to communicate with Relay plugin (French version).
+Section: Network/Communication
+
+Format: HTML
+Index: /usr/share/doc/dogechat-doc/html/dogechat_relay_protocol.fr.html
+Files: /usr/share/doc/dogechat-doc/html/dogechat_relay_protocol.fr.html

@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_IRC_COLOR_H
-#define WEECHAT_IRC_COLOR_H 1
+#ifndef DOGECHAT_IRC_COLOR_H
+#define DOGECHAT_IRC_COLOR_H 1
 
 #define IRC_NUM_COLORS        100
 
@@ -27,14 +27,14 @@
  * in IRC messages (same as other IRC clients)
  */
 
-#define WEECHAT_COLOR_BLACK   COLOR_BLACK
-#define WEECHAT_COLOR_RED     COLOR_BLUE
-#define WEECHAT_COLOR_GREEN   COLOR_GREEN
-#define WEECHAT_COLOR_YELLOW  COLOR_CYAN
-#define WEECHAT_COLOR_BLUE    COLOR_RED
-#define WEECHAT_COLOR_MAGENTA COLOR_MAGENTA
-#define WEECHAT_COLOR_CYAN    COLOR_YELLOW
-#define WEECHAT_COLOR_WHITE   COLOR_WHITE
+#define DOGECHAT_COLOR_BLACK   COLOR_BLACK
+#define DOGECHAT_COLOR_RED     COLOR_BLUE
+#define DOGECHAT_COLOR_GREEN   COLOR_GREEN
+#define DOGECHAT_COLOR_YELLOW  COLOR_CYAN
+#define DOGECHAT_COLOR_BLUE    COLOR_RED
+#define DOGECHAT_COLOR_MAGENTA COLOR_MAGENTA
+#define DOGECHAT_COLOR_CYAN    COLOR_YELLOW
+#define DOGECHAT_COLOR_WHITE   COLOR_WHITE
 
 /* attributes in IRC messages for color & style (bold, ..) */
 
@@ -61,40 +61,40 @@
 
 #define IRC_COLOR_TERM2IRC_NUM_COLORS 16
 
-/* macros for WeeChat core and IRC colors */
+/* macros for DogeChat core and IRC colors */
 
-#define IRC_COLOR_BAR_FG weechat_color("bar_fg")
-#define IRC_COLOR_BAR_BG weechat_color("bar_bg")
-#define IRC_COLOR_BAR_DELIM weechat_color("bar_delim")
-#define IRC_COLOR_RESET weechat_color("reset")
-#define IRC_COLOR_CHAT_CHANNEL weechat_color("chat_channel")
-#define IRC_COLOR_CHAT_DELIMITERS weechat_color("chat_delimiters")
-#define IRC_COLOR_CHAT_HOST weechat_color("chat_host")
-#define IRC_COLOR_CHAT_NICK weechat_color("chat_nick")
-#define IRC_COLOR_CHAT_NICK_SELF weechat_color("chat_nick_self")
-#define IRC_COLOR_CHAT_NICK_OTHER weechat_color("chat_nick_other")
-#define IRC_COLOR_CHAT_SERVER weechat_color("chat_server")
-#define IRC_COLOR_CHAT_VALUE weechat_color("chat_value")
-#define IRC_COLOR_NICK_PREFIX_OP weechat_color(weechat_config_string(irc_config_color_nick_prefix_op))
-#define IRC_COLOR_NICK_PREFIX_HALFOP weechat_color(weechat_config_string(irc_config_color_nick_prefix_halfop))
-#define IRC_COLOR_NICK_PREFIX_VOICE weechat_color(weechat_config_string(irc_config_color_nick_prefix_voice))
-#define IRC_COLOR_NICK_PREFIX_USER weechat_color(weechat_config_string(irc_config_color_nick_prefix_user))
-#define IRC_COLOR_NOTICE weechat_color(weechat_config_string(irc_config_color_notice))
-#define IRC_COLOR_STATUS_NUMBER weechat_color("status_number")
-#define IRC_COLOR_STATUS_NAME weechat_color("status_name")
-#define IRC_COLOR_STATUS_NAME_SSL weechat_color("status_name_ssl")
-#define IRC_COLOR_MESSAGE_JOIN weechat_color(weechat_config_string(irc_config_color_message_join))
-#define IRC_COLOR_MESSAGE_QUIT weechat_color(weechat_config_string(irc_config_color_message_quit))
-#define IRC_COLOR_REASON_QUIT weechat_color(weechat_config_string(irc_config_color_reason_quit))
-#define IRC_COLOR_TOPIC_CURRENT weechat_color(weechat_config_string(irc_config_color_topic_current))
-#define IRC_COLOR_TOPIC_OLD weechat_color(weechat_config_string(irc_config_color_topic_old))
-#define IRC_COLOR_TOPIC_NEW weechat_color(weechat_config_string(irc_config_color_topic_new))
-#define IRC_COLOR_INPUT_NICK weechat_color(weechat_config_string(irc_config_color_input_nick))
-#define IRC_COLOR_ITEM_AWAY weechat_color(weechat_config_string(irc_config_color_item_away))
-#define IRC_COLOR_ITEM_CHANNEL_MODES weechat_color(weechat_config_string(irc_config_color_item_channel_modes))
-#define IRC_COLOR_ITEM_LAG_COUNTING weechat_color(weechat_config_string(irc_config_color_item_lag_counting))
-#define IRC_COLOR_ITEM_LAG_FINISHED weechat_color(weechat_config_string(irc_config_color_item_lag_finished))
-#define IRC_COLOR_ITEM_NICK_MODES weechat_color(weechat_config_string(irc_config_color_item_nick_modes))
+#define IRC_COLOR_BAR_FG dogechat_color("bar_fg")
+#define IRC_COLOR_BAR_BG dogechat_color("bar_bg")
+#define IRC_COLOR_BAR_DELIM dogechat_color("bar_delim")
+#define IRC_COLOR_RESET dogechat_color("reset")
+#define IRC_COLOR_CHAT_CHANNEL dogechat_color("chat_channel")
+#define IRC_COLOR_CHAT_DELIMITERS dogechat_color("chat_delimiters")
+#define IRC_COLOR_CHAT_HOST dogechat_color("chat_host")
+#define IRC_COLOR_CHAT_NICK dogechat_color("chat_nick")
+#define IRC_COLOR_CHAT_NICK_SELF dogechat_color("chat_nick_self")
+#define IRC_COLOR_CHAT_NICK_OTHER dogechat_color("chat_nick_other")
+#define IRC_COLOR_CHAT_SERVER dogechat_color("chat_server")
+#define IRC_COLOR_CHAT_VALUE dogechat_color("chat_value")
+#define IRC_COLOR_NICK_PREFIX_OP dogechat_color(dogechat_config_string(irc_config_color_nick_prefix_op))
+#define IRC_COLOR_NICK_PREFIX_HALFOP dogechat_color(dogechat_config_string(irc_config_color_nick_prefix_halfop))
+#define IRC_COLOR_NICK_PREFIX_VOICE dogechat_color(dogechat_config_string(irc_config_color_nick_prefix_voice))
+#define IRC_COLOR_NICK_PREFIX_USER dogechat_color(dogechat_config_string(irc_config_color_nick_prefix_user))
+#define IRC_COLOR_NOTICE dogechat_color(dogechat_config_string(irc_config_color_notice))
+#define IRC_COLOR_STATUS_NUMBER dogechat_color("status_number")
+#define IRC_COLOR_STATUS_NAME dogechat_color("status_name")
+#define IRC_COLOR_STATUS_NAME_SSL dogechat_color("status_name_ssl")
+#define IRC_COLOR_MESSAGE_JOIN dogechat_color(dogechat_config_string(irc_config_color_message_join))
+#define IRC_COLOR_MESSAGE_QUIT dogechat_color(dogechat_config_string(irc_config_color_message_quit))
+#define IRC_COLOR_REASON_QUIT dogechat_color(dogechat_config_string(irc_config_color_reason_quit))
+#define IRC_COLOR_TOPIC_CURRENT dogechat_color(dogechat_config_string(irc_config_color_topic_current))
+#define IRC_COLOR_TOPIC_OLD dogechat_color(dogechat_config_string(irc_config_color_topic_old))
+#define IRC_COLOR_TOPIC_NEW dogechat_color(dogechat_config_string(irc_config_color_topic_new))
+#define IRC_COLOR_INPUT_NICK dogechat_color(dogechat_config_string(irc_config_color_input_nick))
+#define IRC_COLOR_ITEM_AWAY dogechat_color(dogechat_config_string(irc_config_color_item_away))
+#define IRC_COLOR_ITEM_CHANNEL_MODES dogechat_color(dogechat_config_string(irc_config_color_item_channel_modes))
+#define IRC_COLOR_ITEM_LAG_COUNTING dogechat_color(dogechat_config_string(irc_config_color_item_lag_counting))
+#define IRC_COLOR_ITEM_LAG_FINISHED dogechat_color(dogechat_config_string(irc_config_color_item_lag_finished))
+#define IRC_COLOR_ITEM_NICK_MODES dogechat_color(dogechat_config_string(irc_config_color_item_nick_modes))
 
 struct t_irc_color_ansi_state
 {
@@ -110,7 +110,7 @@ extern char *irc_color_modifier_cb (void *data, const char *modifier,
                                     const char *modifier_data,
                                     const char *string);
 extern char *irc_color_for_tags (const char *color);
-extern int irc_color_weechat_add_to_infolist (struct t_infolist *infolist);
+extern int irc_color_dogechat_add_to_infolist (struct t_infolist *infolist);
 extern void irc_color_end ();
 
-#endif /* WEECHAT_IRC_COLOR_H */
+#endif /* DOGECHAT_IRC_COLOR_H */

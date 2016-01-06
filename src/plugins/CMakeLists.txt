@@ -2,24 +2,24 @@
 # Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
 # Copyright (C) 2009 Emmanuel Bouthenot <kolter@openics.org>
 #
-# This file is part of WeeChat, the extensible chat client.
+# This file is part of DogeChat, the extensible chat client.
 #
-# WeeChat is free software; you can redistribute it and/or modify
+# DogeChat is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
-# WeeChat is distributed in the hope that it will be useful,
+# DogeChat is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+# along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 set(LIB_PLUGINS_SRC
-weechat-plugin.h
+dogechat-plugin.h
 plugin.c plugin.h
 plugin-api.c plugin-api.h
 plugin-config.h plugin-config.c)
@@ -30,13 +30,13 @@ plugin-script-api.c plugin-script-api.h
 plugin-script-callback.c plugin-script-callback.h)
 
 include_directories(${CMAKE_BINARY_DIR})
-add_library(weechat_plugins STATIC ${LIB_PLUGINS_SRC})
+add_library(dogechat_plugins STATIC ${LIB_PLUGINS_SRC})
 
 add_definitions(${CMAKE_SHARED_LIBRARY_C_FLAGS})
 if(NOT CYGWIN)
   add_definitions(-fPIC)
 endif()
-add_library(weechat_plugins_scripts STATIC ${LIB_PLUGINS_SCRIPTS_SRC})
+add_library(dogechat_plugins_scripts STATIC ${LIB_PLUGINS_SCRIPTS_SRC})
 
 include(CheckIncludeFiles)
 include(CheckFunctionExists)
@@ -156,4 +156,4 @@ if(ENABLE_XFER)
   add_subdirectory(xfer)
 endif()
 
-install(FILES weechat-plugin.h DESTINATION ${INCLUDEDIR})
+install(FILES dogechat-plugin.h DESTINATION ${INCLUDEDIR})

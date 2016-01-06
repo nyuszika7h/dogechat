@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -26,12 +26,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-hook.h"
-#include "../core/wee-input.h"
-#include "../core/wee-string.h"
-#include "../core/wee-utf8.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-hook.h"
+#include "../core/doge-input.h"
+#include "../core/doge-string.h"
+#include "../core/doge-utf8.h"
 #include "../plugins/plugin.h"
 #include "gui-input.h"
 #include "gui-buffer.h"
@@ -130,7 +130,7 @@ gui_input_paste_pending_signal ()
     }
 
     (void) hook_signal_send ("input_paste_pending",
-                             WEECHAT_HOOK_SIGNAL_STRING, NULL);
+                             DOGECHAT_HOOK_SIGNAL_STRING, NULL);
 }
 
 /*
@@ -180,7 +180,7 @@ gui_input_text_changed_modifier_and_signal (struct t_gui_buffer *buffer,
 
     /* send signal */
     (void) hook_signal_send ("input_text_changed",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -197,7 +197,7 @@ gui_input_text_cursor_moved_signal (struct t_gui_buffer *buffer)
     }
 
     (void) hook_signal_send ("input_text_cursor_moved",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -214,7 +214,7 @@ gui_input_search_signal (struct t_gui_buffer *buffer)
     }
 
     (void) hook_signal_send ("input_search",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*
@@ -1709,7 +1709,7 @@ gui_input_zoom_merged_buffer (struct t_gui_buffer *buffer)
 
     (void) hook_signal_send ((buffer_was_zoomed) ?
                              "buffer_unzoomed" : "buffer_zoomed",
-                             WEECHAT_HOOK_SIGNAL_POINTER, buffer);
+                             DOGECHAT_HOOK_SIGNAL_POINTER, buffer);
 }
 
 /*

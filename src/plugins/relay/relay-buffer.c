@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -24,7 +24,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "relay.h"
 #include "relay-buffer.h"
 #include "relay-client.h"
@@ -51,14 +51,14 @@ relay_buffer_refresh (const char *hotlist)
 
     if (relay_buffer)
     {
-        weechat_buffer_clear (relay_buffer);
+        dogechat_buffer_clear (relay_buffer);
         line = 0;
         client_selected = relay_client_search_by_number (relay_buffer_selected_line);
-        weechat_printf_y (relay_buffer, 0,
+        dogechat_printf_y (relay_buffer, 0,
                           "%s%s%s%s%s%s%s",
-                          weechat_color("green"),
+                          dogechat_color("green"),
                           _("Actions (letter+enter):"),
-                          weechat_color("lightgreen"),
+                          dogechat_color("lightgreen"),
                           /* disconnect */
                           (client_selected
                            && !RELAY_CLIENT_HAS_ENDED(client_selected)) ?
@@ -77,13 +77,13 @@ relay_buffer_refresh (const char *hotlist)
             snprintf (str_color, sizeof (str_color),
                       "%s,%s",
                       (line == relay_buffer_selected_line) ?
-                      weechat_config_string (relay_config_color_text_selected) :
-                      weechat_config_string (relay_config_color_text),
-                      weechat_config_string (relay_config_color_text_bg));
+                      dogechat_config_string (relay_config_color_text_selected) :
+                      dogechat_config_string (relay_config_color_text),
+                      dogechat_config_string (relay_config_color_text_bg));
 
             snprintf (str_status, sizeof (str_status),
                       "%s", _(relay_client_status_string[ptr_client->status]));
-            length = weechat_utf8_strlen_screen (str_status);
+            length = dogechat_utf8_strlen_screen (str_status);
             if (length < 20)
             {
                 for (i = 0; i < 20 - length; i++)
@@ -111,26 +111,26 @@ relay_buffer_refresh (const char *hotlist)
                 }
             }
 
-            str_recv = weechat_string_format_size (ptr_client->bytes_recv);
-            str_sent = weechat_string_format_size (ptr_client->bytes_sent);
+            str_recv = dogechat_string_format_size (ptr_client->bytes_recv);
+            str_sent = dogechat_string_format_size (ptr_client->bytes_sent);
 
             /* first line with status, description and bytes recv/sent */
-            weechat_printf_y (relay_buffer, (line * 2) + 2,
+            dogechat_printf_y (relay_buffer, (line * 2) + 2,
                               _("%s%s[%s%s%s%s] %s, received: %s, sent: %s"),
-                              weechat_color(str_color),
+                              dogechat_color(str_color),
                               (line == relay_buffer_selected_line) ? "*** " : "    ",
-                              weechat_color(weechat_config_string (relay_config_color_status[ptr_client->status])),
+                              dogechat_color(dogechat_config_string (relay_config_color_status[ptr_client->status])),
                               str_status,
-                              weechat_color ("reset"),
-                              weechat_color (str_color),
+                              dogechat_color ("reset"),
+                              dogechat_color (str_color),
                               ptr_client->desc,
                               (str_recv) ? str_recv : "?",
                               (str_sent) ? str_sent : "?");
 
             /* second line with start/end time */
-            weechat_printf_y (relay_buffer, (line * 2) + 3,
+            dogechat_printf_y (relay_buffer, (line * 2) + 3,
                               _("%s%-26s started on: %s, ended on: %s"),
-                              weechat_color(str_color),
+                              dogechat_color(str_color),
                               " ",
                               str_date_start,
                               str_date_end);
@@ -143,7 +143,7 @@ relay_buffer_refresh (const char *hotlist)
             line++;
         }
         if (hotlist)
-            weechat_buffer_set (relay_buffer, "hotlist", hotlist);
+            dogechat_buffer_set (relay_buffer, "hotlist", hotlist);
     }
 }
 
@@ -162,24 +162,24 @@ relay_buffer_input_cb (void *data, struct t_gui_buffer *buffer,
 
     if (buffer == relay_raw_buffer)
     {
-        if (weechat_strcasecmp (input_data, "q") == 0)
-            weechat_buffer_close (buffer);
+        if (dogechat_strcasecmp (input_data, "q") == 0)
+            dogechat_buffer_close (buffer);
     }
     else if (buffer == relay_buffer)
     {
         client = relay_client_search_by_number (relay_buffer_selected_line);
 
         /* disconnect client */
-        if (weechat_strcasecmp (input_data, "d") == 0)
+        if (dogechat_strcasecmp (input_data, "d") == 0)
         {
             if (client && !RELAY_CLIENT_HAS_ENDED(client))
             {
                 relay_client_disconnect (client);
-                relay_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+                relay_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             }
         }
         /* purge old clients */
-        else if (weechat_strcasecmp (input_data, "p") == 0)
+        else if (dogechat_strcasecmp (input_data, "p") == 0)
         {
             ptr_client = relay_clients;
             while (ptr_client)
@@ -189,25 +189,25 @@ relay_buffer_input_cb (void *data, struct t_gui_buffer *buffer,
                     relay_client_free (ptr_client);
                 ptr_client = next_client;
             }
-            relay_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+            relay_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
         }
         /* quit relay buffer (close it) */
-        else if (weechat_strcasecmp (input_data, "q") == 0)
+        else if (dogechat_strcasecmp (input_data, "q") == 0)
         {
-            weechat_buffer_close (buffer);
+            dogechat_buffer_close (buffer);
         }
         /* remove client */
-        else if (weechat_strcasecmp (input_data, "r") == 0)
+        else if (dogechat_strcasecmp (input_data, "r") == 0)
         {
             if (client && RELAY_CLIENT_HAS_ENDED(client))
             {
                 relay_client_free (client);
-                relay_buffer_refresh (WEECHAT_HOTLIST_MESSAGE);
+                relay_buffer_refresh (DOGECHAT_HOTLIST_MESSAGE);
             }
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -229,7 +229,7 @@ relay_buffer_close_cb (void *data, struct t_gui_buffer *buffer)
         relay_buffer = NULL;
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -241,7 +241,7 @@ relay_buffer_open ()
 {
     if (!relay_buffer)
     {
-        relay_buffer = weechat_buffer_new (RELAY_BUFFER_NAME,
+        relay_buffer = dogechat_buffer_new (RELAY_BUFFER_NAME,
                                            &relay_buffer_input_cb, NULL,
                                            &relay_buffer_close_cb, NULL);
 
@@ -249,10 +249,10 @@ relay_buffer_open ()
         if (!relay_buffer)
             return;
 
-        weechat_buffer_set (relay_buffer, "type", "free");
-        weechat_buffer_set (relay_buffer, "title", _("List of clients for relay"));
-        weechat_buffer_set (relay_buffer, "key_bind_meta2-A", "/relay up");
-        weechat_buffer_set (relay_buffer, "key_bind_meta2-B", "/relay down");
-        weechat_buffer_set (relay_buffer, "localvar_set_type", "relay");
+        dogechat_buffer_set (relay_buffer, "type", "free");
+        dogechat_buffer_set (relay_buffer, "title", _("List of clients for relay"));
+        dogechat_buffer_set (relay_buffer, "key_bind_meta2-A", "/relay up");
+        dogechat_buffer_set (relay_buffer, "key_bind_meta2-B", "/relay down");
+        dogechat_buffer_set (relay_buffer, "localvar_set_type", "relay");
     }
 }

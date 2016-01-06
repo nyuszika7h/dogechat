@@ -3,25 +3,25 @@
 # Copyright (C) 2007-2008 Julien Louis <ptitlouis@sysif.net>
 # Copyright (C) 2008-2009 Emmanuel Bouthenot <kolter@openics.org>
 #
-# This file is part of WeeChat, the extensible chat client.
+# This file is part of DogeChat, the extensible chat client.
 #
-# WeeChat is free software; you can redistribute it and/or modify
+# DogeChat is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
-# WeeChat is distributed in the hope that it will be useful,
+# DogeChat is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+# along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
 #
 
 cmake_minimum_required(VERSION 2.4)
 
-project(weechat C)
+project(dogechat C)
 
 # CMake options
 set(CMAKE_VERBOSE_MAKEFILE OFF)
@@ -49,9 +49,9 @@ set(LICENSE "GPL3")
 # add definitions for version and license
 if(COMMAND cmake_policy)
   cmake_policy(SET CMP0005 NEW)
-  add_definitions(-DWEECHAT_VERSION="${VERSION}" -DWEECHAT_LICENSE="${LICENSE}")
+  add_definitions(-DDOGECHAT_VERSION="${VERSION}" -DDOGECHAT_LICENSE="${LICENSE}")
 else()
-  add_definitions(-DWEECHAT_VERSION='"${VERSION}"' -DWEECHAT_LICENSE='"${LICENSE}"')
+  add_definitions(-DDOGECHAT_VERSION='"${VERSION}"' -DDOGECHAT_LICENSE='"${LICENSE}"')
 endif()
 
 # package string
@@ -111,21 +111,21 @@ option(ENABLE_MAN        "Enable build of man page"                  OFF)
 option(ENABLE_DOC        "Enable build of documentation"             OFF)
 option(ENABLE_TESTS      "Enable tests"                              OFF)
 
-# option WEECHAT_HOME
-if(NOT DEFINED WEECHAT_HOME OR "${WEECHAT_HOME}" STREQUAL "")
-  set(WEECHAT_HOME "~/.weechat")
+# option DOGECHAT_HOME
+if(NOT DEFINED DOGECHAT_HOME OR "${DOGECHAT_HOME}" STREQUAL "")
+  set(DOGECHAT_HOME "~/.dogechat")
 endif()
-set(WEECHAT_HOME "${WEECHAT_HOME}" CACHE
-  STRING "WeeChat home directory for config, logs, scripts.. (default is \"~/.weechat\")"
+set(DOGECHAT_HOME "${DOGECHAT_HOME}" CACHE
+  STRING "DogeChat home directory for config, logs, scripts.. (default is \"~/.dogechat\")"
   FORCE)
-mark_as_advanced(CLEAR WEECHAT_HOME)
+mark_as_advanced(CLEAR DOGECHAT_HOME)
 
 # option CA_FILE
 if(NOT DEFINED CA_FILE OR "${CA_FILE}" STREQUAL "")
   set(CA_FILE "/etc/ssl/certs/ca-certificates.crt")
 endif()
 set(CA_FILE "${CA_FILE}" CACHE
-  STRING "File containing the certificate authorities (default is \"/etc/ssl/certs/ca-certificates.crt\"). This is the default value of option \"weechat.network.gnutls_ca_file\"."
+  STRING "File containing the certificate authorities (default is \"/etc/ssl/certs/ca-certificates.crt\"). This is the default value of option \"dogechat.network.gnutls_ca_file\"."
   FORCE)
 mark_as_advanced(CLEAR CA_FILE)
 
@@ -194,14 +194,14 @@ endif()
 # Check for CURL
 find_package(CURL REQUIRED)
 
-# weechat_gui_common MUST be the first lib in the list
-set(STATIC_LIBS weechat_gui_common)
+# dogechat_gui_common MUST be the first lib in the list
+set(STATIC_LIBS dogechat_gui_common)
 
 find_library(DL_LIBRARY
   NAMES dl
   PATHS /lib /usr/lib /usr/libexec /usr/local/lib /usr/local/libexec
 )
-list(APPEND STATIC_LIBS weechat_plugins)
+list(APPEND STATIC_LIBS dogechat_plugins)
 if(DL_LIBRARY)
   string(REGEX REPLACE "/[^/]*$" "" DL_LIBRARY_PATH "${DL_LIBRARY}")
   set(CMAKE_C_LINK_FLAGS "${CMAKE_C_LINK_FLAGS} -L${DL_LIBRARY_PATH}")
@@ -246,11 +246,11 @@ set(prefix "${CMAKE_INSTALL_PREFIX}")
 set(exec_prefix "\${prefix}")
 set(libdir "\${exec_prefix}/lib")
 set(includedir "\${prefix}/include")
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/weechat.pc.in ${CMAKE_CURRENT_BINARY_DIR}/weechat.pc @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/weechat.pc DESTINATION ${LIBDIR}/../pkgconfig)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dogechat.pc.in ${CMAKE_CURRENT_BINARY_DIR}/dogechat.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/dogechat.pc DESTINATION ${LIBDIR}/../pkgconfig)
 
 # cygport file (used to build Cygwin packages)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/weechat.cygport.in ${CMAKE_CURRENT_BINARY_DIR}/weechat-${VERSION}-1.cygport @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dogechat.cygport.in ${CMAKE_CURRENT_BINARY_DIR}/dogechat-${VERSION}-1.cygport @ONLY)
 
 # install some files (only on Cygwin)
 if(CYGWIN)
@@ -264,7 +264,7 @@ if(CYGWIN)
 endif()
 
 # icon
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/weechat.png DESTINATION ${SHAREDIR}/icons/hicolor/32x32/apps)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dogechat.png DESTINATION ${SHAREDIR}/icons/hicolor/32x32/apps)
 
 # packages
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Fast, light and extensible chat client")
@@ -277,11 +277,11 @@ set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
 
 # binary package
 set(CPACK_GENERATOR "STGZ;TGZ;TBZ2")
-set(CPACK_PACKAGE_FILE_NAME weechat-binary-${VERSION})
+set(CPACK_PACKAGE_FILE_NAME dogechat-binary-${VERSION})
 
 # source package
 set(CPACK_SOURCE_GENERATOR "TGZ;TBZ2")
-set(CPACK_SOURCE_PACKAGE_FILE_NAME weechat-${VERSION})
+set(CPACK_SOURCE_PACKAGE_FILE_NAME dogechat-${VERSION})
 set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git" "/build/" "/m4/"
   "/autom4te\\\\.cache/" "/ABOUT-NLS$" "/config\\\\.guess$" "/config\\\\.h$"
   "/config\\\\.h.in$" "/config\\\\.log$" "/config\\\\.rpath$"
@@ -289,7 +289,7 @@ set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git" "/build/" "/m4/"
   "/install-sh$" "/missing$" "/intl/" "/libtool$" "/\\\\.libs/"
   "/ltmain\\\\.sh$" "/\\\\.deps/" "/html/" "/html1/" "/Makefile$"
   "/Makefile\\\\.in$" "stamp" "/po/.*\\\\.header$" "\\\\.gmo$" "~$" "\\\\.o$"
-  "\\\\.lo$" "\\\\.a$" "\\\\.la$" "\\\\.lai$" "\\\\.Plo$" "/weechat$"
+  "\\\\.lo$" "\\\\.a$" "\\\\.la$" "\\\\.lai$" "\\\\.Plo$" "/dogechat$"
 )
 
 include(CPack)

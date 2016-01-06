@@ -13,7 +13,7 @@
 ** valori: sha224, sha256, sha384, sha512 (valore predefinito: `sha256`)
 
 * [[option_sec.crypt.passphrase_file]] *sec.crypt.passphrase_file*
-** descrizione: `path to a file containing the passphrase to encrypt/decrypt secured data; this option is used only when reading file sec.conf; only first line of file is used; this file is used only if the environment variable "WEECHAT_PASSPHRASE" is not set (the environment variable has higher priority); security note: it is recommended to keep this file readable only by you and store it outside WeeChat home (for example in your home); example: "~/.weechat-passphrase"`
+** descrizione: `path to a file containing the passphrase to encrypt/decrypt secured data; this option is used only when reading file sec.conf; only first line of file is used; this file is used only if the environment variable "DOGECHAT_PASSPHRASE" is not set (the environment variable has higher priority); security note: it is recommended to keep this file readable only by you and store it outside DogeChat home (for example in your home); example: "~/.dogechat-passphrase"`
 ** tipo: stringa
 ** valori: qualsiasi stringa (valore predefinito: `""`)
 

@@ -33,8 +33,8 @@ Note: in command, special variables are replaced:
 Examples:
   alias /split to split window horizontally:
     /alias add split /window splith
-  alias /hello to say "hello" on all channels but not on #weechat:
-    /alias add hello /allchan -exclude=#weechat msg * hello
+  alias /hello to say "hello" on all channels but not on #dogechat:
+    /alias add hello /allchan -exclude=#dogechat msg * hello
   alias /forcejoin to send IRC command "forcejoin" with completion of /sajoin:
     /alias addcompletion %%sajoin forcejoin /quote forcejoin
 ----

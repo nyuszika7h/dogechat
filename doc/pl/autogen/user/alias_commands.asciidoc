@@ -33,8 +33,8 @@ Ważne: dla komend specjalne zmienne są zastępowane odpowiednimi wartościami:
 Przykłady:
   alias /split do poziomego podziału okna:
     /alias split /window splith
-  alias /hello pisze "hello" na wszystkich kanałach poza #weechat:
-    /alias hello /allchan -exclude=#weechat msg * hello
+  alias /hello pisze "hello" na wszystkich kanałach poza #dogechat:
+    /alias hello /allchan -exclude=#dogechat msg * hello
   alias /forcejoin wysyłający komende IRC "forcejoin" z dopełnieniem dla /sajoin:
     /alias -completion %%sajoin forcejoin /quote forcejoin
 ----

@@ -5,18 +5,18 @@
     Afficher les couleurs par défaut du terminal.
 
 *-d*, *--dir* '<répertoire>'::
-    Définir le répertoire comme étant la base de WeeChat
+    Définir le répertoire comme étant la base de DogeChat
     (utilisé pour les fichiers de configuration, logs, extensions
-    et scripts de l'utilisateur), la valeur par défaut est '~/.weechat' (note :
-    le répertoire est créé s'il n'est pas trouvé par WeeChat).
-    Si cette option n'est pas donnée, la variable d'environnement WEECHAT_HOME
+    et scripts de l'utilisateur), la valeur par défaut est '~/.dogechat' (note :
+    le répertoire est créé s'il n'est pas trouvé par DogeChat).
+    Si cette option n'est pas donnée, la variable d'environnement DOGECHAT_HOME
     est utilisée (si non vide).
 
 *-h*, *--help*::
     Afficher l'aide.
 
 *-l*, *--license*::
-    Afficher la licence de WeeChat.
+    Afficher la licence de DogeChat.
 
 *-p*, *--no-plugin*::
     Supprimer le chargement automatique des extensions au démarrage.
@@ -29,11 +29,11 @@
     Supprimer le chargement automatique des scripts au démarrage.
 
 *--upgrade*::
-    Mettre à jour WeeChat en utilisant les fichiers de session générés avec la
+    Mettre à jour DogeChat en utilisant les fichiers de session générés avec la
     commande `/upgrade -quit`.
 
 *-v*, *--version*::
-    Afficher la version de WeeChat.
+    Afficher la version de DogeChat.
 
 *extension:option*::
     Option pour une extension.

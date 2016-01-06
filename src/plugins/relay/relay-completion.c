@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "relay.h"
 #include "relay-server.h"
 
@@ -45,29 +45,29 @@ relay_completion_protocol_name_cb (void *data, const char *completion_item,
     (void) buffer;
     (void) completion_item;
 
-    infolist = weechat_infolist_get("irc_server", NULL, NULL);
+    infolist = dogechat_infolist_get("irc_server", NULL, NULL);
     if (infolist)
     {
-        while (weechat_infolist_next (infolist))
+        while (dogechat_infolist_next (infolist))
         {
             snprintf (protocol_name, sizeof (protocol_name), "irc.%s",
-                      weechat_infolist_string (infolist, "name"));
-            weechat_hook_completion_list_add (completion, protocol_name,
-                                              0, WEECHAT_LIST_POS_SORT);
+                      dogechat_infolist_string (infolist, "name"));
+            dogechat_hook_completion_list_add (completion, protocol_name,
+                                              0, DOGECHAT_LIST_POS_SORT);
             snprintf (protocol_name, sizeof (protocol_name), "ssl.irc.%s",
-                      weechat_infolist_string (infolist, "name"));
-            weechat_hook_completion_list_add (completion, protocol_name,
-                                              0, WEECHAT_LIST_POS_SORT);
+                      dogechat_infolist_string (infolist, "name"));
+            dogechat_hook_completion_list_add (completion, protocol_name,
+                                              0, DOGECHAT_LIST_POS_SORT);
         }
-        weechat_infolist_free (infolist);
+        dogechat_infolist_free (infolist);
     }
 
-    weechat_hook_completion_list_add (completion, "weechat",
-                                      0, WEECHAT_LIST_POS_SORT);
-    weechat_hook_completion_list_add (completion, "ssl.weechat",
-                                      0, WEECHAT_LIST_POS_SORT);
+    dogechat_hook_completion_list_add (completion, "dogechat",
+                                      0, DOGECHAT_LIST_POS_SORT);
+    dogechat_hook_completion_list_add (completion, "ssl.dogechat",
+                                      0, DOGECHAT_LIST_POS_SORT);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -89,12 +89,12 @@ relay_completion_relays_cb (void *data, const char *completion_item,
     for (ptr_server = relay_servers; ptr_server;
          ptr_server = ptr_server->next_server)
     {
-        weechat_hook_completion_list_add (completion,
+        dogechat_hook_completion_list_add (completion,
                                           ptr_server->protocol_string,
-                                          0, WEECHAT_LIST_POS_SORT);
+                                          0, DOGECHAT_LIST_POS_SORT);
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -126,10 +126,10 @@ relay_completion_free_port_cb (void *data, const char *completion_item,
         port_max = 8000 - 1;
 
     snprintf (str_port, sizeof (str_port), "%d", port_max + 1);
-    weechat_hook_completion_list_add (completion, str_port,
-                                      0, WEECHAT_LIST_POS_SORT);
+    dogechat_hook_completion_list_add (completion, str_port,
+                                      0, DOGECHAT_LIST_POS_SORT);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -139,14 +139,14 @@ relay_completion_free_port_cb (void *data, const char *completion_item,
 void
 relay_completion_init ()
 {
-    weechat_hook_completion ("relay_protocol_name",
+    dogechat_hook_completion ("relay_protocol_name",
                              N_("all possible protocol.name for relay plugin"),
                              &relay_completion_protocol_name_cb, NULL);
-    weechat_hook_completion ("relay_relays",
+    dogechat_hook_completion ("relay_relays",
                              N_("protocol.name of current relays for relay "
                                 "plugin"),
                              &relay_completion_relays_cb, NULL);
-    weechat_hook_completion ("relay_free_port",
+    dogechat_hook_completion ("relay_free_port",
                              N_("first free port for relay plugin"),
                              &relay_completion_free_port_cb, NULL);
 }

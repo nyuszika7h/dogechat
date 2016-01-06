@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -27,12 +27,12 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "../core/weechat.h"
-#include "../core/wee-config.h"
-#include "../core/wee-hdata.h"
-#include "../core/wee-infolist.h"
-#include "../core/wee-log.h"
-#include "../core/wee-string.h"
+#include "../core/dogechat.h"
+#include "../core/doge-config.h"
+#include "../core/doge-hdata.h"
+#include "../core/doge-infolist.h"
+#include "../core/doge-log.h"
+#include "../core/doge-string.h"
 #include "../plugins/plugin.h"
 #include "gui-layout.h"
 #include "gui-buffer.h"
@@ -801,7 +801,7 @@ gui_layout_store_on_exit ()
             break;
     }
 
-    /* use layout, so it will be used after restart of WeeChat */
+    /* use layout, so it will be used after restart of DogeChat */
     gui_layout_current = ptr_layout;
 }
 
@@ -954,7 +954,7 @@ gui_layout_hdata_layout_cb (void *data, const char *hdata_name)
         HDATA_VAR(struct t_gui_layout, internal_id_current_window, INTEGER, 0, NULL, NULL);
         HDATA_VAR(struct t_gui_layout, prev_layout, POINTER, 0, NULL, hdata_name);
         HDATA_VAR(struct t_gui_layout, next_layout, POINTER, 0, NULL, hdata_name);
-        HDATA_LIST(gui_layouts, WEECHAT_HDATA_LIST_CHECK_POINTERS);
+        HDATA_LIST(gui_layouts, DOGECHAT_HDATA_LIST_CHECK_POINTERS);
         HDATA_LIST(last_gui_layout, 0);
         HDATA_LIST(gui_layout_current, 0);
     }
@@ -1072,7 +1072,7 @@ gui_layout_add_to_infolist (struct t_infolist *infolist,
 }
 
 /*
- * Prints windows layout infos in WeeChat log file (usually for crash dump).
+ * Prints windows layout infos in DogeChat log file (usually for crash dump).
  */
 
 void
@@ -1102,7 +1102,7 @@ gui_layout_print_log_window (struct t_gui_layout_window *layout_window,
 }
 
 /*
- * Prints layouts in WeeChat log file (usually for crash dump).
+ * Prints layouts in DogeChat log file (usually for crash dump).
  */
 
 void

@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_ALIAS_CONFIG_H
-#define WEECHAT_ALIAS_CONFIG_H 1
+#ifndef DOGECHAT_ALIAS_CONFIG_H
+#define DOGECHAT_ALIAS_CONFIG_H 1
 
 extern struct t_config_file *alias_config_file;
 extern struct t_config_section *alias_config_section_cmd;
@@ -32,4 +32,4 @@ extern int alias_config_init ();
 extern int alias_config_read ();
 extern int alias_config_write ();
 
-#endif /* WEECHAT_ALIAS_CONFIG_H */
+#endif /* DOGECHAT_ALIAS_CONFIG_H */

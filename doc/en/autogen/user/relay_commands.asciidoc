@@ -30,10 +30,10 @@ Relay name is: [ipv4.][ipv6.][ssl.]<protocol.name>
           ssl: enable SSL
 protocol.name: protocol and name to relay:
                  - protocol "irc": name is the server to share (optional, if not given, the server name must be sent by client in command "PASS", with format: "PASS server:password")
-                 - protocol "weechat" (name is not used)
+                 - protocol "dogechat" (name is not used)
 
-The "irc" protocol allows any IRC client (including WeeChat itself) to connect on the port.
-The "weechat" protocol allows a remote interface to connect on the port, see the list here: https://weechat.org/download/
+The "irc" protocol allows any IRC client (including DogeChat itself) to connect on the port.
+The "dogechat" protocol allows a remote interface to connect on the port, see the list here: https://dogechat.org/download/
 
 Without argument, this command opens buffer with list of relay clients.
 
@@ -44,14 +44,14 @@ Examples:
     /relay add ssl.irc.freenode 8001
   irc proxy, for all servers (client will choose), with SSL:
     /relay add ssl.irc 8002
-  weechat protocol:
-    /relay add weechat 9000
-  weechat protocol with SSL:
-    /relay add ssl.weechat 9001
-  weechat protocol with SSL, using only IPv4:
-    /relay add ipv4.ssl.weechat 9001
-  weechat protocol with SSL, using only IPv6:
-    /relay add ipv6.ssl.weechat 9001
-  weechat protocol with SSL, using IPv4 + IPv6:
-    /relay add ipv4.ipv6.ssl.weechat 9001
+  dogechat protocol:
+    /relay add dogechat 9000
+  dogechat protocol with SSL:
+    /relay add ssl.dogechat 9001
+  dogechat protocol with SSL, using only IPv4:
+    /relay add ipv4.ssl.dogechat 9001
+  dogechat protocol with SSL, using only IPv6:
+    /relay add ipv6.ssl.dogechat 9001
+  dogechat protocol with SSL, using IPv4 + IPv6:
+    /relay add ipv4.ipv6.ssl.dogechat 9001
 ----

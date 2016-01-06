@@ -33,8 +33,8 @@ Beispiele:
     /logger disable
   Stellt den Level für alle IRC-Buffer auf 3 ein:
     /set logger.level.irc 3
-  Die Protokollierung, für den WeeChat Haupt-Buffer, wird deaktiviert:
-    /set logger.level.core.weechat 0
+  Die Protokollierung, für den DogeChat Haupt-Buffer, wird deaktiviert:
+    /set logger.level.core.dogechat 0
   Für jeden IRC-Server wird ein separates Verzeichnis erstellt und darin eine eigene Protokoll-Datei, für jeden Channel:
-    /set logger.mask.irc "$server/$channel.weechatlog"
+    /set logger.mask.irc "$server/$channel.dogechatlog"
 ----

@@ -1,4 +1,4 @@
-Source: weechat-devel
+Source: dogechat-devel
 Section: net
 Priority: optional
 Maintainer: Sébastien Helleu <flashcode@flashtux.org>
@@ -25,16 +25,16 @@ Build-Depends:
     libgnutls28-dev,
     zlib1g-dev
 Standards-Version: 3.9.6
-Homepage: https://weechat.org/
-Vcs-Git: https://github.com/weechat/weechat.git
-Vcs-Browser: https://github.com/weechat/weechat
+Homepage: https://dogechat.org/
+Vcs-Git: https://github.com/dogechat/dogechat.git
+Vcs-Browser: https://github.com/dogechat/dogechat
 
-Package: weechat-devel
+Package: dogechat-devel
 Architecture: all
-Depends: ${misc:Depends}, weechat-devel-curses (>= ${source:Version})
-Conflicts: weechat
+Depends: ${misc:Depends}, dogechat-devel-curses (>= ${source:Version})
+Conflicts: dogechat
 Description: Fast, light and extensible chat client
- WeeChat (Wee Enhanced Environment for Chat) is a fast and light chat client
+ DogeChat (Doge Enhanced Environment for Chat) is a fast and light chat client
  for many operating systems. Everything can be done with a keyboard.
  It is customizable and extensible with plugins/scripts, and includes:
   - support of IRC protocol (native)
@@ -53,13 +53,13 @@ Description: Fast, light and extensible chat client
   - highly customizable and extensible
   - and much more!
 
-Package: weechat-devel-curses
+Package: dogechat-devel-curses
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, weechat-devel-core (= ${binary:Version})
-Conflicts: weechat-curses
-Recommends: weechat-devel-plugins (= ${binary:Version})
+Depends: ${misc:Depends}, ${shlibs:Depends}, dogechat-devel-core (= ${binary:Version})
+Conflicts: dogechat-curses
+Recommends: dogechat-devel-plugins (= ${binary:Version})
 Description: Fast, light and extensible chat client - console client
- WeeChat (Wee Enhanced Environment for Chat) is a fast and light chat client
+ DogeChat (Doge Enhanced Environment for Chat) is a fast and light chat client
  for many operating systems. Everything can be done with a keyboard.
  It is customizable and extensible with plugins/scripts, and includes:
   - support of IRC protocol (native)
@@ -80,27 +80,27 @@ Description: Fast, light and extensible chat client - console client
  .
  This package provides the console client (ncurses).
 
-Package: weechat-devel-core
+Package: dogechat-devel-core
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
-Conflicts: weechat-core
+Conflicts: dogechat-core
 Description: Fast, light and extensible chat client - core files
- WeeChat (Wee Enhanced Environment for Chat) is a fast and light chat client
+ DogeChat (Doge Enhanced Environment for Chat) is a fast and light chat client
  for many operating systems. Everything can be done with a keyboard.
  .
- This package provides core plugins and locales files for WeeChat. It
+ This package provides core plugins and locales files for DogeChat. It
  currently ships the following plugins: alias, xfer, irc, charset and
- logger. It is useless without weechat-curses.
+ logger. It is useless without dogechat-curses.
 
-Package: weechat-devel-plugins
+Package: dogechat-devel-plugins
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, weechat-devel-curses (= ${binary:Version})
-Conflicts: weechat-plugins
+Depends: ${misc:Depends}, ${shlibs:Depends}, dogechat-devel-curses (= ${binary:Version})
+Conflicts: dogechat-plugins
 Description: Fast, light and extensible chat client - plugins
- WeeChat (Wee Enhanced Environment for Chat) is a fast and light chat client
+ DogeChat (Doge Enhanced Environment for Chat) is a fast and light chat client
  for many operating systems. Everything can be done with a keyboard.
  .
- This package provides some plugins to enhance WeeChat. It currently
+ This package provides some plugins to enhance DogeChat. It currently
  ships the following plugins:
   - Perl, Python, Ruby, Lua, Tcl, Scheme and Javascript scripting
   - scripts manager
@@ -109,26 +109,26 @@ Description: Fast, light and extensible chat client - plugins
   - IRC proxy
   - Trigger
 
-Package: weechat-devel-dev
+Package: dogechat-devel-dev
 Section: devel
 Architecture: all
 Depends: ${misc:Depends}
-Conflicts: weechat-dev
+Conflicts: dogechat-dev
 Description: Fast, light and extensible chat client - development headers
- WeeChat (Wee Enhanced Environment for Chat) is a fast and light chat client
+ DogeChat (Doge Enhanced Environment for Chat) is a fast and light chat client
  for many operating systems. Everything can be done with a keyboard.
  .
  This package contains the headers needed to build plugins.
 
-Package: weechat-devel-dbg
+Package: dogechat-devel-dbg
 Section: debug
 Priority: extra
 Architecture: any
-Depends: ${misc:Depends}, weechat-devel-curses (= ${binary:Version}) |
- weechat-devel-core (= ${binary:Version}), weechat-devel-plugins (= ${binary:Version})
-Conflicts: weechat-dbg
+Depends: ${misc:Depends}, dogechat-devel-curses (= ${binary:Version}) |
+ dogechat-devel-core (= ${binary:Version}), dogechat-devel-plugins (= ${binary:Version})
+Conflicts: dogechat-dbg
 Description: Fast, light and extensible chat client - debugging symbols
- WeeChat (Wee Enhanced Environment for Chat) is a fast and light chat client
+ DogeChat (Doge Enhanced Environment for Chat) is a fast and light chat client
  for many operating systems. Everything can be done with a keyboard.
  .
- This package contains gdb debugging symbols for the WeeChat packages.
+ This package contains gdb debugging symbols for the DogeChat packages.

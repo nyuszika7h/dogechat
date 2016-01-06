@@ -12,7 +12,7 @@
 
 | irc | irc_channel | liste des canaux pour un serveur IRC | pointeur vers le canal (optionnel) | serveur,canal (le canal est optionnel)
 
-| irc | irc_color_weechat | correspondance entre les codes couleur IRC et les noms de couleur WeeChat | - | -
+| irc | irc_color_dogechat | correspondance entre les codes couleur IRC et les noms de couleur DogeChat | - | -
 
 | irc | irc_ignore | liste des ignores IRC | pointeur vers l'ignore (optionnel) | -
 
@@ -40,39 +40,39 @@
 
 | tcl | tcl_script | liste des scripts | pointeur vers le script (optionnel) | nom de script (le caractère joker "*" est autorisé) (optionnel)
 
-| weechat | bar | liste des barres | pointeur vers la barre (optionnel) | nom de barre (le caractère joker "*" est autorisé) (optionnel)
+| dogechat | bar | liste des barres | pointeur vers la barre (optionnel) | nom de barre (le caractère joker "*" est autorisé) (optionnel)
 
-| weechat | bar_item | liste des objets de barres | pointeur vers l'objet de barre (optionnel) | nom d'objet de barre (le caractère joker "*" est autorisé) (optionnel)
+| dogechat | bar_item | liste des objets de barres | pointeur vers l'objet de barre (optionnel) | nom d'objet de barre (le caractère joker "*" est autorisé) (optionnel)
 
-| weechat | bar_window | liste des fenêtres de barre | pointeur vers la fenêtre de barre (optionnel) | -
+| dogechat | bar_window | liste des fenêtres de barre | pointeur vers la fenêtre de barre (optionnel) | -
 
-| weechat | buffer | liste des tampons | pointeur vers le tampon (optionnel) | nom de tampon (le caractère joker "*" est autorisé) (optionnel)
+| dogechat | buffer | liste des tampons | pointeur vers le tampon (optionnel) | nom de tampon (le caractère joker "*" est autorisé) (optionnel)
 
-| weechat | buffer_lines | lignes d'un tampon | pointeur vers le tampon | -
+| dogechat | buffer_lines | lignes d'un tampon | pointeur vers le tampon | -
 
-| weechat | filter | liste des filtres | - | nom de filtre (le caractère joker "*" est autorisé) (optionnel)
+| dogechat | filter | liste des filtres | - | nom de filtre (le caractère joker "*" est autorisé) (optionnel)
 
-| weechat | history | historique des commandes | pointeur vers le tampon (si non défini, retourne l'historique global) (optionnel) | -
+| dogechat | history | historique des commandes | pointeur vers le tampon (si non défini, retourne l'historique global) (optionnel) | -
 
-| weechat | hook | liste des hooks | pointeur vers le hook (optionnel) | type,paramètres (le type est command/timer/.., paramètres pour avoir seulement quelques hooks (le caractère joker "*" est autorisé), les deux sont optionnels)
+| dogechat | hook | liste des hooks | pointeur vers le hook (optionnel) | type,paramètres (le type est command/timer/.., paramètres pour avoir seulement quelques hooks (le caractère joker "*" est autorisé), les deux sont optionnels)
 
-| weechat | hotlist | liste des tampons dans la hotlist | - | -
+| dogechat | hotlist | liste des tampons dans la hotlist | - | -
 
-| weechat | key | liste des associations de touches | - | contexte ("default", "search", "cursor" ou "mouse") (optionnel)
+| dogechat | key | liste des associations de touches | - | contexte ("default", "search", "cursor" ou "mouse") (optionnel)
 
-| weechat | layout | liste des dispositions | - | -
+| dogechat | layout | liste des dispositions | - | -
 
-| weechat | nicklist | pseudos dans la liste des pseudos pour un tampon | pointeur vers le tampon | nick_xxx ou group_xxx pour avoir seulement le pseudo/groupe xxx (optionnel)
+| dogechat | nicklist | pseudos dans la liste des pseudos pour un tampon | pointeur vers le tampon | nick_xxx ou group_xxx pour avoir seulement le pseudo/groupe xxx (optionnel)
 
-| weechat | option | liste des options | - | nom d'option (le caractère joker "*" est autorisé) (optionnel)
+| dogechat | option | liste des options | - | nom d'option (le caractère joker "*" est autorisé) (optionnel)
 
-| weechat | plugin | liste des extensions | pointeur vers l'extension (optionnel) | nom d'extension (le caractère joker "*" est autorisé) (optionnel)
+| dogechat | plugin | liste des extensions | pointeur vers l'extension (optionnel) | nom d'extension (le caractère joker "*" est autorisé) (optionnel)
 
-| weechat | proxy | liste des proxies | pointeur vers le proxy (optionnel) | nom de proxy (le caractère joker "*" est autorisé) (optionnel)
+| dogechat | proxy | liste des proxies | pointeur vers le proxy (optionnel) | nom de proxy (le caractère joker "*" est autorisé) (optionnel)
 
-| weechat | url_options | options pour l'URL | - | -
+| dogechat | url_options | options pour l'URL | - | -
 
-| weechat | window | liste des fenêtres | pointeur vers la fenêtre (optionnel) | "current" pour la fenêtre courante ou un numéro de fenêtre (optionnel)
+| dogechat | window | liste des fenêtres | pointeur vers la fenêtre (optionnel) | "current" pour la fenêtre courante ou un numéro de fenêtre (optionnel)
 
 | xfer | xfer | liste des xfer | pointeur vers le xfer (optionnel) | -
 

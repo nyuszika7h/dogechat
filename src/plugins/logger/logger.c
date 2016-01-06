@@ -1,22 +1,22 @@
 /*
- * logger.c - logger plugin for WeeChat: save buffer lines to disk files
+ * logger.c - logger plugin for DogeChat: save buffer lines to disk files
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /* this define is needed for strptime() (not on OpenBSD/Sun) */
@@ -37,7 +37,7 @@
 #include <fcntl.h>
 #include <time.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "logger.h"
 #include "logger-buffer.h"
 #include "logger-config.h"
@@ -45,14 +45,14 @@
 #include "logger-tail.h"
 
 
-WEECHAT_PLUGIN_NAME(LOGGER_PLUGIN_NAME);
-WEECHAT_PLUGIN_DESCRIPTION(N_("Log buffers to files"));
-WEECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
-WEECHAT_PLUGIN_VERSION(WEECHAT_VERSION);
-WEECHAT_PLUGIN_LICENSE(WEECHAT_LICENSE);
-WEECHAT_PLUGIN_PRIORITY(12000);
+DOGECHAT_PLUGIN_NAME(LOGGER_PLUGIN_NAME);
+DOGECHAT_PLUGIN_DESCRIPTION(N_("Log buffers to files"));
+DOGECHAT_PLUGIN_AUTHOR("Sébastien Helleu <flashcode@flashtux.org>");
+DOGECHAT_PLUGIN_VERSION(DOGECHAT_VERSION);
+DOGECHAT_PLUGIN_LICENSE(DOGECHAT_LICENSE);
+DOGECHAT_PLUGIN_PRIORITY(12000);
 
-struct t_weechat_plugin *weechat_logger_plugin = NULL;
+struct t_dogechat_plugin *dogechat_logger_plugin = NULL;
 
 struct t_hook *logger_timer = NULL;    /* timer to flush log files          */
 
@@ -61,7 +61,7 @@ struct t_hook *logger_timer = NULL;    /* timer to flush log files          */
  * Gets logger file path option.
  *
  * Special vars are replaced:
- *   - "%h" (at beginning of string): WeeChat home
+ *   - "%h" (at beginning of string): DogeChat home
  *   - "~": user home
  *   - date/time specifiers (see man strftime)
  *
@@ -80,8 +80,8 @@ logger_get_file_path ()
     path2 = NULL;
 
     /* replace %h and "~", evaluate path */
-    path = weechat_string_eval_path_home (
-        weechat_config_string (logger_config_file_path), NULL, NULL, NULL);
+    path = dogechat_string_eval_path_home (
+        dogechat_config_string (logger_config_file_path), NULL, NULL, NULL);
     if (!path)
         goto end;
 
@@ -95,9 +95,9 @@ logger_get_file_path ()
     path2[0] = '\0';
     strftime (path2, length - 1, path, date_tmp);
 
-    if (weechat_logger_plugin->debug)
+    if (dogechat_logger_plugin->debug)
     {
-        weechat_printf_tags (NULL,
+        dogechat_printf_tags (NULL,
                              "no_log",
                              "%s: file path = \"%s\"",
                              LOGGER_PLUGIN_NAME, path2);
@@ -128,7 +128,7 @@ logger_create_directory ()
     file_path = logger_get_file_path ();
     if (file_path)
     {
-        if (!weechat_mkdir_parents (file_path, 0700))
+        if (!dogechat_mkdir_parents (file_path, 0700))
             rc = 0;
         free (file_path);
     }
@@ -154,8 +154,8 @@ logger_build_option_name (struct t_gui_buffer *buffer)
     if (!buffer)
         return NULL;
 
-    plugin_name = weechat_buffer_get_string (buffer, "plugin");
-    name = weechat_buffer_get_string (buffer, "name");
+    plugin_name = dogechat_buffer_get_string (buffer, "plugin");
+    name = dogechat_buffer_get_string (buffer, "name");
 
     length = strlen (plugin_name) + 1 + strlen (name) + 1;
     option_name = malloc (length);
@@ -181,7 +181,7 @@ logger_get_level_for_buffer (struct t_gui_buffer *buffer)
     struct t_config_option *ptr_option;
 
     /* no log for buffer if local variable "no_log" is defined for buffer */
-    no_log = weechat_buffer_get_string (buffer, "localvar_no_log");
+    no_log = dogechat_buffer_get_string (buffer, "localvar_no_log");
     if (no_log && no_log[0])
         return 0;
 
@@ -200,7 +200,7 @@ logger_get_level_for_buffer (struct t_gui_buffer *buffer)
             {
                 free (option_name);
                 free (name);
-                return weechat_config_integer (ptr_option);
+                return dogechat_config_integer (ptr_option);
             }
             ptr_end--;
             while ((ptr_end >= option_name) && (ptr_end[0] != '.'))
@@ -216,7 +216,7 @@ logger_get_level_for_buffer (struct t_gui_buffer *buffer)
         free (name);
 
         if (ptr_option)
-            return weechat_config_integer (ptr_option);
+            return dogechat_config_integer (ptr_option);
     }
     else
         free (name);
@@ -253,7 +253,7 @@ logger_get_mask_for_buffer (struct t_gui_buffer *buffer)
             {
                 free (option_name);
                 free (name);
-                return weechat_config_string (ptr_option);
+                return dogechat_config_string (ptr_option);
             }
             ptr_end--;
             while ((ptr_end >= option_name) && (ptr_end[0] != '.'))
@@ -269,15 +269,15 @@ logger_get_mask_for_buffer (struct t_gui_buffer *buffer)
         free (name);
 
         if (ptr_option)
-            return weechat_config_string (ptr_option);
+            return dogechat_config_string (ptr_option);
     }
     else
         free (name);
 
     /* nothing found => return default mask (if set) */
-    if (weechat_config_string (logger_config_file_mask)
-        && weechat_config_string (logger_config_file_mask)[0])
-        return weechat_config_string (logger_config_file_mask);
+    if (dogechat_config_string (logger_config_file_mask)
+        && dogechat_config_string (logger_config_file_mask)[0])
+        return dogechat_config_string (logger_config_file_mask);
 
     /* no default mask set */
     return NULL;
@@ -310,7 +310,7 @@ logger_get_mask_expanded (struct t_gui_buffer *buffer, const char *mask)
     mask_decoded4 = NULL;
     mask_decoded5 = NULL;
 
-    dir_separator = weechat_info_get ("dir_separator", "");
+    dir_separator = dogechat_info_get ("dir_separator", "");
     if (!dir_separator)
         return NULL;
 
@@ -319,23 +319,23 @@ logger_get_mask_expanded (struct t_gui_buffer *buffer, const char *mask)
      * buffer mask can contain this char, and will be replaced by replacement
      * char ('_' by default)
      */
-    mask2 = weechat_string_replace (mask, dir_separator, "\01");
+    mask2 = dogechat_string_replace (mask, dir_separator, "\01");
     if (!mask2)
         goto end;
 
-    mask_decoded = weechat_buffer_string_replace_local_var (buffer, mask2);
+    mask_decoded = dogechat_buffer_string_replace_local_var (buffer, mask2);
     if (!mask_decoded)
         goto end;
 
-    mask_decoded2 = weechat_string_replace (mask_decoded,
+    mask_decoded2 = dogechat_string_replace (mask_decoded,
                                             dir_separator,
-                                            weechat_config_string (logger_config_file_replacement_char));
+                                            dogechat_config_string (logger_config_file_replacement_char));
     if (!mask_decoded2)
         goto end;
 
 #ifdef __CYGWIN__
-    mask_decoded3 = weechat_string_replace (mask_decoded2, "\\",
-                                            weechat_config_string (logger_config_file_replacement_char));
+    mask_decoded3 = dogechat_string_replace (mask_decoded2, "\\",
+                                            dogechat_config_string (logger_config_file_replacement_char));
 #else
     mask_decoded3 = strdup (mask_decoded2);
 #endif /* __CYGWIN__ */
@@ -343,7 +343,7 @@ logger_get_mask_expanded (struct t_gui_buffer *buffer, const char *mask)
         goto end;
 
     /* restore directory separator */
-    mask_decoded4 = weechat_string_replace (mask_decoded3,
+    mask_decoded4 = dogechat_string_replace (mask_decoded3,
                                             "\01", dir_separator);
     if (!mask_decoded4)
         goto end;
@@ -359,17 +359,17 @@ logger_get_mask_expanded (struct t_gui_buffer *buffer, const char *mask)
     strftime (mask_decoded5, length - 1, mask_decoded4, date_tmp);
 
     /* convert to lower case? */
-    if (weechat_config_boolean (logger_config_file_name_lower_case))
-        weechat_string_tolower (mask_decoded5);
+    if (dogechat_config_boolean (logger_config_file_name_lower_case))
+        dogechat_string_tolower (mask_decoded5);
 
-    if (weechat_logger_plugin->debug)
+    if (dogechat_logger_plugin->debug)
     {
-        weechat_printf_tags (NULL,
+        dogechat_printf_tags (NULL,
                              "no_log",
                              "%s: buffer = \"%s\", mask = \"%s\", "
                              "decoded mask = \"%s\"",
                              LOGGER_PLUGIN_NAME,
-                             weechat_buffer_get_string (buffer, "name"),
+                             dogechat_buffer_get_string (buffer, "name"),
                              mask, mask_decoded5);
     }
 
@@ -399,30 +399,30 @@ logger_get_filename (struct t_gui_buffer *buffer)
 {
     char *res, *mask_expanded, *file_path;
     const char *mask;
-    const char *dir_separator, *weechat_dir;
+    const char *dir_separator, *dogechat_dir;
     int length;
 
     res = NULL;
     mask_expanded = NULL;
     file_path = NULL;
 
-    dir_separator = weechat_info_get ("dir_separator", "");
+    dir_separator = dogechat_info_get ("dir_separator", "");
     if (!dir_separator)
         return NULL;
-    weechat_dir = weechat_info_get ("weechat_dir", "");
-    if (!weechat_dir)
+    dogechat_dir = dogechat_info_get ("dogechat_dir", "");
+    if (!dogechat_dir)
         return NULL;
 
     /* get filename mask for buffer */
     mask = logger_get_mask_for_buffer (buffer);
     if (!mask)
     {
-        weechat_printf_tags (NULL,
+        dogechat_printf_tags (NULL,
                              "no_log",
                              _("%s%s: unable to find filename mask for buffer "
                                "\"%s\", logging is disabled for this buffer"),
-                             weechat_prefix ("error"), LOGGER_PLUGIN_NAME,
-                             weechat_buffer_get_string (buffer, "name"));
+                             dogechat_prefix ("error"), LOGGER_PLUGIN_NAME,
+                             dogechat_buffer_get_string (buffer, "name"));
         return NULL;
     }
 
@@ -470,10 +470,10 @@ logger_set_log_filename (struct t_logger_buffer *logger_buffer)
     log_filename = logger_get_filename (logger_buffer->buffer);
     if (!log_filename)
     {
-        weechat_printf_tags (NULL,
+        dogechat_printf_tags (NULL,
                              "no_log",
                              _("%s%s: not enough memory"),
-                             weechat_prefix ("error"),
+                             dogechat_prefix ("error"),
                              LOGGER_PLUGIN_NAME);
         return;
     }
@@ -482,28 +482,28 @@ logger_set_log_filename (struct t_logger_buffer *logger_buffer)
     ptr_logger_buffer = logger_buffer_search_log_filename (log_filename);
     if (ptr_logger_buffer)
     {
-        weechat_printf_tags (NULL,
+        dogechat_printf_tags (NULL,
                              "no_log",
                              _("%s%s: unable to start logging for buffer "
                                "\"%s\": filename \"%s\" is already used by "
                                "another buffer (check your log settings)"),
-                             weechat_prefix ("error"),
+                             dogechat_prefix ("error"),
                              LOGGER_PLUGIN_NAME,
-                             weechat_buffer_get_string (logger_buffer->buffer, "name"),
+                             dogechat_buffer_get_string (logger_buffer->buffer, "name"),
                              log_filename);
         free (log_filename);
         return;
     }
 
     /* create directory for path in "log_filename" */
-    dir_separator = weechat_info_get ("dir_separator", "");
+    dir_separator = dogechat_info_get ("dir_separator", "");
     if (dir_separator)
     {
         pos_last_sep = strrchr (log_filename, dir_separator[0]);
         if (pos_last_sep)
         {
             pos_last_sep[0] = '\0';
-            weechat_mkdir_parents (log_filename, 0700);
+            dogechat_mkdir_parents (log_filename, 0700);
             pos_last_sep[0] = dir_separator[0];
         }
     }
@@ -526,7 +526,7 @@ logger_write_line (struct t_logger_buffer *logger_buffer,
     struct tm *date_tmp;
     int log_level;
 
-    charset = weechat_info_get ("charset_terminal", "");
+    charset = dogechat_info_get ("charset_terminal", "");
 
     if (!logger_buffer->log_file)
     {
@@ -538,12 +538,12 @@ logger_write_line (struct t_logger_buffer *logger_buffer,
         }
         if (!logger_create_directory ())
         {
-            weechat_printf_tags (NULL,
+            dogechat_printf_tags (NULL,
                                  "no_log",
                                  _("%s%s: unable to create directory for logs "
                                    "(\"%s\")"),
-                                 weechat_prefix ("error"), LOGGER_PLUGIN_NAME,
-                                 weechat_config_string (logger_config_file_path));
+                                 dogechat_prefix ("error"), LOGGER_PLUGIN_NAME,
+                                 dogechat_config_string (logger_config_file_path));
             logger_buffer_free (logger_buffer);
             return;
         }
@@ -559,17 +559,17 @@ logger_write_line (struct t_logger_buffer *logger_buffer,
             fopen (logger_buffer->log_filename, "a");
         if (!logger_buffer->log_file)
         {
-            weechat_printf_tags (
+            dogechat_printf_tags (
                 NULL,
                 "no_log",
                 _("%s%s: unable to write log file \"%s\": %s"),
-                weechat_prefix ("error"), LOGGER_PLUGIN_NAME,
+                dogechat_prefix ("error"), LOGGER_PLUGIN_NAME,
                 logger_buffer->log_filename, strerror (errno));
             logger_buffer_free (logger_buffer);
             return;
         }
 
-        if (weechat_config_boolean (logger_config_file_info_lines)
+        if (dogechat_config_boolean (logger_config_file_info_lines)
             && logger_buffer->write_start_info_line)
         {
             buf_time[0] = '\0';
@@ -578,14 +578,14 @@ logger_write_line (struct t_logger_buffer *logger_buffer,
             if (date_tmp)
             {
                 strftime (buf_time, sizeof (buf_time) - 1,
-                          weechat_config_string (logger_config_file_time_format),
+                          dogechat_config_string (logger_config_file_time_format),
                           date_tmp);
             }
             snprintf (buf_beginning, sizeof (buf_beginning),
                       _("%s\t****  Beginning of log  ****"),
                       buf_time);
             message = (charset) ?
-                weechat_iconv_from_internal (charset, buf_beginning) : NULL;
+                dogechat_iconv_from_internal (charset, buf_beginning) : NULL;
             fprintf (logger_buffer->log_file,
                      "%s\n", (message) ? message : buf_beginning);
             if (message)
@@ -595,11 +595,11 @@ logger_write_line (struct t_logger_buffer *logger_buffer,
         logger_buffer->write_start_info_line = 0;
     }
 
-    weechat_va_format (format);
+    dogechat_va_format (format);
     if (vbuffer)
     {
         message = (charset) ?
-            weechat_iconv_from_internal (charset, vbuffer) : NULL;
+            dogechat_iconv_from_internal (charset, vbuffer) : NULL;
         fprintf (logger_buffer->log_file,
                  "%s\n", (message) ? message : vbuffer);
         if (message)
@@ -630,7 +630,7 @@ logger_stop (struct t_logger_buffer *logger_buffer, int write_info_line)
 
     if (logger_buffer->log_enabled && logger_buffer->log_file)
     {
-        if (write_info_line && weechat_config_boolean (logger_config_file_info_lines))
+        if (write_info_line && dogechat_config_boolean (logger_config_file_info_lines))
         {
             buf_time[0] = '\0';
             seconds = time (NULL);
@@ -638,7 +638,7 @@ logger_stop (struct t_logger_buffer *logger_buffer, int write_info_line)
             if (date_tmp)
             {
                 strftime (buf_time, sizeof (buf_time) - 1,
-                          weechat_config_string (logger_config_file_time_format),
+                          dogechat_config_string (logger_config_file_time_format),
                           date_tmp);
             }
             logger_write_line (logger_buffer,
@@ -678,7 +678,7 @@ logger_start_buffer (struct t_gui_buffer *buffer, int write_info_line)
         return;
 
     log_level = logger_get_level_for_buffer (buffer);
-    log_enabled =  weechat_config_boolean (logger_config_file_auto_log)
+    log_enabled =  dogechat_config_boolean (logger_config_file_auto_log)
         && (log_level > 0);
 
     ptr_logger_buffer = logger_buffer_search_buffer (buffer);
@@ -725,16 +725,16 @@ logger_start_buffer_all (int write_info_line)
 {
     struct t_infolist *ptr_infolist;
 
-    ptr_infolist = weechat_infolist_get ("buffer", NULL, NULL);
+    ptr_infolist = dogechat_infolist_get ("buffer", NULL, NULL);
     if (ptr_infolist)
     {
-        while (weechat_infolist_next (ptr_infolist))
+        while (dogechat_infolist_next (ptr_infolist))
         {
-            logger_start_buffer (weechat_infolist_pointer (ptr_infolist,
+            logger_start_buffer (dogechat_infolist_pointer (ptr_infolist,
                                                            "pointer"),
                                  write_info_line);
         }
-        weechat_infolist_free (ptr_infolist);
+        dogechat_infolist_free (ptr_infolist);
     }
 }
 
@@ -750,15 +750,15 @@ logger_list ()
     struct t_gui_buffer *ptr_buffer;
     char status[128];
 
-    weechat_printf (NULL, "");
-    weechat_printf (NULL, _("Logging on buffers:"));
+    dogechat_printf (NULL, "");
+    dogechat_printf (NULL, _("Logging on buffers:"));
 
-    ptr_infolist = weechat_infolist_get ("buffer", NULL, NULL);
+    ptr_infolist = dogechat_infolist_get ("buffer", NULL, NULL);
     if (ptr_infolist)
     {
-        while (weechat_infolist_next (ptr_infolist))
+        while (dogechat_infolist_next (ptr_infolist))
         {
-            ptr_buffer = weechat_infolist_pointer (ptr_infolist, "pointer");
+            ptr_buffer = dogechat_infolist_pointer (ptr_infolist, "pointer");
             if (ptr_buffer)
             {
                 ptr_logger_buffer = logger_buffer_search_buffer (ptr_buffer);
@@ -772,17 +772,17 @@ logger_list ()
                 {
                     snprintf (status, sizeof (status), "%s", _("not logging"));
                 }
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 "  %s[%s%d%s]%s (%s) %s%s%s: %s%s%s%s",
-                                weechat_color("chat_delimiters"),
-                                weechat_color("chat"),
-                                weechat_infolist_integer (ptr_infolist, "number"),
-                                weechat_color("chat_delimiters"),
-                                weechat_color("chat"),
-                                weechat_infolist_string (ptr_infolist, "plugin_name"),
-                                weechat_color("chat_buffer"),
-                                weechat_infolist_string (ptr_infolist, "name"),
-                                weechat_color("chat"),
+                                dogechat_color("chat_delimiters"),
+                                dogechat_color("chat"),
+                                dogechat_infolist_integer (ptr_infolist, "number"),
+                                dogechat_color("chat_delimiters"),
+                                dogechat_color("chat"),
+                                dogechat_infolist_string (ptr_infolist, "plugin_name"),
+                                dogechat_color("chat_buffer"),
+                                dogechat_infolist_string (ptr_infolist, "name"),
+                                dogechat_color("chat"),
                                 status,
                                 (ptr_logger_buffer) ? " (" : "",
                                 (ptr_logger_buffer) ?
@@ -791,7 +791,7 @@ logger_list ()
                                 (ptr_logger_buffer) ? ")" : "");
             }
         }
-        weechat_infolist_free (ptr_infolist);
+        dogechat_infolist_free (ptr_infolist);
     }
 }
 
@@ -809,14 +809,14 @@ logger_set_buffer (struct t_gui_buffer *buffer, const char *value)
     if (!name)
         return;
 
-    if (logger_config_set_level (name, value) != WEECHAT_CONFIG_OPTION_SET_ERROR)
+    if (logger_config_set_level (name, value) != DOGECHAT_CONFIG_OPTION_SET_ERROR)
     {
         ptr_option = logger_config_get_level (name);
         if (ptr_option)
         {
-            weechat_printf (NULL, _("%s: \"%s\" => level %d"),
+            dogechat_printf (NULL, _("%s: \"%s\" => level %d"),
                             LOGGER_PLUGIN_NAME, name,
-                            weechat_config_integer (ptr_option));
+                            dogechat_config_integer (ptr_option));
         }
     }
 
@@ -837,9 +837,9 @@ logger_flush ()
     {
         if (ptr_logger_buffer->log_file && ptr_logger_buffer->flush_needed)
         {
-            if (weechat_logger_plugin->debug >= 2)
+            if (dogechat_logger_plugin->debug >= 2)
             {
-                weechat_printf_tags (NULL,
+                dogechat_printf_tags (NULL,
                                      "no_log",
                                      "%s: flush file %s",
                                      LOGGER_PLUGIN_NAME,
@@ -864,32 +864,32 @@ logger_command_cb (void *data, struct t_gui_buffer *buffer,
     (void) argv_eol;
 
     if ((argc == 1)
-        || ((argc == 2) && (weechat_strcasecmp (argv[1], "list") == 0)))
+        || ((argc == 2) && (dogechat_strcasecmp (argv[1], "list") == 0)))
     {
         logger_list ();
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "set") == 0)
+    if (dogechat_strcasecmp (argv[1], "set") == 0)
     {
         if (argc > 2)
             logger_set_buffer (buffer, argv[2]);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "flush") == 0)
+    if (dogechat_strcasecmp (argv[1], "flush") == 0)
     {
         logger_flush ();
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "disable") == 0)
+    if (dogechat_strcasecmp (argv[1], "disable") == 0)
     {
         logger_set_buffer (buffer, "0");
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    WEECHAT_COMMAND_ERROR;
+    DOGECHAT_COMMAND_ERROR;
 }
 
 /*
@@ -907,7 +907,7 @@ logger_buffer_opened_signal_cb (void *data, const char *signal,
 
     logger_start_buffer (signal_data, 1);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -925,7 +925,7 @@ logger_buffer_closing_signal_cb (void *data, const char *signal,
 
     logger_stop (logger_buffer_search_buffer (signal_data), 1);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -944,7 +944,7 @@ logger_buffer_renamed_signal_cb (void *data, const char *signal,
     logger_stop (logger_buffer_search_buffer (signal_data), 1);
     logger_start_buffer (signal_data, 1);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -961,9 +961,9 @@ logger_backlog (struct t_gui_buffer *buffer, const char *filename, int lines)
     struct tm tm_line;
     int num_lines;
 
-    charset = weechat_info_get ("charset_terminal", "");
+    charset = dogechat_info_get ("charset_terminal", "");
 
-    weechat_buffer_set (buffer, "print_hooks_enabled", "0");
+    dogechat_buffer_set (buffer, "print_hooks_enabled", "0");
 
     num_lines = 0;
     last_lines = logger_tail_file (filename, lines);
@@ -985,7 +985,7 @@ logger_backlog (struct t_gui_buffer *buffer, const char *filename, int lines)
             localtime_r (&time_now, &tm_line);
             pos_message[0] = '\0';
             error = strptime (ptr_lines->data,
-                              weechat_config_string (logger_config_file_time_format),
+                              dogechat_config_string (logger_config_file_time_format),
                               &tm_line);
             if (error && !error[0] && (tm_line.tm_year > 0))
                 datetime = mktime (&tm_line);
@@ -994,19 +994,19 @@ logger_backlog (struct t_gui_buffer *buffer, const char *filename, int lines)
         pos_message = (pos_message && (datetime != 0)) ?
             pos_message + 1 : ptr_lines->data;
         message = (charset) ?
-            weechat_iconv_to_internal (charset, pos_message) : strdup (pos_message);
+            dogechat_iconv_to_internal (charset, pos_message) : strdup (pos_message);
         if (message)
         {
             pos_tab = strchr (message, '\t');
             if (pos_tab)
                 pos_tab[0] = '\0';
-            weechat_printf_date_tags (buffer, datetime,
+            dogechat_printf_date_tags (buffer, datetime,
                                       "no_highlight,notify_none,logger_backlog",
                                       "%s%s%s%s%s",
-                                      weechat_color (weechat_config_string (logger_config_color_backlog_line)),
+                                      dogechat_color (dogechat_config_string (logger_config_color_backlog_line)),
                                       message,
                                       (pos_tab) ? "\t" : "",
-                                      (pos_tab) ? weechat_color (weechat_config_string (logger_config_color_backlog_line)) : "",
+                                      (pos_tab) ? dogechat_color (dogechat_config_string (logger_config_color_backlog_line)) : "",
                                       (pos_tab) ? pos_tab + 1 : "");
             if (pos_tab)
                 pos_tab[0] = '\t';
@@ -1019,15 +1019,15 @@ logger_backlog (struct t_gui_buffer *buffer, const char *filename, int lines)
         logger_tail_free (last_lines);
     if (num_lines > 0)
     {
-        weechat_printf_date_tags (buffer, datetime,
+        dogechat_printf_date_tags (buffer, datetime,
                                   "no_highlight,notify_none,logger_backlog_end",
                                   _("%s===\t%s========== End of backlog (%d lines) =========="),
-                                  weechat_color (weechat_config_string (logger_config_color_backlog_end)),
-                                  weechat_color (weechat_config_string (logger_config_color_backlog_end)),
+                                  dogechat_color (dogechat_config_string (logger_config_color_backlog_end)),
+                                  dogechat_color (dogechat_config_string (logger_config_color_backlog_end)),
                                   num_lines);
-        weechat_buffer_set (buffer, "unread", "");
+        dogechat_buffer_set (buffer, "unread", "");
     }
-    weechat_buffer_set (buffer, "print_hooks_enabled", "1");
+    dogechat_buffer_set (buffer, "print_hooks_enabled", "1");
 }
 
 /*
@@ -1045,7 +1045,7 @@ logger_backlog_signal_cb (void *data, const char *signal,
     (void) signal;
     (void) type_data;
 
-    if (weechat_config_integer (logger_config_look_backlog) >= 0)
+    if (dogechat_config_integer (logger_config_look_backlog) >= 0)
     {
         ptr_logger_buffer = logger_buffer_search_buffer (signal_data);
         if (ptr_logger_buffer && ptr_logger_buffer->log_enabled)
@@ -1059,14 +1059,14 @@ logger_backlog_signal_cb (void *data, const char *signal,
 
                 logger_backlog (signal_data,
                                 ptr_logger_buffer->log_filename,
-                                weechat_config_integer (logger_config_look_backlog));
+                                dogechat_config_integer (logger_config_look_backlog));
 
                 ptr_logger_buffer->log_enabled = 1;
             }
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1084,7 +1084,7 @@ logger_start_signal_cb (void *data, const char *signal, const char *type_data,
 
     logger_start_buffer (signal_data, 1);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1106,7 +1106,7 @@ logger_stop_signal_cb (void *data, const char *signal, const char *type_data,
     if (ptr_logger_buffer)
         logger_stop (ptr_logger_buffer, 0);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1124,12 +1124,12 @@ logger_adjust_log_filenames ()
     struct t_gui_buffer *ptr_buffer;
     char *log_filename;
 
-    ptr_infolist = weechat_infolist_get ("buffer", NULL, NULL);
+    ptr_infolist = dogechat_infolist_get ("buffer", NULL, NULL);
     if (ptr_infolist)
     {
-        while (weechat_infolist_next (ptr_infolist))
+        while (dogechat_infolist_next (ptr_infolist))
         {
-            ptr_buffer = weechat_infolist_pointer (ptr_infolist, "pointer");
+            ptr_buffer = dogechat_infolist_pointer (ptr_infolist, "pointer");
             ptr_logger_buffer = logger_buffer_search_buffer (ptr_buffer);
             if (ptr_logger_buffer && ptr_logger_buffer->log_filename)
             {
@@ -1149,7 +1149,7 @@ logger_adjust_log_filenames ()
                 }
             }
         }
-        weechat_infolist_free (ptr_infolist);
+        dogechat_infolist_free (ptr_infolist);
     }
 }
 
@@ -1169,7 +1169,7 @@ logger_day_changed_signal_cb (void *data, const char *signal,
 
     logger_adjust_log_filenames ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1256,21 +1256,21 @@ logger_print_cb (void *data, struct t_gui_buffer *buffer, time_t date,
             if (date_tmp)
             {
                 strftime (buf_time, sizeof (buf_time) - 1,
-                          weechat_config_string (logger_config_file_time_format),
+                          dogechat_config_string (logger_config_file_time_format),
                           date_tmp);
             }
 
             logger_write_line (ptr_logger_buffer,
                                "%s\t%s%s%s\t%s",
                                buf_time,
-                               (prefix && prefix_is_nick) ? weechat_config_string (logger_config_file_nick_prefix) : "",
+                               (prefix && prefix_is_nick) ? dogechat_config_string (logger_config_file_nick_prefix) : "",
                                (prefix) ? prefix : "",
-                               (prefix && prefix_is_nick) ? weechat_config_string (logger_config_file_nick_suffix) : "",
+                               (prefix && prefix_is_nick) ? dogechat_config_string (logger_config_file_nick_suffix) : "",
                                message);
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1286,7 +1286,7 @@ logger_timer_cb (void *data, int remaining_calls)
 
     logger_flush ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1294,21 +1294,21 @@ logger_timer_cb (void *data, int remaining_calls)
  */
 
 int
-weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
+dogechat_plugin_init (struct t_dogechat_plugin *plugin, int argc, char *argv[])
 {
     /* make C compiler happy */
     (void) argc;
     (void) argv;
 
-    weechat_plugin = plugin;
+    dogechat_plugin = plugin;
 
     if (!logger_config_init ())
-        return WEECHAT_RC_ERROR;
+        return DOGECHAT_RC_ERROR;
 
     logger_config_read ();
 
     /* command /logger */
-    weechat_hook_command (
+    dogechat_hook_command (
         "logger",
         N_("logger plugin configuration"),
         N_("list"
@@ -1339,10 +1339,10 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
            "    /logger disable\n"
            "  set level to 3 for all IRC buffers:\n"
            "    /set logger.level.irc 3\n"
-           "  disable logging for main WeeChat buffer:\n"
-           "    /set logger.level.core.weechat 0\n"
+           "  disable logging for main DogeChat buffer:\n"
+           "    /set logger.level.core.dogechat 0\n"
            "  use a directory per IRC server and a file per channel inside:\n"
-           "    /set logger.mask.irc \"$server/$channel.weechatlog\""),
+           "    /set logger.mask.irc \"$server/$channel.dogechatlog\""),
         "list"
         " || set 1|2|3|4|5|6|7|8|9"
         " || flush"
@@ -1351,19 +1351,19 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
 
     logger_start_buffer_all (1);
 
-    weechat_hook_signal ("buffer_opened", &logger_buffer_opened_signal_cb, NULL);
-    weechat_hook_signal ("buffer_closing", &logger_buffer_closing_signal_cb, NULL);
-    weechat_hook_signal ("buffer_renamed", &logger_buffer_renamed_signal_cb, NULL);
-    weechat_hook_signal ("logger_backlog", &logger_backlog_signal_cb, NULL);
-    weechat_hook_signal ("logger_start", &logger_start_signal_cb, NULL);
-    weechat_hook_signal ("logger_stop", &logger_stop_signal_cb, NULL);
-    weechat_hook_signal ("day_changed", &logger_day_changed_signal_cb, NULL);
+    dogechat_hook_signal ("buffer_opened", &logger_buffer_opened_signal_cb, NULL);
+    dogechat_hook_signal ("buffer_closing", &logger_buffer_closing_signal_cb, NULL);
+    dogechat_hook_signal ("buffer_renamed", &logger_buffer_renamed_signal_cb, NULL);
+    dogechat_hook_signal ("logger_backlog", &logger_backlog_signal_cb, NULL);
+    dogechat_hook_signal ("logger_start", &logger_start_signal_cb, NULL);
+    dogechat_hook_signal ("logger_stop", &logger_stop_signal_cb, NULL);
+    dogechat_hook_signal ("day_changed", &logger_day_changed_signal_cb, NULL);
 
-    weechat_hook_print (NULL, NULL, NULL, 1, &logger_print_cb, NULL);
+    dogechat_hook_print (NULL, NULL, NULL, 1, &logger_print_cb, NULL);
 
     logger_info_init ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -1371,14 +1371,14 @@ weechat_plugin_init (struct t_weechat_plugin *plugin, int argc, char *argv[])
  */
 
 int
-weechat_plugin_end (struct t_weechat_plugin *plugin)
+dogechat_plugin_end (struct t_dogechat_plugin *plugin)
 {
     /* make C compiler happy */
     (void) plugin;
 
     if (logger_timer)
     {
-        weechat_unhook (logger_timer);
+        dogechat_unhook (logger_timer);
         logger_timer = NULL;
     }
 
@@ -1388,5 +1388,5 @@ weechat_plugin_end (struct t_weechat_plugin *plugin)
 
     logger_config_free ();
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }

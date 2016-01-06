@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2014-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_EXEC_COMMAND_H
-#define WEECHAT_EXEC_COMMAND_H 1
+#ifndef DOGECHAT_EXEC_COMMAND_H
+#define DOGECHAT_EXEC_COMMAND_H 1
 
 struct t_exec_cmd_options
 {
@@ -38,7 +38,7 @@ struct t_exec_cmd_options
     int color;                         /* what to do with ANSI colors       */
     int display_rc;                    /* 1 to display return code          */
     const char *ptr_command_name;      /* name of command                   */
-    char *pipe_command;                /* output piped to WeeChat/plugin cmd*/
+    char *pipe_command;                /* output piped to DogeChat/plugin cmd*/
     char *hsignal;                     /* send a hsignal with output        */
 };
 
@@ -47,4 +47,4 @@ extern int exec_command_run (struct t_gui_buffer *buffer,
                              int start_arg);
 extern void exec_command_init ();
 
-#endif /* WEECHAT_EXEC_COMMAND_H */
+#endif /* DOGECHAT_EXEC_COMMAND_H */

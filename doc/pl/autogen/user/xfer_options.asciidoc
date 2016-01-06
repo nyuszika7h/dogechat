@@ -5,47 +5,47 @@
 * [[option_xfer.color.status_aborted]] *xfer.color.status_aborted*
 ** opis: `kolor statusu "aborted"`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `lightred`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `lightred`)
 
 * [[option_xfer.color.status_active]] *xfer.color.status_active*
 ** opis: `kolor statusu "active"`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `lightblue`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `lightblue`)
 
 * [[option_xfer.color.status_connecting]] *xfer.color.status_connecting*
 ** opis: `kolor statusu "connecting"`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `yellow`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `yellow`)
 
 * [[option_xfer.color.status_done]] *xfer.color.status_done*
 ** opis: `kolor statusu "done"`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `lightgreen`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `lightgreen`)
 
 * [[option_xfer.color.status_failed]] *xfer.color.status_failed*
 ** opis: `kolor statusu "failed"`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `lightred`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `lightred`)
 
 * [[option_xfer.color.status_waiting]] *xfer.color.status_waiting*
 ** opis: `kolor statusu "waiting"`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `lightcyan`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `lightcyan`)
 
 * [[option_xfer.color.text]] *xfer.color.text*
 ** opis: `kolor tekstu w buforze xfer`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
 
 * [[option_xfer.color.text_bg]] *xfer.color.text_bg*
 ** opis: `kolor tła w buforze xfer`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `default`)
 
 * [[option_xfer.color.text_selected]] *xfer.color.text_selected*
 ** opis: `kolor tekstu zaznaczonej linii w buforze xfer`
 ** typ: kolor
-** wartości: nazwa koloru WeeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `white`)
+** wartości: nazwa koloru DogeChat (default, black, (dark)gray, white, (light)red, (light)green, brown, yellow, (light)blue, (light)magenta, (light)cyan), numer koloru terminala albo alias; atrybuty dozwolone przed kolorem (tylko dla kolorów testu, nie tła): "*" pogrubienie, "!" odwrócenie, "/" pochylenie, "_" podkreślenie (domyślna wartość: `white`)
 
 * [[option_xfer.file.auto_accept_chats]] *xfer.file.auto_accept_chats*
 ** opis: `automatycznie akceptuj prośby o rozmowę (ostrożnie!)`
@@ -83,12 +83,12 @@
 ** wartości: on, off (domyślna wartość: `on`)
 
 * [[option_xfer.file.download_path]] *xfer.file.download_path*
-** opis: `ścieżka, do której zapisywane będą pliki przychodzące; "%h" na początku ciągu zostanie zastąpione przez katalog domowy WeeChat (domyślnie "~/.weechat")  (uwaga: zawartość jest przetwarzana, zobacz /help eval)`
+** opis: `ścieżka, do której zapisywane będą pliki przychodzące; "%h" na początku ciągu zostanie zastąpione przez katalog domowy DogeChat (domyślnie "~/.dogechat")  (uwaga: zawartość jest przetwarzana, zobacz /help eval)`
 ** typ: ciąg
 ** wartości: dowolny ciąg (domyślna wartość: `"%h/xfer"`)
 
 * [[option_xfer.file.upload_path]] *xfer.file.upload_path*
-** opis: `ścieżka do wysyłanych plików (jeśli nie zostanie ona podana przez użykownika); "%h" na początku ciągu zostanie zastąpione przez katalog domowy WeeChat (domyślnie "~/.weechat")  (uwaga: zawartość jest przetwarzana, zobacz /help eval)`
+** opis: `ścieżka do wysyłanych plików (jeśli nie zostanie ona podana przez użykownika); "%h" na początku ciągu zostanie zastąpione przez katalog domowy DogeChat (domyślnie "~/.dogechat")  (uwaga: zawartość jest przetwarzana, zobacz /help eval)`
 ** typ: ciąg
 ** wartości: dowolny ciąg (domyślna wartość: `"~"`)
 

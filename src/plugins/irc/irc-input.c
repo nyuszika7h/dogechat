@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-buffer.h"
 #include "irc-server.h"
@@ -57,7 +57,7 @@ irc_input_user_message_display (struct t_gui_buffer *buffer, int action,
         action = 1;
         pos = strrchr (text + 8, '\01');
         if (pos)
-            text2 = weechat_strndup (text + 8, pos - text - 8);
+            text2 = dogechat_strndup (text + 8, pos - text - 8);
         else
             text2 = strdup (text + 8);
     }
@@ -66,7 +66,7 @@ irc_input_user_message_display (struct t_gui_buffer *buffer, int action,
 
     text_decoded = irc_color_decode (
         (text2) ? text2 : text,
-        weechat_config_boolean (irc_config_network_colors_send));
+        dogechat_config_boolean (irc_config_network_colors_send));
 
     IRC_BUFFER_GET_SERVER_CHANNEL(buffer);
 
@@ -87,8 +87,8 @@ irc_input_user_message_display (struct t_gui_buffer *buffer, int action,
         else
         {
             str_color = irc_color_for_tags (
-                weechat_config_color (
-                    weechat_config_get ("weechat.color.chat_nick_self")));
+                dogechat_config_color (
+                    dogechat_config_get ("dogechat.color.chat_nick_self")));
             snprintf (str_tags, sizeof (str_tags),
                       "notify_none,no_highlight,prefix_nick_%s",
                       (str_color) ? str_color : "default");
@@ -98,14 +98,14 @@ irc_input_user_message_display (struct t_gui_buffer *buffer, int action,
         ptr_text = (text_decoded) ? text_decoded : ((text2) ? text2 : text);
         if (action)
         {
-            weechat_printf_tags (
+            dogechat_printf_tags (
                 buffer,
                 irc_protocol_tags (
                     "privmsg", str_tags,
                     (ptr_nick) ? ptr_nick->name : ptr_server->nick,
                     NULL),
                 "%s%s%s%s%s %s",
-                weechat_prefix ("action"),
+                dogechat_prefix ("action"),
                 irc_nick_mode_for_display (ptr_server, ptr_nick, 0),
                 IRC_COLOR_CHAT_NICK_SELF,
                 ptr_server->nick,
@@ -114,7 +114,7 @@ irc_input_user_message_display (struct t_gui_buffer *buffer, int action,
         }
         else
         {
-            weechat_printf_tags (
+            dogechat_printf_tags (
                 buffer,
                 irc_protocol_tags (
                     "privmsg", str_tags,
@@ -157,9 +157,9 @@ irc_input_send_user_message (struct t_gui_buffer *buffer, int flags,
 
     if (!ptr_server->is_connected)
     {
-        weechat_printf (buffer,
+        dogechat_printf (buffer,
                         _("%s%s: you are not connected to server"),
-                        weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                        dogechat_prefix ("error"), IRC_PLUGIN_NAME);
         return;
     }
     hashtable = irc_server_sendf (ptr_server,
@@ -174,13 +174,13 @@ irc_input_send_user_message (struct t_gui_buffer *buffer, int flags,
         while (1)
         {
             snprintf (hash_key, sizeof (hash_key), "args%d", number);
-            str_args = weechat_hashtable_get (hashtable, hash_key);
+            str_args = dogechat_hashtable_get (hashtable, hash_key);
             if (!str_args)
                 break;
             irc_input_user_message_display (buffer, action, str_args);
             number++;
         }
-        weechat_hashtable_free (hashtable);
+        dogechat_hashtable_free (hashtable);
     }
 }
 
@@ -198,8 +198,8 @@ irc_input_data (struct t_gui_buffer *buffer, const char *input_data, int flags)
 
     if (buffer == irc_raw_buffer)
     {
-        if (weechat_strcasecmp (input_data, "q") == 0)
-            weechat_buffer_close (buffer);
+        if (dogechat_strcasecmp (input_data, "q") == 0)
+            dogechat_buffer_close (buffer);
     }
     else
     {
@@ -207,25 +207,25 @@ irc_input_data (struct t_gui_buffer *buffer, const char *input_data, int flags)
          * if send unknown commands is enabled and that input data is a
          * command, then send this command to IRC server
          */
-        if (weechat_config_boolean (irc_config_network_send_unknown_commands)
-            && !weechat_string_input_for_buffer (input_data))
+        if (dogechat_config_boolean (irc_config_network_send_unknown_commands)
+            && !dogechat_string_input_for_buffer (input_data))
         {
             if (ptr_server)
             {
                 irc_server_sendf (ptr_server, flags, NULL,
-                                  "%s", weechat_utf8_next_char (input_data));
+                                  "%s", dogechat_utf8_next_char (input_data));
             }
-            return WEECHAT_RC_OK;
+            return DOGECHAT_RC_OK;
         }
 
         if (ptr_channel)
         {
-            ptr_data = weechat_string_input_for_buffer (input_data);
+            ptr_data = dogechat_string_input_for_buffer (input_data);
             if (!ptr_data)
                 ptr_data = input_data;
             data_with_colors = irc_color_encode (
                 ptr_data,
-                weechat_config_boolean (irc_config_network_colors_send));
+                dogechat_config_boolean (irc_config_network_colors_send));
 
             msg = strdup ((data_with_colors) ? data_with_colors : ptr_data);
             if (msg)
@@ -239,13 +239,13 @@ irc_input_data (struct t_gui_buffer *buffer, const char *input_data, int flags)
         }
         else
         {
-            weechat_printf (buffer,
+            dogechat_printf (buffer,
                             _("%s%s: this buffer is not a channel!"),
-                            weechat_prefix ("error"), IRC_PLUGIN_NAME);
+                            dogechat_prefix ("error"), IRC_PLUGIN_NAME);
         }
     }
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }
 
 /*
@@ -309,14 +309,14 @@ irc_input_send_cb (void *data, const char *signal,
     {
         if (pos_semicol1 > ptr_string + 1)
         {
-            server = weechat_strndup (ptr_string, pos_semicol1 - ptr_string);
+            server = dogechat_strndup (ptr_string, pos_semicol1 - ptr_string);
         }
         pos_semicol2 = strchr (pos_semicol1 + 1, ';');
         if (pos_semicol2)
         {
             if (pos_semicol2 > pos_semicol1 + 1)
             {
-                channel = weechat_strndup (pos_semicol1 + 1,
+                channel = dogechat_strndup (pos_semicol1 + 1,
                                            pos_semicol2 - pos_semicol1 - 1);
             }
             pos_semicol3 = strchr (pos_semicol2 + 1, ';');
@@ -324,7 +324,7 @@ irc_input_send_cb (void *data, const char *signal,
             {
                 if (pos_semicol3 > pos_semicol2 + 1)
                 {
-                    flags = weechat_strndup (pos_semicol2 + 1,
+                    flags = dogechat_strndup (pos_semicol2 + 1,
                                              pos_semicol3 - pos_semicol2 - 1);
                 }
                 pos_semicol4 = strchr (pos_semicol3 + 1, ';');
@@ -332,7 +332,7 @@ irc_input_send_cb (void *data, const char *signal,
                 {
                     if (pos_semicol4 > pos_semicol3 + 1)
                     {
-                        tags = weechat_strndup (pos_semicol3 + 1,
+                        tags = dogechat_strndup (pos_semicol3 + 1,
                                                 pos_semicol4 - pos_semicol3 - 1);
                     }
                     ptr_message = pos_semicol4 + 1;
@@ -367,7 +367,7 @@ irc_input_send_cb (void *data, const char *signal,
             irc_server_set_send_default_tags (tags);
 
             /* send text to buffer, or execute command */
-            if (weechat_string_input_for_buffer (ptr_message))
+            if (dogechat_string_input_for_buffer (ptr_message))
             {
                 /* text as input */
                 irc_input_data (ptr_buffer, ptr_message, flags_value);
@@ -377,8 +377,8 @@ irc_input_send_cb (void *data, const char *signal,
                 /* command */
                 data_with_colors = irc_color_encode (
                     ptr_message,
-                    weechat_config_boolean (irc_config_network_colors_send));
-                weechat_command (
+                    dogechat_config_boolean (irc_config_network_colors_send));
+                dogechat_command (
                     ptr_buffer,
                     (data_with_colors) ? data_with_colors : ptr_message);
                 if (data_with_colors)
@@ -399,5 +399,5 @@ irc_input_send_cb (void *data, const char *signal,
     if (tags)
         free (tags);
 
-    return WEECHAT_RC_OK;
+    return DOGECHAT_RC_OK;
 }

@@ -30,10 +30,10 @@ Aufbau des Relay-Namens: [ipv4.][ipv6.][ssl.]<Protokoll.Name>
           ssl: aktiviert SSL
 protocol.name: Protokoll und Name relay:
                  - Protokoll "irc": Name des Servers welcher geteilt werden soll (optional. Falls kein Name angegeben wird, muss der Client einen Namen mit dem Befehl "PASS" übermitteln, das Format ist wie folgt: "PASS Server:Passwort")
-                 - Protokoll "weechat" (es wird kein Name verwendet)
+                 - Protokoll "dogechat" (es wird kein Name verwendet)
 
-Das "irc" Protokoll dient dazu eine Verbindung zu einem anderen IRC Client (oder zu einem zweiten WeeChat) herzustellen.
-Das "weechat" Protokoll wird von einem Remote-Interface genutzt um eine Verbindung herzustellen. Siehe https://weechat.org/download/
+Das "irc" Protokoll dient dazu eine Verbindung zu einem anderen IRC Client (oder zu einem zweiten DogeChat) herzustellen.
+Das "dogechat" Protokoll wird von einem Remote-Interface genutzt um eine Verbindung herzustellen. Siehe https://dogechat.org/download/
 
 Ohne Angabe von Argumenten werden alle Relay-Clients in einem neuen Buffer dargestellt.
 
@@ -44,14 +44,14 @@ Beispiele:
     /relay add ssl.irc.freenode 8001
   IRC Proxy für alle Server (Client wählt aus), mit SSL:
     /relay add ssl.irc 8002
-  WeeChat Protokoll:
-    /relay add weechat 9000
-  WeeChat Protokoll, mit SSL:
-    /relay add ssl.weechat 9001
-  WeeChat Protokoll, mit SSL, nur IPv4 nutzen:
-    /relay add ipv4.ssl.weechat 9001
-  WeeChat Protokoll, mit SSL, nur IPv6 nutzen:
-    /relay add ipv6.ssl.weechat 9001
-  WeeChat Protokoll, mit SSL, mit IPv4 + IPv6:
-    /relay add ipv4.ipv6.ssl.weechat 9001
+  DogeChat Protokoll:
+    /relay add dogechat 9000
+  DogeChat Protokoll, mit SSL:
+    /relay add ssl.dogechat 9001
+  DogeChat Protokoll, mit SSL, nur IPv4 nutzen:
+    /relay add ipv4.ssl.dogechat 9001
+  DogeChat Protokoll, mit SSL, nur IPv6 nutzen:
+    /relay add ipv6.ssl.dogechat 9001
+  DogeChat Protokoll, mit SSL, mit IPv4 + IPv6:
+    /relay add ipv4.ipv6.ssl.dogechat 9001
 ----

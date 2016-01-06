@@ -12,7 +12,7 @@
 
 | irc | irc_channel | list of channels for an IRC server | channel pointer (optional) | server,channel (channel is optional)
 
-| irc | irc_color_weechat | mapping between IRC color codes and WeeChat color names | - | -
+| irc | irc_color_dogechat | mapping between IRC color codes and DogeChat color names | - | -
 
 | irc | irc_ignore | list of IRC ignores | ignore pointer (optional) | -
 
@@ -40,39 +40,39 @@
 
 | tcl | tcl_script | list of scripts | script pointer (optional) | script name (wildcard "*" is allowed) (optional)
 
-| weechat | bar | list of bars | bar pointer (optional) | bar name (wildcard "*" is allowed) (optional)
+| dogechat | bar | list of bars | bar pointer (optional) | bar name (wildcard "*" is allowed) (optional)
 
-| weechat | bar_item | list of bar items | bar item pointer (optional) | bar item name (wildcard "*" is allowed) (optional)
+| dogechat | bar_item | list of bar items | bar item pointer (optional) | bar item name (wildcard "*" is allowed) (optional)
 
-| weechat | bar_window | list of bar windows | bar window pointer (optional) | -
+| dogechat | bar_window | list of bar windows | bar window pointer (optional) | -
 
-| weechat | buffer | list of buffers | buffer pointer (optional) | buffer name (wildcard "*" is allowed) (optional)
+| dogechat | buffer | list of buffers | buffer pointer (optional) | buffer name (wildcard "*" is allowed) (optional)
 
-| weechat | buffer_lines | lines of a buffer | buffer pointer | -
+| dogechat | buffer_lines | lines of a buffer | buffer pointer | -
 
-| weechat | filter | list of filters | - | filter name (wildcard "*" is allowed) (optional)
+| dogechat | filter | list of filters | - | filter name (wildcard "*" is allowed) (optional)
 
-| weechat | history | history of commands | buffer pointer (if not set, return global history) (optional) | -
+| dogechat | history | history of commands | buffer pointer (if not set, return global history) (optional) | -
 
-| weechat | hook | list of hooks | hook pointer (optional) | type,arguments (type is command/timer/.., arguments to get only some hooks (wildcard "*" is allowed), both are optional)
+| dogechat | hook | list of hooks | hook pointer (optional) | type,arguments (type is command/timer/.., arguments to get only some hooks (wildcard "*" is allowed), both are optional)
 
-| weechat | hotlist | list of buffers in hotlist | - | -
+| dogechat | hotlist | list of buffers in hotlist | - | -
 
-| weechat | key | list of key bindings | - | context ("default", "search", "cursor" or "mouse") (optional)
+| dogechat | key | list of key bindings | - | context ("default", "search", "cursor" or "mouse") (optional)
 
-| weechat | layout | list of layouts | - | -
+| dogechat | layout | list of layouts | - | -
 
-| weechat | nicklist | nicks in nicklist for a buffer | buffer pointer | nick_xxx or group_xxx to get only nick/group xxx (optional)
+| dogechat | nicklist | nicks in nicklist for a buffer | buffer pointer | nick_xxx or group_xxx to get only nick/group xxx (optional)
 
-| weechat | option | list of options | - | option name (wildcard "*" is allowed) (optional)
+| dogechat | option | list of options | - | option name (wildcard "*" is allowed) (optional)
 
-| weechat | plugin | list of plugins | plugin pointer (optional) | plugin name (wildcard "*" is allowed) (optional)
+| dogechat | plugin | list of plugins | plugin pointer (optional) | plugin name (wildcard "*" is allowed) (optional)
 
-| weechat | proxy | list of proxies | proxy pointer (optional) | proxy name (wildcard "*" is allowed) (optional)
+| dogechat | proxy | list of proxies | proxy pointer (optional) | proxy name (wildcard "*" is allowed) (optional)
 
-| weechat | url_options | options for URL | - | -
+| dogechat | url_options | options for URL | - | -
 
-| weechat | window | list of windows | window pointer (optional) | "current" for current window or a window number (optional)
+| dogechat | window | list of windows | window pointer (optional) | "current" for current window or a window number (optional)
 
 | xfer | xfer | list of xfer | xfer pointer (optional) | -
 

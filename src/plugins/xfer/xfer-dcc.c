@@ -3,20 +3,20 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
@@ -34,7 +34,7 @@
 #include <errno.h>
 #include <gcrypt.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "xfer.h"
 #include "xfer-config.h"
 #include "xfer-file.h"
@@ -63,10 +63,10 @@ xfer_dcc_send_file_child (struct t_xfer *xfer)
     }
 
     blocksize = xfer->blocksize;
-    if (weechat_config_integer (xfer_config_network_speed_limit) > 0)
+    if (dogechat_config_integer (xfer_config_network_speed_limit) > 0)
     {
-        if (blocksize > weechat_config_integer (xfer_config_network_speed_limit) * 1024)
-            blocksize = weechat_config_integer (xfer_config_network_speed_limit) * 1024;
+        if (blocksize > dogechat_config_integer (xfer_config_network_speed_limit) * 1024)
+            blocksize = dogechat_config_integer (xfer_config_network_speed_limit) * 1024;
     }
 
     last_sent = time (NULL);
@@ -112,8 +112,8 @@ xfer_dcc_send_file_child (struct t_xfer *xfer)
         if ((xfer->pos < xfer->size) &&
              (xfer->fast_send || (xfer->pos <= xfer->ack)))
         {
-            if ((weechat_config_integer (xfer_config_network_speed_limit) > 0)
-                && (sent_last_second >= (unsigned long long)weechat_config_integer (xfer_config_network_speed_limit) * 1024))
+            if ((dogechat_config_integer (xfer_config_network_speed_limit) > 0)
+                && (sent_last_second >= (unsigned long long)dogechat_config_integer (xfer_config_network_speed_limit) * 1024))
             {
                 /* we're sending too fast (according to speed limit set by user) */
                 usleep (100);
@@ -335,7 +335,7 @@ xfer_dcc_recv_file_child (struct t_xfer *xfer)
     }
 
     /* first connect to sender (blocking) */
-    xfer->sock = weechat_network_connect_to (xfer->proxy,
+    xfer->sock = dogechat_network_connect_to (xfer->proxy,
                                              xfer->remote_address,
                                              xfer->remote_address_length);
     if (xfer->sock == -1)
@@ -442,7 +442,7 @@ xfer_dcc_recv_file_child (struct t_xfer *xfer)
                             snprintf (hash, sizeof (hash), "%.2X%.2X%.2X%.2X",
                                       bin_hash[0], bin_hash[1], bin_hash[2],
                                       bin_hash[3]);
-                            if (weechat_strcasecmp (hash,
+                            if (dogechat_strcasecmp (hash,
                                                     xfer->hash_target) == 0)
                             {
                                 xfer_network_write_pipe (xfer,

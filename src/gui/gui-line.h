@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef WEECHAT_GUI_LINE_H
-#define WEECHAT_GUI_LINE_H 1
+#ifndef DOGECHAT_GUI_LINE_H
+#define DOGECHAT_GUI_LINE_H 1
 
 #include <regex.h>
 
@@ -31,7 +31,7 @@ struct t_gui_line_data
     struct t_gui_buffer *buffer;       /* pointer to buffer                 */
     int y;                             /* line position (for free buffer)   */
     time_t date;                       /* date/time of line (may be past)   */
-    time_t date_printed;               /* date/time when weechat print it   */
+    time_t date_printed;               /* date/time when dogechat print it   */
     char *str_time;                    /* time string (for display)         */
     int tags_count;                    /* number of tags for line           */
     char **tags_array;                 /* tags for line                     */
@@ -124,4 +124,4 @@ extern int gui_line_add_to_infolist (struct t_infolist *infolist,
                                      struct t_gui_line *line);
 extern void gui_lines_print_log (struct t_gui_lines *lines);
 
-#endif /* WEECHAT_GUI_LINE_H */
+#endif /* DOGECHAT_GUI_LINE_H */

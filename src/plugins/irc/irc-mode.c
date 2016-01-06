@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "irc.h"
 #include "irc-mode.h"
 #include "irc-config.h"
@@ -122,13 +122,13 @@ irc_mode_channel_update (struct t_irc_server *server,
     pos_args = strchr (channel->modes, ' ');
     if (pos_args)
     {
-        str_modes = weechat_strndup (channel->modes, pos_args - channel->modes);
+        str_modes = dogechat_strndup (channel->modes, pos_args - channel->modes);
         if (!str_modes)
             return;
         pos_args++;
         while (pos_args[0] == ' ')
             pos_args++;
-        argv = weechat_string_split (pos_args, " ", 0, 0, &argc);
+        argv = dogechat_string_split (pos_args, " ", 0, 0, &argc);
     }
     else
     {
@@ -260,7 +260,7 @@ irc_mode_channel_update (struct t_irc_server *server,
     if (str_modes)
         free (str_modes);
     if (argv)
-        weechat_string_free_split (argv);
+        dogechat_string_free_split (argv);
 }
 
 /*
@@ -277,7 +277,7 @@ irc_mode_smart_filtered (struct t_irc_server *server, char mode)
 {
     const char *ptr_modes;
 
-    ptr_modes = weechat_config_string (irc_config_look_smart_filter_mode);
+    ptr_modes = dogechat_config_string (irc_config_look_smart_filter_mode);
 
     /* if empty value, there's no smart filtering on mode messages */
     if (!ptr_modes || !ptr_modes[0])
@@ -333,13 +333,13 @@ irc_mode_channel_set (struct t_irc_server *server,
     pos_args = strchr (modes, ' ');
     if (pos_args)
     {
-        str_modes = weechat_strndup (modes, pos_args - modes);
+        str_modes = dogechat_strndup (modes, pos_args - modes);
         if (!str_modes)
             return 0;
         pos_args++;
         while (pos_args[0] == ' ')
             pos_args++;
-        argv = weechat_string_split (pos_args, " ", 0, 0, &argc);
+        argv = dogechat_string_split (pos_args, " ", 0, 0, &argc);
     }
     else
     {
@@ -350,9 +350,9 @@ irc_mode_channel_set (struct t_irc_server *server,
 
     current_arg = 0;
 
-    smart_filter = (weechat_config_boolean (irc_config_look_smart_filter)
-                    && weechat_config_string (irc_config_look_smart_filter_mode)
-                    && weechat_config_string (irc_config_look_smart_filter_mode)[0]) ? 1 : 0;
+    smart_filter = (dogechat_config_boolean (irc_config_look_smart_filter)
+                    && dogechat_config_string (irc_config_look_smart_filter_mode)
+                    && dogechat_config_string (irc_config_look_smart_filter_mode)[0]) ? 1 : 0;
 
     if (str_modes && str_modes[0])
     {
@@ -472,10 +472,10 @@ irc_mode_channel_set (struct t_irc_server *server,
     if (str_modes)
         free (str_modes);
     if (argv)
-        weechat_string_free_split (argv);
+        dogechat_string_free_split (argv);
 
     if (channel_modes_updated)
-        weechat_bar_item_update ("buffer_modes");
+        dogechat_bar_item_update ("buffer_modes");
 
     return smart_filter;
 }
@@ -509,16 +509,16 @@ irc_mode_user_add (struct t_irc_server *server, char mode)
             }
             server->nick_modes = nick_modes2;
             strcat (server->nick_modes, str_mode);
-            weechat_bar_item_update ("input_prompt");
-            weechat_bar_item_update ("irc_nick_modes");
+            dogechat_bar_item_update ("input_prompt");
+            dogechat_bar_item_update ("irc_nick_modes");
         }
     }
     else
     {
         server->nick_modes = malloc (2);
         strcpy (server->nick_modes, str_mode);
-        weechat_bar_item_update ("input_prompt");
-        weechat_bar_item_update ("irc_nick_modes");
+        dogechat_bar_item_update ("input_prompt");
+        dogechat_bar_item_update ("irc_nick_modes");
     }
 }
 
@@ -542,8 +542,8 @@ irc_mode_user_remove (struct t_irc_server *server, char mode)
             nick_modes2 = realloc (server->nick_modes, new_size);
             if (nick_modes2)
                 server->nick_modes = nick_modes2;
-            weechat_bar_item_update ("input_prompt");
-            weechat_bar_item_update ("irc_nick_modes");
+            dogechat_bar_item_update ("input_prompt");
+            dogechat_bar_item_update ("irc_nick_modes");
         }
     }
 }
@@ -595,6 +595,6 @@ irc_mode_user_set (struct t_irc_server *server, const char *modes,
             break;
         modes++;
     }
-    weechat_bar_item_update ("input_prompt");
-    weechat_bar_item_update ("irc_nick_modes");
+    dogechat_bar_item_update ("input_prompt");
+    dogechat_bar_item_update ("irc_nick_modes");
 }

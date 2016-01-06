@@ -3,27 +3,27 @@
  *
  * Copyright (C) 2003-2016 Sébastien Helleu <flashcode@flashtux.org>
  *
- * This file is part of WeeChat, the extensible chat client.
+ * This file is part of DogeChat, the extensible chat client.
  *
- * WeeChat is free software; you can redistribute it and/or modify
+ * DogeChat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3 of the License, or
  * (at your option) any later version.
  *
- * WeeChat is distributed in the hope that it will be useful,
+ * DogeChat is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with WeeChat.  If not, see <http://www.gnu.org/licenses/>.
+ * along with DogeChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "../weechat-plugin.h"
+#include "../dogechat-plugin.h"
 #include "alias.h"
 #include "alias-config.h"
 
@@ -40,33 +40,33 @@ alias_command_add (const char *alias_name, const char *command,
     /* define new alias */
     if (!alias_new (alias_name, command, completion))
     {
-        weechat_printf (NULL,
+        dogechat_printf (NULL,
                         _("%s%s: error creating alias \"%s\" "
                           "=> \"%s\""),
-                        weechat_prefix ("error"), ALIAS_PLUGIN_NAME,
+                        dogechat_prefix ("error"), ALIAS_PLUGIN_NAME,
                         alias_name, command);
         return;
     }
 
     /* create configuration option for command */
-    ptr_option = weechat_config_search_option (alias_config_file,
+    ptr_option = dogechat_config_search_option (alias_config_file,
                                                alias_config_section_cmd,
                                                alias_name);
     if (ptr_option)
-        weechat_config_option_free (ptr_option);
+        dogechat_config_option_free (ptr_option);
     alias_config_cmd_new_option (alias_name, command);
 
     /* create configuration option for completion */
-    ptr_option = weechat_config_search_option (alias_config_file,
+    ptr_option = dogechat_config_search_option (alias_config_file,
                                                alias_config_section_completion,
                                                alias_name);
     if (ptr_option)
-        weechat_config_option_free (ptr_option);
+        dogechat_config_option_free (ptr_option);
     if (completion)
         alias_config_completion_new_option (alias_name, completion);
 
     /* display message */
-    weechat_printf (NULL,
+    dogechat_printf (NULL,
                     _("Alias \"%s\" => \"%s\" created"),
                     alias_name, command);
 }
@@ -89,7 +89,7 @@ alias_command_cb (void *data, struct t_gui_buffer *buffer, int argc,
     (void) buffer;
 
     /* List all aliases */
-    if ((argc == 1) || (weechat_strcasecmp (argv[1], "list") == 0))
+    if ((argc == 1) || (dogechat_strcasecmp (argv[1], "list") == 0))
     {
         if (alias_list)
         {
@@ -97,8 +97,8 @@ alias_command_cb (void *data, struct t_gui_buffer *buffer, int argc,
             ptr_alias_name = NULL;
             if (argc > 1)
             {
-                ptr_alias_name = (weechat_string_is_command_char (argv[2])) ?
-                    (char *)weechat_utf8_next_char (argv[2]) : argv[2];
+                ptr_alias_name = (dogechat_string_is_command_char (argv[2])) ?
+                    (char *)dogechat_utf8_next_char (argv[2]) : argv[2];
             }
 
             /* display list of aliases */
@@ -107,50 +107,50 @@ alias_command_cb (void *data, struct t_gui_buffer *buffer, int argc,
                  ptr_alias = ptr_alias->next_alias)
             {
                 if (!ptr_alias_name
-                    || weechat_strcasestr (ptr_alias->name, ptr_alias_name))
+                    || dogechat_strcasestr (ptr_alias->name, ptr_alias_name))
                 {
                     if (!alias_found)
                     {
-                        weechat_printf (NULL, "");
+                        dogechat_printf (NULL, "");
                         if (ptr_alias_name)
                         {
-                            weechat_printf (NULL,
+                            dogechat_printf (NULL,
                                             _("Aliases with \"%s\":"),
                                             ptr_alias_name);
                         }
                         else
                         {
-                            weechat_printf (NULL, _("All aliases:"));
+                            dogechat_printf (NULL, _("All aliases:"));
                         }
                     }
-                    ptr_option = weechat_config_search_option (
+                    ptr_option = dogechat_config_search_option (
                         alias_config_file,
                         alias_config_section_completion,
                         ptr_alias->name);
                     if (ptr_option)
                     {
-                        weechat_printf (
+                        dogechat_printf (
                             NULL,
                             "  %s %s=>%s %s  %s(%s%s %s%s)%s",
                             ptr_alias->name,
-                            weechat_color ("chat_delimiters"),
-                            weechat_color ("chat"),
+                            dogechat_color ("chat_delimiters"),
+                            dogechat_color ("chat"),
                             ptr_alias->command,
-                            weechat_color ("chat_delimiters"),
-                            weechat_color ("chat"),
+                            dogechat_color ("chat_delimiters"),
+                            dogechat_color ("chat"),
                             _("completion:"),
-                            weechat_config_string (ptr_option),
-                            weechat_color ("chat_delimiters"),
-                            weechat_color ("chat"));
+                            dogechat_config_string (ptr_option),
+                            dogechat_color ("chat_delimiters"),
+                            dogechat_color ("chat"));
                     }
                     else
                     {
-                        weechat_printf (
+                        dogechat_printf (
                             NULL,
                             "  %s %s=>%s %s",
                             ptr_alias->name,
-                            weechat_color ("chat_delimiters"),
-                            weechat_color ("chat"),
+                            dogechat_color ("chat_delimiters"),
+                            dogechat_color ("chat"),
                             ptr_alias->command);
                     }
                     alias_found = 1;
@@ -158,52 +158,52 @@ alias_command_cb (void *data, struct t_gui_buffer *buffer, int argc,
             }
             if (!alias_found)
             {
-                weechat_printf (NULL, _("No alias found matching \"%s\""),
+                dogechat_printf (NULL, _("No alias found matching \"%s\""),
                                 (ptr_alias_name) ? ptr_alias_name : "");
             }
         }
         else
         {
-            weechat_printf (NULL, _("No alias defined"));
+            dogechat_printf (NULL, _("No alias defined"));
         }
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "add") == 0)
+    if (dogechat_strcasecmp (argv[1], "add") == 0)
     {
-        WEECHAT_COMMAND_MIN_ARGS(4, "add");
+        DOGECHAT_COMMAND_MIN_ARGS(4, "add");
         alias_command_add (
-            (weechat_string_is_command_char (argv[2])) ?
-            (char *)weechat_utf8_next_char (argv[2]) : argv[2],
+            (dogechat_string_is_command_char (argv[2])) ?
+            (char *)dogechat_utf8_next_char (argv[2]) : argv[2],
             argv_eol[3],
             NULL);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "addcompletion") == 0)
+    if (dogechat_strcasecmp (argv[1], "addcompletion") == 0)
     {
-        WEECHAT_COMMAND_MIN_ARGS(5, "add");
+        DOGECHAT_COMMAND_MIN_ARGS(5, "add");
         alias_command_add (
-            (weechat_string_is_command_char (argv[3])) ?
-            (char *)weechat_utf8_next_char (argv[3]) : argv[3],
+            (dogechat_string_is_command_char (argv[3])) ?
+            (char *)dogechat_utf8_next_char (argv[3]) : argv[3],
             argv_eol[4],
             argv[2]);
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    if (weechat_strcasecmp (argv[1], "del") == 0)
+    if (dogechat_strcasecmp (argv[1], "del") == 0)
     {
-        WEECHAT_COMMAND_MIN_ARGS(3, "del");
+        DOGECHAT_COMMAND_MIN_ARGS(3, "del");
         for (i = 2; i < argc; i++)
         {
-            ptr_alias_name = (weechat_string_is_command_char (argv[i])) ?
-                (char *)weechat_utf8_next_char (argv[i]) : argv[i];
+            ptr_alias_name = (dogechat_string_is_command_char (argv[i])) ?
+                (char *)dogechat_utf8_next_char (argv[i]) : argv[i];
             ptr_alias = alias_search (ptr_alias_name);
             if (!ptr_alias)
             {
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("%sAlias \"%s\" not found"),
-                                weechat_prefix ("error"),
+                                dogechat_prefix ("error"),
                                 ptr_alias_name);
             }
             else
@@ -212,28 +212,28 @@ alias_command_cb (void *data, struct t_gui_buffer *buffer, int argc,
                 alias_free (ptr_alias);
 
                 /* remove options */
-                ptr_option = weechat_config_search_option (
+                ptr_option = dogechat_config_search_option (
                     alias_config_file,
                     alias_config_section_cmd,
                     ptr_alias_name);
                 if (ptr_option)
-                    weechat_config_option_free (ptr_option);
-                ptr_option = weechat_config_search_option (
+                    dogechat_config_option_free (ptr_option);
+                ptr_option = dogechat_config_search_option (
                     alias_config_file,
                     alias_config_section_completion,
                     ptr_alias_name);
                 if (ptr_option)
-                    weechat_config_option_free (ptr_option);
+                    dogechat_config_option_free (ptr_option);
 
-                weechat_printf (NULL,
+                dogechat_printf (NULL,
                                 _("Alias \"%s\" removed"),
                                 ptr_alias_name);
             }
         }
-        return WEECHAT_RC_OK;
+        return DOGECHAT_RC_OK;
     }
 
-    WEECHAT_COMMAND_ERROR;
+    DOGECHAT_COMMAND_ERROR;
 }
 
 /*
@@ -243,7 +243,7 @@ alias_command_cb (void *data, struct t_gui_buffer *buffer, int argc,
 void
 alias_command_init ()
 {
-    weechat_hook_command (
+    dogechat_hook_command (
         "alias",
         N_("list, add or remove command aliases"),
         N_("list [<alias>]"
@@ -278,8 +278,8 @@ alias_command_init ()
            "  alias /split to split window horizontally:\n"
            "    /alias add split /window splith\n"
            "  alias /hello to say \"hello\" on all channels but not on "
-           "#weechat:\n"
-           "    /alias add hello /allchan -exclude=#weechat msg * hello\n"
+           "#dogechat:\n"
+           "    /alias add hello /allchan -exclude=#dogechat msg * hello\n"
            "  alias /forcejoin to send IRC command \"forcejoin\" with "
            "completion of /sajoin:\n"
            "    /alias addcompletion %%sajoin forcejoin /quote forcejoin"),
